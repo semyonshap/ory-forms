@@ -1,0 +1,17 @@
+services:
+  frontend:
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      - NEXT_PUBLIC_ORY_SDK_URL=https://auth-dev.with-jiko.com
+      - LOG_LEVEL=${LOG_LEVEL}
+    extra_hosts:
+      - "auth-dev.with-jiko.com:127.0.0.1"
+    command: npm run dev

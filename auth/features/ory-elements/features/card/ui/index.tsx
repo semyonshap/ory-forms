@@ -1,0 +1,44 @@
+import { OryCardProps } from "@/features/ory-elements"
+import { DefaultCardContent } from "./content"
+import { DefaultCardFooter } from "./footer"
+import { DefaultCardHeader } from "./header"
+import { DefaultCardLogo } from "./logo"
+import { DefaultCurrentIdentifierButton } from "./current-identifier-button"
+import { ComponentPropsWithoutRef } from "react"
+import { cn } from "../../../shared/util/cn"
+import { Card } from "@/components/ui/card"
+
+/**
+ * The DefaultCard component is a styled container that serves as the main card layout for Ory Elements.
+ *
+ * @param props - The properties for the DefaultCard component.
+ * @returns
+ * @group Components
+ * @category Default Components
+ */
+export function DefaultCard({
+  children,
+  className,
+  ...rest
+}: OryCardProps & ComponentPropsWithoutRef<"div">) {
+  return (
+    <div className={cn("ory-elements", className)} {...rest}>
+      <div className="flex w-full flex-1 items-start justify-center font-sans-default sm:w-[480px] sm:max-w-[480px] sm:items-center">
+        <Card
+          className="relative grid w-full grid-cols-1 gap-8 px-8 py-12 sm:px-12 sm:py-14"
+          data-testid="ory/card"
+        >
+          {children}
+        </Card>
+      </div>
+    </div>
+  )
+}
+
+export {
+  DefaultCardContent,
+  DefaultCardFooter,
+  DefaultCardHeader,
+  DefaultCardLogo,
+  DefaultCurrentIdentifierButton,
+}
