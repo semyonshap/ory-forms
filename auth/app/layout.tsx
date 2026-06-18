@@ -1,8 +1,6 @@
 // Copyright © 2024 Ory Corp
 // SPDX-License-Identifier: Apache-2.0
 
-export const dynamic = 'force-dynamic'
-
 import "./globals.css"
 import React, { ReactNode, Suspense } from "react"
 import { Inter } from "next/font/google"

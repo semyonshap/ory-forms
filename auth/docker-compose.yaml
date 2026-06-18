@@ -4,14 +4,12 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.dev
-    ports:
-      - "3000:3000"
+    network_mode: host
     volumes:
       - .:/app
       - /app/node_modules
     environment:
       - NEXT_PUBLIC_ORY_SDK_URL=https://auth-dev.with-jiko.com
-      - LOG_LEVEL=${LOG_LEVEL}
+      - LOG_LEVEL=debug
     extra_hosts:
-      - "auth-dev.with-jiko.com:127.0.0.1"
-    command: npm run dev
+      - "auth-dev.with-jiko.com:49.12.22.114"

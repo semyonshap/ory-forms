@@ -1,3 +1,0 @@
-[submodule "libs/ory"]
-	path = libs/ory
-	url = https://github.com/ory/elements.git

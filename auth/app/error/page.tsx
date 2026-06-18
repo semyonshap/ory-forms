@@ -1,34 +1,18 @@
-import { redirect } from "next/navigation";
-import ErrorCard from "@/components/errorCard";
-import { Configuration, FrontendApi } from "@ory/client-fetch";
-import { oryConfig } from "@/ory.config";
+import { Error as ErrorComponent } from "@/features/ory-elements/features/flows"
+import { getError, getServerSession, OryPageParams } from "@ory/nextjs/app"
 
-export default async function ErrorPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ id?: string; lid?: string }>;
-}) {
-  const params = await searchParams;
-  let userMessage;
+import { oryConfig } from "@/ory.config"
 
-  if (params.id) {
-    const client = new FrontendApi(
-      new Configuration({
-        basePath: oryConfig.sdk.url,
-        headers: { Accept: "application/json" },
-      }),
-    );
+export default async function ErrorPage(props: OryPageParams) {
+  const error = await getError(props.searchParams)
+  const session = await getServerSession().catch(() => null)
 
-    const flow = await client.getFlowError({ id: params.id }).catch(() => null);
-    if (flow) {
-      const err = flow.error as
-        | { message?: string; reason?: string }
-        | undefined;
-      userMessage = err?.message || err?.reason;
-    }
-  } else {
-    redirect("/");
-  }
-
-  return <ErrorCard message={userMessage || "No error details available."} />;
+  return (
+    <ErrorComponent
+      error={error}
+      config={oryConfig}
+      components={{ Card: {} }}
+      session={session ?? undefined}
+    />
+  )
 }
