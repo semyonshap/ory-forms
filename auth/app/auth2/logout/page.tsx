@@ -1,4 +1,4 @@
-import { logger } from "@/lib/logger";
+import { logger } from "@/libs/logger";
 import {
   Card,
   CardContent,
@@ -9,7 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { redirect } from "next/navigation";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
-import { OAuth2Client } from "@/lib/adminClients";
+import { OAuth2Client } from "@/libs/adminClients";
 
 async function confirmLogout(formData: FormData) {
   "use server";
