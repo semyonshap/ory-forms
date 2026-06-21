@@ -1,35 +1,37 @@
 // Copyright © 2024 Ory Corp
 // SPDX-License-Identifier: Apache-2.0
 
-"use client"
+"use client";
 import {
   FlowError,
   GenericError,
   instanceOfFlowError,
   instanceOfGenericError,
   Session,
-} from "@ory/client-fetch"
+} from "@ory/client-fetch";
 import {
   OryClientConfiguration,
   OryConfigurationProvider,
   OryFlowComponentOverrides,
   useOryConfiguration,
-} from "@/features/ory-elements"
-import { useMemo } from "react"
-import { FormattedMessage } from "react-intl"
-import { IntlProvider } from "../../../context/intl-context"
-import Image from "next/image"
-import { DefaultCard } from "../../../shared"
+} from "@/features/ory-elements";
+import { useMemo } from "react";
+import { FormattedMessage } from "react-intl";
+import { IntlProvider } from "../../../context/intl-context";
+import Image from "next/image";
+import { DefaultCard } from "../../../shared";
 
-import { useClientLogout } from "../../../shared/hooks/logout"
-import { Separator } from "@/components/ui/separator"
+import { useClientLogout } from "../../../shared/hooks/logout";
+
+import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
 
 /**
  * A union type of all possible errors that can be returned by the Ory SDK.
  * @hidden
  * @inline
  */
-export type OryError = FlowError | OAuth2Error | { error: GenericError }
+export type OryError = FlowError | OAuth2Error | { error: GenericError };
 
 /**
  * An OAuth2 error response.
@@ -37,9 +39,9 @@ export type OryError = FlowError | OAuth2Error | { error: GenericError }
  * @inline
  */
 export type OAuth2Error = {
-  error: string
-  error_description: string
-}
+  error: string;
+  error_description: string;
+};
 
 function isOAuth2Error(error: unknown): error is OAuth2Error {
   return (
@@ -47,7 +49,7 @@ function isOAuth2Error(error: unknown): error is OAuth2Error {
     typeof error === "object" &&
     "error" in error &&
     "error_description" in error
-  )
+  );
 }
 
 /**
@@ -61,37 +63,37 @@ export type ErrorFlowContextProps = {
    * The error object returned by the Ory SDK.
    * This can be a FlowError, OAuth2Error, or a GenericError.
    */
-  error: OryError
+  error: OryError;
   /**
    * The components to override the default ones.
    * This allows you to customize the appearance and behavior of the error flow.
    */
-  components?: OryFlowComponentOverrides
+  components?: OryFlowComponentOverrides;
   /**
    * The Ory client configuration object.
    * This object contains the configuration for the Ory client, such as the base URL and project information.
    */
-  config: OryClientConfiguration
+  config: OryClientConfiguration;
   /**
    * The session object, if available.
    * This is used to determine if the user is logged in and to provide appropriate actions.
    */
-  session?: Session
-}
+  session?: Session;
+};
 
 const errorDescriptions: Record<number, string> = {
   4: "The server could not handle your request, because it was malformed",
   5: "The server encountered an error and could not complete your request",
-}
+};
 
 type InternalStandardizedError = {
-  code: number
-  message?: string
-  status?: string
-  reason?: string
-  id?: string
-  timestamp?: Date
-}
+  code: number;
+  message?: string;
+  status?: string;
+  reason?: string;
+  id?: string;
+  timestamp?: Date;
+};
 
 function useStandardize(error: OryError): InternalStandardizedError {
   // Memoize the error to keep the timestamp consistent
@@ -102,15 +104,15 @@ function useStandardize(error: OryError): InternalStandardizedError {
         message: error.error_description,
         status: error.error,
         timestamp: new Date(),
-      }
+      };
     }
     if (instanceOfFlowError(error)) {
-      const parsed = error.error as InternalStandardizedError
+      const parsed = error.error as InternalStandardizedError;
       return {
         ...parsed,
         id: error.id,
         timestamp: error.created_at,
-      }
+      };
     } else if (error.error && instanceOfGenericError(error.error)) {
       return {
         code: error.error.code ?? 500,
@@ -118,14 +120,14 @@ function useStandardize(error: OryError): InternalStandardizedError {
         status: error.error.status,
         reason: error.error.reason,
         timestamp: new Date(),
-      }
+      };
     }
     return {
       code: 500,
       message: "An error occurred",
       status: "error",
-    }
-  }, [error])
+    };
+  }, [error]);
 }
 
 /**
@@ -142,11 +144,11 @@ export function Error({
   config,
   session,
 }: ErrorFlowContextProps) {
-  const Card = Components?.Card?.Root ?? DefaultCard
-  const Divider = Components?.Card?.Divider ?? Separator
-  const parsed = useStandardize(error)
+  const Card = Components?.Card?.Root ?? DefaultCard;
+  const Divider = Components?.Card?.Divider ?? Separator;
+  const parsed = useStandardize(error);
 
-  const description = errorDescriptions[Math.floor(parsed.code / 100)]
+  const description = errorDescriptions[Math.floor(parsed.code / 100)];
 
   return (
     <OryConfigurationProvider sdk={config.sdk} project={config.project}>
@@ -206,71 +208,77 @@ export function Error({
               <p className="text-sm text-interface-foreground-default-secondary">
                 Message:{" "}
                 <code data-testid={"ory/screen/error/message"}>
-                  {parsed.reason}
+                  {parsed.reason ?? parsed.message}
                 </code>
               </p>
 
               <div>
-                <button
-                  className="text-interface-foreground-default-primary underline"
+                <Button
+                  variant="outline"
                   onClick={() => {
+                    const errorMessage = parsed.reason ?? parsed.message;
                     const text = `${parsed.id ? `ID: ${parsed.id}` : ""}
-Time: ${parsed.timestamp?.toUTCString()}
-${parsed.reason ? `Message: ${parsed.reason}` : ""}
-`
-                    void navigator.clipboard.writeText(text)
+                      Time: ${parsed.timestamp?.toUTCString()}
+                      ${errorMessage ? `Message: ${errorMessage}` : ""}`;
+                    void navigator.clipboard.writeText(text);
                   }}
                 >
                   <FormattedMessage id="error.footer.copy" />
-                </button>
+                </Button>
               </div>
             </div>
           </div>
         </Card>
       </IntlProvider>
     </OryConfigurationProvider>
-  )
+  );
 }
 
 function LoggedInActions() {
-  const config = useOryConfiguration()
-  const { logoutFlow } = useClientLogout(config)
+  const config = useOryConfiguration();
+  const { logoutFlow } = useClientLogout(config);
 
   return (
-    <a
-      href={logoutFlow?.logout_url}
-      className="text-interface-foreground-default-primary underline"
-    >
-      <FormattedMessage id="login.logout-button" />
-    </a>
-  )
+    <Button asChild variant="outline">
+      <a href={logoutFlow?.logout_url}>
+        <FormattedMessage id="login.logout-button" />
+      </a>
+    </Button>
+  );
 }
 
 function GoBackButton() {
-  const config = useOryConfiguration()
+  const config = useOryConfiguration();
   if ("default_redirect_url" in config.project) {
     return (
-      <a
-        className="text-interface-foreground-default-primary underline"
-        href={config.project.default_redirect_url}
-      >
-        <FormattedMessage id="error.action.go-back" />
-      </a>
-    )
+      <Button asChild variant="outline">
+        <a href={config.project.default_redirect_url}>
+          <FormattedMessage id="error.action.go-back" />
+        </a>
+      </Button>
+    );
   }
 
-  return null
+  return null;
 }
 
 function ErrorLogo() {
-  const { project } = useOryConfiguration()
+  const { project } = useOryConfiguration();
   if (project.logo_light_url) {
-    return <Image src={project.logo_light_url} className="h-full" alt="Logo" width={40} height={40} />
+    return (
+      <Image
+        src={project.logo_light_url}
+        className="h-full"
+        alt="Logo"
+        width={120}
+        height={40}
+      />
+    );
   }
 
   return (
     <h1 className="text-xl leading-normal font-semibold text-interface-foreground-default-primary">
       {project.name}
     </h1>
-  )
+  );
 }

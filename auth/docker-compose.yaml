@@ -1,12 +1,13 @@
 services:
-  frontend:
+  auth-frontend:
     restart: unless-stopped
     build:
-      context: .
+      context: ./auth
       dockerfile: Dockerfile.dev
-    network_mode: host
+    ports:
+      - "3000:3000"
     volumes:
-      - .:/app
+      - ./auth:/app
       - /app/node_modules
     environment:
       - NEXT_PUBLIC_ORY_SDK_URL=https://auth-dev.with-jiko.com

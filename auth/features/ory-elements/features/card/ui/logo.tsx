@@ -19,8 +19,8 @@ export function DefaultCardLogo() {
         src={config.project.logo_light_url}
         className="h-full max-h-9 self-start"
         alt="Logo"
-        width={36}
-        height={36}
+        width={100}
+        height={40}
       />
     )
   }

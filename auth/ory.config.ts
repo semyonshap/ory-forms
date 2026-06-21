@@ -10,6 +10,8 @@ export const oryConfig: OryClientConfiguration = {
 		error_ui_url: "/error",
 		locale_behavior: "force_default",
 		name: "Jiko Authorization",
+		logo_dark_url: "/jiko.svg",
+		logo_light_url: "/jiko.svg",
 		registration_enabled: true,
 		verification_enabled: true,
 		recovery_enabled: true,
