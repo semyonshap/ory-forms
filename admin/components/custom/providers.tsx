@@ -1,0 +1,29 @@
+"use client";
+
+import { ReactNode } from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { SidebarProvider } from "@/components/ui/sidebar";
+import { AdminSidebar } from "@/features/ory-admin/components/sidebar";
+import { AdminNavbar } from "@/features/ory-admin/components/navbar";
+import { DialogRenderer } from "@/components/custom/dialogRenderer";
+import { Toaster } from "sonner";
+
+const queryClient = new QueryClient();
+
+export function Providers({ children }: { children: ReactNode }) {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <SidebarProvider>
+        <div className="w-full flex min-h-screen">
+          <AdminSidebar />
+          <main className="w-full flex flex-col">
+            <AdminNavbar />
+            <div className="w-full flex-1 p-6">{children}</div>
+          </main>
+        </div>
+        <DialogRenderer />
+        <Toaster />
+      </SidebarProvider>
+    </QueryClientProvider>
+  );
+}
