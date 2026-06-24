@@ -21,6 +21,18 @@ export function orySdkUrl() {
   return baseUrl.replace(/\/$/, "")
 }
 
+export function hydraAdminUrl() {
+  const baseUrl = getEnv("HYDRA_URL")
+
+  if (!baseUrl) {
+    throw new Error(
+      "You need to set environment variable `NEXT_PUBLIC_HYDRA_URL`.",
+    )
+  }
+
+  return baseUrl.replace(/\/$/, "")
+}
+
 /**
  * This function returns whether the current environment is a production environment.
  */

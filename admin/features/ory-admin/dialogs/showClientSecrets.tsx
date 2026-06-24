@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import {
   Dialog,
@@ -6,24 +6,25 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { useDialogStore } from "@/store/dialogStore"
-import CopyToClipboard from "@/features/ory-admin/components/copyToClipboard"
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useDialogStore } from "@/store/dialogStore";
+import CopyToClipboard from "@/components/custom/copyToClipboard";
 
 export default function ShowClientSecretsDialog() {
-  const { open, props, closeDialog } = useDialogStore()
-  const clientId = (props?.clientId as string) || ''
-  const clientSecret = (props?.clientSecret as string) || ''
+  const { open, props, closeDialog } = useDialogStore();
+  const clientId = (props?.clientId as string) || "";
+  const clientSecret = (props?.clientSecret as string) || "";
 
   return (
-    <Dialog open={open} onOpenChange={closeDialog} >
+    <Dialog open={open} onOpenChange={closeDialog}>
       <DialogContent className="sm:max-w-md" showCloseButton={false}>
         <DialogHeader>
           <DialogTitle>Client Created Successfully</DialogTitle>
           <DialogDescription>
-            Save these credentials securely. The client secret will not be shown again.
+            Save these credentials securely. The client secret will not be shown
+            again.
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-4">
@@ -57,5 +58,5 @@ export default function ShowClientSecretsDialog() {
         </div>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

@@ -9,7 +9,9 @@ import {
 import { Button } from "@/components/ui/button";
 import { redirect } from "next/navigation";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
-import { OAuth2Client } from "@/libs/adminClients";
+import { oauth2Client } from "@/features/ory-elements/client/clients";
+
+const api = oauth2Client();
 
 async function confirmLogout(formData: FormData) {
   "use server";
@@ -18,12 +20,12 @@ async function confirmLogout(formData: FormData) {
   const action = formData.get("action") as string;
 
   if (action === "accept") {
-    const { redirect_to } = await OAuth2Client.acceptOAuth2LogoutRequest({
+    const { redirect_to } = await api.acceptOAuth2LogoutRequest({
       logoutChallenge: challenge,
     });
     redirect(redirect_to);
   } else if (action === "reject") {
-    await OAuth2Client.rejectOAuth2LogoutRequest({
+    await api.rejectOAuth2LogoutRequest({
       logoutChallenge: challenge,
     });
     redirect("/");
@@ -42,7 +44,7 @@ export default async function OAuth2LogoutPage(props: {
   }
 
   try {
-    const logoutRequest = await OAuth2Client.getOAuth2LogoutRequest({
+    const logoutRequest = await api.getOAuth2LogoutRequest({
       logoutChallenge,
     });
     const { challenge, subject, sid, client } = logoutRequest;

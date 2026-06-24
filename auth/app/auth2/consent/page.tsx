@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { logger } from "@/libs/logger";
 import { randomUUID } from "crypto";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
-import { OAuth2Client } from "@/libs/adminClients";
+import { oauth2Client } from "@/features/ory-elements/client/clients";
 
 export default async function ConsentPage(props: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -18,7 +18,7 @@ export default async function ConsentPage(props: {
     return <div>Invalid consent challenge</div>;
   }
 
-  const api = OAuth2Client;
+  const api = oauth2Client();
 
   try {
     const consentRequest = await api.getOAuth2ConsentRequest({

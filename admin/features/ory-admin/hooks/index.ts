@@ -1,4 +1,3 @@
-export { useMetrics } from "../../prometheus/hooks/useMetricsQuery";
 export { useIdentity, useUser, useUsers } from "./useUsersQuery";
 export { useSubjectUsers, useSubjectRelations } from "./useSubjectSuggestions";
 export {

@@ -11,7 +11,4 @@ export const requiredUrl = (envName: string): string => {
   return url.replace(/\/$/, "");
 };
 
-export const hydraAdminUrl = () => requiredUrl("HYDRA_ADMIN_URL");
-export const kratosAdminUrl = () => requiredUrl("KRATOS_ADMIN_URL");
-export const ketoPublicUrl = () => requiredUrl("KETO_PUBLIC_URL");
-export const ketoAdminUrl = () => requiredUrl("KETO_ADMIN_URL");
+export const adminUrl = () => requiredUrl("ADMIN_URL");

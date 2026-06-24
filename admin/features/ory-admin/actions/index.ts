@@ -1,5 +1,4 @@
 export { getUser, getUsers, getIdentity } from "./users";
-export { fetchMetrics } from "../../prometheus/actions/metrics";
 export {
   getClients,
   getClient,

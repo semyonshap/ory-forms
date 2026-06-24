@@ -3,8 +3,8 @@
 import { ReactNode } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { SidebarProvider } from "@/components/ui/sidebar";
-import { AdminSidebar } from "@/features/ory-admin/components/sidebar";
-import { AdminNavbar } from "@/features/ory-admin/components/navbar";
+import { AdminSidebar } from "@/components/custom/sidebar";
+import { AdminNavbar } from "@/components/custom/navbar";
 import { DialogRenderer } from "@/components/custom/dialogRenderer";
 import { Toaster } from "sonner";
 
@@ -22,7 +22,7 @@ export function Providers({ children }: { children: ReactNode }) {
           </main>
         </div>
         <DialogRenderer />
-        <Toaster />
+        <Toaster theme="dark" />
       </SidebarProvider>
     </QueryClientProvider>
   );
