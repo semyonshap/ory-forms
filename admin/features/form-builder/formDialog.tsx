@@ -39,7 +39,7 @@ export function FormDialog<T extends z.ZodObject<z.ZodRawShape>>({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent showCloseButton={false}>
         <DialogHeader>
-          {title && <DialogTitle>{title}</DialogTitle>}
+          {title && <DialogTitle className="uppercase font-black">{title}</DialogTitle>}
           {description && <DialogDescription>{description}</DialogDescription>}
         </DialogHeader>
 

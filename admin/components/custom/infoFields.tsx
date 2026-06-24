@@ -1,4 +1,5 @@
 import { Spinner } from "@/components/ui/spinner";
+import { cn } from "@/lib/utils";
 
 interface InfoField {
   label: string;
@@ -27,17 +28,17 @@ export function InfoFields({ fields, isLoading = false }: InfoFieldsProps) {
   return (
     <div className="flex flex-col gap-2">
       {fields.map((field, index) => (
-        <div
-          key={index}
-          className={`flex items-start justify-between text-sm ${
-            field.onClick ? "cursor-pointer hover:underline" : ""
-          }`}
-          onClick={field.onClick}
-        >
+        <div key={index} className="break-all ">
           <span className="font-medium text-muted-foreground">
-            {field.label}:
+            {field.label}:{" "}
           </span>
-          <span className="text-right break-all max-w-[70%] whitespace-pre-wrap">
+          <span
+            className={cn(
+              "whitespace-pre-wrap text-sm ",
+              field.onClick ? "cursor-pointer hover:underline" : "",
+            )}
+            onClick={field.onClick}
+          >
             {field.value ?? "N/A"}
           </span>
         </div>

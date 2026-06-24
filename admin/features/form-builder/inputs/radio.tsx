@@ -9,7 +9,6 @@ export function RadioInput({ field, config, handlers, invalid }: InputProps) {
     <RadioGroup
       value={field.value ?? ""}
       onValueChange={field.onChange}
-      disabled={config.disabled}
       className="flex gap-4"
       aria-invalid={invalid}
       onBlur={() => {

@@ -35,10 +35,11 @@ export function FormField<T extends FieldValues = FieldValues>({
     return config;
   }, [config, handlers, formValues]);
 
-  if (config.hidden) return null;
-
-  const InputComponent = getInput(config.type);
+  const InputComponent = getInput(config.interface);
   if (!InputComponent) return null;
+
+  const isHidden = config.hidden ? config.hidden(formValues) : false;
+  if (isHidden) return null;
 
   return (
     <Controller

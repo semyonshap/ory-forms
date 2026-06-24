@@ -12,7 +12,6 @@ export function SelectInput({ field, config, handlers, invalid }: InputProps) {
     <Select
       value={field.value ?? ""}
       onValueChange={field.onChange}
-      disabled={config.disabled}
     >
       <SelectTrigger
         className={invalid ? "border-destructive" : ""}

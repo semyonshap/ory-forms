@@ -7,7 +7,7 @@ export const RelationshipRow = ({ rel }: { rel: Relationship }) => {
   const { openDialog } = useDialogStore();
 
   return (
-    <div className="flex items-center p-2 border-b gap-4">
+    <div className="flex items-center border-b gap-4 h-10 p-2 ">
       <div className="flex-1 truncate">{rel.namespace}</div>
       <div className="flex-1 truncate">{rel.object}</div>
       <div className="flex-1 truncate">{rel.relation}</div>

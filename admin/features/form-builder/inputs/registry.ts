@@ -20,6 +20,6 @@ const registry = new Map<FieldType, ComponentType<InputProps>>([
   ["multiselect", MultiSelectInput],
 ]);
 
-export function getInput(type: FieldType): ComponentType<InputProps> | null {
-  return registry.get(type) ?? null;
+export function getInput(type?: FieldType): ComponentType<InputProps> | null {
+  return registry.get(type || "string") ?? null;
 }

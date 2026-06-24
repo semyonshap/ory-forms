@@ -31,7 +31,7 @@ export default function RelationshipsPage() {
 
   return (
     <div>
-      <div className="flex items-center p-2 border-b gap-4">
+      <div className="flex items-center border-b gap-4 h-10 p-2 ">
         <div className="flex-1">Namespace</div>
         <div className="flex-1">Object</div>
         <div className="flex-1">Relation</div>

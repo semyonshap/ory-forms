@@ -9,13 +9,15 @@ import { CreateRelationshipBody } from "@ory/client-fetch";
 import { FieldHandlers, FormDialog } from "@/features/form-builder";
 import { createRelationshipSchema } from "../schemas";
 import { useSubjectUsers } from "../hooks/useUsersQuery";
+import { useDebounce } from "@/hooks/useDebounce";
 
 export default function CreateRelationshipDialog() {
   const { open, closeDialog } = useDialogStore();
   const createRelationshipMutation = useCreateRelationship();
 
   const [subjectQuery, setSubjectQuery] = useState("");
-  const { data: userSuggestions = [] } = useSubjectUsers(subjectQuery);
+  const debouncedQuery = useDebounce(subjectQuery, 400);
+  const { data: userSuggestions = [] } = useSubjectUsers(debouncedQuery);
 
   const handlers: Record<
     string,

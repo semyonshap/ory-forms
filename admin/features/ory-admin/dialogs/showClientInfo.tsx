@@ -87,8 +87,10 @@ export default function ShowClientInfoDialog() {
     <Dialog key={clientId} open={open} onOpenChange={closeDialog}>
       <DialogContent className="sm:max-w-md" showCloseButton={false}>
         <DialogHeader className="flex flex-row justify-between items-start">
-          <div>
-            <DialogTitle>Client Information</DialogTitle>
+          <div className="flex flex-col gap-1">
+            <DialogTitle className="font-bold uppercase">
+              Client Information
+            </DialogTitle>
             <DialogDescription>Details for OAuth2 client</DialogDescription>
           </div>
           <CopyToClipboard text={infoText} label="Client information" />

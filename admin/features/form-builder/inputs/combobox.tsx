@@ -29,7 +29,6 @@ export function ComboboxInput({
 
   const options = config.options ?? [];
   const placeholder = config.placeholder || "Select...";
-  const disabled = config.disabled;
   const onInputChange = handlers?.onInputChange as
     | ((value: string) => void)
     | undefined;
@@ -44,9 +43,7 @@ export function ComboboxInput({
           className={cn(
             "w-full justify-between font-normal",
             invalid && "border-destructive ring-destructive",
-            disabled && "opacity-50 cursor-not-allowed",
           )}
-          disabled={disabled}
         >
           {field.value
             ? options.find((option) => option.value === field.value)?.label ||

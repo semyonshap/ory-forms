@@ -27,11 +27,15 @@ export const createRelationshipSchema = z
       interface: "radio",
     }),
 
-    subject_id: z.string().optional().register(formRegistry, {
-      label: "Subject ID",
-      placeholder: "Search or enter subject ID",
-      interface: "combobox",
-    }),
+    subject_id: z
+      .string()
+      .optional()
+      .register(formRegistry, {
+        label: "Subject ID",
+        placeholder: "Search or enter subject ID",
+        interface: "combobox",
+        hidden: (values) => values.subjectType !== "id",
+      }),
 
     subject_set: z
       .object({
@@ -55,6 +59,9 @@ export const createRelationshipSchema = z
             placeholder: "Select a relation",
             interface: "select",
           }),
+      })
+      .register(formRegistry, {
+        hidden: (values) => values.subjectType !== "set",
       })
       .optional(),
   })

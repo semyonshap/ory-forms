@@ -36,7 +36,7 @@ export function AdminSidebar() {
             {items.map((item) => (
               <SidebarMenuItem key={item.href}>
                 <SidebarMenuButton asChild isActive={pathname === item.href}>
-                  <Link href={item.href} className="flex items-center gap-2">
+                  <Link href={item.href} className="flex items-start gap-4 font-heading">
                     <item.icon className="self-center" />
                     {item.label}
                   </Link>

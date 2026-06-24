@@ -6,7 +6,6 @@ export function NumberInput({ field, config, handlers, invalid }: InputProps) {
     <Input
       {...field}
       placeholder={config.placeholder}
-      disabled={config.disabled}
       aria-invalid={invalid}
       value={field.value ?? ""}
       onChange={(e) => {

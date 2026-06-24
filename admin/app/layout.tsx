@@ -2,7 +2,7 @@ import "./globals.css";
 import { ReactNode } from "react";
 import { Metadata } from "next";
 import { Providers } from "@/components/custom/providers";
-import { panelSans, panelMono, panelSansMono } from "./fonts";
+import { panelSans, panelMono, panelSansMono, roboto } from "./fonts";
 
 export const metadata: Metadata = {
   title: "Jiko Admin Auth",
@@ -15,7 +15,7 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      className={`${panelSans.variable} ${panelMono.variable} ${panelSansMono.variable} dark`}
+      className={`${panelSans.variable} ${panelMono.variable} ${panelSansMono.variable} ${roboto.variable} dark`}
     >
       <body>
         <Providers>{children}</Providers>

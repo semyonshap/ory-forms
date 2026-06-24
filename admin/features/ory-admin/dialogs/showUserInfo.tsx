@@ -56,10 +56,10 @@ export default function ShowUserInfoDialog() {
 
   return (
     <Dialog key={userId} open={open} onOpenChange={closeDialog}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent showCloseButton={false} className="sm:max-w-md">
         <DialogHeader className="flex flex-row justify-between items-start">
-          <div>
-            <DialogTitle>User Information</DialogTitle>
+          <div className="flex flex-col gap-1">
+            <DialogTitle className="font-bold uppercase">User Information</DialogTitle>
             <DialogDescription>Details for user</DialogDescription>
           </div>
           <CopyToClipboard text={infoText} label="User information" />

@@ -1,4 +1,5 @@
 import localFont from "next/font/local";
+import { Inter } from "next/font/google"; 
 
 export const panelSans = localFont({
   src: [
@@ -106,4 +107,10 @@ export const panelSansMono = localFont({
     },
   ],
   variable: "--font-panel-sans-mono",
+});
+
+export const roboto = Inter({
+  subsets: ["latin"],
+  weight: ["400", "500", "700"],
+  variable: "--font-inter",
 });

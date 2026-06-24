@@ -1,7 +1,7 @@
 import { Checkbox } from "@/components/ui/checkbox";
 import { InputProps } from "../types";
 
-export function BooleanInput({ field, config, handlers, invalid }: InputProps) {
+export function BooleanInput({ field, handlers, invalid }: InputProps) {
   return (
     <Checkbox
       checked={field.value ?? false}
@@ -9,7 +9,6 @@ export function BooleanInput({ field, config, handlers, invalid }: InputProps) {
         field.onChange(checked);
         handlers?.onInputChange?.(String(checked ?? false));
       }}
-      disabled={config.disabled}
       aria-invalid={invalid}
       onBlur={() => {
         field.onBlur();

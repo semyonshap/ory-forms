@@ -7,7 +7,6 @@ export function StringInput({ field, config, handlers, invalid }: InputProps) {
       {...field}
       value={field.value ?? ""}
       placeholder={config.placeholder}
-      disabled={config.disabled}
       aria-invalid={invalid}
       onChange={(e) => {
         field.onChange(e);
