@@ -1,12 +1,11 @@
-import { ReactNode } from "react"
-import type { Virtualizer } from "@tanstack/react-virtual"
+import { ReactNode } from "react";
+import type { Virtualizer } from "@tanstack/react-virtual";
 
 interface VirtualListProps<T> {
-  parentRef: React.RefObject<HTMLDivElement | null>
-  rowVirtualizer: Virtualizer<HTMLDivElement, Element>
-  items: T[]
-  renderRow: (item: T, index: number) => ReactNode
-  height: string
+  parentRef: React.RefObject<HTMLDivElement | null>;
+  rowVirtualizer: Virtualizer<HTMLDivElement, Element>;
+  items: T[];
+  renderRow: (item: T, index: number) => ReactNode;
 }
 
 export function VirtualList<T>({
@@ -14,10 +13,12 @@ export function VirtualList<T>({
   rowVirtualizer,
   items,
   renderRow,
-  height,
 }: VirtualListProps<T>) {
   return (
-    <div ref={parentRef} style={{ height, overflowY: "auto" }}>
+    <div
+      ref={parentRef}
+      style={{ height: "calc(100vh - 170px)", overflowY: "auto" }}
+    >
       <div
         style={{
           height: `${rowVirtualizer.getTotalSize()}px`,
@@ -26,8 +27,8 @@ export function VirtualList<T>({
         }}
       >
         {rowVirtualizer.getVirtualItems().map((vRow) => {
-          const item = items[vRow.index]
-          if (!item) return null
+          const item = items[vRow.index];
+          if (!item) return null;
           return (
             <div
               key={vRow.key}
@@ -42,9 +43,9 @@ export function VirtualList<T>({
             >
               {renderRow(item, vRow.index)}
             </div>
-          )
+          );
         })}
       </div>
     </div>
-  )
+  );
 }

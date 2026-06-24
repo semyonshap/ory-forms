@@ -74,7 +74,7 @@ function FormFooter({
 }: {
   onOpenChange: (open: boolean) => void;
 }) {
-  const { handleSubmit, methods } = useFormContext();
+  const { methods, onSubmit } = useFormContext();
   const { isSubmitting } = methods.formState;
 
   return (
@@ -82,7 +82,7 @@ function FormFooter({
       <Button variant="outline" onClick={() => onOpenChange(false)}>
         Cancel
       </Button>
-      <Button onClick={handleSubmit} disabled={isSubmitting}>
+      <Button onClick={methods.handleSubmit(onSubmit)} disabled={isSubmitting}>
         {isSubmitting ? <Spinner /> : "Submit"}
       </Button>
     </DialogFooter>

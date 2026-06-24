@@ -1,6 +1,10 @@
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, UseFormReturn } from "react-hook-form";
+import {
+  FormProvider as RHFProvider,
+  useForm,
+  UseFormReturn,
+} from "react-hook-form";
 import { createContext, useContext, useMemo } from "react";
 
 import { FieldConfig } from "../types";
@@ -9,12 +13,12 @@ import { parseZodSchema } from "../parser";
 interface FormContextValue<T extends z.ZodObject<z.ZodRawShape>> {
   methods: UseFormReturn<z.infer<T>>;
   fieldConfigs: FieldConfig[];
-  handleSubmit: (e?: React.BaseSyntheticEvent) => Promise<void>;
-  isSubmitting: boolean;
-  schema: T;
+  onSubmit: (data: z.infer<T>) => void | Promise<void>;
 }
 
-const FormContext = createContext<FormContextValue<any> | undefined>(undefined);
+const FormContext = createContext<
+  FormContextValue<z.ZodObject<z.ZodRawShape>> | undefined
+>(undefined);
 
 interface FormProviderProps<T extends z.ZodObject<z.ZodRawShape>> {
   schema: T;
@@ -39,23 +43,22 @@ export function FormProvider<T extends z.ZodObject<z.ZodRawShape>>({
     }, {} as Partial<FormValues>);
   }, [fieldConfigs]);
 
-  const methods = useForm({
-    resolver: zodResolver(schema),
-    defaultValues,
-  } as any) as UseFormReturn<FormValues>;
+  const methods = useForm<FormValues>({
+    resolver: zodResolver(schema) as any,
+    defaultValues: defaultValues as any,
+  });
 
-  const handleSubmit = methods.handleSubmit(onSubmit);
-  const isSubmitting = methods.formState.isSubmitting;
-
-  const value: FormContextValue<T> = {
+  const contextValue: FormContextValue<T> = {
     methods,
     fieldConfigs,
-    handleSubmit,
-    isSubmitting,
-    schema,
+    onSubmit,
   };
 
-  return <FormContext.Provider value={value}>{children}</FormContext.Provider>;
+  return (
+    <FormContext.Provider value={contextValue as any}>
+      <RHFProvider {...methods}>{children}</RHFProvider>
+    </FormContext.Provider>
+  );
 }
 
 export function useFormContext<T extends z.ZodObject<z.ZodRawShape>>() {
@@ -64,9 +67,4 @@ export function useFormContext<T extends z.ZodObject<z.ZodRawShape>>() {
     throw new Error("useFormContext must be used within a FormProvider");
   }
   return context as FormContextValue<T>;
-}
-
-export function useFormMethods<T extends z.ZodObject<z.ZodRawShape>>() {
-  const { methods } = useFormContext<T>();
-  return methods;
 }

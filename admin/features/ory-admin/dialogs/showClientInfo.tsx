@@ -10,10 +10,10 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { Spinner } from "@/components/ui/spinner";
 import { useDialogStore } from "@/store/dialogStore";
 import { useIdentity, useClient } from "@/features/ory-admin/hooks";
 import CopyToClipboard from "@/components/custom/copyToClipboard";
+import { InfoFields } from "@/components/custom/infoFields";
 
 export default function ShowClientInfoDialog() {
   const { open, props, closeDialog, openDialog } = useDialogStore();
@@ -29,7 +29,6 @@ export default function ShowClientInfoDialog() {
     }
   }, [error, client, isLoading, closeDialog]);
 
-  // Собираем поля для отображения и для копирования
   const fields = client
     ? [
         { label: "ID", value: client.client_id },
@@ -80,7 +79,7 @@ export default function ShowClientInfoDialog() {
   const infoText = fields
     .map(
       (field) =>
-        `${field.label}: ${Array.isArray(field.value) ? field.value.join(", ") : field.value || "N/A"}`
+        `${field.label}: ${Array.isArray(field.value) ? field.value.join(", ") : field.value || "N/A"}`,
     )
     .join("\n");
 
@@ -94,35 +93,7 @@ export default function ShowClientInfoDialog() {
           </div>
           <CopyToClipboard text={infoText} label="Client information" />
         </DialogHeader>
-
-        {isLoading ? (
-          <div className="flex justify-center">
-            <Spinner />
-          </div>
-        ) : client ? (
-          <div className="flex flex-col gap-2">
-            {fields.map((field, index) => (
-              <div
-                key={index}
-                className={`flex items-start justify-between text-sm ${
-                  field.onClick ? "cursor-pointer hover:underline" : ""
-                }`}
-                onClick={field.onClick}
-              >
-                <span className="font-medium text-muted-foreground">
-                  {field.label}:
-                </span>
-                <span className="text-right break-all max-w-[70%]">
-                  {Array.isArray(field.value)
-                    ? field.value.join(", ") || "N/A"
-                    : field.value || "N/A"}
-                </span>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="text-center">No client data available</div>
-        )}
+        <InfoFields fields={fields} isLoading={isLoading} />
       </DialogContent>
     </Dialog>
   );

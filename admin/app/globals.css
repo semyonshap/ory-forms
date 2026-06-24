@@ -138,3 +138,9 @@
 * {
   scrollbar-width: none;
 }
+
+:root {
+  --font-sans: "panel-sans", sans-serif;
+  --font-heading: "panel-sans", sans-serif;
+  --font-mono: "panel-mono", monospace;
+}

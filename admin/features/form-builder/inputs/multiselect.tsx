@@ -70,7 +70,6 @@ export function MultiSelectInput({
 
   const value = field.value ?? [];
   const { options = [], placeholder = "Select...", disabled } = config;
-  const onInputChange = handlers?.onInputChange;
 
   // Фильтрация опций по поиску
   const filteredOptions = useMemo(() => {
@@ -124,7 +123,7 @@ export function MultiSelectInput({
             className="h-9"
             onValueChange={(val) => {
               setSearch(val);
-              onInputChange?.(val);
+              handlers?.onInputChange?.(val);
             }}
           />
           <CommandList>
@@ -139,7 +138,9 @@ export function MultiSelectInput({
                   <Check
                     className={cn(
                       "mr-2 h-4 w-4",
-                      value.includes(option.value) ? "opacity-100" : "opacity-0"
+                      value.includes(option.value)
+                        ? "opacity-100"
+                        : "opacity-0",
                     )}
                   />
                   {option.label}

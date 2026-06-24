@@ -1,5 +1,4 @@
 export { useIdentity, useUser, useUsers } from "./useUsersQuery";
-export { useSubjectUsers, useSubjectRelations } from "./useSubjectSuggestions";
 export {
   useClient,
   useClients,

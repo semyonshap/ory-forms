@@ -61,7 +61,7 @@ export function useDeleteClient() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: deleteClient,
-    onSuccess: (data, variables) => {
+    onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["clients"] });
       toast.success(`Client ${variables} delete`);
     },

@@ -10,9 +10,9 @@ import {
 import { useDialogStore } from "@/store/dialogStore";
 import { useEffect } from "react";
 import { toast } from "sonner";
-import { Spinner } from "@/components/ui/spinner";
 import { useUser } from "@/features/ory-admin/hooks";
 import CopyToClipboard from "@/components/custom/copyToClipboard";
+import { InfoFields } from "@/components/custom/infoFields";
 
 export default function ShowUserInfoDialog() {
   const { open, props, closeDialog } = useDialogStore();
@@ -64,29 +64,7 @@ export default function ShowUserInfoDialog() {
           </div>
           <CopyToClipboard text={infoText} label="User information" />
         </DialogHeader>
-        {isLoading ? (
-          <div className="flex justify-center">
-            <Spinner />
-          </div>
-        ) : user ? (
-          <div className="flex flex-col gap-2">
-            {fields.map((field, index) => (
-              <div
-                key={index}
-                className="flex items-start justify-between text-sm"
-              >
-                <span className="font-medium text-muted-foreground">
-                  {field.label}:
-                </span>
-                <span className="text-right break-all max-w-[70%] whitespace-pre-wrap">
-                  {field.value || "N/A"}
-                </span>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="text-center">No user data available</div>
-        )}
+        <InfoFields fields={fields} isLoading={isLoading} />
       </DialogContent>
     </Dialog>
   );

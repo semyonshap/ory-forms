@@ -34,3 +34,28 @@ export function useUsers(req?: Omit<ListIdentitiesRequest, "pageToken">) {
     ...DEFAULT_QUERY_OPTIONS,
   });
 }
+
+export interface SubjectSuggestion {
+  value: string;
+  label: string;
+}
+
+export function useSubjectUsers(query: string) {
+  return useQuery<SubjectSuggestion[]>({
+    queryKey: ["userSuggestions", query],
+    queryFn: async () => {
+      const result = await getUsers({
+        pageSize: 5,
+        credentialsIdentifier: query,
+      });
+      const users =
+        result.data?.map((u: Identity) => ({
+          value: u.id,
+          label: u.traits?.email || u.id,
+        })) || [];
+      return users.slice(0, 10);
+    },
+    enabled: query.length > 0,
+    staleTime: 300_000,
+  });
+}

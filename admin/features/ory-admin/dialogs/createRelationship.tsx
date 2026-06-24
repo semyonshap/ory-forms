@@ -3,19 +3,19 @@
 import { toast } from "sonner";
 import { useState } from "react";
 import { useCreateRelationship } from "@/features/ory-admin/hooks/useRelationshipsQuery";
-import { useSubjectUsers } from "@/features/ory-admin/hooks/useSubjectSuggestions";
 import { useDialogStore } from "@/store/dialogStore";
 import { namespaceRelations } from "../utils/relationsConfig";
 import { CreateRelationshipBody } from "@ory/client-fetch";
 import { FormDialog } from "@/features/form-builder";
 import { createRelationshipSchema } from "../schemas";
+import { useSubjectUsers } from "../hooks/useUsersQuery";
 
 export default function CreateRelationshipDialog() {
   const { open, closeDialog } = useDialogStore();
   const createRelationshipMutation = useCreateRelationship();
 
   const [subjectQuery, setSubjectQuery] = useState("");
-  const userSuggestions = useSubjectUsers(subjectQuery);
+  const { data: userSuggestions = [] } = useSubjectUsers(subjectQuery);
 
   const handlers = {
     relation: {
