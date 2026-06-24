@@ -37,7 +37,7 @@ export function AdminSidebar() {
               <SidebarMenuItem key={item.href}>
                 <SidebarMenuButton asChild isActive={pathname === item.href}>
                   <Link href={item.href} className="flex items-center gap-2">
-                    <item.icon className="w-4 h-4" />
+                    <item.icon className="self-center" />
                     {item.label}
                   </Link>
                 </SidebarMenuButton>

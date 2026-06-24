@@ -1,6 +1,7 @@
 import {
   Control,
   Controller,
+  ControllerRenderProps,
   FieldValues,
   Path,
   useWatch,
@@ -22,9 +23,7 @@ export function FormField<T extends FieldValues = FieldValues>({
   config,
 }: FormFieldProps<T>) {
   const fieldName = config.name as Path<T>;
-  if (config.hidden) return null;
   const handlers = useFieldHandlers(config.name);
-
   const { methods } = useFormContext();
   const formValues = useWatch({ control: methods.control });
 
@@ -34,7 +33,9 @@ export function FormField<T extends FieldValues = FieldValues>({
       return { ...config, options: dynamicOptions };
     }
     return config;
-  }, [config, handlers.getOptions, formValues]);
+  }, [config, handlers, formValues]);
+
+  if (config.hidden) return null;
 
   const InputComponent = getInput(config.type);
   if (!InputComponent) return null;
@@ -47,7 +48,7 @@ export function FormField<T extends FieldValues = FieldValues>({
         <Field data-invalid={fieldState.invalid || undefined}>
           <FieldLabel>{config.label}</FieldLabel>
           <InputComponent
-            field={field as any}
+            field={field as ControllerRenderProps<FieldValues, string>}
             config={resolvedConfig}
             handlers={handlers}
             invalid={fieldState.invalid}

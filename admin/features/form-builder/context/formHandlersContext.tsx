@@ -1,14 +1,16 @@
 import { createContext, useContext } from "react";
-import { FieldHandlers } from "../types";
+import { AnyFieldHandlers } from "../types";
 
-const FieldHandlersContext = createContext<Record<string, FieldHandlers>>({});
+const FieldHandlersContext = createContext<Record<string, AnyFieldHandlers>>(
+  {},
+);
 
 export function FieldHandlersProvider({
   children,
   handlers = {},
 }: {
   children: React.ReactNode;
-  handlers?: Record<string, FieldHandlers>;
+  handlers?: Record<string, AnyFieldHandlers>;
 }) {
   return (
     <FieldHandlersContext.Provider value={handlers}>

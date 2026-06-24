@@ -18,7 +18,7 @@ export function Providers({ children }: { children: ReactNode }) {
           <AdminSidebar />
           <main className="w-full flex flex-col">
             <AdminNavbar />
-            <div className="w-full flex-1">{children}</div>
+            <div className="w-full flex-1 p-2">{children}</div>
           </main>
         </div>
         <DialogRenderer />

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { z } from "zod";
 import { FieldConfig, formRegistry } from "./types";
 

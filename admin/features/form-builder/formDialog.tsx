@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { FormProvider, useFormContext } from "./context/formContext";
 import { FormField } from "./formField";
 import { Spinner } from "@/components/ui/spinner";
-import { FieldHandlers } from "./types";
+import { AnyFieldHandlers } from "./types";
 import { FieldHandlersProvider } from "./context/formHandlersContext";
 
 interface FormDialogProps<T extends z.ZodObject<z.ZodRawShape>> {
@@ -23,7 +23,7 @@ interface FormDialogProps<T extends z.ZodObject<z.ZodRawShape>> {
   description?: string;
   schema: T;
   onSubmit: (data: z.infer<T>) => void;
-  handlers?: Record<string, FieldHandlers>;
+  handlers?: Record<string, AnyFieldHandlers>;
 }
 
 export function FormDialog<T extends z.ZodObject<z.ZodRawShape>>({

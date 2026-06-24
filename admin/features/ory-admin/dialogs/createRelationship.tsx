@@ -6,7 +6,7 @@ import { useCreateRelationship } from "@/features/ory-admin/hooks/useRelationshi
 import { useDialogStore } from "@/store/dialogStore";
 import { namespaceRelations } from "../utils/relationsConfig";
 import { CreateRelationshipBody } from "@ory/client-fetch";
-import { FormDialog } from "@/features/form-builder";
+import { FieldHandlers, FormDialog } from "@/features/form-builder";
 import { createRelationshipSchema } from "../schemas";
 import { useSubjectUsers } from "../hooks/useUsersQuery";
 
@@ -17,9 +17,12 @@ export default function CreateRelationshipDialog() {
   const [subjectQuery, setSubjectQuery] = useState("");
   const { data: userSuggestions = [] } = useSubjectUsers(subjectQuery);
 
-  const handlers = {
+  const handlers: Record<
+    string,
+    FieldHandlers<typeof createRelationshipSchema>
+  > = {
     relation: {
-      getOptions: (formValues: any) => {
+      getOptions: (formValues) => {
         const ns = formValues.namespace;
         return ns
           ? namespaceRelations[ns]?.map((rel) => ({
@@ -30,7 +33,7 @@ export default function CreateRelationshipDialog() {
       },
     },
     "subject_set.relation": {
-      getOptions: (formValues: any) => {
+      getOptions: (formValues) => {
         const ns = formValues.subject_set?.namespace;
         return ns
           ? namespaceRelations[ns]?.map((rel) => ({

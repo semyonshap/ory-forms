@@ -16,7 +16,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { InputProps } from "../types";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 function SelectedBadges({
   values,
@@ -68,8 +68,13 @@ export function MultiSelectInput({
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
 
-  const value = field.value ?? [];
-  const { options = [], placeholder = "Select...", disabled } = config;
+  const value = useMemo(() => field.value ?? [], [field.value]);
+  const { options = [] } = config;
+
+  const handleOpenChange = (newOpen: boolean) => {
+    if (!newOpen) setSearch("");
+    setOpen(newOpen);
+  };
 
   // Фильтрация опций по поиску
   const filteredOptions = useMemo(() => {
@@ -77,11 +82,6 @@ export function MultiSelectInput({
     const lower = search.toLowerCase();
     return options.filter((opt) => opt.label.toLowerCase().includes(lower));
   }, [options, search]);
-
-  // Очистка поиска при закрытии
-  useEffect(() => {
-    if (!open) setSearch("");
-  }, [open]);
 
   // Переключение выбранного значения
   const toggleValue = useCallback(
@@ -91,14 +91,13 @@ export function MultiSelectInput({
         : [...value, selected];
       field.onChange(newValue);
     },
-    [value, field.onChange],
+    [value, field],
   );
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover open={open} onOpenChange={handleOpenChange}>
       <PopoverTrigger asChild>
         <div
-          role="combobox"
           aria-expanded={open}
           className={cn(
             buttonVariants({ variant: "outline" }),

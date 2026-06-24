@@ -18,12 +18,19 @@ export interface FormFieldMeta {
 
 export const formRegistry = z.registry<FormFieldMeta>();
 
-export type FieldHandlers = {
+export type FormValues<T extends z.ZodObject<z.ZodRawShape>> = z.infer<T>;
+
+export type FieldHandlers<T extends z.ZodObject<z.ZodRawShape>> = {
   onInputChange?: (value: string) => void;
   onBlur?: (value: string) => void;
   onFocus?: (value: string) => void;
-  getOptions?: (formValues: any) => { value: string; label: string }[];
+  getOptions?: (
+    formValues: FormValues<T>,
+  ) => { value: string; label: string }[];
 };
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type AnyFieldHandlers = FieldHandlers<any>;
 
 export interface FieldConfig {
   name: string;
@@ -33,12 +40,12 @@ export interface FieldConfig {
   disabled?: boolean;
   hidden?: boolean;
   options?: { value: string; label: string }[];
-  defaultValue?: any;
+  defaultValue?: unknown;
 }
 
 export interface InputProps {
   field: ControllerRenderProps<FieldValues, string>;
   config: FieldConfig;
-  handlers?: FieldHandlers;
+  handlers?: AnyFieldHandlers;
   invalid?: boolean;
 }

@@ -1,6 +1,8 @@
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
+  DefaultValues,
+  Resolver,
   FormProvider as RHFProvider,
   useForm,
   UseFormReturn,
@@ -37,15 +39,15 @@ export function FormProvider<T extends z.ZodObject<z.ZodRawShape>>({
   const defaultValues = useMemo(() => {
     return fieldConfigs.reduce((acc, field) => {
       if (field.defaultValue !== undefined) {
-        acc[field.name as keyof FormValues] = field.defaultValue;
+        (acc as Record<string, unknown>)[field.name] = field.defaultValue;
       }
       return acc;
     }, {} as Partial<FormValues>);
   }, [fieldConfigs]);
 
   const methods = useForm<FormValues>({
-    resolver: zodResolver(schema) as any,
-    defaultValues: defaultValues as any,
+    resolver: zodResolver(schema) as Resolver<FormValues>,
+    defaultValues: defaultValues as DefaultValues<FormValues>,
   });
 
   const contextValue: FormContextValue<T> = {
@@ -55,7 +57,11 @@ export function FormProvider<T extends z.ZodObject<z.ZodRawShape>>({
   };
 
   return (
-    <FormContext.Provider value={contextValue as any}>
+    <FormContext.Provider
+      value={
+        contextValue as unknown as FormContextValue<z.ZodObject<z.ZodRawShape>>
+      }
+    >
       <RHFProvider {...methods}>{children}</RHFProvider>
     </FormContext.Provider>
   );
