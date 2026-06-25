@@ -29,7 +29,7 @@ export default function ClientsPage() {
     isFetchingNextPage,
   });
 
-  const onClientClick = (clientId: string) => {
+  const onInfoClick = (clientId: string) => {
     if (!clientId) {
       toast.error("Client not found");
       return;
@@ -57,7 +57,7 @@ export default function ClientsPage() {
         renderRow={(client) => (
           <ClientRow
             client={client}
-            onClientClick={onClientClick}
+            onInfoClick={onInfoClick}
             onDeleteClick={onDeleteClick}
           />
         )}

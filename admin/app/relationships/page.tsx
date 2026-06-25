@@ -4,8 +4,10 @@ import { Spinner } from "@/components/ui/spinner";
 import { RelationshipRow } from "./relationshipRow";
 import { PageError, PageLoader } from "@/components/custom";
 import { VirtualList } from "@/components/custom/virtualList";
+import { useDialogStore } from "@/store/dialogStore";
 import { useInfiniteVirtualizer } from "@/hooks/useInfiniteVirtualizer";
 import { useRelationships } from "@/features/ory-admin/hooks/useRelationshipsQuery";
+import { Relationship } from "@ory/client-fetch";
 
 export default function RelationshipsPage() {
   const {
@@ -16,6 +18,7 @@ export default function RelationshipsPage() {
     isLoading,
     error,
   } = useRelationships({ pageSize: 100 });
+  const { openDialog } = useDialogStore();
 
   const allRelationships = data?.pages.flatMap((page) => page.data ?? []) ?? [];
 
@@ -25,6 +28,14 @@ export default function RelationshipsPage() {
     hasNextPage,
     isFetchingNextPage,
   });
+
+  const onInfoClick = (rel: Relationship) => {
+    openDialog("showRelashionshipInfo", { relationship: rel });
+  };
+
+  const onDeleteClick = (rel: Relationship) => {
+    openDialog("deleteRelationship", { relationship: rel });
+  };
 
   if (isLoading) return PageLoader();
   if (error) return PageError(error);
@@ -42,7 +53,13 @@ export default function RelationshipsPage() {
         parentRef={parentRef}
         rowVirtualizer={rowVirtualizer}
         items={allRelationships}
-        renderRow={(rel) => <RelationshipRow rel={rel} />}
+        renderRow={(rel) => (
+          <RelationshipRow
+            rel={rel}
+            onInfoClick={onInfoClick}
+            onDeleteClick={onDeleteClick}
+          />
+        )}
       />
       {isFetchingNextPage && (
         <div className="text-center py-2 flex justify-center">

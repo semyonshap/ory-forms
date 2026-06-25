@@ -5,19 +5,19 @@ import { Trash2 } from "lucide-react";
 
 interface ClientRowProps {
   client: OAuth2Client;
-  onClientClick: (id: string) => void;
+  onInfoClick: (id: string) => void;
   onDeleteClick: (id: string) => void;
 }
 
 export const ClientRow = ({
   client,
-  onClientClick,
+  onInfoClick,
   onDeleteClick,
 }: ClientRowProps) => {
   return (
     <div
       className="flex items-center p-2 border-b cursor-pointer hover:bg-muted/50"
-      onClick={() => onClientClick(client.client_id!)}
+      onClick={() => onInfoClick(client.client_id!)}
     >
       <div className="flex-1 max-w-20 truncate ml-2">
         {client.client_name || "N/A"}

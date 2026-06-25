@@ -1,7 +1,7 @@
 import { Spinner } from "@/components/ui/spinner";
 import { cn } from "@/lib/utils";
 
-interface InfoField {
+export interface InfoField {
   label: string;
   value: React.ReactNode;
   onClick?: () => void;
