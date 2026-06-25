@@ -7,7 +7,7 @@ export function NumberInput({ field, config, handlers, invalid }: InputProps) {
       {...field}
       placeholder={config.placeholder}
       aria-invalid={invalid}
-      value={field.value ?? ""}
+      value={field.value}
       onChange={(e) => {
         const val = e.target.valueAsNumber;
         if (!isNaN(val)) {
@@ -17,10 +17,10 @@ export function NumberInput({ field, config, handlers, invalid }: InputProps) {
       }}
       onBlur={() => {
         field.onBlur();
-        handlers?.onBlur?.(String(field.value ?? ""));
+        handlers?.onBlur?.(String(field.value));
       }}
       onFocus={() => {
-        handlers?.onFocus?.(String(field.value ?? ""));
+        handlers?.onFocus?.(String(field.value));
       }}
     />
   );

@@ -19,7 +19,10 @@ export function RadioInput({ field, config, handlers, invalid }: InputProps) {
     >
       {options.map((opt) => (
         <div key={opt.value} className="flex items-center space-x-2">
-          <RadioGroupItem value={opt.value} id={`${field.name}-${opt.value}`} />
+          <RadioGroupItem
+            value={String(opt.value)}
+            id={`${field.name}-${opt.value}`}
+          />
           <Label htmlFor={`${field.name}-${opt.value}`}>{opt.label}</Label>
         </div>
       ))}

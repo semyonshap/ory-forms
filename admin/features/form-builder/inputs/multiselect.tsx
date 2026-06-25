@@ -15,17 +15,19 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { InputProps } from "../types";
+import { FieldOptions, InputProps } from "../types";
 import { useCallback, useMemo, useState } from "react";
+
+type OptionValue = string | number;
 
 function SelectedBadges({
   values,
   options,
   onToggle,
 }: {
-  values: string[];
-  options: { value: string; label: string }[];
-  onToggle: (val: string) => void;
+  values: OptionValue[];
+  options: FieldOptions;
+  onToggle: (val: OptionValue) => void;
 }) {
   if (values.length === 0) {
     return <span className="text-muted-foreground">Select...</span>;
@@ -33,10 +35,8 @@ function SelectedBadges({
 
   return (
     <>
-      {values.map((val: string) => {
-        const option = options.find(
-          (opt: { value: string; label: string }) => opt.value === val,
-        );
+      {values.map((val) => {
+        const option = options.find((opt) => opt.value === val);
         return (
           <Badge key={val} variant="outline" className="text-xs">
             {option?.label || val}
@@ -68,7 +68,7 @@ export function MultiSelectInput({
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
 
-  const value = useMemo(() => field.value ?? [], [field.value]);
+  const value = useMemo(() => (field.value ?? []) as OptionValue[], [field.value]);
   const { options = [] } = config;
 
   const handleOpenChange = (newOpen: boolean) => {
@@ -85,9 +85,10 @@ export function MultiSelectInput({
 
   // Переключение выбранного значения
   const toggleValue = useCallback(
-    (selected: string) => {
-      const newValue = value.includes(selected)
-        ? value.filter((v: string) => v !== selected)
+    (selected: OptionValue) => {
+      const isSelected = value.some((v) => String(v) === String(selected));
+      const newValue = isSelected
+        ? value.filter((v) => String(v) !== String(selected))
         : [...value, selected];
       field.onChange(newValue);
     },
@@ -131,13 +132,13 @@ export function MultiSelectInput({
               {filteredOptions.map((option) => (
                 <CommandItem
                   key={option.value}
-                  value={option.value}
+                  value={String(option.value)}
                   onSelect={() => toggleValue(option.value)}
                 >
                   <Check
                     className={cn(
                       "mr-2 h-4 w-4",
-                      value.includes(option.value)
+                      value.some((v) => String(v) === String(option.value))
                         ? "opacity-100"
                         : "opacity-0",
                     )}

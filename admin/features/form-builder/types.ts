@@ -20,9 +20,11 @@ export interface FormFieldMeta {
 
 export const formRegistry = z.registry<FormFieldMeta>();
 
+export type FieldOptions =  { value: string | number; label: string }[];
+
 export type FieldConfig = {
   name: string;
-  options?: { value: string; label: string }[];
+  options?:FieldOptions;
   defaultValue?: unknown;
 } & FormFieldMeta;
 
@@ -34,7 +36,7 @@ export type FieldHandlers<T extends z.ZodObject<z.ZodRawShape>> = {
   onFocus?: (value: string) => void;
   getOptions?: (
     formValues: FormValues<T>,
-  ) => { value: string; label: string }[];
+  ) => FieldOptions;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

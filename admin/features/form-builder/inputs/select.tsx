@@ -9,10 +9,7 @@ import { InputProps } from "../types";
 
 export function SelectInput({ field, config, handlers, invalid }: InputProps) {
   return (
-    <Select
-      value={field.value ?? ""}
-      onValueChange={field.onChange}
-    >
+    <Select value={field.value ?? ""} onValueChange={field.onChange}>
       <SelectTrigger
         className={invalid ? "border-destructive" : ""}
         onBlur={() => {
@@ -25,7 +22,7 @@ export function SelectInput({ field, config, handlers, invalid }: InputProps) {
       </SelectTrigger>
       <SelectContent>
         {config.options?.map((opt) => (
-          <SelectItem key={opt.value} value={opt.value}>
+          <SelectItem key={opt.value} value={String(opt.value)}>
             {opt.label}
           </SelectItem>
         ))}
