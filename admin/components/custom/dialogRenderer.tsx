@@ -13,10 +13,10 @@ interface DialogProps {
 
 const dialogComponentsMap: Record<string, React.ComponentType<DialogProps>> = {
   createClient: dynamic<DialogProps>(() => import('@/features/ory-admin/dialogs/createClient'), { ssr: false }),
+  createRelationship: dynamic<DialogProps>(() => import('@/features/ory-admin/dialogs/createRelationship'), { ssr: false }),
   showClient: dynamic<DialogProps>(() => import('@/features/ory-admin/dialogs/showClientSecrets'), { ssr: false }),
   showClientInfo: dynamic<DialogProps>(() => import('@/features/ory-admin/dialogs/showClientInfo'), { ssr: false }),
   showUserInfo: dynamic<DialogProps>(() => import('@/features/ory-admin/dialogs/showUserInfo'), { ssr: false }),
-  createRelationship: dynamic<DialogProps>(() => import('@/features/ory-admin/dialogs/createRelationship'), { ssr: false }),
   deleteClient: dynamic<DialogProps>(() => import('@/features/ory-admin/dialogs/deleteClient'), { ssr: false }),
   deleteRelationship: dynamic<DialogProps>(() => import('@/features/ory-admin/dialogs/deleteRelationship'), { ssr: false }),
 };

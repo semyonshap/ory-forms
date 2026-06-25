@@ -28,7 +28,7 @@ export const UserRow = ({ user, onUserClick }: UserRowProps) => {
 
   return (
     <div
-      className="flex items-center border-b cursor-pointer hover:bg-muted/50 h-10 p-2 "
+      className="flex items-center p-2 border-b cursor-pointer hover:bg-muted/50"
       onClick={() => onUserClick(user.id)}
     >
       <div className="flex-1 max-w-20 truncate ml-2">

@@ -11,8 +11,10 @@ export const PageLoader = () => {
 
 export const PageError = (error: Error) => {
   return (
-    <Alert>
-      <AlertDescription>Error loading page: {error.message}</AlertDescription>
-    </Alert>
+    <div className="p-2">
+      <Alert>
+        <AlertDescription>Error loading page: {error.message}</AlertDescription>
+      </Alert>
+    </div>
   );
 };
