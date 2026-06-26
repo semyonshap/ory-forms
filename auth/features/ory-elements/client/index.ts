@@ -7,4 +7,4 @@ export {
 } from "./session-provider";
 export { useSession } from "./useSession";
 
-export { frontendClient } from "./clients";
+export { frontendClient } from "./frontendClient";

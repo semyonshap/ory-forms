@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { logger } from "@/libs/logger";
 import { randomUUID } from "crypto";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
-import { oauth2Client } from "@/features/ory-elements/client/clients";
+import { oauth2Client } from "@/features/ory-elements/client/frontendClient";
 
 export default async function ConsentPage(props: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;

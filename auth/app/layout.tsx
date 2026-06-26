@@ -6,27 +6,35 @@ import React, { ReactNode, Suspense } from "react"
 import { Inter } from "next/font/google"
 import { Metadata } from "next"
 import { Toaster } from "@/components/ui/sonner"
+import { OryConfigProvider } from "@/features/ory-ui/context/ory-provider"
+import { oryConfig } from "@/ory.config"
 
 const inter = Inter({ subsets: ["latin"] })
 
-export const metadata: Metadata  = {
-	title: "Jiko Auth",
-	icons: {
-		icon: "/jiko.ico",
-	},
+export const metadata: Metadata = {
+  title: "Jiko Auth",
+  icons: {
+    icon: "/jiko.ico",
+  },
 }
 
 export default function RootLayout({
-	children,
+  children,
 }: Readonly<{
-	children: ReactNode
+  children: ReactNode
 }>) {
-	return (
-		<html lang="en" suppressHydrationWarning className={`${inter.className} dark`}>
-			<body>
-				<Suspense>{children}</Suspense>
-				<Toaster />
-			</body>
-		</html>
-	)
+  return (
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`${inter.className} dark`}
+    >
+      <body>
+        <OryConfigProvider config={oryConfig}>
+          <Suspense>{children}</Suspense>
+          <Toaster />
+        </OryConfigProvider>
+      </body>
+    </html>
+  )
 }

@@ -16,8 +16,6 @@ export default function ShowRelashionshipInfoDialog() {
   const { open, props, closeDialog, openDialog } = useDialogStore();
   const relationship = props?.relationship as Relationship | undefined;
 
-  const namespaces = ["Group"];
-
   const fields: InfoField[] = [];
 
   if (relationship) {
@@ -31,33 +29,27 @@ export default function ShowRelashionshipInfoDialog() {
       const subjectField: InfoField = {
         label: "Subject ID",
         value: relationship.subject_id,
-      };
-      if (namespaces.includes(relationship.namespace ?? "")) {
-        subjectField.onClick = () => {
+        onClick: () => {
           openDialog("showUserInfo", { userId: relationship.subject_id });
-        };
-      }
+        },
+      };
       fields.push(subjectField);
     } else if (relationship.subject_set) {
       fields.push(
         {
-          label: "Subject Set Namespace",
+          label: "Subject Namespace",
           value: relationship.subject_set.namespace,
         },
-        { label: "Subject Set Object", value: relationship.subject_set.object },
+        { label: "Subject Object", value: relationship.subject_set.object },
         {
-          label: "Subject Set Relation",
+          label: "Subject Relation",
           value: relationship.subject_set.relation,
         },
       );
     }
   }
 
-  const filteredFields = fields.filter(
-    (f) => f.value !== undefined && f.value !== null,
-  );
-
-  const infoText = filteredFields
+  const infoText = fields
     .map((field) => `${field.label}: ${field.value || "N/A"}`)
     .join("\n");
 
@@ -75,7 +67,7 @@ export default function ShowRelashionshipInfoDialog() {
           </div>
           <CopyToClipboard text={infoText} label="Relationship information" />
         </DialogHeader>
-        <InfoFields fields={filteredFields} />
+        <InfoFields fields={fields} />
       </DialogContent>
     </Dialog>
   );

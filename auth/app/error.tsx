@@ -1,6 +1,6 @@
 'use client';
 
-import ErrorCard from '@/components/errorCard';
+import ErrorCard from '@/components/custom/errorCard';
 
 export default function Error({
 	reset,

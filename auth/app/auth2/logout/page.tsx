@@ -9,7 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { redirect } from "next/navigation";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
-import { oauth2Client } from "@/features/ory-elements/client/clients";
+import { oauth2Client } from "@/features/ory-elements/client/frontendClient";
 
 const api = oauth2Client();
 

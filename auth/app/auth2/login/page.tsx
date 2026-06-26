@@ -4,7 +4,7 @@ import { logger } from "@/libs/logger";
 import { getLoginFlow, OryPageParams, getServerSession } from "@ory/nextjs/app";
 import { redirect } from "next/navigation";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
-import { oauth2Client } from "@/features/ory-elements/client/clients";
+import { oauth2Client } from "@/features/ory-elements/client/frontendClient";
 
 export default async function OAuth2LoginPage(props: OryPageParams) {
   const searchParams = await props.searchParams;

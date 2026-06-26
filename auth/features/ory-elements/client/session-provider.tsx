@@ -1,19 +1,23 @@
-import { Session } from "@ory/client-fetch";
-import { createContext, useCallback, useEffect, useRef, useState } from "react";
-import { frontendClient } from "./clients";
+// Copyright © 2024 Ory Corp
+// SPDX-License-Identifier: Apache-2.0
+
+"use client"
+import { Session } from "@ory/client-fetch"
+import { createContext, useCallback, useEffect, useRef, useState } from "react"
+import { frontendClient } from "./frontendClient"
 
 type SessionState =
   | {
-      session: Session;
-      state: "authenticated";
+      session: Session
+      state: "authenticated"
     }
   | {
-      state: "unauthenticated";
+      state: "unauthenticated"
     }
   | {
-      state: "error";
-      error: Error;
-    };
+      state: "error"
+      error: Error
+    }
 
 /**
  * Holds the session context data.
@@ -24,26 +28,26 @@ export type SessionContextData = {
   /**
    * Whether the session is currently being loaded
    */
-  isLoading: boolean;
+  isLoading: boolean
   /**
    * Whether the session is being loaded for the first time
    * Never true, if a session was passed to the provider
    */
-  initialized: boolean;
+  initialized: boolean
   /**
    * The current session or null if the user is not authenticated or an error occurred,
    * when fetching the session
    */
-  session: Session | null;
+  session: Session | null
   /**
    * The error that occurred when fetching the session if any
    */
-  error: Error | undefined;
+  error: Error | undefined
   /**
    * Refetches the session
    */
-  refetch: () => Promise<void>;
-};
+  refetch: () => Promise<void>
+}
 
 export const SessionContext = createContext<SessionContextData>({
   session: null,
@@ -51,12 +55,12 @@ export const SessionContext = createContext<SessionContextData>({
   initialized: false,
   error: undefined,
   refetch: async () => {},
-});
+})
 
 export type SessionProviderProps = {
-  session?: Session | null;
-  baseUrl?: string;
-} & React.PropsWithChildren;
+  session?: Session | null
+  baseUrl?: string
+} & React.PropsWithChildren
 
 /**
  * A provider that fetches the session from the Ory Network and provides it to the children.
@@ -64,7 +68,7 @@ export type SessionProviderProps = {
  * To use this provider, wrap your application in it:
  *
  * ```tsx
- * import { SessionProvider } from "@/lib/ory-elements"
+ * import { SessionProvider } from "@ory/elements-react"
  *
  * export default function App() {
  *   return (
@@ -89,45 +93,45 @@ export function SessionProvider({
   children,
   baseUrl,
 }: SessionProviderProps) {
-  const initialized = useRef(!!initialSession);
-  const [isLoading, setLoading] = useState(false);
+  const initialized = useRef(!!initialSession)
+  const [isLoading, setLoading] = useState(false)
   const [sessionState, setSessionState] = useState<SessionState | undefined>(
     () => {
       if (initialSession) {
         return {
           session: initialSession,
           state: initialSession.active ? "authenticated" : "unauthenticated",
-        };
+        }
       }
 
-      return undefined;
+      return undefined
     },
-  );
+  )
 
   const fetchSession = useCallback(async () => {
     try {
-      setLoading(true);
+      setLoading(true)
       const session = await frontendClient({
         forceBaseUrl: baseUrl,
-      }).toSession();
+      }).toSession()
 
       setSessionState({
         session,
         state: session.active ? "authenticated" : "unauthenticated",
-      });
+      })
     } catch (error) {
-      setSessionState({ state: "error", error: error as Error });
+      setSessionState({ state: "error", error: error as Error })
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  }, [baseUrl]);
+  }, [baseUrl])
 
   useEffect(() => {
     if (!initialized.current) {
-      initialized.current = true;
-      void fetchSession();
+      initialized.current = true
+      void fetchSession()
     }
-  }, [fetchSession]);
+  }, [fetchSession])
 
   return (
     <SessionContext.Provider
@@ -142,5 +146,5 @@ export function SessionProvider({
     >
       {children}
     </SessionContext.Provider>
-  );
+  )
 }

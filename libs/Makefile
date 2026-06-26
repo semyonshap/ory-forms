@@ -1,6 +1,9 @@
 subm-ory:
 	git submodule add https://github.com/ory/elements.git libs/ory
 
+subm-selfservice-ui:
+	git submodule add https://github.com/ory/kratos-selfservice-ui-react-nextjs.git libs/selfservice-ui
+
 subm-ory-pull:
 	cd libs/ory && git pull origin main
 

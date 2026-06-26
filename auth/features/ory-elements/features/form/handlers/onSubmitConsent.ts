@@ -1,7 +1,7 @@
 import { OnRedirectHandler } from "@ory/client-fetch";
 import { OryFlowContainer } from "../../../shared/util";
 import { OryElementsConfiguration } from "../../../context";
-import { oauth2Client } from "../../../client/clients";
+import { oauth2Client } from "../../../client/frontendClient";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
 
 export interface UpdateConsentBody {
