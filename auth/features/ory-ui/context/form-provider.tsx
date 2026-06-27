@@ -55,7 +55,10 @@ interface FlowFormContextValue<T extends FlowValues = FlowValues> {
   isLoading: boolean
   dispatchSubmit: (submitter?: { name: string; value: string }) => void
   form: UseFormReturn<Record<string, unknown>>
-  onFormSubmit: (data: Record<string, unknown>, event?: React.BaseSyntheticEvent) => Promise<void>
+  onFormSubmit: (
+    data: Record<string, unknown>,
+    event?: React.BaseSyntheticEvent,
+  ) => Promise<void>
 }
 
 const FlowFormContext = createContext<FlowFormContextValue | null>(null)
@@ -81,7 +84,7 @@ export function FlowFormProvider<T extends FlowValues>({
 }: FlowFormProviderProps<T>) {
   const [isLoading, setIsLoading] = useState(false)
   const submitterRef = useRef<{ name: string; value: string } | null>(null)
-  const { onSubmit } = useFormSubmit() 
+  const onSubmit = useFormSubmit()
 
   const nodes = useMemo<UiNode[]>(() => {
     if (!flow) return []
