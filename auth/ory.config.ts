@@ -1,4 +1,4 @@
-import { OryClientConfiguration } from "./features/ory-ui/utils/oryConfiguration";
+import { OryClientConfiguration } from "./features/ory-ui/utils/oryConfiguration"
 
 export const oryConfig: OryClientConfiguration = {
   sdk: {
@@ -23,4 +23,4 @@ export const oryConfig: OryClientConfiguration = {
     enabled_locales: ["en"],
     translations: [],
   },
-};
+}

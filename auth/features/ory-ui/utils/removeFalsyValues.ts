@@ -1,42 +1,37 @@
-type AnyObject = Record<string, unknown>
+import { isArray, isObject, isString, isNil, isEmpty, transform } from "lodash"
 
 export function removeEmptyStrings<T>(input: T): T {
-  if (Array.isArray(input)) {
-    return (
-      input
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-        .map((item) => removeEmptyStrings(item))
-        .filter(
-          (v) => v || typeof v === "boolean" || typeof v === "number",
-        ) as unknown as T
-    )
+  if (isArray(input)) {
+    const cleaned = input.map((item) => removeEmptyStrings(item))
+    return cleaned.filter(
+      (item) => !(isString(item) && item === "") && !isNil(item),
+    ) as unknown as T
   }
 
-  if (input === null || typeof input !== "object") {
+  if (!isObject(input)) {
     return input
   }
 
-  const obj = input as AnyObject
-  const out: AnyObject = {}
-
-  for (const [key, value] of Object.entries(obj)) {
-    if (value && typeof value === "object") {
-      const cleaned = removeEmptyStrings(value)
-      if (Array.isArray(cleaned)) {
-        if (cleaned.length) {
-          out[key] = cleaned
+  const result = transform(
+    input,
+    (acc, value, key) => {
+      if (isObject(value) && !isArray(value)) {
+        const cleaned = removeEmptyStrings(value)
+        if (!isEmpty(cleaned)) {
+          acc[key] = cleaned
         }
-      } else if (cleaned && Object.keys(cleaned as AnyObject).length > 0) {
-        out[key] = cleaned
+      } else if (isArray(value)) {
+        const cleaned = removeEmptyStrings(value)
+        if (!isEmpty(cleaned)) {
+          acc[key] = cleaned
+        }
+      } else if (isString(value) && value === "") {
+      } else if (!isNil(value)) {
+        acc[key] = value
       }
-    } else if (
-      value ||
-      typeof value === "boolean" ||
-      typeof value === "number"
-    ) {
-      out[key] = value
-    }
-  }
+    },
+    {} as any,
+  )
 
-  return out as T
+  return result as T
 }
