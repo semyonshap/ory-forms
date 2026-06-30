@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react"
-import { useFormState } from "./useFormState"
+import { useFormState } from "./form/useFormState"
 import { OryFlowContainer } from "../types"
 
 export function useFlow(initialFlow: OryFlowContainer) {

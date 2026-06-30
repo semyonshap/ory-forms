@@ -9,3 +9,7 @@ export function replaceWindowFlowId(flow: string) {
 export const onRedirect: OnRedirectHandler = (url, _external) => {
   window.location.assign(url)
 }
+
+export function normalizeUrl(url: string): string {
+  return url.replace(/\/$/, "")
+}

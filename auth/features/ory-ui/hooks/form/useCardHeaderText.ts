@@ -1,15 +1,13 @@
 import {
-  AuthenticatorAssuranceLevel,
   FlowType,
   isUiNodeInputAttributes,
-  OAuth2ConsentRequest,
-  Session,
   UiContainer,
 } from "@ory/client-fetch"
 import { useTranslation } from "react-i18next"
-import { resolveLabel } from "../i18n/resolver"
-import { findNode } from "../utils/nodes"
-import { FormState } from "../types"
+
+import { findNode } from "../../utils"
+import { resolveLabel } from "../../i18n"
+import { CardHeaderTextOptions } from "../../types"
 
 function joinWithCommaOr(list: string[], orText = "or"): string {
   if (list.length === 0) {
@@ -28,34 +26,6 @@ function normalizeContext(context: unknown): Record<string, unknown> {
   }
   return {}
 }
-
-export type CardHeaderTextOptions =
-  | {
-      flowType: FlowType.Login
-      flow: {
-        refresh?: boolean
-        requested_aal?: AuthenticatorAssuranceLevel
-      }
-      formState?: FormState
-    }
-  | {
-      flowType: FlowType.Registration
-      formState?: FormState
-    }
-  | {
-      flowType: FlowType.OAuth2Consent
-      flow: {
-        consent_request: OAuth2ConsentRequest
-        session: Session
-      }
-    }
-  | {
-      flowType:
-        | FlowType.Error
-        | FlowType.Verification
-        | FlowType.Recovery
-        | FlowType.Settings
-    }
 
 export function useCardHeaderText(
   container: UiContainer,

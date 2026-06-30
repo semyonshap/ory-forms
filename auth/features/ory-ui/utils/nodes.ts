@@ -8,15 +8,13 @@ import {
   UiNodeAttributes,
   UiNodeInputAttributes,
 } from "@ory/client-fetch"
-import { UiNodeInput } from "../types"
-
-export const ALL_GROUP_ENUMS = Object.values(UiNodeGroupEnum)
-export const EXCLUDED_AUTH_GROUPS: UiNodeGroupEnum[] = [
-  UiNodeGroupEnum.Default,
-  UiNodeGroupEnum.IdentifierFirst,
-  UiNodeGroupEnum.Profile,
-  UiNodeGroupEnum.Captcha,
-]
+import {
+  allGroupEnums,
+  authMethodPickerExcludedGroups,
+  excludedAuthGroups,
+  GroupedNodes,
+  UiNodeInput,
+} from "../types"
 
 export function triggerToWindowCall(
   trigger:
@@ -154,8 +152,8 @@ export function nodesToAuthMethodGroups(
     groups[node.group] = groupNodes
   }
 
-  const excludeSet = new Set([...EXCLUDED_AUTH_GROUPS, ...excludeAuthMethods])
-  return ALL_GROUP_ENUMS.filter(
+  const excludeSet = new Set([...excludedAuthGroups, ...excludeAuthMethods])
+  return allGroupEnums.filter(
     (group) => groups[group]?.length && !excludeSet.has(group),
   )
 }
@@ -177,7 +175,7 @@ export function withoutSingleSignOnNodes(nodes: UiNode[]): UiNode[] {
 }
 
 export function isUiNodeGroupEnum(method: string): method is UiNodeGroupEnum {
-  return ALL_GROUP_ENUMS.includes(method as UiNodeGroupEnum)
+  return allGroupEnums.includes(method as UiNodeGroupEnum)
 }
 
 export function isNodeVisible(node: UiNode): node is UiNodeInput {
@@ -186,4 +184,12 @@ export function isNodeVisible(node: UiNode): node is UiNodeInput {
     if (node.attributes.type === "hidden") return false
   }
   return true
+}
+
+export function toAuthMethodPickerOptions(
+  visibleGroups: GroupedNodes,
+): UiNodeGroupEnum[] {
+  return Object.values(UiNodeGroupEnum)
+    .filter((group) => visibleGroups[group]?.length)
+    .filter((group) => !authMethodPickerExcludedGroups.includes(group))
 }

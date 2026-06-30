@@ -1,3 +1,11 @@
+Я переписываю библиотеку
+
+1. Мне не нужен custom components, я хочу их харкодить
+2. Я избавился от всех провайдеров и использую zustand provider, чтобы гибко передавать пропсы между компонентами
+3. Я заменил react-intl на i18n
+4. Я использую в submit @tanstack/react-query для того, чтобы удобнее работать в запросами 
+
+
 # File Contents
 
 ## ory/packages/elements-react/src/util/childCounter.ts

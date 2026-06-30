@@ -1,11 +1,10 @@
 import { useMemo } from "react"
 import { UiNode, UiNodeGroupEnum } from "@ory/client-fetch"
-import { isNodeVisible, EXCLUDED_AUTH_GROUPS } from "../utils/nodes"
-
-export type GroupedNodes = Partial<Record<UiNodeGroupEnum, UiNode[]>>
+import { isNodeVisible } from "../../utils"
+import { excludedAuthGroups, GroupedNodes } from "../../types"
 
 export function useFunctionalNodes(nodes: UiNode[]): UiNode[] {
-  return nodes.filter(({ group }) => EXCLUDED_AUTH_GROUPS.includes(group))
+  return nodes.filter(({ group }) => excludedAuthGroups.includes(group))
 }
 
 export function useNodeGroupsWithVisibleNodes(nodes: UiNode[]): GroupedNodes {

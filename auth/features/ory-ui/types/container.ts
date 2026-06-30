@@ -1,11 +1,16 @@
 import {
   FlowType,
   LoginFlow,
+  OAuth2ConsentRequest,
   RecoveryFlow,
   RegistrationFlow,
+  Session,
   SettingsFlow,
+  UiContainer,
   VerificationFlow,
 } from "@ory/client-fetch"
+import { FormState } from "."
+import { Dispatch } from "react"
 
 export type LoginFlowContainer = {
   flowType: FlowType.Login
@@ -32,9 +37,22 @@ export type SettingsFlowContainer = {
   flow: SettingsFlow
 }
 
-export type OAuth2ConsentFlowContainer = {
+export type ConsentFlow = {
+  created_at: Date
+  expires_at: Date
+  id: "UNSET"
+  issued_at: Date
+  state: "show_form" | "rejected" | "accepted"
+  active: "oauth2_consent"
+  ui: UiContainer
+  consent_request: OAuth2ConsentRequest
+  session: Session
+  return_to?: string
+}
+
+export type ConsentFlowContainer = {
   flowType: FlowType.OAuth2Consent
-  flow: SettingsFlow
+  flow: ConsentFlow
 }
 
 export type OryFlowContainer =
@@ -43,4 +61,10 @@ export type OryFlowContainer =
   | RecoveryFlowContainer
   | VerificationFlowContainer
   | SettingsFlowContainer
-  | OAuth2ConsentFlowContainer
+  | ConsentFlowContainer
+
+export type FlowContainerSetter = Dispatch<OryFlowContainer>
+
+export type OryFlowContainerWithState = OryFlowContainer & {
+  formState: FormState
+}

@@ -1,9 +1,9 @@
 import { FlowType, UiNode, UiNodeGroupEnum } from "@ory/client-fetch"
-import { GroupedNodes } from "../hooks/useNodes"
 import { isUiNodeGroupEnum } from "./nodes"
 import { Dispatch } from "react"
 import {
   FormStateAction,
+  GroupedNodes,
   LoginFlowContainer,
   RegistrationFlowContainer,
 } from "../types"

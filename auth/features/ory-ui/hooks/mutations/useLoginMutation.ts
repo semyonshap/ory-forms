@@ -9,18 +9,21 @@ import {
 } from "@ory/client-fetch"
 import { createOryClient } from "../../client/sdk"
 import { onRedirect, replaceWindowFlowId } from "../../utils/windowUtils"
-import { useFlowFormContext } from "../../context/flow-provider"
-import { OryClientConfiguration } from "../../types"
+import { useFlowStoreShallow } from "../../context"
 
-export function useLoginMutation(config: OryClientConfiguration) {
-  const { flow, setFlowContainer } = useFlowFormContext()
+export function useLoginMutation() {
+  const { flow, setFlowContainer, config } = useFlowStoreShallow((state) => ({
+    config: state.config,
+    flow: state.flow,
+    setFlowContainer: state.setFlowContainer,
+  }))
 
   return useMutation({
     mutationFn: async (body: UpdateLoginFlowBody) => {
       if (!flow || flow.flowType !== FlowType.Login) {
         throw new Error("No active login flow")
       }
-      const client = createOryClient(config)
+      const client = createOryClient()
       const res = await client.updateLoginFlowRaw({
         flow: flow.flow.id,
         updateLoginFlowBody: body,

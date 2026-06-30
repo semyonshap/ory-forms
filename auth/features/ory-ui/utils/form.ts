@@ -1,0 +1,110 @@
+import set from "lodash/set"
+import { FormValues, OryFlowContainer } from "../types"
+import { FlowType, isUiNodeInputAttributes, UiNode } from "@ory/client-fetch"
+
+const prefillIdentifierFields = ["identifier", "traits.email"]
+
+export function getLoginHint(search: string): string | undefined {
+  const hint = new URLSearchParams(search).get("login_hint")?.trim()
+  return hint ? hint : undefined
+}
+
+function searchOf(url: string | undefined): string {
+  if (!url) {
+    return ""
+  }
+  const index = url.indexOf("?")
+  return index === -1 ? "" : url.slice(index)
+}
+
+export function resolveLoginHint(
+  flowContainer: OryFlowContainer,
+): string | undefined {
+  if (
+    flowContainer.flowType !== FlowType.Login &&
+    flowContainer.flowType !== FlowType.Registration
+  ) {
+    return undefined
+  }
+
+  const fromRequestUrl = getLoginHint(searchOf(flowContainer.flow.request_url))
+  if (fromRequestUrl) {
+    return fromRequestUrl
+  }
+
+  const fromOidc =
+    flowContainer.flow.oauth2_login_request?.oidc_context?.login_hint?.trim()
+  return fromOidc ? fromOidc : undefined
+}
+
+export function computeDefaultValues(
+  flow: {
+    active?: string
+    ui: { nodes: UiNode[] }
+  },
+  loginHint?: string,
+): FormValues {
+  const defaults: FormValues = {}
+
+  for (const node of flow.ui.nodes) {
+    const attrs = node.attributes
+    if (!isUiNodeInputAttributes(attrs)) {
+      continue
+    }
+
+    if (attrs.name === "method" || attrs.type === "submit") {
+      continue
+    }
+
+    if (attrs.type === "checkbox" && typeof attrs.value === "undefined") {
+      set(defaults, attrs.name, false)
+      continue
+    }
+
+    if (attrs.name.startsWith("grant_scope")) {
+      const scope = attrs.value as string
+      if (Array.isArray(defaults.grant_scope)) {
+        defaults.grant_scope.push(scope)
+      } else {
+        defaults.grant_scope = [scope]
+      }
+      continue
+    }
+
+    set(defaults, attrs.name, attrs.value ?? "")
+  }
+
+  if (flow.active) {
+    defaults.method = flow.active
+  }
+
+  prefillIdentifierFromHint(flow.ui.nodes, defaults, loginHint)
+
+  return defaults
+}
+
+function prefillIdentifierFromHint(
+  nodes: UiNode[],
+  defaults: FormValues,
+  loginHint?: string,
+): void {
+  const hint = loginHint?.trim()
+  if (!hint) {
+    return
+  }
+
+  for (const name of prefillIdentifierFields) {
+    const node = nodes.find(
+      (n) =>
+        isUiNodeInputAttributes(n.attributes) && n.attributes.name === name,
+    )
+    if (!node || !isUiNodeInputAttributes(node.attributes)) {
+      continue
+    }
+    const current = node.attributes.value
+    if (current === undefined || current === null || current === "") {
+      set(defaults, name, hint)
+      return
+    }
+  }
+}

@@ -6,9 +6,9 @@ import {
   FormState,
   FormStateAction,
   OryFlowContainer,
-} from "../types"
-import { isChoosingMethod } from "../utils/flow"
-import { nodesToAuthMethodGroups } from "../utils/nodes"
+} from "../../types"
+import { isChoosingMethod } from "../../utils/flow"
+import { nodesToAuthMethodGroups } from "../../utils/nodes"
 
 function findMethodWithMessage(nodes?: UiNode[]) {
   return nodes

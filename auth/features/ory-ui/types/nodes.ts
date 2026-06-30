@@ -2,66 +2,85 @@ import {
   UiNode,
   UiNodeAnchorAttributes,
   UiNodeDivisionAttributes,
+  UiNodeGroupEnum,
   UiNodeImageAttributes,
   UiNodeInputAttributes,
   UiNodeScriptAttributes,
   UiNodeTextAttributes,
 } from "@ory/client-fetch"
 
-export type UiNodeInputAttributesOption = {
-  value: unknown
+export type GroupedNodes = Partial<Record<UiNodeGroupEnum, UiNode[]>>
+
+export type FormNodeOptions = {
+  icon?: string
+  onClick?: () => {}
 }
 
-export type UiNodeInputAttributesWithOptions = UiNodeInputAttributes & {
-  options?: UiNodeInputAttributesOption[]
+export type FormNodeSubtype = "divider"
+
+export type FormNode = UiNode & {
+  options?: FormNodeOptions
+  subtype?: FormNodeSubtype
 }
 
-export type UiNodeInput = UiNode & {
+export type UiNodeInput = FormNode & {
   type: "input"
-  attributes: UiNodeInputAttributesWithOptions
+  attributes: UiNodeInputAttributes
 }
-export function isUiNodeInput(node: UiNode): node is UiNodeInput {
+export function isUiNodeInput(node: FormNode): node is UiNodeInput {
   return node.type === "input"
 }
 
-export type UiNodeImage = UiNode & {
+export type UiNodeImage = FormNode & {
   type: "img"
   attributes: UiNodeImageAttributes
 }
-export function isUiNodeImage(node: UiNode): node is UiNodeImage {
+
+export function isUiNodeImage(node: FormNode): node is UiNodeImage {
   return node.type === "img"
 }
 
-export type UiNodeAnchor = UiNode & {
+export type UiNodeAnchor = FormNode & {
   type: "a"
   attributes: UiNodeAnchorAttributes
 }
-export function isUiNodeAnchor(node: UiNode): node is UiNodeAnchor {
+export function isUiNodeAnchor(node: FormNode): node is UiNodeAnchor {
   return node.type === "a"
 }
 
-export type UiNodeText = UiNode & {
+export type UiNodeText = FormNode & {
   type: "text"
   attributes: UiNodeTextAttributes
 }
-export function isUiNodeText(node: UiNode): node is UiNodeText {
+export function isUiNodeText(node: FormNode): node is UiNodeText {
   return node.type === "text"
 }
 
-export type UiNodeScript = UiNode & {
+export type UiNodeScript = FormNode & {
   type: "script"
   attributes: UiNodeScriptAttributes
 }
-export function isUiNodeScript(node: UiNode): node is UiNodeScript {
+export function isUiNodeScript(node: FormNode): node is UiNodeScript {
   return node.type === "script"
 }
 
-export type UiNodeDiv = UiNode & {
+export type UiNodeDiv = FormNode & {
   type: "div"
   attributes: UiNodeDivisionAttributes
 }
-export function isUiNodeDiv(node: UiNode): node is UiNodeDiv {
-  return node.type === "div"
+
+export function isUiNodeDiv(node: FormNode): node is UiNodeDiv {
+  return node.type === "div" && node.subtype === undefined
+}
+
+export type UiNodeDivider = FormNode & {
+  type: "div"
+  subtype: "divider"
+  attributes: UiNodeDivisionAttributes
+}
+
+export function isUiNodeDivider(node: FormNode): node is UiNodeDivider {
+  return node.type === "div" && node.subtype == "divider"
 }
 
 export type UiNodeFixed =
@@ -71,3 +90,4 @@ export type UiNodeFixed =
   | UiNodeText
   | UiNodeScript
   | UiNodeDiv
+  | UiNodeDivider
