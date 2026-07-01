@@ -1,6 +1,10 @@
 import { UiNodeGroupEnum } from "@ory/client-fetch"
 
+export const resendMessageId = 1070008
+
 export const allGroupEnums = Object.values(UiNodeGroupEnum)
+
+export const ignoredScriptGroups: UiNodeGroupEnum[] = [UiNodeGroupEnum.Captcha]
 
 export const excludedAuthGroups: UiNodeGroupEnum[] = [
   UiNodeGroupEnum.Default,
@@ -42,3 +46,19 @@ export const defaultNodeOrder = [
   "code",
   "webauthn",
 ]
+
+export const defaultHiddenMessageIds = [
+  1040009, 1060003, 1080003, 1010004, 1010014, 1010025, 1040005, 1010016,
+  1010003, 1060004, 1060005, 1060006,
+]
+
+export const omittedInputKeys = [
+  "autocomplete",
+  "label",
+  "node_type",
+  "maxlength",
+  "onclick",
+  "onclickTrigger",
+  "onload",
+  "onloadTrigger",
+] as const

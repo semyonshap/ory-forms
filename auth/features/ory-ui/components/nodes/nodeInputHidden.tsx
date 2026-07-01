@@ -1,9 +1,5 @@
-import { useFormContext } from "react-hook-form"
-import { NodeInputProps, useOnload } from "../helpers"
+import { UiNodeInputHidden } from "../../types"
 
-export function NodeInputHidden({ attributes }: NodeInputProps) {
-  const { register } = useFormContext()
-  useOnload(attributes as any)
-
-  return <input type="hidden" {...register(attributes.name)} />
+export function NodeInputHidden({ node }: { node: UiNodeInputHidden }) {
+  return <input type="hidden" {...node.props} />
 }

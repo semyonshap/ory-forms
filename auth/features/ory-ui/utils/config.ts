@@ -1,5 +1,25 @@
-import { OryClientConfiguration, OryConfiguration } from "../types"
+import {
+  OryComponents,
+  OryConfiguration,
+  OryClientComponents,
+  OryClientConfiguration,
+} from "../types"
 import { normalizeUrl } from "./windowUtils"
+
+export function computeComponents(
+  defaultComponents: OryComponents,
+  overrideComponents: Partial<OryClientComponents>,
+): OryComponents {
+  return {
+    Node: {
+      ...defaultComponents.Node,
+      ...(overrideComponents.Node || {}),
+    },
+    nodeSorter: overrideComponents.nodeSorter ?? defaultComponents.nodeSorter,
+    groupSorter:
+      overrideComponents.groupSorter ?? defaultComponents.groupSorter,
+  }
+}
 
 export function computeSdkConfig(
   config?: OryClientConfiguration["sdk"],

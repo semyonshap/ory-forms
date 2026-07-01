@@ -55,7 +55,7 @@ export function useNodes() {
       if (ssoNodes.length > 0) {
         nodes.push(...ssoNodes)
         if (nonSsoNodes.some(isNodeVisible)) {
-          nodes.push(createFormNode({ type: "div", subtype: "divider" }))
+          nodes.push(createFormNode({ type: "div" }))
         }
       }
 

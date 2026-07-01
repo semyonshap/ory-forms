@@ -1,6 +1,3 @@
-import { getNodeId } from "@ory/client-fetch"
-
-import { Node } from "./nodes/node"
 import { Messages } from "./messages"
 import {
   Card,
@@ -12,16 +9,15 @@ import {
 import { useFlowStoreShallow } from "../context"
 import { useCardHeaderText } from "../hooks"
 import { OryFlowContainerWithState } from "../types"
+import { getNodeId } from "../utils"
+import { Node } from "./node"
 
 export function FlowContent() {
-  const { flow, nodes, dispatchSubmit, formState, setFlowContainer } =
-    useFlowStoreShallow((state) => ({
-      flow: state.flow,
-      nodes: state.nodes,
-      setFlowContainer: state.setFlowContainer,
-      dispatchSubmit: state.dispatchSubmit,
-      formState: state.formState,
-    }))
+  const { flow, nodes, formState } = useFlowStoreShallow((state) => ({
+    flow: state.flow,
+    nodes: state.nodes,
+    formState: state.formState,
+  }))
 
   const context: OryFlowContainerWithState = {
     ...flow,
@@ -40,13 +36,8 @@ export function FlowContent() {
         <CardContent>
           <Messages messages={flow.flow.ui.messages} />
           <div className="space-y-4">
-            {nodes.map((node, k) => (
-              <Node
-                key={`${getNodeId(node)}-${k}`}
-                disabled={formState.isSubmitting}
-                node={node}
-                dispatchSubmit={dispatchSubmit}
-              />
+            {nodes.map((node) => (
+              <Node key={getNodeId(node)} node={node} />
             ))}
           </div>
         </CardContent>

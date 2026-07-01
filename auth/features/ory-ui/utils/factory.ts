@@ -5,7 +5,7 @@ import {
   UiNodeTypeEnum,
   UiText,
 } from "@ory/client-fetch"
-import { FormNode, FormNodeOptions, FormNodeSubtype } from "../types"
+import { FormNode } from "../types"
 
 type CreateCustomNodeParams = {
   type: UiNodeTypeEnum
@@ -13,8 +13,6 @@ type CreateCustomNodeParams = {
   attributes?: Partial<UiNodeAttributes>
   messages?: UiText[]
   meta?: Partial<UiNodeMeta>
-  options?: FormNodeOptions
-  subtype?: FormNodeSubtype
 }
 
 export function createFormNode({
@@ -23,8 +21,6 @@ export function createFormNode({
   attributes = {},
   messages = [],
   meta = {},
-  options = {},
-  subtype,
 }: CreateCustomNodeParams): FormNode {
   return {
     type,
@@ -32,7 +28,5 @@ export function createFormNode({
     attributes: attributes as UiNodeAttributes,
     messages,
     meta: meta as UiNodeMeta,
-    options,
-    subtype,
   }
 }

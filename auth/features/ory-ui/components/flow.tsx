@@ -15,7 +15,7 @@ export function Flow({ config, flow, components }: FlowInputProps) {
   return (
     <QueryClientProvider client={queryClient}>
       <I18nextProvider i18n={libraryI18n}>
-        <OryFlowProvider config={config} flow={flow}>
+        <OryFlowProvider config={config} flow={flow} components={components}>
           <OryFormProvider>
             <form
               action={flow.flow.ui.action}

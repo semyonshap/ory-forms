@@ -1,21 +1,9 @@
-import { UiNode, UiNodeImageAttributes } from "@ory/client-fetch"
-import Image from "next/image"
+import { UiNodeImage } from "../../types"
 
-interface Props {
-  node: UiNode
-  attributes: UiNodeImageAttributes
-}
-
-export const NodeImage = ({ node, attributes }: Props) => {
+export function NodeImage({ node }: { node: UiNodeImage }) {
   return (
-    <div className="relative w-48 h-48">
-      <Image
-        data-testid={`node/image/${attributes.id}`}
-        src={attributes.src}
-        alt={node.meta.label?.text || ""}
-        fill
-        className="object-contain"
-      />
-    </div>
+    <figure>
+      <img {...node.props.renderAttributes} alt={node.meta.label?.text || ""} />
+    </figure>
   )
 }

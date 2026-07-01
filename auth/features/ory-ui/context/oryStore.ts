@@ -11,7 +11,7 @@ import {
   FormNode,
   OryComponents,
 } from "../types"
-import { defaultGroupSorter, defaultNodeSorter } from "../utils"
+import { getDefaultComponents } from "../components/defaultComponents"
 
 export interface FlowStoreState {
   config: OryConfiguration
@@ -34,10 +34,7 @@ export const createFlowStore = (
 ) => {
   return createStore<FlowStoreState>((set) => ({
     ...initProps,
-    components: {
-      nodeSorter: defaultNodeSorter,
-      groupSorter: defaultGroupSorter,
-    },
+    components: getDefaultComponents(),
     setFlowContainer: () => {},
     dispatchFormState: () => {},
     dispatchSubmit: () => {},
