@@ -1,15 +1,18 @@
 import { UiNode, UiNodeGroupEnum } from "@ory/client-fetch"
 import { OryClientConfiguration } from "./config"
 import { OryFlowContainer } from "./container"
-import {
-  UiNodeAnchor,
-  UiNodeAuthMethodInput,
-  UiNodeImage,
-  UiNodeInput,
-  UiNodeInputButton,
-  UiNodeText,
-} from "./nodes"
 import { ComponentType } from "react"
+import {
+  FormRenderButton,
+  FormRenderAuthMethodButton as FormRenderMethodButton,
+  FormRenderSelect,
+  FormRenderInput,
+  FormRenderImage,
+  FormRenderText,
+  FormRenderAnchor,
+  CardRenderRoot,
+  CardRenderFooter,
+} from "./render"
 
 export type FormValues = Record<
   string,
@@ -23,29 +26,33 @@ export type FlowInputProps = {
 }
 
 export type OryComponents = {
+  Card: {
+    Root: ComponentType<CardRenderRoot>
+    Footer: ComponentType<CardRenderFooter>
+  }
   Node: {
-    Button: ComponentType<{ node: UiNodeInputButton }>
-    SsoButton: ComponentType<{ node: UiNodeInputButton }>
-    SubmitButton: ComponentType<{ node: UiNodeInput }>
-    AuthMethodButton: ComponentType<{ node: UiNodeAuthMethodInput }>
+    Button: ComponentType<FormRenderButton>
+    SsoButton?: ComponentType<FormRenderButton>
+    SubmitButton?: ComponentType<FormRenderButton>
+    MethodButton: ComponentType<FormRenderMethodButton>
 
-    Select: ComponentType<{ node: UiNode }>
+    Select: ComponentType<FormRenderSelect>
 
-    Input: ComponentType<{ node: UiNodeInput }>
-    CodeInput: ComponentType<{ node: UiNodeInput }>
-    PasswordInput: ComponentType<{ node: UiNodeInput }>
+    Input: ComponentType<FormRenderInput>
+    Code: ComponentType<FormRenderInput>
+    Password?: ComponentType<FormRenderInput>
 
-    Image: ComponentType<{ node: UiNodeImage }>
-    Text: ComponentType<{ node: UiNodeText }>
-    Anchor: ComponentType<{ node: UiNodeAnchor }>
+    Image: ComponentType<FormRenderImage>
+    Text: ComponentType<FormRenderText>
+    Anchor: ComponentType<FormRenderAnchor>
   }
   nodeSorter: (a: UiNode, b: UiNode, ctx: { flowType: string }) => number
   groupSorter: (a: UiNodeGroupEnum, b: UiNodeGroupEnum) => number
 }
 
 export type OryClientComponents = {
-  Node: Omit<OryComponents["Node"], "Image" | "PasswordInput"> & {
-    Image?: ComponentType<{ node: UiNodeImage }>
-    PasswordInput?: ComponentType<{ node: UiNodeInput }>
+  Card: OryComponents["Card"]
+  Node: Omit<OryComponents["Node"], "Image" | "Password"> & {
+    Image?: ComponentType<FormRenderImage>
   }
 } & Partial<Pick<OryComponents, "nodeSorter" | "groupSorter">>

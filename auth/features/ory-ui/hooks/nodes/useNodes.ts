@@ -18,6 +18,8 @@ import {
   useNodeGroupsWithVisibleNodes,
 } from "./useNodesGroups"
 import { useFlowStoreShallow } from "../../context"
+import { useTranslation } from "react-i18next"
+import { resolveMethod } from "../../i18n/resolver"
 
 export function useNodes() {
   const {
@@ -79,28 +81,12 @@ export function useNodes() {
       break
     }
     case "select_method": {
+      const { t } = useTranslation()
+
       const authMethodBlocks = toAuthMethodPickerOptions(visibleGroups)
-      authMethodBlocks.map((group) => {
-        switch (group) {
-          case UiNodeGroupEnum.Password: {
-            break
-          }
-          case UiNodeGroupEnum.Code: {
-            break
-          }
-          case UiNodeGroupEnum.Webauthn: {
-            break
-          }
-          case UiNodeGroupEnum.Passkey: {
-            break
-          }
-          case UiNodeGroupEnum.Totp: {
-            break
-          }
-          case UiNodeGroupEnum.LookupSecret: {
-            break
-          }
-        }
+      const methodsData = authMethodBlocks.map((group) => {
+        const { title, description } = resolveMethod(group, formNodes, t)
+        return { group, title, description }
       })
 
       const authMethodAdditionalNodes = useFunctionalNodes(formNodes)

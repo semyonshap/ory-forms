@@ -2,7 +2,7 @@ import { useMemo } from "react"
 import { defaultHiddenMessageIds } from "../../types"
 import { useFlowStoreShallow } from "../../context"
 
-export function useMessages(
+export function useFormMessages(
   hiddenMessageIds: number[] = defaultHiddenMessageIds,
 ) {
   const {

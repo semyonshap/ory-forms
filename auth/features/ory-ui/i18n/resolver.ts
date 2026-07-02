@@ -1,6 +1,7 @@
-import { UiText } from "@ory/client-fetch"
+import { UiNode, UiNodeGroupEnum, UiText } from "@ory/client-fetch"
 import { uiTextToFormattedMessage } from "."
 import { TFunction } from "i18next"
+import { findCodeIdentifierNode } from "../utils"
 
 function isDynamicText(
   text: UiText,
@@ -44,4 +45,27 @@ export function resolvePlaceholder(uiText: UiText, t: TFunction): string {
   }
 
   return fallback
+}
+
+export function resolveMethod(
+  group: UiNodeGroupEnum,
+  nodes: UiNode[],
+  t: TFunction,
+): { title: string; description: string } {
+  let title: string
+  if (group === UiNodeGroupEnum.Code) {
+    const identifierNode = findCodeIdentifierNode(nodes)
+    const identifier = identifierNode?.attributes?.value
+    if (identifier && typeof identifier === "string" && identifier.length > 0) {
+      title = t("identities.messages.1010023", { address: identifier })
+    } else {
+      title = t(`two-step.${group}.title`)
+    }
+  } else {
+    title = t(`two-step.${group}.title`)
+  }
+
+  const description = t(`two-step.${group}.description`)
+
+  return { title, description }
 }

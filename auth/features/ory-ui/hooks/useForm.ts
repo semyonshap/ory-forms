@@ -3,8 +3,8 @@ import { useForm as useRHForm } from "react-hook-form"
 import { useFormSubmit } from "./form/useFormSubmit"
 import { UiNodeGroupEnum } from "@ory/client-fetch"
 import { useFlowStoreShallow } from "../context"
-import { useNodes } from "./form/useNodes"
-import { useAutofocus } from "./form/useFormAutofocus"
+import { useNodes } from "./nodes/useNodes"
+import { useFormAutofocus } from "./form/useFormAutofocus"
 import { computeDefaultValues, resolveLoginHint } from "../utils/form"
 
 export function useForm() {
@@ -48,7 +48,12 @@ export function useForm() {
     [formState.isSubmitting, formState, onSubmit],
   )
 
-  useAutofocus(nodes, formState.isReady, flowContainer.flowType, form.setFocus)
+  useFormAutofocus(
+    nodes,
+    formState.isReady,
+    flowContainer.flowType,
+    form.setFocus,
+  )
 
   const handleSubmit = form.handleSubmit(onFormSubmit)
 

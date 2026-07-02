@@ -1,19 +1,22 @@
 import {
+  UiNode,
   UiNodeAnchorAttributes,
   UiNodeImageAttributes,
   UiNodeInputAttributesTypeEnum,
 } from "@ory/client-fetch"
-import { omittedInputKeys } from "."
-import { ComponentType, MouseEventHandler } from "react"
+import { omittedInputKeys, UiNodeInput } from "."
+import { ComponentType, MouseEventHandler, PropsWithChildren } from "react"
 
 type OmittedImageKeys = (typeof omittedInputKeys)[number]
 type OmittedAnchorKeys = (typeof omittedInputKeys)[number]
 
 type IconOption = ComponentType<{ size?: number }>
 
-export type FormOptionsInput = {
+export type FormOptionsText = {
   label?: string
 }
+
+export type FormOptionsInput = FormOptionsText
 
 export type FormOptionsButton = {
   label?: string
@@ -29,10 +32,6 @@ export type FormOptionsAuthMethodButton = {
 
 export type FormImageProps = {
   renderAttributes: Omit<UiNodeImageAttributes, OmittedImageKeys>
-}
-
-export type FormAnchorProps = {
-  renderAttributes: Omit<UiNodeAnchorAttributes, OmittedAnchorKeys>
 }
 
 export type FormInputProps = {
@@ -68,4 +67,63 @@ export type FormInputButtonProps = {
   onClick: (event: any) => void
 
   disabled?: boolean
+}
+
+export type FormRenderButton = {
+  node: UiNodeInput
+  props: FormInputButtonProps
+  options: FormOptionsButton
+}
+
+export type FormRenderInput = {
+  node: UiNodeInput
+  props: FormInputProps
+  options: FormOptionsInput
+}
+
+export type FormRenderAuthMethodButton = {
+  node: UiNodeInput
+  props: FormInputButtonProps
+  options: FormOptionsAuthMethodButton
+}
+
+export type FormRenderAnchor = {
+  node: UiNode
+  props: Omit<UiNodeAnchorAttributes, OmittedAnchorKeys>
+  options: FormOptionsText
+}
+
+export type FormRenderImage = {
+  node: UiNode
+  props: Omit<UiNodeImageAttributes, OmittedImageKeys>
+}
+
+export type FormRenderSelect = {
+  node: UiNode
+}
+
+export type FormRenderText = {
+  node: UiNode
+  options: {
+    label?: string
+    description?: string
+  }
+}
+
+export type FooterAction =
+  | { kind: "link"; label: string; href: string }
+  | { kind: "button"; label: string; onClick?: MouseEventHandler }
+
+export type CardRenderRoot = {
+  header: {
+    title?: string
+    description?: string
+  }
+  nodes: React.ReactNode
+  footer: React.ReactNode
+}
+
+export type CardRenderFooter = {
+  captions?: string[]
+  children?: React.ReactNode
 }

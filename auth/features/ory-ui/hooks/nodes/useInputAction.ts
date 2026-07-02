@@ -4,7 +4,7 @@ import { UiNodeInputAttributes, FlowType } from "@ory/client-fetch"
 import { useFlowStoreShallow } from "../../context"
 import { initFlowUrl } from "../../utils"
 
-export function useNodeAction(attributes: UiNodeInputAttributes) {
+export function useInputAction(attributes: UiNodeInputAttributes) {
   const { t } = useTranslation()
   const {
     config,

@@ -19,7 +19,7 @@ function pickAutofocusField(nodes: UiNode[]): string | undefined {
   return node.attributes.name
 }
 
-export function useAutofocus(
+export function useFormAutofocus(
   nodes: UiNode[],
   isReady: boolean,
   flowType: FlowType,

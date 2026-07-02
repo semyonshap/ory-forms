@@ -1,5 +1,5 @@
 import { OryComponents } from "../types"
-import { NodeImage } from "./nodes/nodeImage"
+import { NodeImage } from "./nodes/image"
 import { defaultGroupSorter, defaultNodeSorter } from "../utils"
 
 export function notImplemented(componentName: string) {
@@ -13,15 +13,15 @@ export function notImplemented(componentName: string) {
 
 export function getDefaultComponents(): OryComponents {
   return {
+    Card: {
+      Root: notImplemented("CardRoot"),
+    },
     Node: {
       Button: notImplemented("Button"),
-      SsoButton: notImplemented("SsoButton"),
-      SubmitButton: notImplemented("SubmitButton"),
-      AuthMethodButton: notImplemented("AuthMethodButton"),
+      MethodButton: notImplemented("AuthMethodButton"),
       Select: notImplemented("Select"),
       Input: notImplemented("Input"),
-      CodeInput: notImplemented("CodeInput"),
-      PasswordInput: notImplemented("PasswordInput"),
+      Code: notImplemented("CodeInput"),
       Image: NodeImage,
       Text: notImplemented("Text"),
       Anchor: notImplemented("Anchor"),

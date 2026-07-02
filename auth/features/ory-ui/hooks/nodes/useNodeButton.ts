@@ -18,7 +18,7 @@ export function useNodeButton(node: UiNodeInput) {
 
   const [clicked, setClicked] = useDebounceValue(false, 100)
 
-  const handleClick = useCallback(() => {
+  const onClick = useCallback(() => {
     setValue(node.attributes.name, node.attributes.value)
     setClicked(true)
     if (node.attributes.onclickTrigger) {
@@ -41,7 +41,7 @@ export function useNodeButton(node: UiNodeInput) {
   }, [oryFormState.isSubmitting, setClicked, clicked])
 
   return {
-    handleClick,
+    onClick,
     disabled,
     isSubmitting,
   }

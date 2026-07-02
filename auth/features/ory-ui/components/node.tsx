@@ -6,30 +6,32 @@ import {
   FormNode,
   ignoredScriptGroups,
   isUiNodeAnchor,
-  isUiNodeAuthMethodInput,
   isUiNodeImage,
   isUiNodeInput,
-  isUiNodeInputButton,
-  isUiNodeInputHidden,
   isUiNodeScript,
   isUiNodeText,
   UiNodeInput,
 } from "../types"
 import { useFlowStoreShallow } from "../context"
 import { NodeScript } from "./nodes/nodeScript"
-import { NodeInputHidden } from "./nodes/nodeInputHidden"
 import { isIgnoredInputNode } from "../utils"
+import {
+  MethodButtonWrapper,
+  ButtonWrapper,
+  SsoButtonWrapper,
+  AnchorWrapper,
+  TextWrapper,
+  ImageWrapper,
+  SubmitButtonWrapper,
+  CodeWrapper,
+  InputWrapper,
+} from "./wrappers"
+import { useNodeInputSetup } from "../hooks"
 
 export const Node = ({ node }: { node: FormNode }) => {
-  const {
-    components: { Node },
-  } = useFlowStoreShallow((state) => ({
-    components: state.components,
-  }))
-
-  if (isUiNodeImage(node)) return <Node.Image node={node} />
-  else if (isUiNodeText(node)) return <Node.Text node={node} />
-  else if (isUiNodeAnchor(node)) return <Node.Anchor node={node} />
+  if (isUiNodeImage(node)) return ImageWrapper({ node })
+  else if (isUiNodeText(node)) return TextWrapper({ node })
+  else if (isUiNodeAnchor(node)) return AnchorWrapper({ node })
   else if (isUiNodeInput(node)) return <NodeInput node={node} />
   else if (isUiNodeScript(node) && !ignoredScriptGroups.includes(node.group))
     return <NodeScript node={node} />
@@ -43,30 +45,12 @@ function NodeInput({ node }: { node: UiNodeInput }) {
     components: state.components,
   }))
 
-  if (isUiNodeAuthMethodInput(node))
-    return <Node.AuthMethodButton node={node} />
-
-  if (isUiNodeInputButton(node)) {
-    if (isIgnoredInputNode(node)) {
-      return null
-    }
-    const isSocial =
-      (node.attributes.name === "provider" ||
-        node.attributes.name === "link") &&
-      (node.group === UiNodeGroupEnum.Oidc ||
-        node.group === UiNodeGroupEnum.Saml)
-    if (isSocial) return <Node.SsoButton node={node} />
-    return <Node.Button node={node} />
-  }
-
-  if (isUiNodeInputHidden(node)) {
-    return <NodeInputHidden node={node} />
-  }
+  useNodeInputSetup(node)
 
   const { attributes } = node
   switch (attributes.type) {
     case UiNodeInputAttributesTypeEnum.Submit:
-      return <Node.SubmitButton node={node} />
+      return SubmitButtonWrapper({ node })
     case UiNodeInputAttributesTypeEnum.DatetimeLocal:
       throw new Error("Not implement")
     case UiNodeInputAttributesTypeEnum.Checkbox:
@@ -83,6 +67,21 @@ function NodeInput({ node }: { node: UiNodeInput }) {
       }
 
       throw new Error("Not implement")
+    case UiNodeInputAttributesTypeEnum.Button:
+      if (isIgnoredInputNode(node)) {
+        return null
+      }
+
+      const isMethod = false // TODO: implement method button detection
+      if (isMethod) return MethodButtonWrapper({ node })
+
+      const isSocial =
+        (node.attributes.name === "provider" ||
+          node.attributes.name === "link") &&
+        (node.group === UiNodeGroupEnum.Oidc ||
+          node.group === UiNodeGroupEnum.Saml)
+      if (isSocial) return SsoButtonWrapper({ node })
+      return ButtonWrapper({ node })
     default:
       const options = node.attributes.options
       if (Array.isArray(options) && options.length > 0 && Node.Select)
@@ -92,8 +91,8 @@ function NodeInput({ node }: { node: UiNodeInput }) {
         (attributes.name === "code" && node.group === "code") ||
         (attributes.name === "totp_code" && node.group === "totp")
 
-      if (isPinCodeInput) return <Node.CodeInput node={node} />
+      if (isPinCodeInput) return CodeWrapper({ node })
 
-      return <Node.Input node={node} />
+      return InputWrapper({ node })
   }
 }

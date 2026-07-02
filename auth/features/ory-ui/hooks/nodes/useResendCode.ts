@@ -1,9 +1,9 @@
 import { useCallback } from "react"
 import { useFlowStoreShallow } from "../../context"
-import { useFormSubmit } from "./useFormSubmit"
+import { useFormSubmit } from "../form/useFormSubmit"
 import { computeDefaultValues } from "../../utils/form"
 import { findResendNode } from "../../utils"
-import { useTransientPayload } from "./useTransientPayload"
+import { useTransientPayload } from "../form/useTransientPayload"
 import { FieldValues } from "react-hook-form"
 
 export function useResendCode() {

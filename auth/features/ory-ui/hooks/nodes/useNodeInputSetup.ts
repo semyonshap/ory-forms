@@ -4,7 +4,7 @@ import { useFormContext } from "react-hook-form"
 import { UiNodeInput } from "../../types"
 import { isIgnoredInputNode, triggerToWindowCall } from "../../utils"
 
-export function useNodeInputSetup({ node }: { node: UiNodeInput }) {
+export function useNodeInputSetup(node: UiNodeInput) {
   const { setValue } = useFormContext()
   const hasRun = useRef(false)
 

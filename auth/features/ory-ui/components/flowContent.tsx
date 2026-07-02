@@ -36,8 +36,8 @@ export function FlowContent() {
         <CardContent>
           <Messages messages={flow.flow.ui.messages} />
           <div className="space-y-4">
-            {nodes.map((node) => (
-              <Node key={getNodeId(node)} node={node} />
+            {nodes.map((node, i) => (
+              <Node key={`${getNodeId(node)}-${i}`} node={node} />
             ))}
           </div>
         </CardContent>
