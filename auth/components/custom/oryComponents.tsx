@@ -36,19 +36,6 @@ export const OryComponents: OryClientComponents = {
         </div>
       )
     },
-    Footer: ({ children, captions }) => {
-      return (
-        <div className="flex flex-col gap-2">
-          {captions &&
-            captions.map((caption, index) => (
-              <Label key={index} className="text-sm">
-                {caption}
-              </Label>
-            ))}
-          {children}
-        </div>
-      )
-    },
   },
   Node: {
     Anchor: ({ props, options }) => {

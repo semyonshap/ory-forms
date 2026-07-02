@@ -110,20 +110,11 @@ export type FormRenderText = {
   }
 }
 
-export type FooterAction =
-  | { kind: "link"; label: string; href: string }
-  | { kind: "button"; label: string; onClick?: MouseEventHandler }
-
 export type CardRenderRoot = {
   header: {
     title?: string
     description?: string
   }
-  nodes: React.ReactNode
-  footer: React.ReactNode
-}
-
-export type CardRenderFooter = {
-  captions?: string[]
-  children?: React.ReactNode
+  nodes: React.ReactNode[]
+  footer: React.ReactNode[]
 }

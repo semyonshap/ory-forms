@@ -11,7 +11,6 @@ import {
   FormRenderText,
   FormRenderAnchor,
   CardRenderRoot,
-  CardRenderFooter,
 } from "./render"
 
 export type FormValues = Record<
@@ -25,10 +24,17 @@ export type FlowInputProps = {
   components: Partial<OryClientComponents>
 }
 
+export type NodeSorter = (
+  a: UiNode,
+  b: UiNode,
+  ctx: { flowType: string },
+) => number
+
+export type GroupSorter = (a: UiNodeGroupEnum, b: UiNodeGroupEnum) => number
+
 export type OryComponents = {
   Card: {
     Root: ComponentType<CardRenderRoot>
-    Footer: ComponentType<CardRenderFooter>
   }
   Node: {
     Button: ComponentType<FormRenderButton>
@@ -46,8 +52,8 @@ export type OryComponents = {
     Text: ComponentType<FormRenderText>
     Anchor: ComponentType<FormRenderAnchor>
   }
-  nodeSorter: (a: UiNode, b: UiNode, ctx: { flowType: string }) => number
-  groupSorter: (a: UiNodeGroupEnum, b: UiNodeGroupEnum) => number
+  nodeSorter: NodeSorter
+  groupSorter: GroupSorter
 }
 
 export type OryClientComponents = {

@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react"
+import { useCallback } from "react"
 import {
   isUiNodeScriptAttributes,
   UiNode,
@@ -6,13 +6,7 @@ import {
 } from "@ory/client-fetch"
 
 import { FormNode } from "../../types"
-import {
-  getFinalNodes,
-  isNodeVisible,
-  toAuthMethodPickerOptions,
-  withoutSingleSignOnNodes,
-} from "../../utils"
-import { createFormNode } from "../../utils/factory"
+import { getFinalNodes, toAuthMethodPickerOptions } from "../../utils"
 import {
   useFunctionalNodes,
   useNodeGroupsWithVisibleNodes,
@@ -20,13 +14,16 @@ import {
 import { useFlowStoreShallow } from "../../context"
 import { useTranslation } from "react-i18next"
 import { resolveMethod } from "../../i18n/resolver"
+import { useStateProvideIdentifier } from "../form/useStateProvideIdentifier"
 
 export function useNodes() {
   const {
+    config,
     flow: flowContainer,
     formState,
     nodeSorter,
   } = useFlowStoreShallow((state) => ({
+    config: state.config,
     flow: state.flow,
     formState: state.formState,
     nodeSorter: state.components.nodeSorter,
@@ -45,23 +42,12 @@ export function useNodes() {
 
   switch (formState.current) {
     case "provide_identifier": {
-      const nonSsoNodes = withoutSingleSignOnNodes(formNodes).sort(sortNodes)
-      const ssoNodes = formNodes
-        .filter(isNodeVisible)
-        .filter(
-          (node) =>
-            node.group === UiNodeGroupEnum.Oidc ||
-            node.group === UiNodeGroupEnum.Saml,
-        )
-
-      if (ssoNodes.length > 0) {
-        nodes.push(...ssoNodes)
-        if (nonSsoNodes.some(isNodeVisible)) {
-          nodes.push(createFormNode({ type: "div" }))
-        }
-      }
-
-      nodes.push(...nonSsoNodes)
+      nodes = useStateProvideIdentifier({
+        config,
+        container: flowContainer,
+        nodes: formNodes,
+        nodeSorter: sortNodes,
+      })
       break
     }
     case "method_active": {
@@ -102,5 +88,5 @@ export function useNodes() {
     }
   }
 
-  return { nodes }
+  return nodes
 }

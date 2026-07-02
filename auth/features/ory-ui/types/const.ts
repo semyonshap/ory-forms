@@ -62,3 +62,10 @@ export const omittedInputKeys = [
   "onload",
   "onloadTrigger",
 ] as const
+
+export const custonMessageIds = {
+  "login.registration-button": 9000001,
+  "login.registration-label": 9000002,
+} as const
+
+export type CustomMessageKey = keyof typeof custonMessageIds

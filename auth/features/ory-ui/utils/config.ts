@@ -11,6 +11,10 @@ export function computeComponents(
   overrideComponents: Partial<OryClientComponents>,
 ): OryComponents {
   return {
+    Card: {
+      ...defaultComponents.Card,
+      ...(overrideComponents.Card || {}),
+    },
     Node: {
       ...defaultComponents.Node,
       ...(overrideComponents.Node || {}),

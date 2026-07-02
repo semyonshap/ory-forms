@@ -13,7 +13,7 @@ export function useForm() {
     formState: state.formState,
   }))
 
-  const { nodes } = useNodes()
+  const nodes = useNodes()
 
   const defaultNodes = nodes
     ? flowContainer.flow.ui.nodes
