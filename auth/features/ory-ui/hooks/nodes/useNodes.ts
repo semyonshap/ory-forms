@@ -17,17 +17,14 @@ import { resolveMethod } from "../../i18n/resolver"
 import { useStateProvideIdentifier } from "../form/useStateProvideIdentifier"
 
 export function useNodes() {
-  const {
-    config,
-    flow: flowContainer,
-    formState,
-    nodeSorter,
-  } = useFlowStoreShallow((state) => ({
-    config: state.config,
-    flow: state.flow,
-    formState: state.formState,
-    nodeSorter: state.components.nodeSorter,
-  }))
+  const { config, flowContainer, formState, nodeSorter } = useFlowStoreShallow(
+    (state) => ({
+      config: state.config,
+      flowContainer: state.flowContainer,
+      formState: state.formState,
+      nodeSorter: state.components.nodeSorter,
+    }),
+  )
 
   const { flow, flowType } = flowContainer
   const sortNodes = useCallback(
@@ -38,16 +35,23 @@ export function useNodes() {
   const formNodes: FormNode[] = flow.ui.nodes.map((node) => ({ ...node }))
   const visibleGroups = useNodeGroupsWithVisibleNodes(formNodes)
 
+  // All hooks called unconditionally to satisfy Rules of Hooks
+  const identifierNodes = useStateProvideIdentifier({
+    config,
+    container: flowContainer,
+    nodes: formNodes,
+    nodeSorter: sortNodes,
+  })
+
+  const { t } = useTranslation()
+
+  const authMethodAdditionalNodes = useFunctionalNodes(formNodes)
+
   let nodes: FormNode[] = []
 
   switch (formState.current) {
     case "provide_identifier": {
-      nodes = useStateProvideIdentifier({
-        config,
-        container: flowContainer,
-        nodes: formNodes,
-        nodeSorter: sortNodes,
-      })
+      nodes = identifierNodes
       break
     }
     case "method_active": {
@@ -67,15 +71,11 @@ export function useNodes() {
       break
     }
     case "select_method": {
-      const { t } = useTranslation()
-
       const authMethodBlocks = toAuthMethodPickerOptions(visibleGroups)
       const methodsData = authMethodBlocks.map((group) => {
         const { title, description } = resolveMethod(group, formNodes, t)
         return { group, title, description }
       })
-
-      const authMethodAdditionalNodes = useFunctionalNodes(formNodes)
 
       const hiddenNodes = formNodes.filter(
         (n) =>

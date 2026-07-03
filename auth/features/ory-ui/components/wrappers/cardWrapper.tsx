@@ -1,27 +1,32 @@
-import { Node } from "../node"
-import { getNodeId } from "../../utils"
-import { useCardHeaderText } from "../../hooks"
-import { useFlowStoreShallow } from "../../context"
+import { useLayoutEffect, useMemo } from "react"
+
+import { renderNodes } from "../render"
 import { OryFlowContainerWithState } from "../../types"
+import { useFlowStoreShallow, useOryFormContext } from "../../context"
+import { useCardHeaderText, useFormMessages, useNodes } from "../../hooks"
 
 export function CardWrapper() {
-  const { Card, nodes, flow, formState } = useFlowStoreShallow((state) => ({
+  const { Card, flow, formState } = useFlowStoreShallow((state) => ({
     Card: state.components.Card,
-    flow: state.flow,
-    nodes: state.nodes,
+    flow: state.flowContainer,
     formState: state.formState,
   }))
 
-  const context: OryFlowContainerWithState = {
+  const contextContainer: OryFlowContainerWithState = {
     ...flow,
     formState,
   }
 
-  const { title, description } = useCardHeaderText(flow.flow.ui, context)
+  const { title, description } = useCardHeaderText(
+    flow.flow.ui,
+    contextContainer,
+  )
 
-  const Nodes = nodes.map((node, i) => (
-    <Node key={`${getNodeId(node)}-${i}`} node={node} />
-  ))
+  const nodes = useNodes()
+
+  const { result, contextMap } = useMemo(() => renderNodes(nodes), [nodes])
+
+  const messages = useFormMessages()
 
   return (
     <Card.Root
@@ -29,8 +34,8 @@ export function CardWrapper() {
         title,
         description,
       }}
-      nodes={Nodes}
-      footer={[]}
+      messages={messages}
+      nodes={result}
     />
   )
 }

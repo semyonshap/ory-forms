@@ -1,4 +1,4 @@
-export { useInputAction } from "./useInputAction"
+export { useLabelAction } from "./useLabelAction"
 export { useMethodPasskey } from "./useMethodPasskey"
 export { useNodeButton } from "./useNodeButton"
 export { useNodeConsentCheckbox } from "./useNodeConsentCheckbox"

@@ -1,12 +1,12 @@
+import { useTranslation } from "react-i18next"
 import { getNodeLabel, UiNodeAnchorAttributes } from "@ory/client-fetch"
 
-import { UiNodeAnchor } from "../../types"
 import { useFlowStore } from "../../context"
 import { omitInputAttributes } from "../../utils"
+import { UiNodeAnchorContext } from "../../types"
 import { uiTextToFormattedMessage } from "../../i18n"
-import { useTranslation } from "react-i18next"
 
-export function AnchorWrapper({ node }: { node: UiNodeAnchor }) {
+export function AnchorWrapper({ node, context }: UiNodeAnchorContext) {
   const Node = useFlowStore((state) => state.components.Node)
   const { t } = useTranslation()
 
@@ -19,6 +19,7 @@ export function AnchorWrapper({ node }: { node: UiNodeAnchor }) {
       node={node}
       props={props}
       options={{ label: formattedLabel }}
+      context={context}
     />
   )
 }

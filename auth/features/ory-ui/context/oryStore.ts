@@ -7,19 +7,16 @@ import {
   FormState,
   FormStateAction,
   FormValues,
-  FlowContainerSetter,
   FormNode,
   OryComponents,
+  FormContext,
 } from "../types"
-import { getDefaultComponents } from "../components/defaultComponents"
 
 export interface FlowStoreState {
   config: OryConfiguration
   components: OryComponents
-  flow: OryFlowContainer
-  setFlowContainer: FlowContainerSetter
-  nodes: FormNode[]
-  form: UseFormReturn<FormValues> | null
+  flowContainer: OryFlowContainer
+  setFlowContainer: Dispatch<OryFlowContainer>
   formState: FormState
   dispatchFormState: Dispatch<FormStateAction>
 }
@@ -29,12 +26,15 @@ export type FlowStore = ReturnType<typeof createFlowStore>
 export const createFlowStore = (
   initProps: Omit<
     FlowStoreState,
-    "setFlowContainer" | "dispatchFormState" | "dispatchSubmit" | "components"
+    | "setFlowContainer"
+    | "dispatchFormState"
+    | "dispatchSubmit"
+    | "context"
+    | "setContext"
   >,
 ) => {
-  return createStore<FlowStoreState>((set) => ({
+  return createStore<FlowStoreState>(() => ({
     ...initProps,
-    components: getDefaultComponents(),
     setFlowContainer: () => {},
     dispatchFormState: () => {},
     dispatchSubmit: () => {},

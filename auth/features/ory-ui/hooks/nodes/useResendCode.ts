@@ -9,8 +9,9 @@ import { FieldValues } from "react-hook-form"
 export function useResendCode() {
   const {
     flow: { flow },
-  } = useFlowStoreShallow((state) => ({ flow: state.flow }))
-  const { onSubmit } = useFormSubmit()
+  } = useFlowStoreShallow((state) => ({ flow: state.flowContainer }))
+  const onSubmit = useFormSubmit()
+
   const { getTransientPayload } = useTransientPayload()
 
   const resendCodeNode = findResendNode(flow.ui.nodes)

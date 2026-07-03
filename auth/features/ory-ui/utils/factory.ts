@@ -2,19 +2,18 @@ import {
   UiNodeAttributes,
   UiNodeGroupEnum,
   UiNodeMeta,
-  UiNodeTextAttributes,
   UiNodeTypeEnum,
   UiText,
   UiTextTypeEnum,
 } from "@ory/client-fetch"
 import {
-  CustomMessageKey,
-  custonMessageIds,
   FormNode,
-  FormNodeLayout,
   UiNodeAnchor,
+  UiNodeDiv,
   UiNodeText,
+  NodeData,
 } from "../types"
+import { TFunction } from "i18next"
 
 interface CreateUiNodeParams {
   type: UiNodeTypeEnum
@@ -22,7 +21,7 @@ interface CreateUiNodeParams {
   messages?: Array<UiText>
   meta?: UiNodeMeta
   attributes: UiNodeAttributes
-  layout?: FormNodeLayout
+  data?: NodeData
 }
 
 export function createUiNode({
@@ -31,7 +30,7 @@ export function createUiNode({
   messages = [],
   meta = {},
   attributes,
-  layout,
+  data,
 }: CreateUiNodeParams): FormNode {
   return {
     attributes,
@@ -39,7 +38,7 @@ export function createUiNode({
     type,
     messages,
     meta,
-    layout,
+    data,
   }
 }
 
@@ -99,24 +98,84 @@ export function createTextNode({
 }
 
 interface CreateUiTextParams {
-  keyOrId: CustomMessageKey | number
-  fallback: string
+  keyOrId: string | number
+  text: string
   type?: UiTextTypeEnum
   context?: object
+  t: TFunction
 }
 
 export function createUiText({
   keyOrId,
-  fallback,
+  text,
   type = UiTextTypeEnum.Info,
   context,
+  t,
 }: CreateUiTextParams): UiText {
-  const id = typeof keyOrId === "number" ? keyOrId : custonMessageIds[keyOrId]
+  if (typeof keyOrId === "string") {
+    return {
+      id: 0,
+      text: t(keyOrId, { defaultValue: text, ...(context || {}) }),
+      type,
+      context,
+    }
+  }
 
   return {
-    id,
-    text: fallback,
+    id: keyOrId,
+    text: text,
     type,
     context,
   }
+}
+
+interface CreateDivisionNodeParams extends Omit<
+  CreateUiNodeParams,
+  "type" | "attributes"
+> {
+  id: string
+  class?: string
+  data?: Record<string, string>
+}
+
+export function createDivNode({
+  id,
+  class: className,
+  data,
+  ...rest
+}: CreateDivisionNodeParams): UiNodeDiv {
+  const attributes = {
+    node_type: "div" as const,
+    id,
+    _class: className,
+    data,
+  }
+
+  return createUiNode({
+    type: UiNodeTypeEnum.Div,
+    attributes,
+    ...rest,
+  }) as UiNodeDiv
+}
+
+export function createDivGroup({
+  id,
+  class: className,
+  data,
+  children,
+  ...rest
+}: CreateDivisionNodeParams & { children: FormNode[] }): FormNode[] {
+  const startDiv = createDivNode({
+    id: `${id}-start`,
+    class: className,
+    data: { ...data, role: "start" },
+    ...rest,
+  })
+
+  const endDiv = createDivNode({
+    id: `${id}-end`,
+    data: { ...data, role: "end" },
+  })
+
+  return [startDiv, ...children, endDiv]
 }

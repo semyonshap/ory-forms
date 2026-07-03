@@ -1,10 +1,15 @@
 import { useTranslation } from "react-i18next"
-import { getNodeLabel } from "@ory/client-fetch"
+import {
+  getNodeLabel,
+  UiNodeGroupEnum,
+  UiNodeInputAttributesTypeEnum,
+} from "@ory/client-fetch"
 
-import { UiNodeInput } from "../../types"
+import { ButtonOptionType, UiNodeInput } from "../../types"
 import { useNodeInputProps } from "./useNodeInputProps"
 import { resolvePlaceholder, uiTextToFormattedMessage } from "../../i18n"
 import { useNodeButton } from "./useNodeButton"
+import logos from "../../assets"
 
 export function useInputRenderProps(node: UiNodeInput) {
   const { t } = useTranslation()
@@ -33,6 +38,22 @@ export function useButtonRenderProps(node: UiNodeInput) {
 
   const { onClick, disabled, isSubmitting } = useNodeButton(node)
 
+  const attr = node.attributes
+
+  const isSubmit = attr.type === UiNodeInputAttributesTypeEnum.Submit
+  const isSso =
+    (attr.name === "provider" || attr.name === "link") &&
+    (node.group === UiNodeGroupEnum.Oidc || node.group === UiNodeGroupEnum.Saml)
+
+  let type: ButtonOptionType = "default"
+  if (isSso) type = "sso"
+  else if (isSubmit) type = "submit"
+
+  let icon
+  if (isSso) {
+    icon = logos[(node.attributes.value as string).split("-")[0]]
+  }
+
   return {
     props: {
       name: node.attributes.name,
@@ -41,8 +62,10 @@ export function useButtonRenderProps(node: UiNodeInput) {
       disabled,
     },
     options: {
+      type,
       isSubmitting,
       label: formattedLabel,
+      icon,
     },
   }
 }

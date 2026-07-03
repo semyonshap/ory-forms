@@ -1,7 +1,9 @@
 import { useContext } from "react"
-import { FlowStoreContext, FlowStoreState } from "./oryStore"
 import { useStore } from "zustand"
 import { useShallow } from "zustand/shallow"
+
+import { OryFormContext } from "./oryFormProvider"
+import { FlowStoreContext, FlowStoreState } from "./oryStore"
 
 export function useFlowStore<T>(selector: (state: FlowStoreState) => T): T {
   const store = useContext(FlowStoreContext)
@@ -17,4 +19,11 @@ export function useFlowStoreShallow<T>(
   const store = useContext(FlowStoreContext)
   if (!store) throw new Error("...")
   return useStore(store, useShallow(selector))
+}
+
+export function useOryFormContext() {
+  const ctx = useContext(OryFormContext)
+  if (!ctx)
+    throw new Error("useOryFormContext must be used within OryFormProvider")
+  return ctx
 }

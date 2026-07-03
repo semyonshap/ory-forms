@@ -14,7 +14,7 @@ import { useFlowStoreShallow } from "../../context"
 export function useLoginMutation() {
   const { flow, setFlowContainer, config } = useFlowStoreShallow((state) => ({
     config: state.config,
-    flow: state.flow,
+    flow: state.flowContainer,
     setFlowContainer: state.setFlowContainer,
   }))
 
@@ -23,7 +23,7 @@ export function useLoginMutation() {
       if (!flow || flow.flowType !== FlowType.Login) {
         throw new Error("No active login flow")
       }
-      const client = createOryClient()
+      const client = createOryClient(config)
       const res = await client.updateLoginFlowRaw({
         flow: flow.flow.id,
         updateLoginFlowBody: body,

@@ -5,9 +5,6 @@ export { CardWrapper } from "./cardWrapper"
 
 export {
   ButtonWrapper,
-  CodeWrapper,
   InputWrapper,
-  SsoButtonWrapper,
   MethodButtonWrapper,
-  SubmitButtonWrapper
 } from "./inputWrapper"

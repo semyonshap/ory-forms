@@ -63,8 +63,6 @@ export type OryFlowContainer =
   | SettingsFlowContainer
   | ConsentFlowContainer
 
-export type FlowContainerSetter = Dispatch<OryFlowContainer>
-
 export type OryFlowContainerWithState = OryFlowContainer & {
   formState: FormState
 }

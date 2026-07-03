@@ -1,6 +1,10 @@
-import { useMemo } from "react"
 import { UiNode, UiNodeGroupEnum } from "@ory/client-fetch"
-import { FormNode, OryConfiguration, OryFlowContainer } from "../../types"
+import {
+  FormNode,
+  isUiNodeInput,
+  OryConfiguration,
+  OryFlowContainer,
+} from "../../types"
 import {
   withoutSingleSignOnNodes,
   isNodeVisible,
@@ -8,7 +12,9 @@ import {
   initFlowUrl,
   createUiText,
   createTextNode,
+  createDivGroup,
 } from "../../utils"
+import { useTranslation } from "react-i18next"
 
 type UseStateProvideIdentifierProps = {
   config: OryConfiguration
@@ -23,55 +29,78 @@ export function useStateProvideIdentifier({
   nodes,
   nodeSorter,
 }: UseStateProvideIdentifierProps): UiNode[] {
-  return useMemo(() => {
-    const { flow } = container
+  const { flow } = container
+  const { t } = useTranslation()
 
-    const nonSsoNodes = withoutSingleSignOnNodes(nodes).sort(nodeSorter)
-    const ssoNodes = nodes
-      .filter(isNodeVisible)
-      .filter(
-        (node) =>
-          node.group === UiNodeGroupEnum.Oidc ||
-          node.group === UiNodeGroupEnum.Saml,
-      )
+  const nonSsoNodes = withoutSingleSignOnNodes(nodes).sort(nodeSorter)
+  const ssoNodes = nodes
+    .filter(isNodeVisible)
+    .filter(
+      (node) =>
+        node.group === UiNodeGroupEnum.Oidc ||
+        node.group === UiNodeGroupEnum.Saml,
+    )
 
-    const result: UiNode[] = []
+  const result: UiNode[] = []
 
-    if (ssoNodes.length > 0) {
-      result.push(...ssoNodes)
-      if (nonSsoNodes.some(isNodeVisible)) {
-        result.push()
-      }
+  if (ssoNodes.length > 0) {
+    result.push(...ssoNodes)
+    if (nonSsoNodes.some(isNodeVisible)) {
+      result.push()
     }
+  }
 
-    result.push(...nonSsoNodes)
+  result.push(...nonSsoNodes)
 
-    const { registration_enabled } = config.project
+  const { registration_enabled } = config.project
 
-    if (registration_enabled) {
-      const nodeTextSignUpLabel = createTextNode({
-        id: "registration-label",
-        text: createUiText({
-          keyOrId: "login.registration-label",
-          fallback: "Don't have an account?",
-        }),
-      })
+  if (registration_enabled) {
+    const nodeTextSignUpLabel = createTextNode({
+      id: "registration.label",
+      text: createUiText({
+        keyOrId: "login.registration-label",
+        text: "Don't have an account?",
+        t,
+      }),
+    })
 
-      const nodeAnchorSignUp = createAnchorNode({
-        id: "registration-button",
-        href: initFlowUrl(config.sdk.url, "registration", flow),
-        title: createUiText({
-          keyOrId: "login.registration-button",
-          fallback: "Sign up",
-        }),
-        layout: {
-          inline: true,
-        },
-      })
+    const nodeAnchorSignUp = createAnchorNode({
+      id: "registration.button",
+      href: initFlowUrl(config.sdk.url, "registration", flow),
+      title: createUiText({
+        keyOrId: "login.registration-button",
+        text: "Sign up",
+        t,
+      }),
+    })
 
-      result.push(nodeTextSignUpLabel, nodeAnchorSignUp)
-    }
+    const divGroup = createDivGroup({
+      id: "registration-div",
+      class: "inline-flex",
+      children: [nodeTextSignUpLabel, nodeAnchorSignUp],
+    })
 
-    return result
-  }, [nodes, nodeSorter])
+    result.push(...divGroup)
+  }
+
+  const identifierNode = nonSsoNodes
+    .filter(isUiNodeInput)
+    .find((n) => n.attributes.name === "identifier")
+
+  if (identifierNode) {
+    const nodeAnchorRecover = createAnchorNode({
+      id: "recover-button",
+      href: initFlowUrl(config.sdk.url, "recovery", flow),
+      title: createUiText({
+        keyOrId: "forms.label.recover-account",
+        text: "Recover Account",
+        t,
+      }),
+      data: { target: identifierNode.attributes.name },
+    })
+
+    result.push(nodeAnchorRecover)
+  }
+
+  return result
 }

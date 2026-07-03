@@ -3,32 +3,13 @@ import {
   UiNodeAnchorAttributes,
   UiNodeImageAttributes,
   UiNodeInputAttributesTypeEnum,
+  UiTextTypeEnum,
 } from "@ory/client-fetch"
-import { omittedInputKeys, UiNodeInput } from "."
-import { ComponentType, MouseEventHandler, PropsWithChildren } from "react"
+import { FormContext, omittedInputKeys, UiNodeInput } from "."
+import { MouseEventHandler, PropsWithChildren } from "react"
 
 type OmittedImageKeys = (typeof omittedInputKeys)[number]
 type OmittedAnchorKeys = (typeof omittedInputKeys)[number]
-
-type IconOption = ComponentType<{ size?: number }>
-
-export type FormOptionsText = {
-  label?: string
-}
-
-export type FormOptionsInput = FormOptionsText
-
-export type FormOptionsButton = {
-  label?: string
-  icon?: IconOption
-  isSubmitting: boolean
-}
-
-export type FormOptionsAuthMethodButton = {
-  label?: string
-  icon?: IconOption
-  description?: string
-}
 
 export type FormImageProps = {
   renderAttributes: Omit<UiNodeImageAttributes, OmittedImageKeys>
@@ -69,44 +50,74 @@ export type FormInputButtonProps = {
   disabled?: boolean
 }
 
-export type FormRenderButton = {
-  node: UiNodeInput
-  props: FormInputButtonProps
-  options: FormOptionsButton
+export type ButtonOptionType = "default" | "link" | "submit" | "cancel" | "sso"
+
+export type MessageProps = {
+  id: number
+  text: string
+  type: UiTextTypeEnum
 }
 
-export type FormRenderInput = {
+export type BaseRenderProps = {
+  context?: FormContext
+}
+
+export type FormRenderButton = BaseRenderProps & {
+  node: UiNodeInput
+  props: FormInputButtonProps
+  options: {
+    type?: ButtonOptionType
+    label?: string
+    icon?: IconType
+    isSubmitting?: boolean
+  }
+}
+
+export type FormRenderInput = BaseRenderProps & {
   node: UiNodeInput
   props: FormInputProps
-  options: FormOptionsInput
 }
 
-export type FormRenderAuthMethodButton = {
+export type FormRenderMethodButton = BaseRenderProps & {
   node: UiNodeInput
   props: FormInputButtonProps
-  options: FormOptionsAuthMethodButton
+  options: {
+    label?: string
+    icon?: IconType
+    description?: string
+  }
 }
 
-export type FormRenderAnchor = {
+export type FormRenderAnchor = BaseRenderProps & {
   node: UiNode
   props: Omit<UiNodeAnchorAttributes, OmittedAnchorKeys>
-  options: FormOptionsText
+  options: {
+    label?: string
+  }
 }
 
-export type FormRenderImage = {
+export type FormRenderImage = BaseRenderProps & {
   node: UiNode
   props: Omit<UiNodeImageAttributes, OmittedImageKeys>
 }
 
-export type FormRenderSelect = {
+export type FormRenderSelect = BaseRenderProps & {
   node: UiNode
 }
 
-export type FormRenderText = {
+export type FormRenderLabel = BaseRenderProps & {
+  node: UiNodeInput
+  options: {
+    label?: string
+    messages?: MessageProps[]
+  }
+} & PropsWithChildren
+
+export type FormRenderText = BaseRenderProps & {
   node: UiNode
   options: {
     label?: string
-    description?: string
+    text?: string
   }
 }
 
@@ -116,5 +127,11 @@ export type CardRenderRoot = {
     description?: string
   }
   nodes: React.ReactNode[]
-  footer: React.ReactNode[]
+  messages?: MessageProps[]
 }
+
+export interface IconProps extends React.SVGProps<SVGSVGElement> {
+  size?: number
+}
+
+export type IconType = React.ComponentType<IconProps>

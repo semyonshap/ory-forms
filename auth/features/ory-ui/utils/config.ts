@@ -1,27 +1,34 @@
+import { DefaultComponents } from "../components/defaultComponents"
 import {
   OryComponents,
   OryConfiguration,
   OryClientComponents,
   OryClientConfiguration,
 } from "../types"
+import { defaultGroupSorter, defaultNodeSorter } from "./sorter"
 import { normalizeUrl } from "./windowUtils"
 
 export function computeComponents(
-  defaultComponents: OryComponents,
-  overrideComponents: Partial<OryClientComponents>,
+  components?: Partial<OryClientComponents>,
 ): OryComponents {
   return {
     Card: {
-      ...defaultComponents.Card,
-      ...(overrideComponents.Card || {}),
+      Root: components?.Card?.Root ?? DefaultComponents.Card.Root,
     },
     Node: {
-      ...defaultComponents.Node,
-      ...(overrideComponents.Node || {}),
+      Label: components?.Node?.Label ?? DefaultComponents.Node.Label,
+      Button: components?.Node?.Button ?? DefaultComponents.Node.Button,
+      MethodButton:
+        components?.Node?.MethodButton ?? DefaultComponents.Node.MethodButton,
+      Select: components?.Node?.Select ?? DefaultComponents.Node.Select,
+      Input: components?.Node?.Input ?? DefaultComponents.Node.Input,
+      Code: components?.Node?.Code ?? DefaultComponents.Node.Code,
+      Image: components?.Node?.Image ?? DefaultComponents.Node.Image,
+      Text: components?.Node?.Text ?? DefaultComponents.Node.Text,
+      Anchor: components?.Node?.Anchor ?? DefaultComponents.Node.Anchor,
     },
-    nodeSorter: overrideComponents.nodeSorter ?? defaultComponents.nodeSorter,
-    groupSorter:
-      overrideComponents.groupSorter ?? defaultComponents.groupSorter,
+    nodeSorter: components?.nodeSorter ?? defaultNodeSorter,
+    groupSorter: components?.groupSorter ?? defaultGroupSorter,
   }
 }
 

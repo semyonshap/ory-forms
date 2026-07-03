@@ -11,22 +11,21 @@ export function notImplemented(componentName: string) {
   }
 }
 
-export function getDefaultComponents(): OryComponents {
-  return {
-    Card: {
-      Root: notImplemented("CardRoot"),
-    },
-    Node: {
-      Button: notImplemented("Button"),
-      MethodButton: notImplemented("AuthMethodButton"),
-      Select: notImplemented("Select"),
-      Input: notImplemented("Input"),
-      Code: notImplemented("CodeInput"),
-      Image: NodeImage,
-      Text: notImplemented("Text"),
-      Anchor: notImplemented("Anchor"),
-    },
-    nodeSorter: defaultNodeSorter,
-    groupSorter: defaultGroupSorter,
-  }
+export const DefaultComponents: OryComponents = {
+  Card: {
+    Root: notImplemented("CardRoot"),
+  },
+  Node: {
+    Label: notImplemented("Label"),
+    Button: notImplemented("Button"),
+    MethodButton: notImplemented("AuthMethodButton"),
+    Select: notImplemented("Select"),
+    Input: notImplemented("Input"),
+    Code: notImplemented("CodeInput"),
+    Image: NodeImage,
+    Text: notImplemented("Text"),
+    Anchor: notImplemented("Anchor"),
+  },
+  nodeSorter: defaultNodeSorter,
+  groupSorter: defaultGroupSorter,
 }

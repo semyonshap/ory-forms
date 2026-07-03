@@ -4,7 +4,7 @@ import { UiNodeInputAttributes, FlowType } from "@ory/client-fetch"
 import { useFlowStoreShallow } from "../../context"
 import { initFlowUrl } from "../../utils"
 
-export function useInputAction(attributes: UiNodeInputAttributes) {
+export function useLabelAction(attributes: UiNodeInputAttributes) {
   const { t } = useTranslation()
   const {
     config,
@@ -12,7 +12,7 @@ export function useInputAction(attributes: UiNodeInputAttributes) {
     formState,
   } = useFlowStoreShallow((state) => ({
     config: state.config,
-    flow: state.flow,
+    flow: state.flowContainer,
     formState: state.formState,
   }))
 

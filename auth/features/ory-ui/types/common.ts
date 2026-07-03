@@ -1,22 +1,31 @@
 import { UiNode, UiNodeGroupEnum } from "@ory/client-fetch"
 import { OryClientConfiguration } from "./config"
 import { OryFlowContainer } from "./container"
-import { ComponentType } from "react"
 import {
-  FormRenderButton,
-  FormRenderAuthMethodButton as FormRenderMethodButton,
+  ComponentPropsWithoutRef,
+  ComponentType,
+  FormEventHandler,
+} from "react"
+import {
+  FormRenderMethodButton,
   FormRenderSelect,
   FormRenderInput,
   FormRenderImage,
   FormRenderText,
   FormRenderAnchor,
   CardRenderRoot,
+  FormRenderLabel,
+  FormRenderButton,
 } from "./render"
 
 export type FormValues = Record<
   string,
   string | boolean | number | string[] | undefined
 >
+
+export type FormRootProps = ComponentPropsWithoutRef<"form"> & {
+  onSubmit: FormEventHandler<HTMLFormElement>
+}
 
 export type FlowInputProps = {
   config: OryClientConfiguration
@@ -37,9 +46,9 @@ export type OryComponents = {
     Root: ComponentType<CardRenderRoot>
   }
   Node: {
+    Label: ComponentType<FormRenderLabel>
+
     Button: ComponentType<FormRenderButton>
-    SsoButton?: ComponentType<FormRenderButton>
-    SubmitButton?: ComponentType<FormRenderButton>
     MethodButton: ComponentType<FormRenderMethodButton>
 
     Select: ComponentType<FormRenderSelect>

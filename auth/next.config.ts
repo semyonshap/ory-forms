@@ -1,7 +1,7 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from "next"
 
 const nextConfig: NextConfig = {
-	allowedDevOrigins: ['*.with-jiko.com']
-};
+  allowedDevOrigins: ["*.with-jiko.com"],
+}
 
-export default nextConfig;
+export default nextConfig

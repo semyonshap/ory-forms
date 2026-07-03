@@ -1,15 +1,16 @@
-import { useLoginMutation } from "../mutations/useLoginMutation"
 import { FlowType, UpdateLoginFlowBody } from "@ory/client-fetch"
 import { removeEmptyStrings } from "../../utils/removeFalsyValues"
 import { useFlowStoreShallow } from "../../context"
+import { onSubmitLogin } from "../../services"
 
 export function useFormSubmit() {
-  const { flow, dispatchFormState } = useFlowStoreShallow((state) => ({
-    flow: state.flow,
-    dispatchFormState: state.dispatchFormState,
-  }))
-
-  const loginMutation = useLoginMutation()
+  const { flow, config, dispatchFormState, setFlowContainer } =
+    useFlowStoreShallow((state) => ({
+      flow: state.flowContainer,
+      config: state.config,
+      dispatchFormState: state.dispatchFormState,
+      setFlowContainer: state.setFlowContainer,
+    }))
 
   const onSubmit = async (initialData: Record<string, unknown>) => {
     dispatchFormState({ type: "form_submit_start" })
@@ -20,7 +21,7 @@ export function useFormSubmit() {
           const submitData: UpdateLoginFlowBody = {
             ...(data as unknown as UpdateLoginFlowBody),
           }
-          await loginMutation.mutateAsync(submitData)
+          await onSubmitLogin(flow, config, submitData, setFlowContainer)
           break
         }
       }
@@ -29,5 +30,5 @@ export function useFormSubmit() {
     }
   }
 
-  return { onSubmit }
+  return onSubmit
 }

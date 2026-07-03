@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react"
+import { useState, useEffect } from "react"
+
+import { FlowInputProps } from "../types"
 import { useFlow } from "../hooks/useFlow"
 import { createFlowStore, FlowStoreContext } from "./oryStore"
-import { OryConfiguration, FlowInputProps } from "../types"
 import { computeSdkConfig, computeComponents } from "../utils"
 
 interface OryFlowProviderProps extends FlowInputProps {
@@ -14,33 +15,29 @@ export function OryFlowProvider({
   components,
   children,
 }: OryFlowProviderProps) {
-  const { setFlowContainer, formState, dispatchFormState } = useFlow(flow)
-
-  const resolvedConfig: OryConfiguration = {
-    sdk: computeSdkConfig(config.sdk),
-    project: config.project,
-  }
+  const { setFlowContainer, formState, dispatchFormState, flowContainer } =
+    useFlow(flow)
 
   const [store] = useState(() =>
     createFlowStore({
-      config: resolvedConfig,
-      flow,
-      nodes: [],
-      form: null,
+      config: {
+        sdk: computeSdkConfig(config.sdk),
+        project: config.project,
+      },
+      flowContainer: flow,
       formState,
+      components: computeComponents(components),
     }),
   )
 
   useEffect(() => {
     store.setState({
-      config: resolvedConfig,
-      flow,
+      flowContainer,
       setFlowContainer,
       formState,
       dispatchFormState,
-      components: computeComponents(store.getState().components, components),
     })
-  }, [config, flow, setFlowContainer, formState, dispatchFormState])
+  }, [flowContainer, setFlowContainer, formState, dispatchFormState])
 
   return (
     <FlowStoreContext.Provider value={store}>

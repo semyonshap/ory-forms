@@ -1,10 +1,10 @@
 import { useTranslation } from "react-i18next"
 
-import { UiNodeText } from "../../types"
 import { useFlowStore } from "../../context"
+import { UiNodeTextContext } from "../../types"
 import { uiTextToFormattedMessage } from "../../i18n"
 
-export function TextWrapper({ node }: { node: UiNodeText }) {
+export function TextWrapper({ node, context }: UiNodeTextContext) {
   const Node = useFlowStore((state) => state.components.Node)
 
   const { t } = useTranslation()
@@ -18,7 +18,8 @@ export function TextWrapper({ node }: { node: UiNodeText }) {
   return (
     <Node.Text
       node={node}
-      options={{ label: formattedLabel, description: formattedText }}
+      options={{ label: formattedLabel, text: formattedText }}
+      context={context}
     />
   )
 }

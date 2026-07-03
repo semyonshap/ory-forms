@@ -18,16 +18,18 @@ export function useNodeButton(node: UiNodeInput) {
 
   const [clicked, setClicked] = useDebounceValue(false, 100)
 
+  const attr = node.attributes
+
   const onClick = useCallback(() => {
-    setValue(node.attributes.name, node.attributes.value)
+    setValue(attr.name, attr.value)
     setClicked(true)
-    if (node.attributes.onclickTrigger) {
-      triggerToWindowCall(node.attributes.onclickTrigger)
+    if (attr.onclickTrigger) {
+      triggerToWindowCall(attr.onclickTrigger)
     }
-  }, [node.attributes, setValue, setClicked])
+  }, [attr, setValue, setClicked])
 
   const disabled =
-    node.attributes.disabled ||
+    attr.disabled ||
     !isReady ||
     !oryFormState.isReady ||
     oryFormState.isSubmitting

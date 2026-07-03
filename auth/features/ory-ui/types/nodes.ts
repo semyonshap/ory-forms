@@ -11,14 +11,12 @@ import {
 
 export type GroupedNodes = Partial<Record<UiNodeGroupEnum, UiNode[]>>
 
-export type FormNodeLayout = {
-  section?: "default" | "footer"
-  group?: "default" | "method" | "sso"
-  inline?: boolean
+export type NodeData = {
+  target?: string
 }
 
 export type FormNode = UiNode & {
-  layout?: FormNodeLayout
+  data?: NodeData
 }
 
 export type UiNodeInput = FormNode & {

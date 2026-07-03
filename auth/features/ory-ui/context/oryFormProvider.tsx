@@ -1,27 +1,27 @@
-import { FormProvider } from "react-hook-form"
-import React, { useContext, useEffect } from "react"
+import { FormProvider, UseFormReturn } from "react-hook-form"
+import { createContext, PropsWithChildren, useContext, useState } from "react"
 
 import { useForm } from "../hooks/useForm"
 import { FlowStoreContext } from "./oryStore"
+import { FormContext, FormValues } from "../types"
 
-interface OryFormProviderProps {
-  children: React.ReactNode
+export interface OryFormContextValue {
+  methods: UseFormReturn<FormValues> | null
 }
 
-export function OryFormProvider({ children }: OryFormProviderProps) {
+export const OryFormContext = createContext<OryFormContextValue | null>(null)
+
+export function OryFormProvider({ children }: PropsWithChildren) {
   const store = useContext(FlowStoreContext)
   if (!store) {
     throw new Error("OryFormProvider must be used within OryFlowProvider")
   }
 
-  const { form, nodes } = useForm()
+  const { methods } = useForm()
 
-  useEffect(() => {
-    store.setState({
-      form,
-      nodes,
-    })
-  }, [form, nodes])
-
-  return <FormProvider {...form}>{children}</FormProvider>
+  return (
+    <OryFormContext.Provider value={{ methods }}>
+      <FormProvider {...methods}>{children}</FormProvider>
+    </OryFormContext.Provider>
+  )
 }

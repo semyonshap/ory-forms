@@ -1,62 +1,62 @@
-import { logger } from "@/libs/logger";
+import { logger } from "@/lib/logger"
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { redirect } from "next/navigation";
-import { isRedirectError } from "next/dist/client/components/redirect-error";
-import { oauth2Client } from "@/features/ory-elements/client/frontendClient";
+} from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { redirect } from "next/navigation"
+import { isRedirectError } from "next/dist/client/components/redirect-error"
+import { oauth2Client } from "@/features/ory-elements/client/frontendClient"
 
-const api = oauth2Client();
+const api = oauth2Client()
 
 async function confirmLogout(formData: FormData) {
-  "use server";
+  "use server"
 
-  const challenge = formData.get("challenge") as string;
-  const action = formData.get("action") as string;
+  const challenge = formData.get("challenge") as string
+  const action = formData.get("action") as string
 
   if (action === "accept") {
     const { redirect_to } = await api.acceptOAuth2LogoutRequest({
       logoutChallenge: challenge,
-    });
-    redirect(redirect_to);
+    })
+    redirect(redirect_to)
   } else if (action === "reject") {
     await api.rejectOAuth2LogoutRequest({
       logoutChallenge: challenge,
-    });
-    redirect("/");
+    })
+    redirect("/")
   }
 }
 
 export default async function OAuth2LogoutPage(props: {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }) {
-  const searchParams = await props.searchParams;
-  const logoutChallenge = searchParams.logout_challenge as string;
+  const searchParams = await props.searchParams
+  const logoutChallenge = searchParams.logout_challenge as string
 
   if (!logoutChallenge) {
-    logger.error("No logout challenge provided");
-    return <div>Invalid logout challenge</div>;
+    logger.error("No logout challenge provided")
+    return <div>Invalid logout challenge</div>
   }
 
   try {
     const logoutRequest = await api.getOAuth2LogoutRequest({
       logoutChallenge,
-    });
-    const { challenge, subject, sid, client } = logoutRequest;
+    })
+    const { challenge, subject, sid, client } = logoutRequest
 
     logger.info("Logout request received", {
       subject: subject,
       sid: sid,
       challenge: challenge,
-    });
+    })
 
     const redirectUrl =
-      client?.post_logout_redirect_uris?.[0] || "the application";
+      client?.post_logout_redirect_uris?.[0] || "the application"
 
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -89,12 +89,12 @@ export default async function OAuth2LogoutPage(props: {
           </CardContent>
         </Card>
       </div>
-    );
+    )
   } catch (error) {
     if (isRedirectError(error)) {
-      throw error;
+      throw error
     }
-    logger.error("Error handling OAuth2 logout", { error, logoutChallenge });
-    return <div>Error during logout</div>;
+    logger.error("Error handling OAuth2 logout", { error, logoutChallenge })
+    return <div>Error during logout</div>
   }
 }

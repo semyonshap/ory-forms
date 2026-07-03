@@ -1,9 +1,7 @@
 import { Configuration, FrontendApi } from "@ory/client-fetch"
-import { useFlowStore } from "../context"
+import { OryConfiguration } from "../types"
 
-export function createOryClient() {
-  const oryConfig = useFlowStore((state) => state.config)
-
+export function createOryClient(oryConfig: OryConfiguration) {
   const baseUrl = oryConfig?.sdk?.url
 
   if (!baseUrl) {

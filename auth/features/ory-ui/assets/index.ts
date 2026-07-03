@@ -1,30 +1,30 @@
-import apple from "./apple.svg"
-import auth0 from "./auth0.svg"
-import discord from "./discord.svg"
-import facebook from "./facebook.svg"
-import github from "./github.svg"
-import gitlab from "./gitlab.svg"
-import google from "./google.svg"
-import linkedin from "./linkedin.svg"
-import microsoft from "./microsoft.svg"
-import slack from "./slack.svg"
-import spotify from "./spotify.svg"
-import yandex from "./yandex.svg"
-import x from "./x.svg"
+import Apple from "./apple"
+import Auth0 from "./auth0"
+import Discord from "./discord"
+import Facebook from "./facebook"
+import Github from "./github"
+import Gitlab from "./gitlab"
+import Google from "./google"
+import Linkedin from "./linkedin"
+import Microsoft from "./microsoft"
+import Slack from "./slack"
+import Spotify from "./spotify"
+import X from "./x"
+import Yandex from "./yandex"
 
-const logos: Record<string, typeof apple> = {
-  apple,
-  auth0,
-  discord,
-  facebook,
-  github,
-  gitlab,
-  google,
-  linkedin,
-  microsoft,
-  slack,
-  spotify,
-  yandex,
-  x,
+const logos: Record<string, React.FC<import("../types").IconProps>> = {
+  apple: Apple,
+  auth0: Auth0,
+  discord: Discord,
+  facebook: Facebook,
+  github: Github,
+  gitlab: Gitlab,
+  google: Google,
+  linkedin: Linkedin,
+  microsoft: Microsoft,
+  slack: Slack,
+  spotify: Spotify,
+  yandex: Yandex,
+  x: X,
 }
 export default logos
