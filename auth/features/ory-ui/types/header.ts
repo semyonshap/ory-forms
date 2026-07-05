@@ -1,14 +1,13 @@
 import {
   AuthenticatorAssuranceLevel,
-  FlowType,
   OAuth2ConsentRequest,
   Session,
 } from "@ory/client-fetch"
-import { FormState } from "."
+import { FormState, OryFlowType } from "."
 
 export type CardHeaderTextOptions =
   | {
-      flowType: FlowType.Login
+      flowType: OryFlowType.Login
       flow: {
         refresh?: boolean
         requested_aal?: AuthenticatorAssuranceLevel
@@ -16,11 +15,11 @@ export type CardHeaderTextOptions =
       formState?: FormState
     }
   | {
-      flowType: FlowType.Registration
+      flowType: OryFlowType.Registration
       formState?: FormState
     }
   | {
-      flowType: FlowType.OAuth2Consent
+      flowType: OryFlowType.OAuth2Consent
       flow: {
         consent_request: OAuth2ConsentRequest
         session: Session
@@ -28,8 +27,8 @@ export type CardHeaderTextOptions =
     }
   | {
       flowType:
-        | FlowType.Error
-        | FlowType.Verification
-        | FlowType.Recovery
-        | FlowType.Settings
+        | OryFlowType.Error
+        | OryFlowType.Verification
+        | OryFlowType.Recovery
+        | OryFlowType.Settings
     }

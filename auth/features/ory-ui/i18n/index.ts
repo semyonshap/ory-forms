@@ -23,8 +23,4 @@ libraryI18n.use(initReactI18next).init({
 export default libraryI18n
 
 export { uiTextToFormattedMessage } from "./utils"
-export {
-  resolveLabel,
-  resolvePlaceholder,
-  resolveOptionLabel,
-} from "./resolver"
+export * from "./resolver"

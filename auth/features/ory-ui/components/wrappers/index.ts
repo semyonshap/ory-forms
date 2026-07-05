@@ -3,8 +3,4 @@ export { TextWrapper } from "./textWrapper"
 export { ImageWrapper } from "./imageWrapper"
 export { CardWrapper } from "./cardWrapper"
 
-export {
-  ButtonWrapper,
-  InputWrapper,
-  MethodButtonWrapper,
-} from "./inputWrapper"
+export { ButtonWrapper, InputWrapper } from "./inputWrapper"

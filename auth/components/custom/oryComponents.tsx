@@ -18,14 +18,37 @@ import {
 } from "../ui/card"
 import { Alert, AlertDescription } from "../ui/alert"
 import JikoIcon from "../icons/jiko-icon"
+import { useCooldown } from "@/hooks/useCooldown"
 import { cn } from "@/lib/utils"
+import {
+  KeyRound,
+  Mail,
+  Fingerprint,
+  ShieldCheck,
+  Timer,
+  FileKey,
+  Shield,
+  Asterisk,
+} from "lucide-react"
 
 export const OryComponents: OryClientComponents = {
+  Icons: {
+    System: {
+      Password: KeyRound,
+      Code: Mail,
+      CodeAsterix: Asterisk,
+      Passkey: Fingerprint,
+      Webauthn: Shield,
+      Totp: Timer,
+      LookupSecret: FileKey,
+      HardwareToken: ShieldCheck,
+    },
+  },
   Card: {
     Root: ({ header, nodes, messages }) => {
       return (
-        <div className="flex w-full flex-1 items-start justify-center sm:items-center">
-          <Card className="w-full sm:w-[350px] sm:max-w-[350px]">
+        <div className="flex w-full flex-1 items-start justify-center">
+          <Card className="w-[350px] max-w-[350px]">
             {header.title && (
               <CardHeader>
                 <JikoIcon className="pb-6 pt-2" />
@@ -53,7 +76,7 @@ export const OryComponents: OryClientComponents = {
     },
   },
   Node: {
-    Label: ({ node, options, children, context }) => {
+    Label: ({ node, options, children, attached }) => {
       const { label } = options
       const { messages } = node
 
@@ -63,7 +86,7 @@ export const OryComponents: OryClientComponents = {
             <span className="text-sm font-medium text-muted-foreground">
               {label}
             </span>
-            {context?.[node.attributes.name]}
+            {attached}
           </Label>
           {children}
           {messages?.map((msg) => (
@@ -84,26 +107,73 @@ export const OryComponents: OryClientComponents = {
     Anchor: ({ props, options }) => {
       const { label } = options
       return (
-        <Button
-          variant="link"
-          asChild
-          className="cursor-pointer px-2 text-brand-primary"
+        <Link
+          className="text-sm text-brand-primary underline-offset-2 hover:underline cursor-pointer"
+          {...props}
+          title={label}
         >
-          <Link {...props} title={label}>
-            {label}
-          </Link>
+          {label}
+        </Link>
+      )
+    },
+    Resend: ({ props, options }) => {
+      const { label } = options
+      const cooldown = useCooldown(60)
+
+      return (
+        <Button
+          {...props}
+          variant="link"
+          className={cn(
+            "p-0 text-brand-primary",
+            cooldown.isActive && "hover:no-underline text-muted-foreground",
+          )}
+          disabled={cooldown.isActive}
+          onClick={(e) => {
+            if (cooldown.isActive) {
+              e.preventDefault()
+              return
+            }
+            cooldown.start()
+            props.onClick?.(e)
+          }}
+        >
+          {cooldown.isActive && (
+            <span className="tabular-nums">{cooldown.remaining}s</span>
+          )}
+          <span>{label}</span>
         </Button>
       )
     },
-    MethodButton: ({ node }) => null,
+    AuthMethod: ({ props, options }) => {
+      const { label, description, icon: Icon } = options
+
+      return (
+        <Button
+          {...props}
+          variant="outline"
+          className="inline-flex gap-4 h-auto w-full whitespace-normal items-start"
+        >
+          {Icon && <Icon className="size-5 shrink-0 mt-3" />}
+          <div className="flex flex-col gap-1 justify-start items-start min-w-0">
+            {label}
+            {description && (
+              <span className="text-muted-foreground text-left text-sm">
+                {description}
+              </span>
+            )}
+          </div>
+        </Button>
+      )
+    },
     Button: ({ props, options }) => {
       const { type, label, icon: Icon, isSubmitting } = options
 
       const buttonConfig = {
-        link: { variant: "link", className: "justify-start" },
-        cancel: { variant: "destructive", className: "justify-center" },
-        submit: { variant: "outline", className: "justify-center" },
-        sso: { variant: "outline", className: "justify-start gap-16" },
+        link: { variant: "link", className: "justify-start p-0" },
+        cancel: { variant: "destructive", className: "w-full justify-center" },
+        submit: { variant: "outline", className: "w-full justify-center" },
+        sso: { variant: "outline", className: "w-full justify-start gap-16" },
       } as const
 
       const config = buttonConfig[type as keyof typeof buttonConfig] ?? {
@@ -114,7 +184,7 @@ export const OryComponents: OryClientComponents = {
       return (
         <Button
           {...props}
-          className={cn("w-full text-center", config.className)}
+          className={cn("text-center", config.className)}
           variant={config.variant}
         >
           {type == "submit" && isSubmitting && <Spinner />}
@@ -135,10 +205,20 @@ export const OryComponents: OryClientComponents = {
           {...restInputProps}
           value={value as string}
           maxLength={elements}
+          className="w-full"
+          onKeyDown={(e) => {
+            if ((value as string)?.length >= elements && e.key.length === 1) {
+              e.preventDefault()
+            }
+          }}
         >
-          <InputOTPGroup>
+          <InputOTPGroup className="w-full">
             {Array.from({ length: elements }, (_, index) => (
-              <InputOTPSlot index={index} key={index} />
+              <InputOTPSlot
+                index={index}
+                key={index}
+                className="text-2xl w-full aspect-square h-auto"
+              />
             ))}
           </InputOTPGroup>
         </InputOTP>

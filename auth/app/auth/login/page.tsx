@@ -1,9 +1,7 @@
 import { getLoginFlow, OryPageParams } from "@ory/nextjs/app"
 
 import { oryConfig } from "@/ory.config"
-import { Flow } from "@/features/ory-ui/components/flow"
-import { FlowType } from "@ory/client-fetch"
-import { Login } from "@/features/ory-elements"
+import { Flow, OryFlowType } from "@/features/ory-ui"
 import { OryComponents } from "@/components/custom/oryComponents"
 
 export default async function LoginPage(props: OryPageParams) {
@@ -15,8 +13,7 @@ export default async function LoginPage(props: OryPageParams) {
     <Flow
       config={oryConfig}
       components={OryComponents}
-      flow={{ flow, flowType: FlowType.Login }}
+      flow={{ flow, flowType: OryFlowType.Login }}
     />
   )
-  // return <Login config={oryConfig} flow={flow} />
 }

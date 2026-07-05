@@ -1,6 +1,7 @@
 import {
   UiNodeAttributes,
   UiNodeGroupEnum,
+  UiNodeInputAttributes,
   UiNodeMeta,
   UiNodeTypeEnum,
   UiText,
@@ -12,7 +13,9 @@ import {
   UiNodeDiv,
   UiNodeText,
   NodeData,
-} from "../types"
+  InputNodeData,
+  UiNodeInput,
+} from "../../types"
 import { TFunction } from "i18next"
 
 interface CreateUiNodeParams {
@@ -21,7 +24,7 @@ interface CreateUiNodeParams {
   messages?: Array<UiText>
   meta?: UiNodeMeta
   attributes: UiNodeAttributes
-  data?: NodeData
+  data?: NodeData | InputNodeData
 }
 
 export function createUiNode({
@@ -95,6 +98,53 @@ export function createTextNode({
     attributes,
     ...rest,
   }) as UiNodeText
+}
+
+export interface CreateButtonNodeParams extends Omit<
+  CreateUiNodeParams,
+  "type" | "attributes"
+> {
+  name: string
+  value?: any
+  label?: UiText
+  onClick?: () => void
+  buttonType?: "submit" | "button"
+  disabled?: boolean
+  group?: UiNodeGroupEnum
+  messages?: UiText[]
+}
+
+export function createButtonNode({
+  name,
+  value,
+  label,
+  onClick,
+  buttonType = "button",
+  disabled = false,
+  messages = [],
+  group,
+  data,
+}: CreateButtonNodeParams): UiNodeInput {
+  const attributes: UiNodeInputAttributes = {
+    node_type: "input",
+    name,
+    value: value ?? "",
+    type: buttonType,
+    disabled,
+  }
+
+  const meta = label ? { label } : {}
+  const nodeData: InputNodeData = { ...data }
+  if (onClick) nodeData.onClick = onClick
+
+  return createUiNode({
+    type: UiNodeTypeEnum.Input,
+    attributes: attributes as UiNodeAttributes,
+    meta,
+    messages,
+    group,
+    data: nodeData,
+  }) as UiNodeInput
 }
 
 interface CreateUiTextParams {

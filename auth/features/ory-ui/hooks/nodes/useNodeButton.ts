@@ -2,8 +2,9 @@ import { useCallback, useEffect } from "react"
 import { useDebounceValue } from "usehooks-ts"
 import { useFormContext } from "react-hook-form"
 
+import { UiNodeGroupEnum } from "@ory/client-fetch"
 import { UiNodeInput } from "../../types"
-import { triggerToWindowCall } from "../../utils"
+import { triggerToWindowCall } from "../../lib/nodes"
 import { useFlowStoreShallow } from "../../context"
 
 export function useNodeButton(node: UiNodeInput) {
@@ -21,12 +22,20 @@ export function useNodeButton(node: UiNodeInput) {
   const attr = node.attributes
 
   const onClick = useCallback(() => {
+    node.data?.onClick?.()
     setValue(attr.name, attr.value)
+    if (
+      attr.name === "provider" &&
+      (node.group === UiNodeGroupEnum.Oidc ||
+        node.group === UiNodeGroupEnum.Saml)
+    ) {
+      setValue("method", node.group)
+    }
     setClicked(true)
     if (attr.onclickTrigger) {
       triggerToWindowCall(attr.onclickTrigger)
     }
-  }, [attr, setValue, setClicked])
+  }, [node, attr, setValue, setClicked])
 
   const disabled =
     attr.disabled ||

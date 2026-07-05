@@ -1,12 +1,13 @@
-import { FlowType, UiNode, UiNodeGroupEnum } from "@ory/client-fetch"
+import { UiNode, UiNodeGroupEnum } from "@ory/client-fetch"
 import { isUiNodeGroupEnum } from "./nodes"
 import { Dispatch } from "react"
 import {
   FormStateAction,
   GroupedNodes,
   LoginFlowContainer,
+  OryFlowType,
   RegistrationFlowContainer,
-} from "../types"
+} from "../../types"
 
 function isScreenSelectionNode(node: UiNode): boolean {
   if (
@@ -31,7 +32,7 @@ function isScreenSelectionNode(node: UiNode): boolean {
 export function isChoosingMethod(
   flow: LoginFlowContainer | RegistrationFlowContainer,
 ): boolean {
-  if (flow.flowType === FlowType.Login) {
+  if (flow.flowType === OryFlowType.Login) {
     if (flow.flow.requested_aal === "aal2") {
       return true
     }

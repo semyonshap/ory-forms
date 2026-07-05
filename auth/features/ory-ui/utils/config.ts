@@ -5,47 +5,46 @@ import {
   OryClientComponents,
   OryClientConfiguration,
 } from "../types"
-import { defaultGroupSorter, defaultNodeSorter } from "./sorter"
+import { defaultGroupSorter, defaultNodeSorter } from "../lib/nodes/sorter"
 import { normalizeUrl } from "./windowUtils"
+import { frontendClient } from "./sdk"
 
 export function computeComponents(
   components?: Partial<OryClientComponents>,
 ): OryComponents {
+  const defaultComponents = DefaultComponents
+  const overrides = components ?? {}
+
   return {
     Card: {
-      Root: components?.Card?.Root ?? DefaultComponents.Card.Root,
+      Root: overrides?.Card?.Root ?? defaultComponents.Card.Root,
     },
     Node: {
-      Label: components?.Node?.Label ?? DefaultComponents.Node.Label,
-      Button: components?.Node?.Button ?? DefaultComponents.Node.Button,
-      MethodButton:
-        components?.Node?.MethodButton ?? DefaultComponents.Node.MethodButton,
-      Select: components?.Node?.Select ?? DefaultComponents.Node.Select,
-      Input: components?.Node?.Input ?? DefaultComponents.Node.Input,
-      Code: components?.Node?.Code ?? DefaultComponents.Node.Code,
-      Image: components?.Node?.Image ?? DefaultComponents.Node.Image,
-      Text: components?.Node?.Text ?? DefaultComponents.Node.Text,
-      Anchor: components?.Node?.Anchor ?? DefaultComponents.Node.Anchor,
+      ...defaultComponents.Node,
+      ...overrides.Node,
     },
-    nodeSorter: components?.nodeSorter ?? defaultNodeSorter,
-    groupSorter: components?.groupSorter ?? defaultGroupSorter,
+    Icons: {
+      Providers: {
+        ...defaultComponents.Icons.Providers,
+        ...overrides.Icons?.Providers,
+      },
+      System: components?.Icons?.System,
+    },
+    nodeSorter: overrides.nodeSorter ?? defaultNodeSorter,
+    groupSorter: overrides.groupSorter ?? defaultGroupSorter,
   }
 }
 
 export function computeSdkConfig(
   config?: OryClientConfiguration["sdk"],
 ): OryConfiguration["sdk"] {
-  if (config?.url && typeof config.url === "string") {
-    return {
-      url: normalizeUrl(config.url),
-      options: config.options || {},
-    }
-  }
+  const url =
+    config?.url && typeof config.url === "string"
+      ? normalizeUrl(config.url)
+      : getSdkUrl()
+  const options = config?.options || {}
 
-  return {
-    url: getSdkUrl(),
-    options: config?.options || {},
-  }
+  return { url, options, frontend: frontendClient(url, options) }
 }
 
 export function getSdkUrl(): string {

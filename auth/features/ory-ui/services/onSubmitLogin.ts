@@ -1,37 +1,62 @@
 import {
-  FlowType,
   handleContinueWith,
-  handleFlowError,
   LoginFlow,
   loginUrl,
   UpdateLoginFlowBody,
 } from "@ory/client-fetch"
-import { createOryClient } from "../client/sdk"
-import { OryConfiguration, OryFlowContainer } from "../types"
-import { onRedirect, replaceWindowFlowId } from "../utils/windowUtils"
+import {
+  LoginFlowContainer,
+  OnSubmitHandlerProps,
+  OryConfiguration,
+  OryFlowType,
+} from "../types"
+import { flowHasErrors, replaceWindowFlowId } from "../utils"
+import { handleFlowError } from "../utils/error"
 
 export async function onSubmitLogin(
-  flowContainer: OryFlowContainer,
+  { flow }: LoginFlowContainer,
   config: OryConfiguration,
-  body: UpdateLoginFlowBody,
-  setFlowContainer: (flowContainer: OryFlowContainer) => void,
+  {
+    setFlowContainer,
+    body,
+    onRedirect,
+    onSuccess,
+    onValidationError,
+    onError,
+  }: OnSubmitHandlerProps<UpdateLoginFlowBody>,
 ) {
-  const client = createOryClient(config)
+  if (!config.sdk.url) {
+    throw new Error(
+      `Please supply your Ory Network SDK url to the Ory Elements configuration.`,
+    )
+  }
 
-  await client
+  const method = String(body.method)
+
+  await config.sdk.frontend
     .updateLoginFlowRaw({
-      flow: flowContainer.flow.id,
+      flow: flow.id,
       updateLoginFlowBody: body,
     })
     .then(async (res) => {
-      const data = await res.value()
+      const body = await res.value()
 
-      const didContinueWith = handleContinueWith(data.continue_with, {
+      await onSuccess?.({
+        flowType: OryFlowType.Login,
+        method,
+        session: body.session,
+        flow,
+      })
+
+      const didContinueWith = handleContinueWith(body.continue_with, {
         onRedirect,
       })
+
       if (!didContinueWith) {
-        onRedirect(loginUrl({ sdk: config.sdk }), true)
+        onRedirect(loginUrl(config), true)
       }
+
+      return
     })
     .catch(
       handleFlowError({
@@ -39,13 +64,25 @@ export async function onSubmitLogin(
           if (useFlowId) {
             replaceWindowFlowId(useFlowId)
           } else {
-            onRedirect(loginUrl({ sdk: config.sdk }), true)
+            onRedirect(loginUrl(config), true)
           }
         },
-        onValidationError: (body: LoginFlow) => {
-          setFlowContainer({ flowType: FlowType.Login, flow: body })
+        onValidationError: async (body: LoginFlow) => {
+          if (flowHasErrors(body.ui)) {
+            await onValidationError?.({
+              flowType: OryFlowType.Login,
+              flow: body,
+            })
+          }
+          setFlowContainer({
+            flow: body,
+            flowType: OryFlowType.Login,
+          })
         },
         onRedirect,
+        config,
+        flowType: OryFlowType.Login,
+        onError,
       }),
     )
 }

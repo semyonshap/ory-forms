@@ -1,1 +1,5 @@
 export { onSubmitLogin } from "./onSubmitLogin"
+export { onSubmitRegistration } from "./onSubmitRegistration"
+export { onSubmitRecovery } from "./onSubmitRecovery"
+export { onSubmitSettings } from "./onSubmitSettings"
+export { onSubmitVerification } from "./onSubmitVerification"

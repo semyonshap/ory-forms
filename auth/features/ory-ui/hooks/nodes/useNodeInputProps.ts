@@ -2,7 +2,7 @@ import { useCallback } from "react"
 import { useController, useFormContext } from "react-hook-form"
 import { UiNodeInputAttributes } from "@ory/client-fetch"
 import { useFlowStoreShallow } from "../../context"
-import { triggerToWindowCall } from "../../utils"
+import { triggerToWindowCall } from "../../lib/nodes"
 
 export function useNodeInputProps(attributes: UiNodeInputAttributes) {
   const {

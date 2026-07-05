@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 
 import { FlowInputProps } from "../types"
-import { useFlow } from "../hooks/useFlow"
+import { useOryFlow } from "../hooks/useOryFlow"
 import { createFlowStore, FlowStoreContext } from "./oryStore"
 import { computeSdkConfig, computeComponents } from "../utils"
 
@@ -11,20 +11,22 @@ interface OryFlowProviderProps extends FlowInputProps {
 
 export function OryFlowProvider({
   config,
-  flow,
+  flow: initalFlowContainer,
   components,
   children,
 }: OryFlowProviderProps) {
+  const configResolved = {
+    sdk: computeSdkConfig(config.sdk),
+    project: config.project,
+  }
+
   const { setFlowContainer, formState, dispatchFormState, flowContainer } =
-    useFlow(flow)
+    useOryFlow(initalFlowContainer)
 
   const [store] = useState(() =>
     createFlowStore({
-      config: {
-        sdk: computeSdkConfig(config.sdk),
-        project: config.project,
-      },
-      flowContainer: flow,
+      config: configResolved,
+      flowContainer,
       formState,
       components: computeComponents(components),
     }),

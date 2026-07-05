@@ -2,7 +2,7 @@ import { OryClientConfiguration } from "./features/ory-ui/types"
 
 export const oryConfig: OryClientConfiguration = {
   sdk: {
-    url: process.env.NEXT_PUBLIC_ORY_SDK_URL || window.location.origin,
+    url: process.env.NEXT_PUBLIC_ORY_SDK_URL,
   },
   project: {
     default_locale: "en",

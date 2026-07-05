@@ -1,14 +1,15 @@
 import { useReducer, useState } from "react"
-import { FlowType, UiNode, UiNodeGroupEnum } from "@ory/client-fetch"
+import { UiNode, UiNodeGroupEnum } from "@ory/client-fetch"
 
 import {
   FlowFormState,
   FormState,
   FormStateAction,
   OryFlowContainer,
+  OryFlowType,
 } from "../../types"
-import { isChoosingMethod } from "../../utils/flow"
-import { nodesToAuthMethodGroups } from "../../utils/nodes"
+import { isChoosingMethod } from "../../lib/nodes/flow"
+import { nodesToAuthMethodGroups } from "../../lib/nodes/nodes"
 
 function findMethodWithMessage(nodes?: UiNode[]) {
   return nodes
@@ -18,8 +19,8 @@ function findMethodWithMessage(nodes?: UiNode[]) {
 
 function parseStateFromFlow(flow: OryFlowContainer): FlowFormState {
   switch (flow.flowType) {
-    case FlowType.Registration:
-    case FlowType.Login: {
+    case OryFlowType.Registration:
+    case OryFlowType.Login: {
       const methodWithMessage = findMethodWithMessage(flow.flow.ui.nodes)
       if (flow.flow.active == "link_recovery") {
         return { current: "method_active", method: "link" }
@@ -46,8 +47,8 @@ function parseStateFromFlow(flow: OryFlowContainer): FlowFormState {
       }
       return { current: "provide_identifier" }
     }
-    case FlowType.Recovery:
-    case FlowType.Verification:
+    case OryFlowType.Recovery:
+    case OryFlowType.Verification:
       if (flow.flow.active === "code" || flow.flow.active === "link") {
         if (flow.flow.state === "choose_method") {
           return { current: "provide_identifier" }
@@ -55,9 +56,9 @@ function parseStateFromFlow(flow: OryFlowContainer): FlowFormState {
         return { current: "method_active", method: flow.flow.active }
       }
       break
-    case FlowType.Settings:
+    case OryFlowType.Settings:
       return { current: "settings" }
-    case FlowType.OAuth2Consent:
+    case OryFlowType.OAuth2Consent:
       return { current: "method_active", method: "oauth2_consent" }
   }
   console.warn(

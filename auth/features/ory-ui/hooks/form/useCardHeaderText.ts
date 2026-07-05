@@ -1,13 +1,9 @@
-import {
-  FlowType,
-  isUiNodeInputAttributes,
-  UiContainer,
-} from "@ory/client-fetch"
+import { isUiNodeInputAttributes, UiContainer } from "@ory/client-fetch"
 import { useTranslation } from "react-i18next"
 
-import { findNode } from "../../utils"
+import { findNode } from "../../lib/nodes"
 import { resolveLabel } from "../../i18n"
-import { CardHeaderTextOptions } from "../../types"
+import { CardHeaderTextOptions, OryFlowType } from "../../types"
 
 function joinWithCommaOr(list: string[], orText = "or"): string {
   if (list.length === 0) {
@@ -35,7 +31,7 @@ export function useCardHeaderText(
   const nodes = container.nodes
 
   switch (opts.flowType) {
-    case FlowType.Recovery: {
+    case OryFlowType.Recovery: {
       const recoveryV2Message = container.messages?.find((m) =>
         [1060006, 1060005, 1060004].includes(m.id),
       )
@@ -65,13 +61,13 @@ export function useCardHeaderText(
       }
     }
 
-    case FlowType.Settings:
+    case OryFlowType.Settings:
       return {
         title: t("settings.title"),
         description: t("settings.subtitle"),
       }
 
-    case FlowType.Verification:
+    case OryFlowType.Verification:
       if (
         nodes.find(
           (node) =>
@@ -88,7 +84,7 @@ export function useCardHeaderText(
         description: t("verification.subtitle"),
       }
 
-    case FlowType.Login: {
+    case OryFlowType.Login: {
       // account linking
       const accountLinkingMessage = container.messages?.find(
         (m) => m.id === 1010016,
@@ -110,7 +106,7 @@ export function useCardHeaderText(
 
   if (nodes.find((node) => node.group === "password")) {
     switch (opts.flowType) {
-      case FlowType.Registration:
+      case OryFlowType.Registration:
         parts.push(
           t("card.header.parts.password.registration", {
             identifierLabel: "email", // TODO: сделать динамическим
@@ -190,7 +186,7 @@ export function useCardHeaderText(
   const stringifiedParts = joinWithCommaOr(parts, orText)
 
   switch (opts.flowType) {
-    case FlowType.Login: {
+    case OryFlowType.Login: {
       const codeMethodNode = findNode(container.nodes, {
         node_type: "input",
         group: "code",
@@ -238,7 +234,7 @@ export function useCardHeaderText(
       }
     }
 
-    case FlowType.Registration: {
+    case OryFlowType.Registration: {
       const codeMethodNode = findNode(container.nodes, {
         node_type: "input",
         group: "code",
@@ -262,7 +258,7 @@ export function useCardHeaderText(
       }
     }
 
-    case FlowType.OAuth2Consent:
+    case OryFlowType.OAuth2Consent:
       return {
         title: t("consent.title", {
           party: opts.flow.consent_request.client?.client_name,

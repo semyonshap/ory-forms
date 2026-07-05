@@ -1,9 +1,11 @@
 import { useState, useEffect, useMemo } from "react"
-import { useFormState } from "./form/useFormState"
-import { OryFlowContainer } from "../types"
 
-export function useFlow(initialFlow: OryFlowContainer) {
-  const [flowContainer, setFlowContainer] = useState(initialFlow)
+import { OryFlowContainer } from "../types"
+import { useFormState } from "./form/useFormState"
+
+export function useOryFlow(initialFlowContainer: OryFlowContainer) {
+  const [flowContainer, setFlowContainer] = useState(initialFlowContainer)
+
   const { formState, dispatchFormState } = useFormState(flowContainer)
 
   useEffect(() => {

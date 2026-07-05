@@ -1,21 +1,18 @@
 import { UiNodeInputAttributesTypeEnum } from "@ory/client-fetch"
 import {
-  FormContext,
-  FormNodeContext,
+  NodeRender,
   ignoredScriptGroups,
   isUiNodeAnchor,
   isUiNodeImage,
   isUiNodeInput,
   isUiNodeScript,
   isUiNodeText,
-  UiNodeInput,
-  UiNodeInputContext,
+  NodeRenderInput,
 } from "../types"
 import { useFlowStoreShallow } from "../context"
 import { NodeScript } from "./nodes/nodeScript"
-import { isIgnoredInputNode } from "../utils"
+import { isIgnoredInputNode } from "../lib/nodes"
 import {
-  MethodButtonWrapper,
   ButtonWrapper,
   AnchorWrapper,
   TextWrapper,
@@ -24,18 +21,18 @@ import {
 } from "./wrappers"
 import { useNodeInputSetup } from "../hooks"
 
-export const Node = ({ node, context }: FormNodeContext) => {
-  if (isUiNodeImage(node)) return ImageWrapper({ node, context })
-  else if (isUiNodeText(node)) return TextWrapper({ node, context })
-  else if (isUiNodeAnchor(node)) return AnchorWrapper({ node, context })
+export const Node = ({ node, attached }: NodeRender) => {
+  if (isUiNodeImage(node)) return ImageWrapper({ node, attached })
+  else if (isUiNodeText(node)) return TextWrapper({ node, attached })
+  else if (isUiNodeAnchor(node)) return AnchorWrapper({ node, attached })
   else if (isUiNodeInput(node))
-    return <NodeInput node={node} context={context} />
+    return <NodeInput node={node} attached={attached} />
   else if (isUiNodeScript(node) && !ignoredScriptGroups.includes(node.group))
     return <NodeScript node={node} />
   return null
 }
 
-function NodeInput({ node, context }: UiNodeInputContext) {
+function NodeInput({ node, attached }: NodeRenderInput) {
   const {
     components: { Node },
   } = useFlowStoreShallow((state) => ({
@@ -68,15 +65,12 @@ function NodeInput({ node, context }: UiNodeInputContext) {
         return null
       }
 
-      const isMethod = false // TODO: implement method button detection
-      if (isMethod) return MethodButtonWrapper({ node })
-
-      return ButtonWrapper({ node })
+      return ButtonWrapper({ node, attached })
     default:
       const options = node.attributes.options
       if (Array.isArray(options) && options.length > 0 && Node.Select)
-        return <Node.Select node={node} context={context} />
+        return <Node.Select node={node} />
 
-      return InputWrapper({ node })
+      return InputWrapper({ node, attached })
   }
 }

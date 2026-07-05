@@ -1,7 +1,8 @@
-import { Recovery } from "@/features/ory-elements/features/flows"
 import { getRecoveryFlow, OryPageParams } from "@ory/nextjs/app"
 
 import { oryConfig } from "@/ory.config"
+import { Flow, OryFlowType } from "@/features/ory-ui"
+import { OryComponents } from "@/components/custom/oryComponents"
 
 export default async function RecoveryPage(props: OryPageParams) {
   const flow = await getRecoveryFlow(oryConfig, props.searchParams)
@@ -11,9 +12,10 @@ export default async function RecoveryPage(props: OryPageParams) {
   }
 
   return (
-    <Recovery
-      flow={flow}
+    <Flow
       config={oryConfig}
+      components={OryComponents}
+      flow={{ flow, flowType: OryFlowType.Recovery }}
     />
   )
 }

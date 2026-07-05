@@ -63,3 +63,12 @@ export const omittedInputKeys = [
   "onloadTrigger",
 ] as const
 
+export const methodIconMap: Record<string, string> = {
+  password: "Password",
+  code: "Code",
+  passkey: "Passkey",
+  webauthn: "Webauthn",
+  totp: "Totp",
+  lookup_secret: "LookupSecret",
+  hardware_token: "HardwareToken",
+}

@@ -8,11 +8,19 @@ import {
   UiNodeScriptAttributes,
   UiNodeTextAttributes,
 } from "@ory/client-fetch"
+import { InputDataType } from "./render"
 
 export type GroupedNodes = Partial<Record<UiNodeGroupEnum, UiNode[]>>
 
 export type NodeData = {
+  type?: "method" | "resend"
   target?: string
+}
+
+export type InputNodeData = NodeData & {
+  inputType?: InputDataType
+  onClick?: () => void
+  description?: string
 }
 
 export type FormNode = UiNode & {
@@ -22,6 +30,7 @@ export type FormNode = UiNode & {
 export type UiNodeInput = FormNode & {
   type: "input"
   attributes: UiNodeInputAttributes
+  data?: InputNodeData
 }
 
 export function isUiNodeInput(node: FormNode): node is UiNodeInput {

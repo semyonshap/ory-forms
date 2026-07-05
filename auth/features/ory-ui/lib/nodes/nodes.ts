@@ -15,7 +15,7 @@ import {
   GroupedNodes,
   resendMessageId,
   UiNodeInput,
-} from "../types"
+} from "../../types"
 
 export function triggerToWindowCall(
   trigger:
@@ -187,27 +187,9 @@ export function isNodeVisible(node: UiNode): node is UiNodeInput {
   return true
 }
 
-export function toAuthMethodPickerOptions(
-  visibleGroups: GroupedNodes,
-): UiNodeGroupEnum[] {
-  return Object.values(UiNodeGroupEnum)
-    .filter((group) => visibleGroups[group]?.length)
-    .filter((group) => !authMethodPickerExcludedGroups.includes(group))
-}
-
-export function findResendNode(nodes: UiNode[]) {
-  return nodes.find(
-    (n) =>
-      "name" in n.attributes &&
-      ((["email", "recovery_confirm_address"].includes(n.attributes.name) &&
-        n.attributes.type === "submit") ||
-        n.attributes.name === "resend"),
-  )
-}
-
 export function isIgnoredInputNode(node: UiNodeInput): boolean {
   return (
-    node.meta.label?.id === resendMessageId ||
+    //node.meta.label?.id === resendMessageId ||
     ("name" in node.attributes && node.attributes.name === "screen") ||
     node.group === UiNodeGroupEnum.Oauth2Consent
   )

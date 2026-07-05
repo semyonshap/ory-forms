@@ -1,20 +1,20 @@
 import { useCallback } from "react"
-import { useFlowStoreShallow } from "../../context"
-import { useFormSubmit } from "../form/useFormSubmit"
-import { computeDefaultValues } from "../../utils/form"
-import { findResendNode } from "../../utils"
-import { useTransientPayload } from "../form/useTransientPayload"
+import { UiNode } from "@ory/client-fetch"
 import { FieldValues } from "react-hook-form"
 
-export function useResendCode() {
+import { computeDefaultValues } from "../../utils"
+import { useFlowStoreShallow } from "../../context"
+import { useFormSubmit } from "../form/useFormSubmit"
+import { useTransientPayload } from "../form/useTransientPayload"
+
+export function useResendCode(node: UiNode) {
   const {
     flow: { flow },
   } = useFlowStoreShallow((state) => ({ flow: state.flowContainer }))
+
   const onSubmit = useFormSubmit()
 
   const { getTransientPayload } = useTransientPayload()
-
-  const resendCodeNode = findResendNode(flow.ui.nodes)
 
   const handleResend = useCallback(() => {
     const hiddenFields = flow.ui.nodes
@@ -40,19 +40,16 @@ export function useResendCode() {
       transient_payload: transientPayload,
     }
 
-    if (resendCodeNode?.attributes && "name" in resendCodeNode.attributes) {
+    if (node?.attributes && "name" in node.attributes) {
       const data: FieldValues = {
         code: undefined,
-        [resendCodeNode.attributes.name]: resendCodeNode.attributes.value,
+        [node.attributes.name]: node.attributes.value,
         method: "code",
         ...dataWithTransient,
       }
       onSubmit(data)
     }
-  }, [flow, resendCodeNode, getTransientPayload, onSubmit])
+  }, [flow, node, getTransientPayload, onSubmit])
 
-  return {
-    resendCode: handleResend,
-    resendCodeNode,
-  }
+  return handleResend
 }

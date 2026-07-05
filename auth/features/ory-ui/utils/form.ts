@@ -1,6 +1,6 @@
 import set from "lodash/set"
-import { FormValues, OryFlowContainer } from "../types"
-import { FlowType, isUiNodeInputAttributes, UiNode } from "@ory/client-fetch"
+import { FormValues, OryFlowContainer, OryFlowType } from "../types"
+import { isUiNodeInputAttributes, UiNode } from "@ory/client-fetch"
 
 const prefillIdentifierFields = ["identifier", "traits.email"]
 
@@ -21,8 +21,8 @@ export function resolveLoginHint(
   flowContainer: OryFlowContainer,
 ): string | undefined {
   if (
-    flowContainer.flowType !== FlowType.Login &&
-    flowContainer.flowType !== FlowType.Registration
+    flowContainer.flowType !== OryFlowType.Login &&
+    flowContainer.flowType !== OryFlowType.Registration
   ) {
     return undefined
   }

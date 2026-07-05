@@ -1,6 +1,7 @@
 import {
   AccountExperienceConfiguration,
   ConfigurationParameters,
+  FrontendApi,
 } from "@ory/client-fetch"
 
 export interface OryClientConfiguration {
@@ -15,6 +16,7 @@ export interface OryConfiguration {
   sdk: {
     url: string
     options?: Partial<ConfigurationParameters>
+    frontend: FrontendApi
   }
   project: AccountExperienceConfiguration
 }

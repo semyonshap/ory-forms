@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react"
 import { useFormContext } from "react-hook-form"
 
 import { UiNodeInput } from "../../types"
-import { isIgnoredInputNode, triggerToWindowCall } from "../../utils"
+import { isIgnoredInputNode, triggerToWindowCall } from "../../lib/nodes"
 
 export function useNodeInputSetup(node: UiNodeInput) {
   const { setValue } = useFormContext()

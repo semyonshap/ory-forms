@@ -9,26 +9,25 @@ function isDivRole(node: FormNode, role: "start" | "end"): node is UiNodeDiv {
   return isUiNodeDiv(node) && node.attributes.data?.role === role
 }
 
-function renderNode(node: FormNode, context?: FormContext) {
-  return <Node key={getNodeId(node)} node={node} context={context} />
-}
+export function buildContextMap(nodes: FormNode[]): FormContext {
+  const contextMap: FormContext = {}
 
-export function buildFormContext(nodes: FormNode[]): FormContext {
-  const formContext: FormContext = {}
   for (const node of nodes) {
     const target = node.data?.target
     if (!target) continue
-    if (!formContext[target]) formContext[target] = []
-    formContext[target].push(<Node key={getNodeId(node)} node={node} />)
+
+    if (!contextMap[target]) contextMap[target] = []
+    contextMap[target].push(<Node key={getNodeId(node)} node={node} />)
   }
-  return formContext
+
+  return contextMap
 }
 
-export function renderNodes(
+function renderRange(
   nodes: FormNode[],
-  start: number = 0,
-  contextMap: FormContext = {},
-) {
+  contextMap: FormContext,
+  start: number,
+): { result: ReactNode[]; nextIndex: number } {
   const result: ReactNode[] = []
   let i = start
 
@@ -40,25 +39,36 @@ export function renderNodes(
     }
 
     if (isDivRole(node, "start")) {
-      const { result: children, nextIndex } = renderNodes(nodes, i + 1)
+      const { result: children, nextIndex } = renderRange(
+        nodes,
+        contextMap,
+        i + 1,
+      )
       result.push(NodeDiv(node, children))
       i = nextIndex
       continue
     }
 
-    const renderedNode = renderNode(node)
-
     if (node.data?.target) {
-      const key = node.data.target
-      if (!contextMap[key]) contextMap[key] = []
-      contextMap[key].push(renderedNode)
       i++
       continue
     }
 
-    result.push(renderedNode)
+    const name =
+      node.attributes && "name" in node.attributes && node.attributes.name
+
+    const attached = name && contextMap[name]
+
+    result.push(<Node key={getNodeId(node)} node={node} attached={attached} />)
     i++
   }
 
-  return { result, nextIndex: i, contextMap }
+  return { result, nextIndex: i }
+}
+
+export function renderNodes(nodes: FormNode[]) {
+  const contextMap = buildContextMap(nodes)
+  const { result } = renderRange(nodes, contextMap, 0)
+
+  return result
 }

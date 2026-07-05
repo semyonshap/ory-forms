@@ -1,7 +1,7 @@
 import { UiNode, UiNodeGroupEnum, UiText } from "@ory/client-fetch"
 import { uiTextToFormattedMessage } from "."
 import { TFunction } from "i18next"
-import { findCodeIdentifierNode } from "../utils"
+import { findCodeIdentifierNode } from "../lib/nodes"
 
 function isDynamicText(
   text: UiText,

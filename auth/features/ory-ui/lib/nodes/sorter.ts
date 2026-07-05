@@ -3,7 +3,7 @@ import {
   UiNode,
   UiNodeGroupEnum,
 } from "@ory/client-fetch"
-import { defaultGroupOrder, defaultNodeOrder } from "../types"
+import { defaultGroupOrder, defaultNodeOrder } from "../../types"
 
 const Slot = {
   Inputs: 0,

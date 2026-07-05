@@ -1,5 +1,4 @@
 import { UiNode, UiNodeGroupEnum } from "@ory/client-fetch"
-import { OryClientConfiguration } from "./config"
 import { OryFlowContainer } from "./container"
 import {
   ComponentPropsWithoutRef,
@@ -7,16 +6,17 @@ import {
   FormEventHandler,
 } from "react"
 import {
-  FormRenderMethodButton,
   FormRenderSelect,
   FormRenderInput,
-  FormRenderImage,
-  FormRenderText,
-  FormRenderAnchor,
-  CardRenderRoot,
-  FormRenderLabel,
+  FormRenderImageProps,
+  FormRenderTextProps,
+  FormRenderAnchorProps,
+  FormRenderCardProps,
+  FormRenderLabelProps,
   FormRenderButton,
+  IconProps,
 } from "./render"
+import { OryClientConfiguration } from "./config"
 
 export type FormValues = Record<
   string,
@@ -28,8 +28,8 @@ export type FormRootProps = ComponentPropsWithoutRef<"form"> & {
 }
 
 export type FlowInputProps = {
-  config: OryClientConfiguration
   flow: OryFlowContainer
+  config: OryClientConfiguration
   components: Partial<OryClientComponents>
 }
 
@@ -43,23 +43,47 @@ export type GroupSorter = (a: UiNodeGroupEnum, b: UiNodeGroupEnum) => number
 
 export type OryComponents = {
   Card: {
-    Root: ComponentType<CardRenderRoot>
+    Root: ComponentType<FormRenderCardProps>
   }
   Node: {
-    Label: ComponentType<FormRenderLabel>
-
+    Label: ComponentType<FormRenderLabelProps>
+    AuthMethod?: ComponentType<FormRenderButton>
+    Resend?: ComponentType<FormRenderButton>
     Button: ComponentType<FormRenderButton>
-    MethodButton: ComponentType<FormRenderMethodButton>
-
     Select: ComponentType<FormRenderSelect>
-
     Input: ComponentType<FormRenderInput>
     Code: ComponentType<FormRenderInput>
     Password?: ComponentType<FormRenderInput>
-
-    Image: ComponentType<FormRenderImage>
-    Text: ComponentType<FormRenderText>
-    Anchor: ComponentType<FormRenderAnchor>
+    Image: ComponentType<FormRenderImageProps>
+    Text: ComponentType<FormRenderTextProps>
+    Anchor: ComponentType<FormRenderAnchorProps>
+  }
+  Icons: {
+    Providers: {
+      Apple: ComponentType<IconProps>
+      Auth0: ComponentType<IconProps>
+      Discord: ComponentType<IconProps>
+      Facebook: ComponentType<IconProps>
+      Github: ComponentType<IconProps>
+      Gitlab: ComponentType<IconProps>
+      Google: ComponentType<IconProps>
+      Linkedin: ComponentType<IconProps>
+      Microsoft: ComponentType<IconProps>
+      Slack: ComponentType<IconProps>
+      Spotify: ComponentType<IconProps>
+      X: ComponentType<IconProps>
+      Yandex: ComponentType<IconProps>
+    }
+    System?: {
+      Password?: ComponentType<IconProps>
+      Code?: ComponentType<IconProps>
+      CodeAsterix?: ComponentType<IconProps>
+      Passkey?: ComponentType<IconProps>
+      Webauthn?: ComponentType<IconProps>
+      Totp?: ComponentType<IconProps>
+      LookupSecret?: ComponentType<IconProps>
+      HardwareToken?: ComponentType<IconProps>
+    }
   }
   nodeSorter: NodeSorter
   groupSorter: GroupSorter
@@ -68,6 +92,10 @@ export type OryComponents = {
 export type OryClientComponents = {
   Card: OryComponents["Card"]
   Node: Omit<OryComponents["Node"], "Image" | "Password"> & {
-    Image?: ComponentType<FormRenderImage>
+    Image?: ComponentType<FormRenderImageProps>
+  }
+  Icons?: {
+    Providers?: Partial<OryComponents["Icons"]["Providers"]>
+    System?: Partial<OryComponents["Icons"]["System"]>
   }
 } & Partial<Pick<OryComponents, "nodeSorter" | "groupSorter">>

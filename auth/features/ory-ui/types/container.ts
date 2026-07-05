@@ -1,5 +1,4 @@
 import {
-  FlowType,
   LoginFlow,
   OAuth2ConsentRequest,
   RecoveryFlow,
@@ -10,30 +9,39 @@ import {
   VerificationFlow,
 } from "@ory/client-fetch"
 import { FormState } from "."
-import { Dispatch } from "react"
+
+export enum OryFlowType {
+  Login = "login",
+  Registration = "registration",
+  Recovery = "recovery",
+  Verification = "verification",
+  Settings = "settings",
+  OAuth2Consent = "oauth2_consent",
+  Error = "error",
+}
 
 export type LoginFlowContainer = {
-  flowType: FlowType.Login
+  flowType: OryFlowType.Login
   flow: LoginFlow
 }
 
 export type RegistrationFlowContainer = {
-  flowType: FlowType.Registration
+  flowType: OryFlowType.Registration
   flow: RegistrationFlow
 }
 
 export type RecoveryFlowContainer = {
-  flowType: FlowType.Recovery
+  flowType: OryFlowType.Recovery
   flow: RecoveryFlow
 }
 
 export type VerificationFlowContainer = {
-  flowType: FlowType.Verification
+  flowType: OryFlowType.Verification
   flow: VerificationFlow
 }
 
 export type SettingsFlowContainer = {
-  flowType: FlowType.Settings
+  flowType: OryFlowType.Settings
   flow: SettingsFlow
 }
 
@@ -51,7 +59,7 @@ export type ConsentFlow = {
 }
 
 export type ConsentFlowContainer = {
-  flowType: FlowType.OAuth2Consent
+  flowType: OryFlowType.OAuth2Consent
   flow: ConsentFlow
 }
 

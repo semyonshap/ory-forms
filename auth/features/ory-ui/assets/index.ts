@@ -12,19 +12,20 @@ import Spotify from "./spotify"
 import X from "./x"
 import Yandex from "./yandex"
 
-const logos: Record<string, React.FC<import("../types").IconProps>> = {
-  apple: Apple,
-  auth0: Auth0,
-  discord: Discord,
-  facebook: Facebook,
-  github: Github,
-  gitlab: Gitlab,
-  google: Google,
-  linkedin: Linkedin,
-  microsoft: Microsoft,
-  slack: Slack,
-  spotify: Spotify,
-  yandex: Yandex,
-  x: X,
+import { OryComponents } from "../types"
+
+export const logos: OryComponents["Icons"]["Providers"] = {
+  Apple,
+  Auth0,
+  Discord,
+  Facebook,
+  Github,
+  Gitlab,
+  Google,
+  Linkedin,
+  Microsoft,
+  Slack,
+  Spotify,
+  Yandex,
+  X,
 }
-export default logos
