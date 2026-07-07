@@ -1,6 +1,6 @@
 import { FormRenderButton, NodeRenderInput } from "../../types"
 import { useFlowStore, useFlowStoreShallow } from "../../context"
-import { useButtonRenderProps, useInputRenderProps } from "../../hooks"
+import { useButton, useInput } from "../../hooks"
 import { ComponentType } from "react"
 
 export function InputWrapper({ node, attached }: NodeRenderInput) {
@@ -8,7 +8,7 @@ export function InputWrapper({ node, attached }: NodeRenderInput) {
     Node: state.components.Node,
   }))
 
-  const { options, props } = useInputRenderProps(node)
+  const { options, props } = useInput(node)
   if (props.type == "hidden") return <input {...props} />
 
   const attr = node.attributes
@@ -30,13 +30,14 @@ export function InputWrapper({ node, attached }: NodeRenderInput) {
 export function ButtonWrapper({ node, attached }: NodeRenderInput) {
   const Node = useFlowStore((state) => state.components.Node)
 
-  const { props, options } = useButtonRenderProps(node)
+  const { props, options } = useButton(node)
 
   let Component: ComponentType<FormRenderButton>
 
-  if (node.data?.type === "method" && Node.AuthMethod)
-    Component = Node.AuthMethod
-  else if (node.data?.type === "resend" && Node.Resend) Component = Node.Resend
+  const type = node.data?.type
+
+  if (type === "method" && Node.AuthMethod) Component = Node.AuthMethod
+  else if (type === "resend" && Node.Resend) Component = Node.Resend
   else Component = Node.Button
 
   return (

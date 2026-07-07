@@ -13,8 +13,9 @@ export function notImplemented(componentName: string) {
 }
 
 export const DefaultComponents: OryComponents = {
-  Card: {
-    Root: notImplemented("CardRoot"),
+  Main: {
+    FormCard: notImplemented("FormCard"),
+    SettingsCard: notImplemented("SettingsCard"),
   },
   Node: {
     Label: notImplemented("Label"),

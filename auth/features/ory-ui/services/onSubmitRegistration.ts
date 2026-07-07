@@ -10,7 +10,8 @@ import {
   RegistrationFlowContainer,
 } from "../types"
 import { OryElementsConfiguration } from "@/features/ory-elements"
-import { flowHasErrors, handleFlowError, replaceWindowFlowId } from "../utils"
+import { handleFlowError, replaceWindowFlowId } from "../utils"
+import { flowHasErrors } from "../lib"
 
 export async function onSubmitRegistration(
   { flow }: RegistrationFlowContainer,

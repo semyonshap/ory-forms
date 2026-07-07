@@ -1,8 +1,8 @@
 import { useMemo } from "react"
-import { defaultHiddenMessageIds } from "../../types"
-import { useFlowStoreShallow } from "../../context"
+import { defaultHiddenMessageIds } from "../types"
+import { useFlowStoreShallow } from "../context"
 import { useTranslation } from "react-i18next"
-import { uiTextToFormattedMessage } from "../../i18n"
+import { uiTextToFormattedMessage } from "../i18n"
 
 export function useFormMessages(
   hiddenMessageIds: number[] = defaultHiddenMessageIds,

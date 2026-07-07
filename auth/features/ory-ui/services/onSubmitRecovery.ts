@@ -14,7 +14,8 @@ import {
   OryFlowContainer,
   OryFlowType,
 } from "../types"
-import { flowHasErrors, handleFlowError, replaceWindowFlowId } from "../utils"
+import { handleFlowError, replaceWindowFlowId } from "../utils"
+import { flowHasErrors } from "../lib"
 
 export async function onSubmitRecovery(
   { flow }: OryFlowContainer,

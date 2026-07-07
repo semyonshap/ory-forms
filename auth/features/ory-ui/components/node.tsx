@@ -1,5 +1,12 @@
 import { UiNodeInputAttributesTypeEnum } from "@ory/client-fetch"
 import {
+  ButtonWrapper,
+  AnchorWrapper,
+  TextWrapper,
+  ImageWrapper,
+  InputWrapper,
+} from "./wrappers"
+import {
   NodeRender,
   ignoredScriptGroups,
   isUiNodeAnchor,
@@ -8,21 +15,16 @@ import {
   isUiNodeScript,
   isUiNodeText,
   NodeRenderInput,
+  isUiNodeDiv,
 } from "../types"
-import { useFlowStoreShallow } from "../context"
+import { isIgnoredInputNode } from "../lib"
 import { NodeScript } from "./nodes/nodeScript"
-import { isIgnoredInputNode } from "../lib/nodes"
-import {
-  ButtonWrapper,
-  AnchorWrapper,
-  TextWrapper,
-  ImageWrapper,
-  InputWrapper,
-} from "./wrappers"
-import { useNodeInputSetup } from "../hooks"
+import { useFlowStoreShallow } from "../context"
+import { DivWrapper } from "./wrappers/divWrapper"
 
 export const Node = ({ node, attached }: NodeRender) => {
-  if (isUiNodeImage(node)) return ImageWrapper({ node, attached })
+  if (isUiNodeDiv(node)) return DivWrapper({ node, attached })
+  else if (isUiNodeImage(node)) return ImageWrapper({ node, attached })
   else if (isUiNodeText(node)) return TextWrapper({ node, attached })
   else if (isUiNodeAnchor(node)) return AnchorWrapper({ node, attached })
   else if (isUiNodeInput(node))
@@ -38,8 +40,6 @@ function NodeInput({ node, attached }: NodeRenderInput) {
   } = useFlowStoreShallow((state) => ({
     components: state.components,
   }))
-
-  useNodeInputSetup(node)
 
   const { attributes } = node
   switch (attributes.type) {

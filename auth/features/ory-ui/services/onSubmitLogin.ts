@@ -10,8 +10,8 @@ import {
   OryConfiguration,
   OryFlowType,
 } from "../types"
-import { flowHasErrors, replaceWindowFlowId } from "../utils"
-import { handleFlowError } from "../utils/error"
+import { replaceWindowFlowId, handleFlowError } from "../utils"
+import { flowHasErrors } from "../lib"
 
 export async function onSubmitLogin(
   { flow }: LoginFlowContainer,

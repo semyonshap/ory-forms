@@ -12,8 +12,10 @@ import { InputDataType } from "./render"
 
 export type GroupedNodes = Partial<Record<UiNodeGroupEnum, UiNode[]>>
 
+export type ButtonNodeType = "method" | "resend"
+
 export type NodeData = {
-  type?: "method" | "resend"
+  type?: ButtonNodeType
   target?: string
 }
 
@@ -72,9 +74,18 @@ export function isUiNodeScript(node: FormNode): node is UiNodeScript {
   return node.type === "script"
 }
 
+export type DivDataType = "Div" | "FormCard" | "SettingsCard" | "DividerCard"
+
+export type DivAttributesData = {
+  type?: DivDataType
+  end?: string
+}
+
 export type UiNodeDiv = FormNode & {
   type: "div"
-  attributes: UiNodeDivisionAttributes
+  attributes: UiNodeDivisionAttributes & {
+    data?: DivAttributesData
+  }
 }
 
 export function isUiNodeDiv(node: FormNode): node is UiNodeDiv {

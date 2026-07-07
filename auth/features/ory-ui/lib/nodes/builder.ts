@@ -2,7 +2,6 @@ import {
   BuildContext,
   FormNode,
   FormStateAction,
-  InputNodeData,
   NodeSorter,
   OryFlowType,
 } from "../../types"
@@ -18,10 +17,10 @@ import {
 } from "./presets"
 import { BuildAuthMethodList } from "./authMethods"
 import {
-  getFunctionalNodes,
+  getFinalNodes,
   getNodeGroupsWithVisibleNodes,
-  toAuthMethodPickerOptions,
-} from "./nodeGroups"
+  nodesToAuthMethodGroups,
+} from "./groups"
 import {
   isUiNodeScriptAttributes,
   UiNode,
@@ -31,14 +30,14 @@ import { Dispatch } from "react"
 import {
   findScreenSelectionButton,
   isNodeVisible,
-  nodesToAuthMethodGroups,
   withoutSingleSignOnNodes,
-} from "./nodes"
-import { createDivNode } from "./factory"
-import { getFinalNodes } from "./flow"
-import { isResendNode } from "./filters"
+} from "./filters"
+import { createDivGroup, createDivNode } from "./factory"
+import { getFunctionalNodes, toAuthMethodPickerOptions } from "./filters"
+import { computeDataBuilder } from "./data"
 
 export function Builder({
+  
   config,
   container,
   formState,
@@ -59,7 +58,10 @@ export function Builder({
 
   const { flow, flowType } = container
 
-  const nodes = [...flow.ui.nodes]
+  const nodes = computeDataBuilder([...flow.ui.nodes])
+
+  console.log("nodes:", nodes)
+  console.log("formstate:", formState)
 
   let result: FormNode[] = []
 
@@ -84,9 +86,7 @@ export function Builder({
           result.push(
             createDivNode({
               id: "sso-divider",
-              data: {
-                render: "divider",
-              },
+              div_type: "DividerCard",
             }),
           )
         }
@@ -199,24 +199,19 @@ export function Builder({
       ]
       break
     }
-  }
-
-  result = result.map((node) => {
-    /* if (isResendNode(node)) {
-      const data: InputNodeData = {
-        target: "code",
-        type: "resend",
-        inputType: "link",
-      }
-
-      return {
-        ...node,
-        data,
-      }
+    case "settings": {
+      result = Object.entries(visibleGroups)
+        .filter(([, nodes]) => nodes && nodes.length > 0)
+        .flatMap(([group, nodes]) =>
+          createDivGroup({
+            id: `${group}-card`,
+            div_type: "SettingsCard",
+            children: nodes,
+          }),
+        )
+      break
     }
- */
-    return node
-  })
+  }
 
   switch (flowType) {
     case OryFlowType.Login: {

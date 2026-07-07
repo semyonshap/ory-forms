@@ -1,17 +1,14 @@
 import { ReactNode } from "react"
-import { UiNodeDiv } from "../../types"
+import { FormRenderDivProps } from "../../types"
 
-export function NodeDiv(
-  startNode: UiNodeDiv,
-  children: ReactNode[],
-): ReactNode {
+export function NodeDiv({ node, attached }: FormRenderDivProps): ReactNode {
   return (
     <div
-      key={startNode.attributes.id}
-      className={startNode.attributes._class}
-      data-testid={startNode.attributes.data?.testid}
+      key={node.attributes.id}
+      className={node.attributes._class}
+      data-testid={node.attributes.data?.testid}
     >
-      {children}
+      {attached}
     </div>
   )
 }

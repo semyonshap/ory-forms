@@ -1,7 +1,7 @@
 import { UiNodeInputAttributes } from "@ory/client-fetch"
 import { useCallback, useEffect, useState } from "react"
 import { useEventListener, useTimeout } from "usehooks-ts"
-import { triggerToFunction } from "../../lib/nodes"
+import { triggerToFunction } from "../lib/nodes"
 
 interface UsePasskeyOptions {
   passkeyNode: { attributes: UiNodeInputAttributes }

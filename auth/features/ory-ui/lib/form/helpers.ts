@@ -1,6 +1,6 @@
 import set from "lodash/set"
-import { FormValues, OryFlowContainer, OryFlowType } from "../types"
-import { isUiNodeInputAttributes, UiNode } from "@ory/client-fetch"
+import { FormValues, OryFlowContainer, OryFlowType } from "../../types"
+import { isUiNodeInputAttributes, UiContainer, UiNode } from "@ory/client-fetch"
 
 const prefillIdentifierFields = ["identifier", "traits.email"]
 
@@ -107,4 +107,11 @@ function prefillIdentifierFromHint(
       return
     }
   }
+}
+
+export function flowHasErrors(ui: UiContainer): boolean {
+  if (ui.messages?.some((m) => m.type === "error")) {
+    return true
+  }
+  return ui.nodes.some((node) => node.messages.some((m) => m.type === "error"))
 }

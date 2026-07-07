@@ -1,6 +1,6 @@
 import { restartFlowUrl } from "../../utils"
 import { BuildContext, FormState } from "../../types"
-import { onLogout } from "../../hooks/nodes/useLogout"
+import { onLogout } from "../../hooks/useLogout"
 import { LoginFlow } from "@ory/client-fetch"
 import {
   createAnchorNode,

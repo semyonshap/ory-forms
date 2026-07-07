@@ -15,6 +15,8 @@ import {
   NodeData,
   InputNodeData,
   UiNodeInput,
+  DivDataType,
+  DivAttributesData,
 } from "../../types"
 import { TFunction } from "i18next"
 
@@ -185,15 +187,22 @@ interface CreateDivisionNodeParams extends Omit<
 > {
   id: string
   class?: string
-  data?: Record<string, string>
+  div_type?: DivDataType
+  div_end?: string
 }
 
 export function createDivNode({
   id,
   class: className,
-  data,
+  div_type,
+  div_end: end,
   ...rest
 }: CreateDivisionNodeParams): UiNodeDiv {
+  const data: DivAttributesData = {
+    type: div_type,
+  }
+  if (end) data.end = end
+
   const attributes = {
     node_type: "div" as const,
     id,
@@ -211,20 +220,20 @@ export function createDivNode({
 export function createDivGroup({
   id,
   class: className,
-  data,
   children,
-  ...rest
+  div_type,
 }: CreateDivisionNodeParams & { children: FormNode[] }): FormNode[] {
+  const endId = `${id}-end`
+
   const startDiv = createDivNode({
     id: `${id}-start`,
     class: className,
-    data: { ...data, role: "start" },
-    ...rest,
+    div_type,
+    div_end: endId,
   })
 
   const endDiv = createDivNode({
-    id: `${id}-end`,
-    data: { ...data, role: "end" },
+    id: endId,
   })
 
   return [startDiv, ...children, endDiv]

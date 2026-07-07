@@ -18,6 +18,9 @@ export type FlowFormState =
 type CommonFormStateProperties = {
   isSubmitting: boolean
   isReady: boolean
+  selectedMethod?: UiNodeGroupEnum
+  loadingInputs: Set<UiNodeGroupEnum>
+  isRedirecting: boolean
 }
 
 export type FormState = FlowFormState & CommonFormStateProperties

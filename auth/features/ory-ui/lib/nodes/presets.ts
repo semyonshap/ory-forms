@@ -38,6 +38,7 @@ export function BuildSignUp({
   return createDivGroup({
     id: "registration-div",
     class: "inline-flex gap-2",
+    div_type: "Div",
     children: [nodeTextSignUpLabel, nodeAnchorSignUp],
   })
 }
@@ -169,6 +170,7 @@ export function BuildSignIn({
   return createDivGroup({
     id: "login-div",
     class: "inline-flex gap-2",
+    div_type: "Div",
     children: [nodeTextSignInLabel, nodeAnchorSignIn],
   })
 }

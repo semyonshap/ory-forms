@@ -1,6 +1,6 @@
 import { LogoutFlow } from "@ory/client-fetch"
 import { useCallback, useEffect, useState } from "react"
-import { OryConfiguration } from "../../types"
+import { OryConfiguration } from "../types"
 
 export function onLogout(config: OryConfiguration) {
   const [logoutFlow, setLogoutFlow] = useState<LogoutFlow | undefined>()

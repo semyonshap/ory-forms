@@ -11,10 +11,11 @@ import {
   FormRenderImageProps,
   FormRenderTextProps,
   FormRenderAnchorProps,
-  FormRenderCardProps,
   FormRenderLabelProps,
   FormRenderButton,
   IconProps,
+  FormRenderCardProps,
+  FormRenderCardDivider,
 } from "./render"
 import { OryClientConfiguration } from "./config"
 
@@ -42,8 +43,10 @@ export type NodeSorter = (
 export type GroupSorter = (a: UiNodeGroupEnum, b: UiNodeGroupEnum) => number
 
 export type OryComponents = {
-  Card: {
-    Root: ComponentType<FormRenderCardProps>
+  Main: {
+    FormCard: ComponentType<FormRenderCardProps>
+    SettingsCard?: ComponentType<FormRenderCardProps>
+    DividerCard?: ComponentType<FormRenderCardDivider>
   }
   Node: {
     Label: ComponentType<FormRenderLabelProps>
@@ -90,7 +93,7 @@ export type OryComponents = {
 }
 
 export type OryClientComponents = {
-  Card: OryComponents["Card"]
+  Main: OryComponents["Main"]
   Node: Omit<OryComponents["Node"], "Image" | "Password"> & {
     Image?: ComponentType<FormRenderImageProps>
   }

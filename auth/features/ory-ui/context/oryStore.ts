@@ -1,6 +1,5 @@
 import { createStore } from "zustand"
 import { createContext, Dispatch } from "react"
-import { UseFormReturn } from "react-hook-form"
 import {
   OryConfiguration,
   OryFlowContainer,
@@ -8,13 +7,14 @@ import {
   FormStateAction,
   OryComponents,
 } from "../types"
+import { updateFormState, initFormState } from "../lib/form"
 
 export interface FlowStoreState {
   config: OryConfiguration
   components: OryComponents
   flowContainer: OryFlowContainer
-  setFlowContainer: Dispatch<OryFlowContainer>
   formState: FormState
+  setFlowContainer: (flow: OryFlowContainer) => void
   dispatchFormState: Dispatch<FormStateAction>
 }
 
@@ -23,18 +23,30 @@ export type FlowStore = ReturnType<typeof createFlowStore>
 export const createFlowStore = (
   initProps: Omit<
     FlowStoreState,
-    | "setFlowContainer"
-    | "dispatchFormState"
-    | "dispatchSubmit"
-    | "context"
-    | "setContext"
+    "formState" | "setFlowContainer" | "dispatchFormState"
   >,
 ) => {
-  return createStore<FlowStoreState>(() => ({
+  return createStore<FlowStoreState>((set) => ({
     ...initProps,
-    setFlowContainer: () => {},
-    dispatchFormState: () => {},
-    dispatchSubmit: () => {},
+    formState: initFormState(initProps.flowContainer),
+
+    setFlowContainer: (flow) => {
+      set((state) => ({
+        ...state,
+        flowContainer: flow,
+        formState: updateFormState(state.formState, {
+          type: "action_flow_update",
+          flow,
+        }),
+      }))
+    },
+
+    dispatchFormState: (action) => {
+      set((state) => ({
+        ...state,
+        formState: updateFormState(state.formState, action),
+      }))
+    },
   }))
 }
 

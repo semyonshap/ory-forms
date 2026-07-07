@@ -1,7 +1,6 @@
-// useNodeConsentCheckbox.ts
 import { useCallback, useMemo } from "react"
 import { useFormContext } from "react-hook-form"
-import { UiNodeInput } from "../../types"
+import { UiNodeInput } from "../types"
 
 export function useNodeConsentCheckbox(node: UiNodeInput) {
   const attributes = node.attributes

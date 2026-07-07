@@ -13,6 +13,7 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "../ui/card"
@@ -44,34 +45,47 @@ export const OryComponents: OryClientComponents = {
       HardwareToken: ShieldCheck,
     },
   },
-  Card: {
-    Root: ({ header, nodes, messages }) => {
+  Main: {
+    SettingsCard: ({ options, attached }) => {
+      const { title, description } = options
       return (
-        <div className="flex w-full flex-1 items-start justify-center">
-          <Card className="w-[350px] max-w-[350px]">
-            {header.title && (
-              <CardHeader>
-                <JikoIcon className="pb-6 pt-2" />
-                <CardTitle>{header.title}</CardTitle>
-                {header.description && (
-                  <CardDescription>{header.description}</CardDescription>
-                )}
-              </CardHeader>
-            )}
-            <CardContent className="flex flex-col gap-4">
-              {messages &&
-                messages.map((msg, index) => (
-                  <Alert
-                    key={`${msg.id}-${index}`}
-                    variant={msg.type === "error" ? "destructive" : "default"}
-                  >
-                    <AlertDescription>{msg.text}</AlertDescription>
-                  </Alert>
-                ))}
-              {nodes}
-            </CardContent>
-          </Card>
-        </div>
+        <Card className="w-[600px] max-w-[600px]">
+          {title && (
+            <CardHeader>
+              <JikoIcon className="pb-6 pt-2" />
+              <CardTitle>{title}</CardTitle>
+              {description && <CardDescription>{description}</CardDescription>}
+            </CardHeader>
+          )}
+          <CardContent className="flex flex-col gap-4">{attached}</CardContent>
+          <CardFooter>Footer</CardFooter>
+        </Card>
+      )
+    },
+    FormCard: ({ options, attached }) => {
+      const { title, description, messages } = options
+      return (
+        <Card className="w-[350px] max-w-[350px]">
+          {title && (
+            <CardHeader>
+              <JikoIcon className="pb-6 pt-2" />
+              <CardTitle>{title}</CardTitle>
+              {description && <CardDescription>{description}</CardDescription>}
+            </CardHeader>
+          )}
+          <CardContent className="flex flex-col gap-4">
+            {messages &&
+              messages.map((msg, index) => (
+                <Alert
+                  key={`${msg.id}-${index}`}
+                  variant={msg.type === "error" ? "destructive" : "default"}
+                >
+                  <AlertDescription>{msg.text}</AlertDescription>
+                </Alert>
+              ))}
+            {attached}
+          </CardContent>
+        </Card>
       )
     },
   },
@@ -128,7 +142,6 @@ export const OryComponents: OryClientComponents = {
             "p-0 text-brand-primary",
             cooldown.isActive && "hover:no-underline text-muted-foreground",
           )}
-          disabled={cooldown.isActive}
           onClick={(e) => {
             if (cooldown.isActive) {
               e.preventDefault()
@@ -189,7 +202,7 @@ export const OryComponents: OryClientComponents = {
         >
           {type == "submit" && isSubmitting && <Spinner />}
           {Icon && <Icon className={cn(label ? "size-4" : "size-6")} />}
-          {label}
+          <span>{label}</span>
         </Button>
       )
     },

@@ -8,6 +8,7 @@ import {
 import {
   FormNode,
   FormState,
+  ButtonNodeType,
   omittedInputKeys,
   OryConfiguration,
   OryFlowContainer,
@@ -15,17 +16,12 @@ import {
   UiNodeImage,
   UiNodeInput,
   UiNodeText,
+  UiNodeDiv,
 } from "."
 import { MouseEventHandler, PropsWithChildren, ReactNode } from "react"
 import { TFunction } from "i18next"
 
-export type InputDataType =
-  | "default"
-  | "link"
-  | "submit"
-  | "cancel"
-  | "sso"
-  | "method"
+export type InputDataType = "default" | "link" | "submit" | "cancel" | "sso"
 
 export type MessageProps = {
   id: number
@@ -46,7 +42,7 @@ export type FormRenderButton = BaseRenderProps & {
     disabled?: boolean
   }
   options: {
-    type?: InputDataType
+    type?: InputDataType | ButtonNodeType
     label?: string
     description?: string
     icon?: IconType
@@ -102,20 +98,27 @@ export type FormRenderLabelProps = BaseRenderProps & {
 } & PropsWithChildren
 
 export type FormRenderTextProps = BaseRenderProps & {
-  node: UiNode
+  node: UiNodeText
   options: {
     label?: string
     text?: string
   }
 }
 
-export type FormRenderCardProps = {
-  header: {
+export type FormRenderDivProps = BaseRenderProps & {
+  node: UiNodeDiv
+}
+
+export type FormRenderCardDivider = {
+  node: UiNodeDiv
+}
+
+export type FormRenderCardProps = FormRenderDivProps & {
+  options: {
     title?: string
     description?: string
+    messages?: MessageProps[]
   }
-  nodes: React.ReactNode[]
-  messages?: MessageProps[]
 }
 
 export interface IconProps extends React.SVGProps<SVGSVGElement> {
@@ -148,6 +151,10 @@ export type NodeRenderAnchor = {
 
 export type NodeRenderText = {
   node: UiNodeText
+} & Attached
+
+export type NodeRenderDiv = {
+  node: UiNodeDiv
 } & Attached
 
 export interface BuildContext {

@@ -6,8 +6,11 @@ import {
   OryClientConfiguration,
 } from "../types"
 import { defaultGroupSorter, defaultNodeSorter } from "../lib/nodes/sorter"
-import { normalizeUrl } from "./windowUtils"
 import { frontendClient } from "./sdk"
+
+export function normalizeUrl(url: string): string {
+  return url.replace(/\/$/, "")
+}
 
 export function computeComponents(
   components?: Partial<OryClientComponents>,
@@ -16,8 +19,9 @@ export function computeComponents(
   const overrides = components ?? {}
 
   return {
-    Card: {
-      Root: overrides?.Card?.Root ?? defaultComponents.Card.Root,
+    Main: {
+      ...defaultComponents.Main,
+      ...overrides.Main,
     },
     Node: {
       ...defaultComponents.Node,

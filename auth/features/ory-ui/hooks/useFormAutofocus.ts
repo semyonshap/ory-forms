@@ -2,8 +2,8 @@ import { useEffect, useRef } from "react"
 import { UiNode } from "@ory/client-fetch"
 import { UseFormSetFocus } from "react-hook-form"
 
-import { isNodeVisible } from "../../lib/nodes"
-import { FormValues, isUiNodeInput, OryFlowType } from "../../types"
+import { isNodeVisible } from "../lib/nodes"
+import { FormValues, isUiNodeInput, OryFlowType } from "../types"
 
 function pickAutofocusField(nodes: UiNode[]): string | undefined {
   const node = nodes.find((node) => {
@@ -22,14 +22,13 @@ function pickAutofocusField(nodes: UiNode[]): string | undefined {
 
 export function useFormAutofocus(
   nodes: UiNode[],
-  isReady: boolean,
   flowType: OryFlowType,
   setFocus: UseFormSetFocus<FormValues>,
 ): void {
   const lastAutofocusField = useRef<string | null>(null)
 
   useEffect(() => {
-    if (!isReady || flowType === OryFlowType.Settings) {
+    if (flowType === OryFlowType.Settings) {
       return
     }
 
@@ -44,5 +43,5 @@ export function useFormAutofocus(
         setFocus(field, { shouldSelect: true })
       })
     }
-  }, [isReady, flowType, nodes, setFocus])
+  }, [flowType, nodes, setFocus])
 }

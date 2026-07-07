@@ -5,28 +5,30 @@ import {
   UpdateRegistrationFlowBody,
   UpdateVerificationFlowBody,
 } from "@ory/client-fetch"
-import { SubmitHandler, useFormContext } from "react-hook-form"
+import { SubmitHandler, UseFormReturn } from "react-hook-form"
 
 import {
   onSubmitLogin,
   onSubmitRecovery,
   onSubmitRegistration,
   onSubmitVerification,
-} from "../../services"
-import { useFlowStoreShallow } from "../../context"
-import { removeEmptyStrings, computeDefaultValues } from "../../utils"
-import { FormValues, OryFlowContainer, OryFlowType } from "../../types"
+} from "../services"
+import { useFlowStoreShallow } from "../context"
+import { FormValues, OryFlowContainer, OryFlowType } from "../types"
+import {
+  computeDefaultValues,
+  removeEmptyStrings,
+  isUiNodeGroupEnum,
+} from "../lib"
 
-export function useFormSubmit() {
+export function useFormSubmit(methods: UseFormReturn<FormValues>) {
   const { flowContainer, config, dispatchFormState, setFlowContainer } =
     useFlowStoreShallow((state) => ({
-      flowContainer: state.flowContainer,
       config: state.config,
+      flowContainer: state.flowContainer,
       dispatchFormState: state.dispatchFormState,
       setFlowContainer: state.setFlowContainer,
     }))
-
-  const methods = useFormContext()
 
   const { flowType } = flowContainer
 
@@ -73,7 +75,6 @@ export function useFormSubmit() {
             submitData.resend = ""
           }
 
-
           await onSubmitRegistration(flowContainer, config, {
             onRedirect,
             setFlowContainer: handleSuccess,
@@ -112,6 +113,17 @@ export function useFormSubmit() {
       }
       if ("totp_code" in data) {
         methods.setValue("totp_code", "")
+      }
+
+      if (
+        typeof data.method === "string" &&
+        isUiNodeGroupEnum(data.method) &&
+        data.method === "code"
+      ) {
+        dispatchFormState({
+          type: "action_select_method",
+          method: data.method,
+        })
       }
     } catch (error) {
       dispatchFormState({ type: "form_submit_end" })
