@@ -2,12 +2,13 @@ import { useDebounceValue } from "usehooks-ts"
 import { useFormContext } from "react-hook-form"
 import { ComponentType, useCallback, useEffect, useMemo } from "react"
 
-import { UiNodeInput } from "../types"
+import { InputDataType, UiNodeInput } from "../types"
 import { normalizeKeys } from "../utils"
 import { useFlowStoreShallow } from "../context"
 import { triggerToWindowCall } from "../lib/nodes"
 import { useInputTranslation } from "./useTranslation"
 import { useNodeInputSetup } from "./useInputSetup"
+import { UiNodeInputAttributesTypeEnum } from "@ory/client-fetch"
 
 export function useButton(node: UiNodeInput) {
   const {
@@ -64,22 +65,31 @@ export function useButton(node: UiNodeInput) {
   const { formattedLabel } = useInputTranslation(node)
 
   let icon: ComponentType | undefined
+
+  let type: InputDataType =
+    attr.type === UiNodeInputAttributesTypeEnum.Submit ? "submit" : "button"
+
+  let htmlType = type
+
   if (node.data?.type === "method") {
+    htmlType = "button"
     icon = system ? IconsSystem?.[node.group] : undefined
   } else if (node.data?.inputType === "sso") {
+    htmlType = "button"
     const iconKey = (node.attributes.value as string).split("-")[0]
     icon = IconsProviders?.[iconKey]
   }
 
   return {
     props: {
+      type: htmlType,
       name: node.attributes.name,
       value: node.attributes.value,
       onClick,
       disabled,
     },
     options: {
-      type: node.data?.type || node.data?.inputType || "default",
+      type: node.data?.type || node.data?.inputType || type,
       isSubmitting,
       label: formattedLabel,
       description: node.data?.description,

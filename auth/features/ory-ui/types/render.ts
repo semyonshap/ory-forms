@@ -8,7 +8,7 @@ import {
 import {
   FormNode,
   FormState,
-  ButtonNodeType,
+  ButtonDataType,
   omittedInputKeys,
   OryConfiguration,
   OryFlowContainer,
@@ -17,11 +17,10 @@ import {
   UiNodeInput,
   UiNodeText,
   UiNodeDiv,
+  InputDataType,
 } from "."
 import { MouseEventHandler, PropsWithChildren, ReactNode } from "react"
 import { TFunction } from "i18next"
-
-export type InputDataType = "default" | "link" | "submit" | "cancel" | "sso"
 
 export type MessageProps = {
   id: number
@@ -42,7 +41,7 @@ export type FormRenderButton = BaseRenderProps & {
     disabled?: boolean
   }
   options: {
-    type?: InputDataType | ButtonNodeType
+    type: InputDataType | ButtonDataType
     label?: string
     description?: string
     icon?: IconType
@@ -159,7 +158,7 @@ export type NodeRenderDiv = {
 
 export interface BuildContext {
   config: OryConfiguration
-  container: OryFlowContainer
+  flowContainer: OryFlowContainer
   formState: FormState
   t: TFunction
 }

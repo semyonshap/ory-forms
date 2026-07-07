@@ -1,11 +1,10 @@
 import { NodeDiv } from "../nodes/div"
+import { useDiv } from "../../hooks/useDiv"
 import { NodeRenderDiv } from "../../types"
 import { useFlowStore } from "../../context"
-import { useDiv } from "../../hooks/useDiv"
-import { renderNodes } from "../render"
 
 export function DivWrapper({ node, attached }: NodeRenderDiv) {
-  const Main = useFlowStore((state) => state.components.Main)
+  const Main = useFlowStore((state) => state.components.Card)
 
   const type = node.attributes.data?.type
 
@@ -13,20 +12,18 @@ export function DivWrapper({ node, attached }: NodeRenderDiv) {
     return <NodeDiv node={node} attached={attached} />
 
   if (type === "DividerCard") {
-    if (Main.DividerCard) return <Main.DividerCard node={node} />
+    if (Main.Divider) return <Main.Divider node={node} />
     else return null
   }
 
   const { options } = useDiv(node)
 
   if (type === "FormCard") {
-    return <Main.FormCard node={node} attached={attached} options={options} />
+    return <Main.Default node={node} attached={attached} options={options} />
   }
 
-  if (type === "SettingsCard" && Main.SettingsCard) {
-    return (
-      <Main.SettingsCard node={node} attached={attached} options={options} />
-    )
+  if (type === "SettingsCard" && Main.Settings) {
+    return <Main.Settings node={node} attached={attached} options={options} />
   }
 
   return <NodeDiv node={node} attached={attached} />

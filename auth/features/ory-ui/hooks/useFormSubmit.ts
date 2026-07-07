@@ -1,8 +1,10 @@
 import {
   OnRedirectHandler,
+  UiNodeGroupEnum,
   UpdateLoginFlowBody,
   UpdateRecoveryFlowBody,
   UpdateRegistrationFlowBody,
+  UpdateSettingsFlowBody,
   UpdateVerificationFlowBody,
 } from "@ory/client-fetch"
 import { SubmitHandler, UseFormReturn } from "react-hook-form"
@@ -11,10 +13,16 @@ import {
   onSubmitLogin,
   onSubmitRecovery,
   onSubmitRegistration,
+  onSubmitSettings,
   onSubmitVerification,
 } from "../services"
 import { useFlowStoreShallow } from "../context"
-import { FormValues, OryFlowContainer, OryFlowType } from "../types"
+import {
+  FormValues,
+  OryFlowContainer,
+  OryFlowType,
+  supportsSelectAccountPrompt,
+} from "../types"
 import {
   computeDefaultValues,
   removeEmptyStrings,
@@ -98,6 +106,28 @@ export function useFormSubmit(methods: UseFormReturn<FormValues>) {
             ...(data as unknown as UpdateRecoveryFlowBody),
           }
           await onSubmitRecovery(flowContainer, config, {
+            onRedirect,
+            setFlowContainer: handleSuccess,
+            body: submitData,
+          })
+          break
+        }
+        case OryFlowType.Settings: {
+          const submitData: UpdateSettingsFlowBody = {
+            ...(data as unknown as UpdateSettingsFlowBody),
+          }
+
+          if (
+            submitData.method === UiNodeGroupEnum.Oidc &&
+            submitData.link &&
+            supportsSelectAccountPrompt.includes(submitData.link)
+          ) {
+            submitData.upstream_parameters = {
+              prompt: "select_account",
+            }
+          }
+
+          await onSubmitSettings(flowContainer, config, {
             onRedirect,
             setFlowContainer: handleSuccess,
             body: submitData,

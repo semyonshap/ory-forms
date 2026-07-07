@@ -1,7 +1,8 @@
+import { ComponentType } from "react"
+
+import { useButton, useInput } from "../../hooks"
 import { FormRenderButton, NodeRenderInput } from "../../types"
 import { useFlowStore, useFlowStoreShallow } from "../../context"
-import { useButton, useInput } from "../../hooks"
-import { ComponentType } from "react"
 
 export function InputWrapper({ node, attached }: NodeRenderInput) {
   const { Node } = useFlowStoreShallow((state) => ({
@@ -38,6 +39,7 @@ export function ButtonWrapper({ node, attached }: NodeRenderInput) {
 
   if (type === "method" && Node.AuthMethod) Component = Node.AuthMethod
   else if (type === "resend" && Node.Resend) Component = Node.Resend
+  else if (type === "oidc" && Node.Oidc) Component = Node.Oidc
   else Component = Node.Button
 
   return (

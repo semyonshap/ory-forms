@@ -14,7 +14,7 @@ export function BuildReturnTo({
     project: { default_redirect_url },
     sdk: { url: sdkUrl },
   },
-  container: { flow, flowType },
+  flowContainer: { flow, flowType },
 }: BuildContext) {
   let returnTo = default_redirect_url
 

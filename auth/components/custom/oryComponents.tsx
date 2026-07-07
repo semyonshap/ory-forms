@@ -5,7 +5,7 @@ import Image from "next/image"
 
 import { OryClientComponents } from "@/features/ory-ui/types"
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "../ui/input-otp"
-import { Button } from "../ui/button"
+import { Button, buttonVariants } from "../ui/button"
 import { Spinner } from "../ui/spinner"
 import { Input } from "../ui/input"
 import { Label } from "../ui/label"
@@ -13,7 +13,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "../ui/card"
@@ -30,7 +29,12 @@ import {
   FileKey,
   Shield,
   Asterisk,
+  Trash,
 } from "lucide-react"
+import { Separator } from "../ui/separator"
+import { toast } from "sonner"
+import { VariantProps } from "class-variance-authority"
+import { useEffect } from "react"
 
 export const OryComponents: OryClientComponents = {
   Icons: {
@@ -45,24 +49,35 @@ export const OryComponents: OryClientComponents = {
       HardwareToken: ShieldCheck,
     },
   },
-  Main: {
-    SettingsCard: ({ options, attached }) => {
-      const { title, description } = options
+  Card: {
+    Form: ({ children }) => {
+      return <div className="flex flex-col gap-4">{children}</div>
+    },
+    Divider: () => <Separator />,
+    Settings: ({ options, attached }) => {
+      const { title, description, messages } = options
+
+      useEffect(() => {
+        if (!messages) return
+        messages.forEach((message) => {
+          if (message.type === "error") toast.error(message.text)
+          else toast(message.text)
+        })
+      }, [messages])
+
       return (
         <Card className="w-[600px] max-w-[600px]">
           {title && (
             <CardHeader>
-              <JikoIcon className="pb-6 pt-2" />
               <CardTitle>{title}</CardTitle>
               {description && <CardDescription>{description}</CardDescription>}
             </CardHeader>
           )}
           <CardContent className="flex flex-col gap-4">{attached}</CardContent>
-          <CardFooter>Footer</CardFooter>
         </Card>
       )
     },
-    FormCard: ({ options, attached }) => {
+    Default: ({ options, attached }) => {
       const { title, description, messages } = options
       return (
         <Card className="w-[350px] max-w-[350px]">
@@ -179,26 +194,43 @@ export const OryComponents: OryClientComponents = {
         </Button>
       )
     },
+    Oidc: ({ node, props, options }) => {
+      const { icon: Icon, label } = options
+      return (
+        <div className="w-full flex flex-row justify-between items-center">
+          <div className="flex flex-row gap-8">
+            {Icon && <Icon className={"size-6"} />}
+            <span className="text-bold capitalize">
+              {node.attributes.value || label}
+            </span>
+          </div>
+          <Button {...props} variant="link">
+            <Trash />
+          </Button>
+        </div>
+      )
+    },
     Button: ({ props, options }) => {
       const { type, label, icon: Icon, isSubmitting } = options
 
-      const buttonConfig = {
-        link: { variant: "link", className: "justify-start p-0" },
-        cancel: { variant: "destructive", className: "w-full justify-center" },
-        submit: { variant: "outline", className: "w-full justify-center" },
-        sso: { variant: "outline", className: "w-full justify-start gap-16" },
-      } as const
+      type ButtonType = typeof type
+      type ButtonVariant = VariantProps<typeof buttonVariants>["variant"]
 
-      const config = buttonConfig[type as keyof typeof buttonConfig] ?? {
-        variant: "outline",
-        className: "",
+      const variants: Partial<Record<ButtonType, ButtonVariant>> = {
+        cancel: "destructive",
+        link: "link",
+      }
+
+      const classNames: Partial<Record<ButtonType, string>> = {
+        link: "w-fit",
+        sso: "justify-start gap-16",
       }
 
       return (
         <Button
           {...props}
-          className={cn("text-center", config.className)}
-          variant={config.variant}
+          className={cn("text-center", classNames[type])}
+          variant={variants[type] || "outline"}
         >
           {type == "submit" && isSubmitting && <Spinner />}
           {Icon && <Icon className={cn(label ? "size-4" : "size-6")} />}
@@ -239,16 +271,18 @@ export const OryComponents: OryClientComponents = {
     },
     Image: ({ node, props }) => {
       return (
-        <figure>
-          <Image {...props} alt={node.meta.label?.text || ""} />
-        </figure>
+        <Image
+          {...props}
+          alt={node.meta.label?.text || ""}
+          className="rounded-md"
+        />
       )
     },
     Select: ({ node }) => null,
     Text: ({ options }) => {
       const { label, text } = options
       return (
-        <Label>
+        <Label className="text-muted-foreground">
           {label && label} {text && text}
         </Label>
       )

@@ -19,9 +19,9 @@ export function computeComponents(
   const overrides = components ?? {}
 
   return {
-    Main: {
-      ...defaultComponents.Main,
-      ...overrides.Main,
+    Card: {
+      ...defaultComponents.Card,
+      ...overrides.Card,
     },
     Node: {
       ...defaultComponents.Node,

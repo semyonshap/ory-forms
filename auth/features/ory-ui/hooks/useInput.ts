@@ -7,6 +7,7 @@ import { useFlowStoreShallow } from "../context"
 import { triggerToWindowCall } from "../lib/nodes"
 import { useInputTranslation } from "./useTranslation"
 import { useNodeInputSetup } from "./useInputSetup"
+import { UiNodeInputAttributesTypeEnum } from "@ory/client-fetch"
 
 export function useInput(node: UiNodeInput) {
   const {
@@ -43,6 +44,8 @@ export function useInput(node: UiNodeInput) {
   const { t, label, formattedLabel } = useInputTranslation(node)
   const placeholder = label ? resolvePlaceholder(label, t) : ""
 
+  const readOnly = type === UiNodeInputAttributesTypeEnum.Text
+
   return {
     props: {
       ...controller.field,
@@ -54,6 +57,7 @@ export function useInput(node: UiNodeInput) {
       autoComplete: autocomplete,
       disabled,
       placeholder,
+      readOnly,
     },
     options: {
       label: formattedLabel,

@@ -4,6 +4,7 @@ import {
   ComponentPropsWithoutRef,
   ComponentType,
   FormEventHandler,
+  PropsWithChildren,
 } from "react"
 import {
   FormRenderSelect,
@@ -43,15 +44,17 @@ export type NodeSorter = (
 export type GroupSorter = (a: UiNodeGroupEnum, b: UiNodeGroupEnum) => number
 
 export type OryComponents = {
-  Main: {
-    FormCard: ComponentType<FormRenderCardProps>
-    SettingsCard?: ComponentType<FormRenderCardProps>
-    DividerCard?: ComponentType<FormRenderCardDivider>
+  Card: {
+    Default: ComponentType<FormRenderCardProps>
+    Settings?: ComponentType<FormRenderCardProps>
+    Divider?: ComponentType<FormRenderCardDivider>
+    Form?: ComponentType<{ children?: React.ReactNode }>
   }
   Node: {
     Label: ComponentType<FormRenderLabelProps>
     AuthMethod?: ComponentType<FormRenderButton>
     Resend?: ComponentType<FormRenderButton>
+    Oidc?: ComponentType<FormRenderButton>
     Button: ComponentType<FormRenderButton>
     Select: ComponentType<FormRenderSelect>
     Input: ComponentType<FormRenderInput>
@@ -93,7 +96,7 @@ export type OryComponents = {
 }
 
 export type OryClientComponents = {
-  Main: OryComponents["Main"]
+  Card: OryComponents["Card"]
   Node: Omit<OryComponents["Node"], "Image" | "Password"> & {
     Image?: ComponentType<FormRenderImageProps>
   }

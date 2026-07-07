@@ -1,6 +1,6 @@
 export { AnchorWrapper } from "./anchorWrapper"
 export { TextWrapper } from "./textWrapper"
 export { ImageWrapper } from "./imageWrapper"
-export { RenderWrapper } from "./renderWrapper"
+export { FormWrapper } from "./formWrapper"
 
 export { ButtonWrapper, InputWrapper } from "./inputWrapper"

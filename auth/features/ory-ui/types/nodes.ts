@@ -8,14 +8,17 @@ import {
   UiNodeScriptAttributes,
   UiNodeTextAttributes,
 } from "@ory/client-fetch"
-import { InputDataType } from "./render"
+
+export type InputDataType = "button" | "submit" | "link" | "cancel" | "sso"
 
 export type GroupedNodes = Partial<Record<UiNodeGroupEnum, UiNode[]>>
 
-export type ButtonNodeType = "method" | "resend"
+export type NodeDataGroup = "content" | "footer"
+
+export type ButtonDataType = "method" | "resend" | "oidc"
 
 export type NodeData = {
-  type?: ButtonNodeType
+  type?: ButtonDataType
   target?: string
 }
 

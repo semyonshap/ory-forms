@@ -8,7 +8,7 @@ import { BuildContext, FormStateAction } from "../../types"
 export function BuildAuthMethodList({
   groups,
   dispatchFormState,
-  ctx: { t, container },
+  ctx: { t, flowContainer: container },
 }: {
   groups: UiNodeGroupEnum[]
   dispatchFormState: Dispatch<FormStateAction>

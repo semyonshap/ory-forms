@@ -1,10 +1,8 @@
-// Copyright © 2024 Ory Corp
-// SPDX-License-Identifier: Apache-2.0
-
 import "./globals.css"
 import React, { ReactNode, Suspense } from "react"
 import { Inter } from "next/font/google"
 import { Metadata } from "next"
+import { Toaster } from "@/components/ui/sonner"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -28,6 +26,7 @@ export default function RootLayout({
     >
       <body>
         <Suspense>{children}</Suspense>
+        <Toaster />
       </body>
     </html>
   )

@@ -5,6 +5,7 @@ import {
   createAnchorNode,
   createButtonNode,
   createDivGroup,
+  createDivNode,
   createTextNode,
   createUiText,
 } from "./factory"
@@ -13,7 +14,7 @@ export function BuildSignUp({
   config: {
     sdk: { url: sdkUrl },
   },
-  container: { flow },
+  flowContainer: { flow },
   t,
 }: BuildContext) {
   const nodeTextSignUpLabel = createTextNode({
@@ -43,7 +44,18 @@ export function BuildSignUp({
   })
 }
 
-export function BuildRecover({ config, container: { flow }, t }: BuildContext) {
+export function BuildDivider() {
+  return createDivNode({
+    id: `divider-${crypto.randomUUID()}`,
+    div_type: "DividerCard",
+  })
+}
+
+export function BuildRecover({
+  config,
+  flowContainer: { flow },
+  t,
+}: BuildContext) {
   const identifierNode = flow.ui.nodes
     .filter(isUiNodeInput)
     .find((n) => n.attributes.name === "identifier")
@@ -64,7 +76,7 @@ export function BuildRecover({ config, container: { flow }, t }: BuildContext) {
 
 export function BuildForgotPassword({
   config,
-  container: { flow },
+  flowContainer: { flow },
   t,
 }: BuildContext) {
   const passwordNode = flow.ui.nodes
@@ -145,7 +157,7 @@ export function BuildSignIn({
   config: {
     sdk: { url: sdkUrl },
   },
-  container: { flow },
+  flowContainer: { flow },
   t,
 }: BuildContext) {
   const nodeTextSignInLabel = createTextNode({

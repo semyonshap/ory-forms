@@ -52,6 +52,8 @@ export const defaultHiddenMessageIds = [
   1010003, 1060004, 1060005, 1060006,
 ]
 
+export const supportsSelectAccountPrompt = ["google", "github"]
+
 export const omittedInputKeys = [
   "autocomplete",
   "label",

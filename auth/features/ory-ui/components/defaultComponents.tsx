@@ -1,7 +1,7 @@
+import { logos } from "../assets"
 import { OryComponents } from "../types"
 import { NodeImage } from "./nodes/image"
 import { defaultGroupSorter, defaultNodeSorter } from "../lib/nodes"
-import { logos } from "../assets"
 
 export function notImplemented(componentName: string) {
   return function ComponentStub() {
@@ -13,9 +13,8 @@ export function notImplemented(componentName: string) {
 }
 
 export const DefaultComponents: OryComponents = {
-  Main: {
-    FormCard: notImplemented("FormCard"),
-    SettingsCard: notImplemented("SettingsCard"),
+  Card: {
+    Default: notImplemented("FormCard"),
   },
   Node: {
     Label: notImplemented("Label"),

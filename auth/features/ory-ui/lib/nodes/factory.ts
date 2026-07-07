@@ -2,6 +2,7 @@ import {
   UiNodeAttributes,
   UiNodeGroupEnum,
   UiNodeInputAttributes,
+  UiNodeInputAttributesTypeEnum,
   UiNodeMeta,
   UiNodeTypeEnum,
   UiText,
@@ -100,6 +101,37 @@ export function createTextNode({
     attributes,
     ...rest,
   }) as UiNodeText
+}
+
+interface CreateInputNodeParams extends Omit<
+  CreateUiNodeParams,
+  "type" | "attributes"
+> {
+  attributes: Omit<UiNodeInputAttributes, "node_type">
+}
+
+export function createInputNode({
+  group,
+  attributes,
+  messages = [],
+  data,
+}: CreateInputNodeParams): UiNodeInput {
+  const renderAttributes: UiNodeInputAttributes = {
+    ...attributes,
+    node_type: "input",
+  }
+
+  const label = attributes.label
+  const meta = label ? { label } : {}
+
+  return createUiNode({
+    type: UiNodeTypeEnum.Input,
+    attributes: renderAttributes as UiNodeAttributes,
+    meta,
+    messages,
+    group,
+    data,
+  }) as UiNodeInput
 }
 
 export interface CreateButtonNodeParams extends Omit<
@@ -222,6 +254,7 @@ export function createDivGroup({
   class: className,
   children,
   div_type,
+  ...rest
 }: CreateDivisionNodeParams & { children: FormNode[] }): FormNode[] {
   const endId = `${id}-end`
 
@@ -230,10 +263,12 @@ export function createDivGroup({
     class: className,
     div_type,
     div_end: endId,
+    ...rest,
   })
 
   const endDiv = createDivNode({
     id: endId,
+    ...rest,
   })
 
   return [startDiv, ...children, endDiv]
