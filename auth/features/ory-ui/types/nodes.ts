@@ -26,6 +26,7 @@ export type InputNodeData = NodeData & {
   inputType?: InputDataType
   onClick?: () => void
   description?: string
+  readOnly?: boolean
 }
 
 export type FormNode = UiNode & {

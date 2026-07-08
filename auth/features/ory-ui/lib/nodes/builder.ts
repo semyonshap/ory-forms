@@ -129,17 +129,24 @@ export function Builder({
     case "method_active": {
       const finalNodes = getFinalNodes(visibleGroups, formState.method)
 
-      result = [
-        ...new Set([
-          ...nodes.filter(
-            (n) =>
-              isUiNodeScriptAttributes(n.attributes) ||
-              n.group === UiNodeGroupEnum.Default ||
-              n.group === UiNodeGroupEnum.Profile,
-          ),
-          ...finalNodes,
-        ]),
-      ].sort(sortNodes)
+      const hiddenNodes = nodes.filter(
+        (n) =>
+          n.group !== UiNodeGroupEnum.Captcha &&
+          ((n.attributes.node_type === "input" &&
+            n.attributes.type === "hidden") ||
+            isUiNodeScriptAttributes(n.attributes)),
+      )
+
+      const profileNodes = nodes
+        .filter(isNodeVisible)
+        .filter(
+          (node) =>
+            node.group === UiNodeGroupEnum.Default ||
+            node.group === UiNodeGroupEnum.Profile,
+        )
+
+      const combined = [...profileNodes, ...finalNodes, ...hiddenNodes]
+      result = Array.from(new Set(combined)).sort(sortNodes)
 
       switch (flowType) {
         case OryFlowType.Login: {
@@ -320,6 +327,9 @@ export function Builder({
                       type: "text",
                       disabled: false,
                       value: code,
+                    },
+                    data: {
+                      readOnly: true,
                     },
                   }),
                 )

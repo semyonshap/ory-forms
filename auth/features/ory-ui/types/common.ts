@@ -56,7 +56,7 @@ export type OryComponents = {
     Resend?: ComponentType<FormRenderButton>
     Oidc?: ComponentType<FormRenderButton>
     Button: ComponentType<FormRenderButton>
-    Select: ComponentType<FormRenderSelect>
+    Select?: ComponentType<FormRenderSelect>
     Input: ComponentType<FormRenderInput>
     Code: ComponentType<FormRenderInput>
     Password?: ComponentType<FormRenderInput>

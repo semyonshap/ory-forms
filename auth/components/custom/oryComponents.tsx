@@ -60,6 +60,7 @@ export const OryComponents: OryClientComponents = {
       useEffect(() => {
         if (!messages) return
         messages.forEach((message) => {
+          // console.log("msg", message)
           if (message.type === "error") toast.error(message.text)
           else toast(message.text)
         })
@@ -278,7 +279,6 @@ export const OryComponents: OryClientComponents = {
         />
       )
     },
-    Select: ({ node }) => null,
     Text: ({ options }) => {
       const { label, text } = options
       return (

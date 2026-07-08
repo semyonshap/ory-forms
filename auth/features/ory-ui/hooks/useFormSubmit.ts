@@ -1,6 +1,5 @@
 import {
   OnRedirectHandler,
-  UiNodeGroupEnum,
   UpdateLoginFlowBody,
   UpdateRecoveryFlowBody,
   UpdateRegistrationFlowBody,
@@ -16,17 +15,12 @@ import {
   onSubmitSettings,
   onSubmitVerification,
 } from "../services"
+import { FormValues, OryFlowContainer, OryFlowType } from "../types"
 import { useFlowStoreShallow } from "../context"
 import {
-  FormValues,
-  OryFlowContainer,
-  OryFlowType,
-  supportsSelectAccountPrompt,
-} from "../types"
-import {
-  computeDefaultValues,
+  applySelectAccountPrompt,
+  filterSettingsFields,
   removeEmptyStrings,
-  isUiNodeGroupEnum,
 } from "../lib"
 
 export function useFormSubmit(methods: UseFormReturn<FormValues>) {
@@ -40,28 +34,47 @@ export function useFormSubmit(methods: UseFormReturn<FormValues>) {
 
   const { flowType } = flowContainer
 
-  const handleSuccess = (flow: OryFlowContainer) => {
-    dispatchFormState({ type: "form_submit_end" })
-    setFlowContainer(flow)
-    const newValues = computeDefaultValues(flow.flow)
-    methods.reset(newValues, {
-      keepSubmitCount: true,
-    })
-  }
-
   const onRedirect: OnRedirectHandler = (url, _external) => {
     dispatchFormState({ type: "page_redirect" })
     window.location.assign(url)
   }
 
   const onSubmit: SubmitHandler<FormValues> = async (
-    initialData: Record<string, unknown>,
+    initialData: FormValues,
   ) => {
-    console.log("data:", initialData)
+    const isResend = initialData.method === "code"
 
-    dispatchFormState({ type: "form_submit_start" })
+    const startSubmit = () => {
+      if (!isResend) dispatchFormState({ type: "form_submit_start" })
+    }
+
+    const endSubmit = () => {
+      if (!isResend) dispatchFormState({ type: "form_submit_end" })
+    }
+
+    const handleFlowUpdate = (container: OryFlowContainer) => {
+      endSubmit()
+      setFlowContainer(container)
+    }
+
+    const clearSensitiveData = (data: FormValues) => {
+      if ("password" in data) {
+        methods.setValue("password", "")
+      }
+      if ("code" in data) {
+        methods.setValue("code", "")
+      }
+      if ("totp_code" in data) {
+        methods.setValue("totp_code", "")
+      }
+    }
+
+    startSubmit()
+
     try {
-      const data = removeEmptyStrings(initialData)
+      const data = removeEmptyStrings<FormValues>(initialData)
+      console.log("Submit", data)
+      
       switch (flowType) {
         case OryFlowType.Login: {
           const submitData: UpdateLoginFlowBody = {
@@ -69,7 +82,7 @@ export function useFormSubmit(methods: UseFormReturn<FormValues>) {
           }
           await onSubmitLogin(flowContainer, config, {
             onRedirect,
-            setFlowContainer: handleSuccess,
+            setFlowContainer: handleFlowUpdate,
             body: submitData,
           })
           break
@@ -85,7 +98,7 @@ export function useFormSubmit(methods: UseFormReturn<FormValues>) {
 
           await onSubmitRegistration(flowContainer, config, {
             onRedirect,
-            setFlowContainer: handleSuccess,
+            setFlowContainer: handleFlowUpdate,
             body: submitData,
           })
           break
@@ -96,7 +109,7 @@ export function useFormSubmit(methods: UseFormReturn<FormValues>) {
           }
           await onSubmitVerification(flowContainer, config, {
             onRedirect,
-            setFlowContainer: handleSuccess,
+            setFlowContainer: handleFlowUpdate,
             body: submitData,
           })
           break
@@ -107,56 +120,33 @@ export function useFormSubmit(methods: UseFormReturn<FormValues>) {
           }
           await onSubmitRecovery(flowContainer, config, {
             onRedirect,
-            setFlowContainer: handleSuccess,
+            setFlowContainer: handleFlowUpdate,
             body: submitData,
           })
           break
         }
         case OryFlowType.Settings: {
+          const filtered = filterSettingsFields(data, data.method as string)
           const submitData: UpdateSettingsFlowBody = {
-            ...(data as unknown as UpdateSettingsFlowBody),
+            ...(filtered as unknown as UpdateSettingsFlowBody),
           }
 
-          if (
-            submitData.method === UiNodeGroupEnum.Oidc &&
-            submitData.link &&
-            supportsSelectAccountPrompt.includes(submitData.link)
-          ) {
-            submitData.upstream_parameters = {
-              prompt: "select_account",
-            }
-          }
+          console.log("filtered:", filtered)
+
+          applySelectAccountPrompt(submitData)
 
           await onSubmitSettings(flowContainer, config, {
             onRedirect,
-            setFlowContainer: handleSuccess,
+            setFlowContainer: handleFlowUpdate,
             body: submitData,
           })
           break
         }
       }
-      if ("password" in data) {
-        methods.setValue("password", "")
-      }
-      if ("code" in data) {
-        methods.setValue("code", "")
-      }
-      if ("totp_code" in data) {
-        methods.setValue("totp_code", "")
-      }
 
-      if (
-        typeof data.method === "string" &&
-        isUiNodeGroupEnum(data.method) &&
-        data.method === "code"
-      ) {
-        dispatchFormState({
-          type: "action_select_method",
-          method: data.method,
-        })
-      }
+      clearSensitiveData(data)
     } catch (error) {
-      dispatchFormState({ type: "form_submit_end" })
+      endSubmit()
       throw error
     }
   }

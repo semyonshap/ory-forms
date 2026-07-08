@@ -108,76 +108,24 @@ interface CreateInputNodeParams extends Omit<
   "type" | "attributes"
 > {
   attributes: Omit<UiNodeInputAttributes, "node_type">
+  data?: InputNodeData
 }
 
 export function createInputNode({
-  group,
   attributes,
-  messages = [],
   data,
+  ...extra
 }: CreateInputNodeParams): UiNodeInput {
   const renderAttributes: UiNodeInputAttributes = {
     ...attributes,
     node_type: "input",
   }
 
-  const label = attributes.label
-  const meta = label ? { label } : {}
-
   return createUiNode({
     type: UiNodeTypeEnum.Input,
     attributes: renderAttributes as UiNodeAttributes,
-    meta,
-    messages,
-    group,
     data,
-  }) as UiNodeInput
-}
-
-export interface CreateButtonNodeParams extends Omit<
-  CreateUiNodeParams,
-  "type" | "attributes"
-> {
-  name: string
-  value?: any
-  label?: UiText
-  onClick?: () => void
-  buttonType?: "submit" | "button"
-  disabled?: boolean
-  group?: UiNodeGroupEnum
-  messages?: UiText[]
-}
-
-export function createButtonNode({
-  name,
-  value,
-  label,
-  onClick,
-  buttonType = "button",
-  disabled = false,
-  messages = [],
-  group,
-  data,
-}: CreateButtonNodeParams): UiNodeInput {
-  const attributes: UiNodeInputAttributes = {
-    node_type: "input",
-    name,
-    value: value ?? "",
-    type: buttonType,
-    disabled,
-  }
-
-  const meta = label ? { label } : {}
-  const nodeData: InputNodeData = { ...data }
-  if (onClick) nodeData.onClick = onClick
-
-  return createUiNode({
-    type: UiNodeTypeEnum.Input,
-    attributes: attributes as UiNodeAttributes,
-    meta,
-    messages,
-    group,
-    data: nodeData,
+    ...extra,
   }) as UiNodeInput
 }
 
@@ -186,7 +134,7 @@ interface CreateUiTextParams {
   text: string
   type?: UiTextTypeEnum
   context?: object
-  t: TFunction
+  t?: TFunction
 }
 
 export function createUiText({
@@ -196,18 +144,15 @@ export function createUiText({
   context,
   t,
 }: CreateUiTextParams): UiText {
-  if (typeof keyOrId === "string") {
-    return {
-      id: 0,
-      text: t(keyOrId, { defaultValue: text, ...(context || {}) }),
-      type,
-      context,
-    }
-  }
+  const isStringKey = typeof keyOrId === "string"
+  const resolvedText =
+    isStringKey && t
+      ? t(keyOrId, { defaultValue: text, ...(context || {}) })
+      : text
 
   return {
-    id: keyOrId,
-    text: text,
+    id: isStringKey ? 0 : keyOrId,
+    text: resolvedText,
     type,
     context,
   }

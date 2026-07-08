@@ -17,12 +17,11 @@ export const DefaultComponents: OryComponents = {
     Default: notImplemented("FormCard"),
   },
   Node: {
+    Image: NodeImage,
     Label: notImplemented("Label"),
     Button: notImplemented("Button"),
-    Select: notImplemented("Select"),
     Input: notImplemented("Input"),
     Code: notImplemented("CodeInput"),
-    Image: NodeImage,
     Text: notImplemented("Text"),
     Anchor: notImplemented("Anchor"),
   },

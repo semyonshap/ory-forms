@@ -44,8 +44,6 @@ export function useInput(node: UiNodeInput) {
   const { t, label, formattedLabel } = useInputTranslation(node)
   const placeholder = label ? resolvePlaceholder(label, t) : ""
 
-  const readOnly = type === UiNodeInputAttributesTypeEnum.Text
-
   return {
     props: {
       ...controller.field,
@@ -57,7 +55,7 @@ export function useInput(node: UiNodeInput) {
       autoComplete: autocomplete,
       disabled,
       placeholder,
-      readOnly,
+      readOnly: node.data?.readOnly,
     },
     options: {
       label: formattedLabel,

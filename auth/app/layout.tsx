@@ -8,9 +8,6 @@ const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
   title: "Jiko Auth",
-  icons: {
-    icon: "/jiko.ico",
-  },
 }
 
 export default function RootLayout({

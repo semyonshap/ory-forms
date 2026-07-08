@@ -31,9 +31,9 @@ export function useButton(node: UiNodeInput) {
   const onClick = useCallback(() => {
     node.data?.onClick?.()
     setValue(attr.name, attr.value)
+    setValue("method", node.group)
     if (node.data?.inputType === "sso") {
       setValue("provider", node.attributes.value)
-      setValue("method", node.group)
     }
     setClicked(true)
     if (attr.onclickTrigger) {

@@ -3,7 +3,7 @@ import { BuildContext, isUiNodeInput } from "../../types"
 import { BuildReturnTo } from "./logout"
 import {
   createAnchorNode,
-  createButtonNode,
+  createInputNode,
   createDivGroup,
   createDivNode,
   createTextNode,
@@ -103,17 +103,23 @@ export function BuildChooseMethod({
 }: BuildContext & {
   onClick: () => void
 }) {
-  return createButtonNode({
-    name: "choose-method-button",
-    onClick,
+  return createInputNode({
+    attributes: {
+      name: "choose-method-button",
+      type: "button",
+      disabled: false,
+    },
     data: {
+      onClick,
       inputType: "link",
     },
-    label: createUiText({
-      keyOrId: "login.2fa.method.go-back",
-      text: "Choose another method",
-      t,
-    }),
+    meta: {
+      label: createUiText({
+        keyOrId: "login.2fa.method.go-back",
+        text: "Choose another method",
+        t,
+      }),
+    },
   })
 }
 
@@ -123,17 +129,23 @@ export function BuildSelectAnother({
 }: BuildContext & {
   onClick: () => void
 }) {
-  return createButtonNode({
-    name: "select-another-button",
-    onClick,
+  return createInputNode({
+    attributes: {
+      name: "select-another-button",
+      disabled: false,
+      type: "button",
+    },
     data: {
+      onClick,
       inputType: "link",
     },
-    label: createUiText({
-      keyOrId: "card.footer.select-another-method",
-      text: "Select another method",
-      t,
-    }),
+    meta: {
+      label: createUiText({
+        keyOrId: "card.footer.select-another-method",
+        text: "Select another method",
+        t,
+      }),
+    },
   })
 }
 

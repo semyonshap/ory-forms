@@ -52,18 +52,17 @@ export function getFinalNodes(
   uniqueGroups: GroupedNodes,
   selectedGroup: UiNodeGroupEnum | undefined,
 ): UiNode[] {
-  const selectedNodes: UiNode[] = selectedGroup
+  const hiddenGroupNodes = [
+    ...(uniqueGroups.identifier_first ?? []),
+    ...(uniqueGroups.default ?? []),
+    ...(uniqueGroups.captcha ?? []),
+  ].filter(
+    (node) => "type" in node.attributes && node.attributes.type === "hidden",
+  )
+
+  const selectedNodes = selectedGroup
     ? (uniqueGroups[selectedGroup] ?? [])
     : []
 
-  return [
-    ...(uniqueGroups?.identifier_first ?? []),
-    ...(uniqueGroups?.default ?? []),
-    ...(uniqueGroups?.captcha ?? []),
-  ]
-    .flat()
-    .filter(
-      (node) => "type" in node.attributes && node.attributes.type === "hidden",
-    )
-    .concat(selectedNodes)
+  return [...hiddenGroupNodes, ...selectedNodes]
 }
