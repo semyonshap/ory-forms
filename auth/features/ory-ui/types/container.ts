@@ -46,11 +46,7 @@ export type SettingsFlowContainer = {
 }
 
 export type ConsentFlow = {
-  created_at: Date
-  expires_at: Date
   id: "UNSET"
-  issued_at: Date
-  state: "show_form" | "rejected" | "accepted"
   active: "oauth2_consent"
   ui: UiContainer
   consent_request: OAuth2ConsentRequest

@@ -21,6 +21,23 @@ export function orySdkUrl() {
   return baseUrl
 }
 
+function oryOAuth2UrlOrNull(): string | null {
+  const baseUrl = getEnv("ORY_OAUTH2_URL")
+  return baseUrl ? baseUrl.replace(/\/$/, "") : null
+}
+
+export function oryOAuth2Url() {
+  const baseUrl = oryOAuth2UrlOrNull()
+
+  if (!baseUrl) {
+    throw new Error(
+      "You need to set environment variable `ORY_OAUTH2_URL` to your Hydra URL.",
+    )
+  }
+
+  return baseUrl
+}
+
 export function isProduction() {
   const env = getEnv("VERCEL_ENV") || getEnv("NODE_ENV") || ""
   return ["production", "prod"].indexOf(env) > -1

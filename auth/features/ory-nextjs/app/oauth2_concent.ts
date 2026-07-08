@@ -1,20 +1,24 @@
+import { redirect } from "next/navigation"
 import { OAuth2ConsentRequest, UiNode, UiTextTypeEnum } from "@ory/client-fetch"
 
-import { buildActionUrl } from "./utils"
 import { getServerSession } from "./session"
 import { serverSideOAuth2Client } from "./client"
 import { ConsentFlow, QueryParams } from "../types"
-import { redirect } from "next/navigation"
+import { buildActionUrl, getPublicUrl } from "./utils"
+import { guessPotentiallyProxiedOrySdkUrl } from "../utils/sdk"
 
-export async function getConsentFlow(
+export async function getOAuth2ConsentFlow(
+  config: { project: { login_ui_url: string } },
   params: QueryParams | Promise<QueryParams>,
-  baseUrl: string,
-  loginUiUrl: string,
 ): Promise<ConsentFlow | null> {
   const resolved = await params
   const consentChallenge = resolved["consent_challenge"]?.toString()
 
-  if (!consentChallenge) {
+  const baseUrl = guessPotentiallyProxiedOrySdkUrl({
+    knownProxiedUrl: await getPublicUrl(),
+  })
+
+  if (!consentChallenge || !baseUrl) {
     return null
   }
 
@@ -42,14 +46,17 @@ export async function getConsentFlow(
 
   const session = await getServerSession()
   if (!session) {
-    const loginUrl = buildActionUrl(baseUrl, loginUiUrl, {
+    const loginUrl = buildActionUrl(baseUrl, config.project.login_ui_url, {
       login_challenge: resolved["login_challenge"]?.toString(),
     })
     redirect(loginUrl)
   }
 
   return {
-    consentRequest,
+    id: "UNSET",
+    active: "oauth2_consent",
+    consent_request: consentRequest,
+    session,
     ui: {
       action: buildActionUrl(baseUrl, "/self-service/consent", {
         consent_challenge: consentChallenge,
@@ -104,6 +111,7 @@ function challengeNode(challenge: string): UiNode {
     messages: [],
   }
 }
+
 const rememberCheckbox: UiNode = {
   type: "input",
   group: "oauth2_consent",
@@ -123,6 +131,7 @@ const rememberCheckbox: UiNode = {
   },
   messages: [],
 }
+
 const acceptButton: UiNode = {
   type: "input",
   group: "oauth2_consent",
@@ -142,6 +151,7 @@ const acceptButton: UiNode = {
   },
   messages: [],
 }
+
 const rejectButton: UiNode = {
   type: "input",
   group: "oauth2_consent",

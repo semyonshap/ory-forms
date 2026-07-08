@@ -1,4 +1,4 @@
-import { OAuth2ConsentRequest, UiContainer } from "@ory/client-fetch"
+import { OAuth2ConsentRequest, Session, UiContainer } from "@ory/client-fetch"
 
 export type QueryParams = { [key: string]: string | string[] | undefined }
 
@@ -13,6 +13,10 @@ export type FlowParams = {
 }
 
 export type ConsentFlow = {
-  consentRequest: OAuth2ConsentRequest
+  id: "UNSET"
+  active: "oauth2_consent"
   ui: UiContainer
+  consent_request: OAuth2ConsentRequest
+  session: Session
+  return_to?: string
 }

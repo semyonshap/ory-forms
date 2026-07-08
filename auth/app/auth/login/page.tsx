@@ -1,8 +1,7 @@
-import { getLoginFlow, OryPageParams } from "@ory/nextjs/app"
-
 import { oryConfig } from "@/ory.config"
 import { Flow, OryFlowType } from "@/features/ory-ui"
 import { OryComponents } from "@/components/custom/oryComponents"
+import { getLoginFlow, OryPageParams } from "@/features/ory-nextjs/app"
 
 export default async function LoginPage(props: OryPageParams) {
   const flow = await getLoginFlow(oryConfig, props.searchParams)

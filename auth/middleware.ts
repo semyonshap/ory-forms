@@ -1,6 +1,6 @@
-import { createOryMiddleware } from "@ory/nextjs/middleware";
-import { oryConfig } from "@/ory.config";
+import { oryConfig } from "@/ory.config"
+import { createOryMiddleware } from "@/features/ory-nextjs/middleware"
 
 export const middleware = createOryMiddleware(oryConfig)
 
-export const config = {};
+export const config = {}
