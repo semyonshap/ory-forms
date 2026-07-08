@@ -1,10 +1,12 @@
-import { Error as ErrorComponent } from "@/features/ory-elements/features/flows"
+import { OryPageParams } from "@/features/ory-nextjs"
+
+/* import { Error as ErrorComponent } from "@/features/ory-elements/features/flows"
 import { getError, getServerSession, OryPageParams } from "@ory/nextjs/app"
 
 import { oryConfig } from "@/ory.config"
-
+ */
 export default async function ErrorPage(props: OryPageParams) {
-  const error = await getError(props.searchParams)
+  /* const error = await getError(props.searchParams)
   const session = await getServerSession().catch(() => null)
 
   return (
@@ -14,5 +16,5 @@ export default async function ErrorPage(props: OryPageParams) {
       components={{ Card: {} }}
       session={session ?? undefined}
     />
-  )
+  ) */
 }

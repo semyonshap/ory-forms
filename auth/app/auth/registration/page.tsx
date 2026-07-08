@@ -1,7 +1,8 @@
 import { oryConfig } from "@/ory.config"
 import { Flow, OryFlowType } from "@/features/ory-ui"
 import { OryComponents } from "@/components/custom/oryComponents"
-import { getRegistrationFlow, OryPageParams } from "@/features/ory-nextjs/app"
+import { getRegistrationFlow } from "@/features/ory-nextjs"
+import { OryPageParams } from "@/features/ory-nextjs/types"
 
 export default async function RegistrationPage(props: OryPageParams) {
   const flow = await getRegistrationFlow(oryConfig, props.searchParams)

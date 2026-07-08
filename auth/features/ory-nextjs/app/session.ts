@@ -1,3 +1,4 @@
+"use server"
 
 import { Session } from "@ory/client-fetch"
 import { serverSideFrontendClient } from "./client"

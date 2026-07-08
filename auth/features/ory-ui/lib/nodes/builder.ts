@@ -162,12 +162,13 @@ export function Builder({
             const goBack = BuildGoBackCode(ctx)
             result.push(goBack)
           }
+          break
         }
         case OryFlowType.Registration: {
           const screenSelectionNode = findScreenSelectionButton(flow.ui.nodes)
           if (
-            screenSelectionNode ||
-            Object.entries(authMethodBlocks).length > 2
+            screenSelectionNode &&
+            Object.entries(authMethodBlocks).length >= 2
           ) {
             const selectMethod = BuildSelectMethod({
               ...ctx,
@@ -177,6 +178,7 @@ export function Builder({
             })
             result.push(selectMethod)
           }
+          break
         }
       }
       break

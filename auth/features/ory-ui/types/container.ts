@@ -1,6 +1,7 @@
 import {
   LoginFlow,
   OAuth2ConsentRequest,
+  OAuth2LogoutRequest,
   RecoveryFlow,
   RegistrationFlow,
   Session,
@@ -17,6 +18,7 @@ export enum OryFlowType {
   Verification = "verification",
   Settings = "settings",
   OAuth2Consent = "oauth2_consent",
+  OAuth2Logout = "oauth2_logout",
   Error = "error",
 }
 
@@ -45,7 +47,7 @@ export type SettingsFlowContainer = {
   flow: SettingsFlow
 }
 
-export type ConsentFlow = {
+export type OAuth2ConsentFlow = {
   id: "UNSET"
   active: "oauth2_consent"
   ui: UiContainer
@@ -54,9 +56,22 @@ export type ConsentFlow = {
   return_to?: string
 }
 
-export type ConsentFlowContainer = {
+export type OAuth2LogoutFlow = {
+  id: "UNSET"
+  active: "oauth2_logout"
+  ui: UiContainer
+  return_to?: string
+  logout_request: OAuth2LogoutRequest
+}
+
+export type OAuth2ConsentFlowContainer = {
   flowType: OryFlowType.OAuth2Consent
-  flow: ConsentFlow
+  flow: OAuth2ConsentFlow
+}
+
+export type OAuth2LogoutFlowContainer = {
+  flowType: OryFlowType.OAuth2Logout
+  flow: OAuth2LogoutFlow
 }
 
 export type OryFlowContainer =
@@ -65,7 +80,8 @@ export type OryFlowContainer =
   | RecoveryFlowContainer
   | VerificationFlowContainer
   | SettingsFlowContainer
-  | ConsentFlowContainer
+  | OAuth2ConsentFlowContainer
+  | OAuth2LogoutFlowContainer
 
 export type OryFlowContainerWithState = OryFlowContainer & {
   formState: FormState

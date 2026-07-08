@@ -6,16 +6,16 @@ import {
 } from "@ory/client-fetch"
 import {
   OnSubmitHandlerProps,
+  OryConfiguration,
   OryFlowType,
   RegistrationFlowContainer,
 } from "../types"
-import { OryElementsConfiguration } from "@/features/ory-elements"
 import { handleFlowError, replaceWindowFlowId } from "../utils"
 import { flowHasErrors } from "../lib"
 
 export async function onSubmitRegistration(
   { flow }: RegistrationFlowContainer,
-  config: OryElementsConfiguration,
+  config: OryConfiguration,
   {
     setFlowContainer,
     body,

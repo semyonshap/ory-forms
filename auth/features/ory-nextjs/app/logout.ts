@@ -1,3 +1,5 @@
+"use server"
+
 import { LogoutFlow } from "@ory/client-fetch"
 
 import { headers } from "next/headers"

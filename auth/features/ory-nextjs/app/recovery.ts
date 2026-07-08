@@ -1,3 +1,6 @@
+"use server"
+
+
 import { FlowType, RecoveryFlow } from "@ory/client-fetch"
 import { initOverrides, QueryParams } from "../types"
 import { guessPotentiallyProxiedOrySdkUrl } from "../utils/sdk"

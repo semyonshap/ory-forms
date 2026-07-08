@@ -1,3 +1,5 @@
+"use server"
+
 import { QueryParams } from "../types"
 import { serverSideFrontendClient } from "./client"
 import { FlowError } from "@ory/client-fetch"

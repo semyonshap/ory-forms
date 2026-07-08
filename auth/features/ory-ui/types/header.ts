@@ -1,6 +1,7 @@
 import {
   AuthenticatorAssuranceLevel,
   OAuth2ConsentRequest,
+  OAuth2LogoutRequest,
   Session,
 } from "@ory/client-fetch"
 import { FormState, OryFlowType } from "."
@@ -27,10 +28,18 @@ export type HeaderOAuth2ConsentRequestOptions = {
   }
 }
 
+export type HeaderOAuth2LogoutRequestOptions = {
+  flowType: OryFlowType.OAuth2Logout
+  flow: {
+    logout_request: OAuth2LogoutRequest
+  }
+}
+
 export type HeaderOptions =
   | HeaderLoginOptions
   | HeaderRegistrationOptions
   | HeaderOAuth2ConsentRequestOptions
+  | HeaderOAuth2LogoutRequestOptions
   | {
       flowType:
         | OryFlowType.Error

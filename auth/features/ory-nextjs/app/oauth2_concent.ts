@@ -1,16 +1,18 @@
+"use server"
+
 import { redirect } from "next/navigation"
 import { OAuth2ConsentRequest, UiNode, UiTextTypeEnum } from "@ory/client-fetch"
 
 import { getServerSession } from "./session"
 import { serverSideOAuth2Client } from "./client"
-import { ConsentFlow, QueryParams } from "../types"
+import { OAuth2ConsentFlow, QueryParams } from "../types"
 import { buildActionUrl, getPublicUrl } from "./utils"
 import { guessPotentiallyProxiedOrySdkUrl } from "../utils/sdk"
 
 export async function getOAuth2ConsentFlow(
   config: { project: { login_ui_url: string } },
   params: QueryParams | Promise<QueryParams>,
-): Promise<ConsentFlow | null> {
+): Promise<OAuth2ConsentFlow | null> {
   const resolved = await params
   const consentChallenge = resolved["consent_challenge"]?.toString()
 
@@ -18,7 +20,7 @@ export async function getOAuth2ConsentFlow(
     knownProxiedUrl: await getPublicUrl(),
   })
 
-  if (!consentChallenge || !baseUrl) {
+  if (!consentChallenge) {
     return null
   }
 

@@ -33,6 +33,11 @@ export function getCardHeaderText(
       return getRegistrationHeader(container, opts, t)
     case OryFlowType.OAuth2Consent:
       return getConsentHeader(opts, t)
+    case OryFlowType.OAuth2Logout:
+      return {
+        description: "Logout",
+        title: "DEsc",
+      }
     default:
       return getDefaultHeader(t)
   }

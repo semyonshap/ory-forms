@@ -6,6 +6,7 @@ import { orySdkUrl } from "../utils/sdk"
 import { buildUpstreamResponse } from "./response"
 import { rewriteSetCookieHeaders } from "./cookie"
 import { handleConsentSubmit } from "../handlers/consent"
+import { handleLogoutSubmit } from "../handlers/logout"
 import { buildUpstreamUrl, buildUpstreamHeaders } from "./request"
 
 export type OryMiddlewareOptions = {
@@ -35,6 +36,13 @@ export async function proxyRequest(
     request.method === "POST"
   ) {
     return handleConsentSubmit(request)
+  }
+
+  if (
+    request.nextUrl.pathname === "/self-service/logout" &&
+    request.method === "POST"
+  ) {
+    return handleLogoutSubmit(request)
   }
 
   const appBaseHost = request.headers.get("host")

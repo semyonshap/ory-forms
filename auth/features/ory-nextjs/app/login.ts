@@ -1,3 +1,5 @@
+"use server"
+
 import { FlowType, LoginFlow } from "@ory/client-fetch"
 
 import { initOverrides, QueryParams } from "../types"

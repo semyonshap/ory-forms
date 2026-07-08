@@ -1,7 +1,7 @@
 import { oryConfig } from "@/ory.config"
 import { Flow, OryFlowType } from "@/features/ory-ui"
 import { OryComponents } from "@/components/custom/oryComponents"
-import { getVerificationFlow, OryPageParams } from "@/features/ory-nextjs/app"
+import { getVerificationFlow, OryPageParams } from "@/features/ory-nextjs"
 
 export default async function VerificationPage(props: OryPageParams) {
   const flow = await getVerificationFlow(oryConfig, props.searchParams)

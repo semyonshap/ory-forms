@@ -33,10 +33,6 @@ export async function getPublicUrl() {
   return `${protocol}://${host}`
 }
 
-export interface OryPageParams {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
-}
-
 export function startNewFlow(
   params: QueryParams,
   flowType: FlowType,

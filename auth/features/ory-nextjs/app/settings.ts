@@ -1,3 +1,5 @@
+"use server"
+
 import { FlowType, SettingsFlow } from "@ory/client-fetch"
 
 import { initOverrides, QueryParams } from "../types"
