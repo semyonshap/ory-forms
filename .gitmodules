@@ -1,6 +1,3 @@
-[submodule "libs/ory"]
-	path = libs/ory
-	url = https://github.com/ory/elements.git
 [submodule "libs/selfservice-ui"]
 	path = libs/selfservice-ui
 	url = https://github.com/ory/kratos-selfservice-ui-react-nextjs.git
