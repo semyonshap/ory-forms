@@ -14,34 +14,6 @@
       "dependsOn": ["^build"]
     }
   },
-  "release": {
-    "projectsRelationship": "independent",
-    "releaseTagPattern": "release/{projectName}/{version}",
-    "git": {
-      "commit": false,
-      "tag": true,
-      "push": true
-    },
-    "changelog": {
-      "workspaceChangelog": false,
-      "projectChangelogs": {
-        "createRelease": "github",
-        "file": false
-      }
-    },
-    "groups": {
-      "react": {
-        "projects": ["@ory-forms/react"],
-        "title": "React",
-        "releaseTagPattern": "release/{projectName}/{version}"
-      },
-      "nextjs": {
-        "projects": ["@ory-forms/nextjs"],
-        "title": "Next.js",
-        "releaseTagPattern": "release/{projectName}/{version}"
-      }
-    }
-  },
   "plugins": [
     {
       "plugin": "@nx/eslint/plugin",

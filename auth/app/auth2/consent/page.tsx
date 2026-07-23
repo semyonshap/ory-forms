@@ -1,7 +1,7 @@
-import { oryConfig } from "@/ory.config"
-import { Flow, OryFlowType } from "@/features/ory-ui"
-import { OryComponents } from "@/components/custom/oryComponents"
-import { getOAuth2ConsentFlow, OryPageParams } from "@/features/ory-nextjs"
+import { oryConfig } from '@/ory.config'
+import { Flow, OryFlowType } from '@ory-forms/react'
+import { OryComponents } from '@/components/custom/oryComponents'
+import { getOAuth2ConsentFlow, OryPageParams } from '@ory-forms/nextjs'
 
 export default async function LoginPage(props: OryPageParams) {
   const flow = await getOAuth2ConsentFlow(oryConfig, props.searchParams)

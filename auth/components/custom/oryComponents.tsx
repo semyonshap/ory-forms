@@ -1,24 +1,18 @@
-"use client"
+'use client'
 
-import Image from "next/image"
+import Image from 'next/image'
 
-import { OryClientComponents } from "@/features/ory-ui/types"
-import { InputOTP, InputOTPGroup, InputOTPSlot } from "../ui/input-otp"
-import { Button, buttonVariants } from "../ui/button"
-import { Spinner } from "../ui/spinner"
-import { Input } from "../ui/input"
-import { Label } from "../ui/label"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "../ui/card"
-import { Alert, AlertDescription } from "../ui/alert"
-import JikoIcon from "../icons/jiko-icon"
-import { useCooldown } from "@/hooks/useCooldown"
-import { cn } from "@/lib/utils"
+import { OryClientComponents } from '@ory-forms/react'
+import { InputOTP, InputOTPGroup, InputOTPSlot } from '../ui/input-otp'
+import { Button, buttonVariants } from '../ui/button'
+import { Spinner } from '../ui/spinner'
+import { Input } from '../ui/input'
+import { Label } from '../ui/label'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card'
+import { Alert, AlertDescription } from '../ui/alert'
+import JikoIcon from '../icons/jiko-icon'
+import { useCooldown } from '@/hooks/useCooldown'
+import { cn } from '@/lib/utils'
 import {
   KeyRound,
   Mail,
@@ -36,12 +30,12 @@ import {
   MapPin,
   Phone,
   AtSign,
-} from "lucide-react"
-import { Separator } from "../ui/separator"
-import { toast } from "sonner"
-import { VariantProps } from "class-variance-authority"
-import { useEffect } from "react"
-import { Checkbox } from "../ui/checkbox"
+} from 'lucide-react'
+import { Separator } from '../ui/separator'
+import { toast } from 'sonner'
+import { VariantProps } from 'class-variance-authority'
+import { useEffect } from 'react'
+import { Checkbox } from '../ui/checkbox'
 
 export const OryComponents: OryClientComponents = {
   Icons: {
@@ -75,7 +69,7 @@ export const OryComponents: OryClientComponents = {
         if (!messages) return
         messages.forEach((message) => {
           // console.log("msg", message)
-          if (message.type === "error") toast.error(message.text)
+          if (message.type === 'error') toast.error(message.text)
           else toast(message.text)
         })
       }, [messages])
@@ -108,11 +102,9 @@ export const OryComponents: OryClientComponents = {
               messages.map((msg, index) => (
                 <Alert
                   key={`${msg.id}-${index}`}
-                  variant={msg.type === "error" ? "destructive" : "default"}
+                  variant={msg.type === 'error' ? 'destructive' : 'default'}
                 >
-                  <AlertDescription className="whitespace-pre-wrap">
-                    {msg.text}
-                  </AlertDescription>
+                  <AlertDescription className="whitespace-pre-wrap">{msg.text}</AlertDescription>
                 </Alert>
               ))}
             {attached}
@@ -129,9 +121,7 @@ export const OryComponents: OryClientComponents = {
       return (
         <div className="flex flex-col gap-1">
           <Label className="inline-flex justify-between">
-            <span className="text-sm font-medium text-muted-foreground">
-              {label}
-            </span>
+            <span className="text-sm font-medium text-muted-foreground">{label}</span>
             {attached}
           </Label>
           {children}
@@ -139,9 +129,9 @@ export const OryComponents: OryClientComponents = {
             <span
               key={msg.id}
               className={cn(
-                "text-sm",
-                msg.type === "error" && "text-destructive",
-                msg.type === "info" && "text-muted-foreground",
+                'text-sm',
+                msg.type === 'error' && 'text-destructive',
+                msg.type === 'info' && 'text-muted-foreground',
               )}
             >
               {msg.text}
@@ -155,10 +145,10 @@ export const OryComponents: OryClientComponents = {
       return (
         <a
           className={cn(
-            variant === "link" &&
-              "text-sm text-brand-primary underline-offset-2 hover:underline cursor-pointer",
-            variant === "button" && buttonVariants({ variant: "outline" }),
-            variant === "cancel" && buttonVariants({ variant: "destructive" }),
+            variant === 'link' &&
+              'text-sm text-brand-primary underline-offset-2 hover:underline cursor-pointer',
+            variant === 'button' && buttonVariants({ variant: 'outline' }),
+            variant === 'cancel' && buttonVariants({ variant: 'destructive' }),
           )}
           {...props}
           title={label}
@@ -176,8 +166,8 @@ export const OryComponents: OryClientComponents = {
           {...props}
           variant="link"
           className={cn(
-            "p-0 text-brand-primary",
-            cooldown.isActive && "hover:no-underline text-muted-foreground",
+            'p-0 text-brand-primary',
+            cooldown.isActive && 'hover:no-underline text-muted-foreground',
           )}
           onClick={(e) => {
             if (cooldown.isActive) {
@@ -188,9 +178,7 @@ export const OryComponents: OryClientComponents = {
             props.onClick?.(e)
           }}
         >
-          {cooldown.isActive && (
-            <span className="tabular-nums">{cooldown.remaining}s</span>
-          )}
+          {cooldown.isActive && <span className="tabular-nums">{cooldown.remaining}s</span>}
           <span>{label}</span>
         </Button>
       )
@@ -208,9 +196,7 @@ export const OryComponents: OryClientComponents = {
           <div className="flex flex-col gap-1 justify-start items-start min-w-0">
             <span className="text-left">{label}</span>
             {description && (
-              <span className="text-muted-foreground text-left text-sm">
-                {description}
-              </span>
+              <span className="text-muted-foreground text-left text-sm">{description}</span>
             )}
           </div>
         </Button>
@@ -221,13 +207,11 @@ export const OryComponents: OryClientComponents = {
       return (
         <div className="w-full flex flex-row justify-between items-center">
           <div className="flex flex-row gap-8">
-            {Icon && <Icon className={"size-6"} />}
-            <span className="text-bold capitalize">
-              {node.attributes.value || label}
-            </span>
+            {Icon && <Icon className={'size-6'} />}
+            <span className="text-bold capitalize">{node.attributes.value || label}</span>
           </div>
           <Button {...props} variant="link">
-            {node.attributes.name === "link" ? <Link /> : <Unlink />}
+            {node.attributes.name === 'link' ? <Link /> : <Unlink />}
           </Button>
         </div>
       )
@@ -236,28 +220,24 @@ export const OryComponents: OryClientComponents = {
       const { type, label, icon: Icon, isSubmitting } = options
 
       type ButtonType = typeof type
-      type ButtonVariant = VariantProps<typeof buttonVariants>["variant"]
+      type ButtonVariant = VariantProps<typeof buttonVariants>['variant']
 
       const variants: Partial<Record<ButtonType, ButtonVariant>> = {
-        cancel: "destructive",
-        link: "link",
-        code: "outline",
+        cancel: 'destructive',
+        link: 'link',
+        code: 'outline',
       }
 
       const classNames: Partial<Record<ButtonType, string>> = {
-        link: "w-fit px-0",
-        sso: "justify-start gap-16",
-        code: "whitespace-normal text-start h-auto",
+        link: 'w-fit px-0',
+        sso: 'justify-start gap-16',
+        code: 'whitespace-normal text-start h-auto',
       }
 
       return (
-        <Button
-          {...props}
-          className={cn(classNames[type])}
-          variant={variants[type] || "outline"}
-        >
+        <Button {...props} className={cn(classNames[type])} variant={variants[type] || 'outline'}>
           {isSubmitting && <Spinner />}
-          {Icon && <Icon className={cn(label ? "size-4" : "size-6")} />}
+          {Icon && <Icon className={cn(label ? 'size-4' : 'size-6')} />}
           <span>{label}</span>
         </Button>
       )
@@ -294,13 +274,7 @@ export const OryComponents: OryClientComponents = {
       )
     },
     Image: ({ node, props }) => {
-      return (
-        <Image
-          {...props}
-          alt={node.meta.label?.text || ""}
-          className="rounded-md"
-        />
-      )
+      return <Image {...props} alt={node.meta.label?.text || ''} className="rounded-md" />
     },
     Text: ({ options }) => {
       const { label, text } = options

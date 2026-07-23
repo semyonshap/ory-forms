@@ -1,5 +1,0 @@
-{
-  "nxConsole.nxWorkspacePath": "libs\\ory",
-  "js/ts.tsdk.path": "auth/node_modules/typescript/lib",
-  "js/ts.tsdk.promptToUseWorkspaceVersion": true
-}
