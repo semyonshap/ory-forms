@@ -34,6 +34,9 @@ export function BuildSignUp({
       text: "Sign up",
       t,
     }),
+    data: {
+      variant: "link"
+    }
   })
 
   return createDivGroup({
@@ -70,7 +73,7 @@ export function BuildRecover({
       text: "Recover Account",
       t,
     }),
-    data: { target: identifierNode.attributes.name },
+    data: { target: identifierNode.attributes.name, variant: "link" },
   })
 }
 
@@ -93,7 +96,7 @@ export function BuildForgotPassword({
       text: "Forgot Password?",
       t,
     }),
-    data: { target: passwordNode.attributes.name },
+    data: { target: passwordNode.attributes.name, variant: "link" },
   })
 }
 
@@ -111,7 +114,7 @@ export function BuildChooseMethod({
     },
     data: {
       onClick,
-      inputType: "link",
+      variant: "link",
     },
     meta: {
       label: createUiText({
@@ -137,7 +140,7 @@ export function BuildSelectAnother({
     },
     data: {
       onClick,
-      inputType: "link",
+      variant: "link",
     },
     meta: {
       label: createUiText({
@@ -189,6 +192,9 @@ export function BuildSignIn({
       text: "Sign in",
       t,
     }),
+    data: {
+      variant: "link",
+    },
   })
 
   return createDivGroup({

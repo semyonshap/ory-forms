@@ -1,6 +1,6 @@
 "use server"
 
-import { buildActionUrl, getPublicUrl } from "./utils"
+import { getPublicUrl } from "./utils"
 import { guessPotentiallyProxiedOrySdkUrl } from "../utils/sdk"
 import { serverSideOAuth2Client } from "./client"
 import { OAuth2LogoutFlow, QueryParams } from "../types"
@@ -23,14 +23,14 @@ export async function getOAuth2LogoutFlow(
 
   try {
     const logoutRequest = await api.getOAuth2LogoutRequest({ logoutChallenge })
+    const action = new URL("/self-service/logout", baseUrl)
+    action.searchParams.set("logout_challenge", logoutChallenge)
     return {
       id: "UNSET",
       active: "oauth2_logout",
       logout_request: logoutRequest,
       ui: {
-        action: buildActionUrl(baseUrl, "/self-service/logout", {
-          logout_challenge: logoutChallenge,
-        }),
+        action: action.toString(),
         method: "POST",
         nodes: [
           {

@@ -28,7 +28,7 @@ export function useDiv(node: UiNodeDiv) {
   } else {
     header = getGroupHeader(node.group, t)
   }
-  
+
   const messages = useFormMessages()
 
   return {

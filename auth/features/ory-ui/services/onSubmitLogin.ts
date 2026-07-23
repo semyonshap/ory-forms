@@ -5,10 +5,10 @@ import {
   UpdateLoginFlowBody,
 } from "@ory/client-fetch"
 import {
-  LoginFlowContainer,
-  OnSubmitHandlerProps,
-  OryConfiguration,
   OryFlowType,
+  OryConfiguration,
+  LoginFlowContainer,
+  OnSubmitHandlerPropsWithFlow,
 } from "../types"
 import { replaceWindowFlowId, handleFlowError } from "../utils"
 import { flowHasErrors } from "../lib"
@@ -23,7 +23,7 @@ export async function onSubmitLogin(
     onSuccess,
     onValidationError,
     onError,
-  }: OnSubmitHandlerProps<UpdateLoginFlowBody>,
+  }: OnSubmitHandlerPropsWithFlow<UpdateLoginFlowBody>,
 ) {
   if (!config.sdk.url) {
     throw new Error(

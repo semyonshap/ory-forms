@@ -1,49 +1,43 @@
 import { UiNodeGroupEnum } from "@ory/client-fetch"
 import { Dispatch } from "react"
 
-import { resolveMethod } from "../../i18n"
 import { createInputNode, createUiText } from "./factory"
 import { BuildContext, FormStateAction } from "../../types"
 
 export function BuildAuthMethodList({
   groups,
   dispatchFormState,
-  ctx: { t, flowContainer: container },
+  ctx: { t },
 }: {
   groups: UiNodeGroupEnum[]
   dispatchFormState: Dispatch<FormStateAction>
   ctx: BuildContext
 }) {
-  const { flow } = container
   return groups.map((group) => {
-    const { title, description } = resolveMethod(group, flow.ui.nodes, t)
-    const isImmediateSubmit = group === UiNodeGroupEnum.Code
     return createInputNode({
       group,
       attributes: {
-        name: "method",
-        type: isImmediateSubmit ? "submit" : "button",
+        name: `method`,
+        type: "submit",
         value: group,
         disabled: false,
       },
       data: {
         type: "method",
-        description,
-        onClick: isImmediateSubmit
-          ? undefined
-          : () =>
-              dispatchFormState({
-                type: "action_select_method",
-                method: group,
-              }),
+        description: t(`two-step.${group}.description`),
+        onClick: () =>
+          dispatchFormState({
+            type: "action_select_method",
+            method: group,
+          }),
       },
       meta: {
         label: createUiText({
           keyOrId: `two-step.${group}.title`,
-          text: title,
+          text: `two-step.${group}.title`,
           t,
         }),
-      }
+      },
     })
   })
 }

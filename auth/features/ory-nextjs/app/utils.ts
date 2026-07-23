@@ -73,16 +73,3 @@ export function urlQueryToSearchParams(query: ParsedUrlQuery): URLSearchParams {
   }
   return searchParams
 }
-
-export function buildActionUrl(
-  baseUrl: string,
-  path: string,
-  params: Record<string, string | undefined>,
-): string {
-  const search = urlQueryToSearchParams(
-    Object.fromEntries(
-      Object.entries(params).filter(([, v]) => v !== undefined),
-    ) as Record<string, string>,
-  )
-  return new URL(`${path}?${search.toString()}`, baseUrl).toString()
-}

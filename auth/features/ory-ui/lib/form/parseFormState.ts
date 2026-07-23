@@ -52,6 +52,10 @@ export function parseStateFromFlow(flow: OryFlowContainer): FlowFormState {
       return { current: "settings" }
     case OryFlowType.OAuth2Consent:
       return { current: "method_active", method: "oauth2_consent" }
+    case OryFlowType.Navigation:
+      return { current: "navigation" }
+    case OryFlowType.Error:
+      return { current: "error" }
   }
   console.warn(
     `[Ory/Elements React] Encountered an unknown form state on ${flow.flowType} flow with ID ${flow.flow.id}`,

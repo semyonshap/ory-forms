@@ -1,6 +1,5 @@
 "use client"
 
-import Link from "next/link"
 import Image from "next/image"
 
 import { OryClientComponents } from "@/features/ory-ui/types"
@@ -29,12 +28,20 @@ import {
   FileKey,
   Shield,
   Asterisk,
-  Trash,
+  Link,
+  Unlink,
+  IdCard,
+  WifiOff,
+  User,
+  MapPin,
+  Phone,
+  AtSign,
 } from "lucide-react"
 import { Separator } from "../ui/separator"
 import { toast } from "sonner"
 import { VariantProps } from "class-variance-authority"
 import { useEffect } from "react"
+import { Checkbox } from "../ui/checkbox"
 
 export const OryComponents: OryClientComponents = {
   Icons: {
@@ -47,6 +54,13 @@ export const OryComponents: OryClientComponents = {
       Totp: Timer,
       LookupSecret: FileKey,
       HardwareToken: ShieldCheck,
+
+      Openid: IdCard,
+      OfflineAccess: WifiOff,
+      Profile: User,
+      Email: AtSign,
+      Address: MapPin,
+      Phone: Phone,
     },
   },
   Card: {
@@ -96,7 +110,9 @@ export const OryComponents: OryClientComponents = {
                   key={`${msg.id}-${index}`}
                   variant={msg.type === "error" ? "destructive" : "default"}
                 >
-                  <AlertDescription>{msg.text}</AlertDescription>
+                  <AlertDescription className="whitespace-pre-wrap">
+                    {msg.text}
+                  </AlertDescription>
                 </Alert>
               ))}
             {attached}
@@ -135,15 +151,20 @@ export const OryComponents: OryClientComponents = {
       )
     },
     Anchor: ({ props, options }) => {
-      const { label } = options
+      const { label, variant } = options
       return (
-        <Link
-          className="text-sm text-brand-primary underline-offset-2 hover:underline cursor-pointer"
+        <a
+          className={cn(
+            variant === "link" &&
+              "text-sm text-brand-primary underline-offset-2 hover:underline cursor-pointer",
+            variant === "button" && buttonVariants({ variant: "outline" }),
+            variant === "cancel" && buttonVariants({ variant: "destructive" }),
+          )}
           {...props}
           title={label}
         >
           {label}
-        </Link>
+        </a>
       )
     },
     Resend: ({ props, options }) => {
@@ -185,7 +206,7 @@ export const OryComponents: OryClientComponents = {
         >
           {Icon && <Icon className="size-5 shrink-0 mt-3" />}
           <div className="flex flex-col gap-1 justify-start items-start min-w-0">
-            {label}
+            <span className="text-left">{label}</span>
             {description && (
               <span className="text-muted-foreground text-left text-sm">
                 {description}
@@ -206,7 +227,7 @@ export const OryComponents: OryClientComponents = {
             </span>
           </div>
           <Button {...props} variant="link">
-            <Trash />
+            {node.attributes.name === "link" ? <Link /> : <Unlink />}
           </Button>
         </div>
       )
@@ -220,20 +241,22 @@ export const OryComponents: OryClientComponents = {
       const variants: Partial<Record<ButtonType, ButtonVariant>> = {
         cancel: "destructive",
         link: "link",
+        code: "outline",
       }
 
       const classNames: Partial<Record<ButtonType, string>> = {
-        link: "w-fit",
+        link: "w-fit px-0",
         sso: "justify-start gap-16",
+        code: "whitespace-normal text-start h-auto",
       }
 
       return (
         <Button
           {...props}
-          className={cn("text-center", classNames[type])}
+          className={cn(classNames[type])}
           variant={variants[type] || "outline"}
         >
-          {type == "submit" && isSubmitting && <Spinner />}
+          {isSubmitting && <Spinner />}
           {Icon && <Icon className={cn(label ? "size-4" : "size-6")} />}
           <span>{label}</span>
         </Button>
@@ -285,6 +308,29 @@ export const OryComponents: OryClientComponents = {
         <Label className="text-muted-foreground">
           {label && label} {text && text}
         </Label>
+      )
+    },
+    Checkbox: ({ options, props }) => {
+      const { label, description, icon: Icon } = options
+      return (
+        <div className="flex flex-row gap-4">
+          <div>
+            <Checkbox {...props} />
+          </div>
+          <div className="flex flex-col gap-2">
+            <div className="flex flex-row gap-3">
+              {Icon && (
+                <div>
+                  <Icon className="size-6 text-brand-primary" />
+                </div>
+              )}
+              <div className="flex flex-col gap-2">
+                <span>{label}</span>
+              </div>
+            </div>
+            <span className="text-sm text-muted-foreground">{description}</span>
+          </div>
+        </div>
       )
     },
   },

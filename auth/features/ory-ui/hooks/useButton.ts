@@ -2,13 +2,13 @@ import { useDebounceValue } from "usehooks-ts"
 import { useFormContext } from "react-hook-form"
 import { ComponentType, useCallback, useEffect, useMemo } from "react"
 
-import { InputDataType, UiNodeInput } from "../types"
 import { normalizeKeys } from "../utils"
 import { useFlowStoreShallow } from "../context"
 import { triggerToWindowCall } from "../lib/nodes"
 import { useInputTranslation } from "./useTranslation"
-import { useNodeInputSetup } from "./useInputSetup"
+import { useOnload } from "./useOnload"
 import { UiNodeInputAttributesTypeEnum } from "@ory/client-fetch"
+import { InputVariants, OryFlowType, UiNodeInput } from "../types"
 
 export function useButton(node: UiNodeInput) {
   const {
@@ -16,26 +16,37 @@ export function useButton(node: UiNodeInput) {
     formState: { isReady },
   } = useFormContext()
 
-  useNodeInputSetup(node)
+  useOnload(node)
 
-  const { oryFormState, providers, system } = useFlowStoreShallow((state) => ({
-    oryFormState: state.formState,
-    providers: state.components.Icons.Providers,
-    system: state.components.Icons.System,
-  }))
+  const { flowContainer, oryFormState, providers, system } =
+    useFlowStoreShallow((state) => ({
+      flowContainer: state.flowContainer,
+      oryFormState: state.formState,
+      providers: state.components.Icons.Providers,
+      system: state.components.Icons.System,
+    }))
+
+  const { flowType } = flowContainer
 
   const [clicked, setClicked] = useDebounceValue(false, 100)
 
   const attr = node.attributes
 
   const onClick = useCallback(() => {
-    node.data?.onClick?.()
     setValue(attr.name, attr.value)
-    setValue("method", node.group)
-    if (node.data?.inputType === "sso") {
+
+    node.data?.onClick?.()
+
+    if (flowType === OryFlowType.Settings) {
+      setValue("method", node.group)
+    }
+
+    if (node.data?.variant === "sso") {
       setValue("provider", node.attributes.value)
     }
+
     setClicked(true)
+
     if (attr.onclickTrigger) {
       triggerToWindowCall(attr.onclickTrigger)
     }
@@ -66,15 +77,16 @@ export function useButton(node: UiNodeInput) {
 
   let icon: ComponentType | undefined
 
-  let type: InputDataType =
+  let type: InputVariants =
     attr.type === UiNodeInputAttributesTypeEnum.Submit ? "submit" : "button"
 
   let htmlType = type
 
   if (node.data?.type === "method") {
-    htmlType = "button"
     icon = system ? IconsSystem?.[node.group] : undefined
-  } else if (node.data?.inputType === "sso") {
+  } else if (node.data?.type === "resend") {
+    htmlType = "button"
+  } else if (node.data?.variant === "sso") {
     htmlType = "button"
     const iconKey = (node.attributes.value as string).split("-")[0]
     icon = IconsProviders?.[iconKey]
@@ -89,7 +101,7 @@ export function useButton(node: UiNodeInput) {
       disabled,
     },
     options: {
-      type: node.data?.type || node.data?.inputType || type,
+      type: node.data?.type || node.data?.variant || type,
       isSubmitting,
       label: formattedLabel,
       description: node.data?.description,

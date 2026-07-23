@@ -17,6 +17,7 @@ import {
   IconProps,
   FormRenderCardProps,
   FormRenderCardDivider,
+  FormRenderCheckbox,
 } from "./render"
 import { OryClientConfiguration } from "./config"
 
@@ -57,6 +58,7 @@ export type OryComponents = {
     Oidc?: ComponentType<FormRenderButton>
     Button: ComponentType<FormRenderButton>
     Select?: ComponentType<FormRenderSelect>
+    Checkbox: ComponentType<FormRenderCheckbox>
     Input: ComponentType<FormRenderInput>
     Code: ComponentType<FormRenderInput>
     Password?: ComponentType<FormRenderInput>
@@ -89,6 +91,13 @@ export type OryComponents = {
       Totp?: ComponentType<IconProps>
       LookupSecret?: ComponentType<IconProps>
       HardwareToken?: ComponentType<IconProps>
+
+      Openid?: ComponentType<IconProps>
+      OfflineAccess?: ComponentType<IconProps>
+      Profile?: ComponentType<IconProps>
+      Email?: ComponentType<IconProps>
+      Address?: ComponentType<IconProps>
+      Phone?: ComponentType<IconProps>
     }
   }
   nodeSorter: NodeSorter

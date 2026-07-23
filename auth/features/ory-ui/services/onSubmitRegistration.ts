@@ -5,10 +5,10 @@ import {
   UpdateRegistrationFlowBody,
 } from "@ory/client-fetch"
 import {
-  OnSubmitHandlerProps,
-  OryConfiguration,
   OryFlowType,
+  OryConfiguration,
   RegistrationFlowContainer,
+  OnSubmitHandlerPropsWithFlow,
 } from "../types"
 import { handleFlowError, replaceWindowFlowId } from "../utils"
 import { flowHasErrors } from "../lib"
@@ -23,7 +23,7 @@ export async function onSubmitRegistration(
     onSuccess,
     onValidationError,
     onError,
-  }: OnSubmitHandlerProps<UpdateRegistrationFlowBody>,
+  }: OnSubmitHandlerPropsWithFlow<UpdateRegistrationFlowBody>,
 ) {
   const method = String(body.method)
 

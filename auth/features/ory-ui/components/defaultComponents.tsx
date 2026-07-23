@@ -24,6 +24,7 @@ export const DefaultComponents: OryComponents = {
     Code: notImplemented("CodeInput"),
     Text: notImplemented("Text"),
     Anchor: notImplemented("Anchor"),
+    Checkbox: notImplemented("Checkbox"),
   },
   Icons: {
     Providers: {

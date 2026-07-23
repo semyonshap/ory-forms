@@ -4,7 +4,7 @@ import {
   OAuth2LogoutRequest,
   Session,
 } from "@ory/client-fetch"
-import { FormState, OryFlowType } from "."
+import { FormState, OryError, OryFlowType } from "."
 
 export type HeaderLoginOptions = {
   flowType: OryFlowType.Login
@@ -20,7 +20,7 @@ export type HeaderRegistrationOptions = {
   formState?: FormState
 }
 
-export type HeaderOAuth2ConsentRequestOptions = {
+export type HeaderOAuth2ConsentOptions = {
   flowType: OryFlowType.OAuth2Consent
   flow: {
     consent_request: OAuth2ConsentRequest
@@ -28,21 +28,36 @@ export type HeaderOAuth2ConsentRequestOptions = {
   }
 }
 
-export type HeaderOAuth2LogoutRequestOptions = {
+export type HeaderOAuth2LogoutOptions = {
   flowType: OryFlowType.OAuth2Logout
   flow: {
     logout_request: OAuth2LogoutRequest
   }
 }
 
+export type HeaderNavigationOptions = {
+  flowType: OryFlowType.Navigation
+  flow: {
+    session: Session | null
+  }
+}
+
+export type HeaderErrorOptions = {
+  flowType: OryFlowType.Error
+  flow: {
+    error: OryError
+  }
+}
+
 export type HeaderOptions =
   | HeaderLoginOptions
   | HeaderRegistrationOptions
-  | HeaderOAuth2ConsentRequestOptions
-  | HeaderOAuth2LogoutRequestOptions
+  | HeaderOAuth2ConsentOptions
+  | HeaderOAuth2LogoutOptions
+  | HeaderNavigationOptions
+  | HeaderErrorOptions
   | {
       flowType:
-        | OryFlowType.Error
         | OryFlowType.Verification
         | OryFlowType.Recovery
         | OryFlowType.Settings

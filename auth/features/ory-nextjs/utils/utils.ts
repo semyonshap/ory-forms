@@ -1,13 +1,9 @@
 import { pick } from "lodash-es"
 import { ApiResponse } from "@ory/client-fetch"
-import { parseSetCookie } from "set-cookie-parser"
-import { serialize, SerializeOptions } from "cookie"
 
-import { guessCookieDomain } from "./cookie"
 import { rewriteJsonResponse } from "./rewrite"
 import { FlowParams, QueryParams } from "../types"
-import { defaultForwardedHeaders } from "./headers"
-import { OryMiddlewareOptions } from "../middleware/middleware"
+import { defaultForwardedHeaders } from "../const"
 
 export function onValidationError<T>(value: T): T {
   return value
@@ -22,35 +18,6 @@ export async function toFlowParams(
     cookie: await getCookieHeader(),
     return_to: params["return_to"]?.toString() ?? "",
   }
-}
-
-export function processSetCookieHeaders(
-  protocol: string,
-  fetchResponse: Response,
-  options: OryMiddlewareOptions,
-  requestHeaders: Headers,
-) {
-  const isTls =
-    protocol === "https:" || requestHeaders.get("x-forwarded-proto") === "https"
-
-  const forwarded = requestHeaders.get("x-forwarded-host")
-  const host = forwarded ? forwarded : requestHeaders.get("host")
-  const domain =
-    host && !options.forceCookieDomain
-      ? guessCookieDomain(host ?? "")
-      : options.forceCookieDomain
-
-  const setCookieHeader = fetchResponse.headers.get("set-cookie") || ""
-  const cookies = parseSetCookie(setCookieHeader, { split: true })
-
-  return cookies.map(({ name, value, ...opts }) =>
-    serialize(name, value, {
-      ...opts,
-      domain,
-      secure: isTls,
-      encode: (v) => v,
-    } as SerializeOptions),
-  )
 }
 
 export function filterRequestHeaders(

@@ -1,16 +1,15 @@
-import { useCallback } from "react"
+import { useEffect } from "react"
 import { useController, useFormContext } from "react-hook-form"
 
 import { UiNodeInput } from "../types"
 import { resolvePlaceholder } from "../i18n"
 import { useFlowStoreShallow } from "../context"
-import { triggerToWindowCall } from "../lib/nodes"
 import { useInputTranslation } from "./useTranslation"
-import { useNodeInputSetup } from "./useInputSetup"
-import { UiNodeInputAttributesTypeEnum } from "@ory/client-fetch"
+import { useOnload } from "./useOnload"
 
 export function useInput(node: UiNodeInput) {
   const {
+    setValue,
     control,
     formState: { isReady },
   } = useFormContext()
@@ -20,7 +19,7 @@ export function useInput(node: UiNodeInput) {
     oryFormState: state.formState,
   }))
 
-  useNodeInputSetup(node)
+  useOnload(node)
 
   const attr = node.attributes
 
@@ -33,11 +32,17 @@ export function useInput(node: UiNodeInput) {
     shouldUnregister: true,
   })
 
-  const onClick = useCallback(() => {
+  /* const onClick = useCallback(() => {
     if (onclickTrigger) {
       triggerToWindowCall(onclickTrigger)
     }
-  }, [onclickTrigger])
+  }, [onclickTrigger]) */
+
+  useEffect(() => {
+    if (attr.value) {
+      setValue(attr.name, attr.value)
+    }
+  }, [attr.value])
 
   const disabled = attr.disabled || !isReady || isSubmitting
 
@@ -50,7 +55,6 @@ export function useInput(node: UiNodeInput) {
       value: controller.field.value ?? "",
       id: name,
       type,
-      onClick,
       maxLength: maxlength,
       autoComplete: autocomplete,
       disabled,

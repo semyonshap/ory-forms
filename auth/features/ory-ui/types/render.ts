@@ -17,10 +17,13 @@ import {
   UiNodeInput,
   UiNodeText,
   UiNodeDiv,
-  InputDataType,
+  InputVariants,
+  AnchorVariants,
+  FormValues,
 } from "."
 import { MouseEventHandler, PropsWithChildren, ReactNode } from "react"
 import { TFunction } from "i18next"
+import { FieldValues, UseFormGetValues, UseFormSetValue } from "react-hook-form"
 
 export type MessageProps = {
   id: number
@@ -41,11 +44,28 @@ export type FormRenderButton = BaseRenderProps & {
     disabled?: boolean
   }
   options: {
-    type: InputDataType | ButtonDataType
+    type: InputVariants | ButtonDataType
     label?: string
     description?: string
     icon?: IconType
     isSubmitting?: boolean
+  }
+}
+
+export type FormRenderCheckbox = BaseRenderProps & {
+  node: UiNodeInput
+  props: {
+    checked: boolean
+    onCheckedChange: (checked: boolean | "indeterminate") => void
+    disabled?: boolean
+    onBlur?: () => void
+    name?: string
+    ref?: React.Ref<HTMLButtonElement>
+  }
+  options: {
+    label?: string
+    description?: string
+    icon?: IconType
   }
 }
 
@@ -74,6 +94,7 @@ export type FormRenderAnchorProps = BaseRenderProps & {
   node: UiNode
   props: Omit<UiNodeAnchorAttributes, OmittedAnchorKeys>
   options: {
+    variant: AnchorVariants
     label?: string
   }
 }
@@ -161,4 +182,9 @@ export interface BuildContext {
   flowContainer: OryFlowContainer
   formState: FormState
   t: TFunction
+}
+
+export interface BuildFormContext {
+  getValues: UseFormGetValues<FormValues>
+  setValue: UseFormSetValue<FormValues>
 }

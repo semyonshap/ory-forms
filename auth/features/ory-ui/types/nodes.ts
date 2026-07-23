@@ -9,11 +9,18 @@ import {
   UiNodeTextAttributes,
 } from "@ory/client-fetch"
 
-export type InputDataType = "button" | "submit" | "link" | "cancel" | "sso"
-
 export type GroupedNodes = Partial<Record<UiNodeGroupEnum, UiNode[]>>
 
-export type NodeDataGroup = "content" | "footer"
+export type InputVariants =
+  | "button"
+  | "submit"
+  | "link"
+  | "cancel"
+  | "sso"
+  | "code"
+  | "scope"
+
+export type AnchorVariants = "button" | "link" | "cancel"
 
 export type ButtonDataType = "method" | "resend" | "oidc"
 
@@ -22,8 +29,12 @@ export type NodeData = {
   target?: string
 }
 
+export type AnchorNodeData = NodeData & {
+  variant?: AnchorVariants
+}
+
 export type InputNodeData = NodeData & {
-  inputType?: InputDataType
+  variant?: InputVariants
   onClick?: () => void
   description?: string
   readOnly?: boolean
@@ -55,6 +66,7 @@ export function isUiNodeImage(node: FormNode): node is UiNodeImage {
 export type UiNodeAnchor = FormNode & {
   type: "a"
   attributes: UiNodeAnchorAttributes
+  data?: AnchorNodeData
 }
 
 export function isUiNodeAnchor(node: FormNode): node is UiNodeAnchor {

@@ -1,4 +1,11 @@
-import { isArray, isObject, isString, isNil, isEmpty, transform } from "lodash"
+import {
+  isArray,
+  isObject,
+  isString,
+  isNil,
+  isEmpty,
+  transform,
+} from "lodash-es"
 
 export function removeEmptyStrings<T>(input: T): T {
   if (isArray(input)) {

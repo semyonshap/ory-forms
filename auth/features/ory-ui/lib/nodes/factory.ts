@@ -18,6 +18,7 @@ import {
   UiNodeInput,
   DivDataType,
   DivAttributesData,
+  AnchorNodeData,
 } from "../../types"
 import { TFunction } from "i18next"
 
@@ -50,11 +51,12 @@ export function createUiNode({
 
 interface CreateAnchorNodeParams extends Omit<
   CreateUiNodeParams,
-  "type" | "attributes"
+  "type" | "attributes" | "data"
 > {
   id: string
   href: string
   title: UiText
+  data?: AnchorNodeData
 }
 
 export function createAnchorNode({

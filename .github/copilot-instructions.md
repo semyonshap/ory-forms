@@ -1,4 +1,3 @@
-- Always respond in Russian.
 - Be extremely concise. Output only what is strictly requested.
 - Skip all greetings, polite fluff, and introductory phrases (e.g., "Sure, I can help...", "Here is the code...").
 - Skip all conclusions, summaries, and closing remarks.

@@ -11,12 +11,12 @@ import {
   authMethodPickerExcludedGroups,
   excludedAuthGroups,
   GroupedNodes,
+  isUiNodeInput,
   LoginFlowContainer,
   OryFlowType,
   RegistrationFlowContainer,
   UiNodeInput,
 } from "../../types"
-import { findNode } from "./finder"
 
 export function toAuthMethodPickerOptions(
   visibleGroups: GroupedNodes,
@@ -29,34 +29,22 @@ export function toAuthMethodPickerOptions(
 export function findCodeIdentifierNode(
   nodes: UiNode[],
 ): UiNodeInput | undefined {
-  return (findNode(nodes, {
-    group: "identifier_first",
-    node_type: "input",
-    name: "identifier",
-  }) ??
-    findNode(nodes, {
-      group: "code",
-      node_type: "input",
-      name: "address",
-    })) as UiNodeInput | undefined
+  return nodes.find((n): n is UiNodeInput => {
+    if (!isUiNodeInput(n)) return false
+    return (
+      (n.group === UiNodeGroupEnum.IdentifierFirst &&
+        n.attributes.name === "identifier") ||
+      (n.group === UiNodeGroupEnum.Code && n.attributes.name === "address")
+    )
+  })
 }
 
-export function findScreenSelectionButton(
-  nodes: UiNode[],
-): { attributes: UiNodeInputAttributes } | undefined {
+export function findScreenSelectionButton(nodes: UiNode[]) {
   return nodes.find(
-    (node) =>
-      node.attributes.node_type === "input" &&
-      node.attributes.type === "submit" &&
-      node.attributes.name === "screen",
-  ) as { attributes: UiNodeInputAttributes }
-}
-
-export function hasSingleSignOnNodes(nodes: UiNode[]): boolean {
-  return nodes.some(
-    (node) =>
-      node.group === UiNodeGroupEnum.Oidc ||
-      node.group === UiNodeGroupEnum.Saml,
+    (n): n is UiNodeInput =>
+      isUiNodeInput(n) &&
+      n.attributes.type === "submit" &&
+      n.attributes.name === "screen",
   )
 }
 
@@ -73,15 +61,13 @@ export function isSsoNode(node: UiNode): boolean {
 }
 
 export function isResendNode(node: UiNode): boolean {
-  if (!("attributes" in node)) return false
-  const attrs = node.attributes
-  if (!("name" in attrs)) return false
+  if (!isUiNodeInput(node)) return false
 
-  const name = attrs.name
+  const name = node.attributes.name
   return (
     name === "resend" ||
     (["email", "recovery_confirm_address"].includes(name) &&
-      attrs.type === "submit")
+      node.attributes.type === "submit")
   )
 }
 
@@ -89,12 +75,14 @@ export function isCodeSent(
   nodes: UiNode[],
   formState?: { current?: string; method?: string },
 ): boolean {
-  const codeNode = findNode(nodes, {
-    node_type: "input",
-    group: "code",
-    name: "code",
-    type: "text",
-  })
+  const codeNode = nodes.find(
+    (n) =>
+      isUiNodeInput(n) &&
+      n.group === "code" &&
+      n.attributes.name === "code" &&
+      n.attributes.type === "text",
+  )
+
   return (
     !!codeNode &&
     formState?.current === "method_active" &&
@@ -120,13 +108,6 @@ export function isNodeVisible(node: UiNode): node is UiNodeInput {
     if (node.attributes.type === "hidden") return false
   }
   return true
-}
-
-export function isIgnoredInputNode(node: UiNodeInput): boolean {
-  return (
-    ("name" in node.attributes && node.attributes.name === "screen") ||
-    node.group === UiNodeGroupEnum.Oauth2Consent
-  )
 }
 
 function isScreenSelectionNode(node: UiNode): boolean {
@@ -179,6 +160,9 @@ export function getFunctionalNodes(nodes: UiNode[]): UiNode[] {
 export function getNodeId({ attributes }: UiNode) {
   if (isUiNodeInputAttributes(attributes)) {
     if (attributes.type === "submit" && attributes.value) {
+      return `${attributes.name}:${attributes.value}`
+    }
+    if (attributes.type === "checkbox" && attributes.value) {
       return `${attributes.name}:${attributes.value}`
     }
     return attributes.name

@@ -17,10 +17,10 @@ import {
   NodeRenderInput,
   isUiNodeDiv,
 } from "../types"
-import { isIgnoredInputNode } from "../lib"
 import { NodeScript } from "./nodes/nodeScript"
 import { useFlowStoreShallow } from "../context"
 import { DivWrapper } from "./wrappers/divWrapper"
+import { CheckboxWrapper } from "./wrappers/inputWrapper"
 
 export const Node = ({ node, attached }: NodeRender) => {
   if (isUiNodeDiv(node)) return DivWrapper({ node, attached })
@@ -43,28 +43,10 @@ function NodeInput({ node, attached }: NodeRenderInput) {
 
   const { attributes } = node
   switch (attributes.type) {
-    case UiNodeInputAttributesTypeEnum.DatetimeLocal:
-      throw new Error("Not implement")
     case UiNodeInputAttributesTypeEnum.Checkbox:
-      const isConsent =
-        node.group === "oauth2_consent" && node.attributes.node_type === "input"
-
-      if (isConsent) {
-        switch (attributes.name) {
-          case "grant_scope":
-            throw new Error("Not implement")
-          default:
-            return null
-        }
-      }
-
-      throw new Error("Not implement")
+      return CheckboxWrapper({ node, attached })
     case UiNodeInputAttributesTypeEnum.Button:
     case UiNodeInputAttributesTypeEnum.Submit:
-      if (isIgnoredInputNode(node)) {
-        return null
-      }
-
       return ButtonWrapper({ node, attached })
     default:
       const options = node.attributes.options

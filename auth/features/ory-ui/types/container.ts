@@ -20,6 +20,7 @@ export enum OryFlowType {
   OAuth2Consent = "oauth2_consent",
   OAuth2Logout = "oauth2_logout",
   Error = "error",
+  Navigation = "navigation",
 }
 
 export type LoginFlowContainer = {
@@ -47,6 +48,41 @@ export type SettingsFlowContainer = {
   flow: SettingsFlow
 }
 
+export type OAuth2ConsentFlowContainer = {
+  flowType: OryFlowType.OAuth2Consent
+  flow: OAuth2ConsentFlow
+}
+
+export type OAuth2LogoutFlowContainer = {
+  flowType: OryFlowType.OAuth2Logout
+  flow: OAuth2LogoutFlow
+}
+
+export type NavigationFlowContainer = {
+  flowType: OryFlowType.Navigation
+  flow: NavigationFlow
+}
+
+export type ErrorFlowContainer = {
+  flowType: OryFlowType.Error
+  flow: ErrorFlow
+}
+
+export type OryFlowContainer =
+  | LoginFlowContainer
+  | RegistrationFlowContainer
+  | RecoveryFlowContainer
+  | VerificationFlowContainer
+  | SettingsFlowContainer
+  | NavigationFlowContainer
+  | OAuth2ConsentFlowContainer
+  | OAuth2LogoutFlowContainer
+  | ErrorFlowContainer
+
+export type OryFlowContainerWithState = OryFlowContainer & {
+  formState: FormState
+}
+
 export type OAuth2ConsentFlow = {
   id: "UNSET"
   active: "oauth2_consent"
@@ -64,25 +100,29 @@ export type OAuth2LogoutFlow = {
   logout_request: OAuth2LogoutRequest
 }
 
-export type OAuth2ConsentFlowContainer = {
-  flowType: OryFlowType.OAuth2Consent
-  flow: OAuth2ConsentFlow
+export type NavigationFlow = {
+  id: "UNSET"
+  active: "navigation"
+  ui: UiContainer
+  session: Session | null
+  return_to?: string
 }
 
-export type OAuth2LogoutFlowContainer = {
-  flowType: OryFlowType.OAuth2Logout
-  flow: OAuth2LogoutFlow
+export type ErrorFlow = {
+  id: string
+  active: "error"
+  ui: UiContainer
+  error: OryError
+  session: Session | null
+  return_to?: string
 }
 
-export type OryFlowContainer =
-  | LoginFlowContainer
-  | RegistrationFlowContainer
-  | RecoveryFlowContainer
-  | VerificationFlowContainer
-  | SettingsFlowContainer
-  | OAuth2ConsentFlowContainer
-  | OAuth2LogoutFlowContainer
-
-export type OryFlowContainerWithState = OryFlowContainer & {
-  formState: FormState
+export type OryError = {
+  code: number
+  message?: string
+  status?: string
+  reason?: string
+  id?: string
+  timestamp?: Date
+  correlationId?: string
 }

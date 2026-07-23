@@ -21,6 +21,7 @@ export async function proxyRequest(
 ) {
   const matchPaths = [
     "/self-service",
+    "/custom-service",
     "/sessions/whoami",
     "/ui",
     "/.well-known/ory",
@@ -32,7 +33,7 @@ export async function proxyRequest(
   }
 
   if (
-    request.nextUrl.pathname === "/self-service/consent" &&
+    request.nextUrl.pathname === "/custom-service/consent" &&
     request.method === "POST"
   ) {
     return handleConsentSubmit(request)

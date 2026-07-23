@@ -4,9 +4,11 @@ import { UiContainer } from "@ory/client-fetch"
 import {
   HeaderOptions,
   HeaderLoginOptions,
-  HeaderOAuth2ConsentRequestOptions,
+  HeaderOAuth2ConsentOptions,
   HeaderRegistrationOptions,
   OryFlowType,
+  HeaderNavigationOptions,
+  HeaderErrorOptions,
 } from "../../types"
 import {
   collectParts,
@@ -33,6 +35,10 @@ export function getCardHeaderText(
       return getRegistrationHeader(container, opts, t)
     case OryFlowType.OAuth2Consent:
       return getConsentHeader(opts, t)
+    case OryFlowType.Navigation:
+      return getNavigationHeader(opts, t)
+    case OryFlowType.Error:
+      return getErrorHeader(t)
     case OryFlowType.OAuth2Logout:
       return {
         description: "Logout",
@@ -166,10 +172,7 @@ function getRegistrationHeader(
   }
 }
 
-function getConsentHeader(
-  opts: HeaderOAuth2ConsentRequestOptions,
-  t: TFunction,
-) {
+function getConsentHeader(opts: HeaderOAuth2ConsentOptions, t: TFunction) {
   return {
     title: t("consent.title", {
       party: opts.flow.consent_request?.client?.client_name,
@@ -177,6 +180,48 @@ function getConsentHeader(
     description: t("consent.subtitle", {
       identifier: opts.flow.session?.identity?.traits?.email ?? "",
     }),
+  }
+}
+
+function getNavigationHeader(opts: HeaderNavigationOptions, t: TFunction) {
+  const session = opts.flow.session
+  const rawUser =
+    session?.identity?.traits?.name?.first ??
+    session?.identity?.traits?.username
+
+  const user =
+    typeof rawUser === "string" && rawUser.trim() !== "" ? rawUser : "User"
+
+  if (opts.flow.session) {
+    return {
+      title: t(
+        "navigation.header.authenticated.title",
+        "Welcome back, {user}",
+        { user },
+      ),
+      description: t(
+        "navigation.header.authenticated.description",
+        "Manage your account settings or sign out",
+      ),
+    }
+  } else {
+    return {
+      title: t("navigation.header.guest.title", "Get started"),
+      description: t(
+        "navigation.header.guest.description",
+        "Sign in or create an account to continue",
+      ),
+    }
+  }
+}
+
+function getErrorHeader(t: TFunction) {
+  return {
+    title: t("error.title.what-happened", "What happened?"),
+    description: t(
+      "error.instructions",
+      "Please try again in a few minutes or contact the website operator.",
+    ),
   }
 }
 

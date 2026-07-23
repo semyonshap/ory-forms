@@ -4,10 +4,10 @@ import {
   verificationUrl,
 } from "@ory/client-fetch"
 import {
-  OnSubmitHandlerProps,
+  OryFlowType,
   OryConfiguration,
   OryFlowContainer,
-  OryFlowType,
+  OnSubmitHandlerPropsWithFlow,
 } from "../types"
 import { handleFlowError, replaceWindowFlowId } from "../utils"
 import { flowHasErrors } from "../lib"
@@ -22,7 +22,7 @@ export async function onSubmitVerification(
     onSuccess,
     onValidationError,
     onError,
-  }: OnSubmitHandlerProps<UpdateVerificationFlowBody>,
+  }: OnSubmitHandlerPropsWithFlow<UpdateVerificationFlowBody>,
 ) {
   const method = String(body.method)
 

@@ -4,6 +4,11 @@ import { Node } from "./node"
 import { getNodeId } from "../lib"
 import { FormContext, FormNode, isUiNodeDiv } from "../types"
 
+export type OutputNode = {
+  node: FormNode
+  element: ReactNode
+}
+
 function buildContextMap(nodes: FormNode[]): FormContext {
   const contextMap: FormContext = {}
 
@@ -23,8 +28,8 @@ function renderRange(
   contextMap: FormContext,
   start: number,
   endId?: string,
-): { result: ReactNode[]; nextIndex: number } {
-  const result: ReactNode[] = []
+): { result: OutputNode[]; nextIndex: number } {
+  const result: OutputNode[] = []
   let i = start
 
   while (i < nodes.length) {
@@ -47,9 +52,16 @@ function renderRange(
           divEnd,
         )
 
-        result.push(
-          <Node key={getNodeId(node)} node={node} attached={children} />,
-        )
+        result.push({
+          node,
+          element: (
+            <Node
+              key={getNodeId(node)}
+              node={node}
+              attached={children.map((c) => c.element)}
+            />
+          ),
+        })
         i = nextIndex
         continue
       }
@@ -63,14 +75,17 @@ function renderRange(
     const name = "name" in node.attributes && node.attributes.name
     const attached = name ? contextMap[name] : undefined
 
-    result.push(<Node key={getNodeId(node)} node={node} attached={attached} />)
+    result.push({
+      node,
+      element: <Node key={getNodeId(node)} node={node} attached={attached} />,
+    })
     i++
   }
 
   return { result, nextIndex: i }
 }
 
-export function renderNodes(nodes: FormNode[]) {
+export function renderNodes(nodes: FormNode[]): OutputNode[] {
   const contextMap = buildContextMap(nodes)
   const { result } = renderRange(nodes, contextMap, 0)
   return result

@@ -17,8 +17,8 @@ export function AnchorWrapper({ node, attached }: NodeRenderAnchor) {
   return (
     <Node.Anchor
       node={node}
-      props={props}
-      options={{ label: formattedLabel }}
+      props={{ ...props }}
+      options={{ label: formattedLabel, variant: node.data?.variant || "button" }}
       attached={attached}
     />
   )

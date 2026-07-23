@@ -10,15 +10,22 @@ import { SubmitHandler, UseFormReturn } from "react-hook-form"
 
 import {
   onSubmitLogin,
+  onSubmitOAuth2Consent,
   onSubmitRecovery,
   onSubmitRegistration,
   onSubmitSettings,
   onSubmitVerification,
 } from "../services"
-import { FormValues, OryFlowContainer, OryFlowType } from "../types"
+import {
+  FormValues,
+  OryFlowContainer,
+  OryFlowType,
+  UpdateOAuth2ConsentFlowBody,
+} from "../types"
 import { useFlowStoreShallow } from "../context"
 import {
   applySelectAccountPrompt,
+  computeDefaultValues,
   filterSettingsFields,
   removeEmptyStrings,
 } from "../lib"
@@ -32,7 +39,7 @@ export function useFormSubmit(methods: UseFormReturn<FormValues>) {
       setFlowContainer: state.setFlowContainer,
     }))
 
-  const { flowType } = flowContainer
+  const { flow, flowType } = flowContainer
 
   const onRedirect: OnRedirectHandler = (url, _external) => {
     dispatchFormState({ type: "page_redirect" })
@@ -42,7 +49,7 @@ export function useFormSubmit(methods: UseFormReturn<FormValues>) {
   const onSubmit: SubmitHandler<FormValues> = async (
     initialData: FormValues,
   ) => {
-    const isResend = initialData.method === "code"
+    const isResend = initialData.method === "code" && "resend" in initialData
 
     const startSubmit = () => {
       if (!isResend) dispatchFormState({ type: "form_submit_start" })
@@ -55,6 +62,10 @@ export function useFormSubmit(methods: UseFormReturn<FormValues>) {
     const handleFlowUpdate = (container: OryFlowContainer) => {
       endSubmit()
       setFlowContainer(container)
+      const newValues = computeDefaultValues(container.flow)
+      methods.reset(newValues, {
+        keepSubmitCount: true,
+      })
     }
 
     const clearSensitiveData = (data: FormValues) => {
@@ -72,9 +83,10 @@ export function useFormSubmit(methods: UseFormReturn<FormValues>) {
     startSubmit()
 
     try {
+      console.log("Submit", initialData)
+
       const data = removeEmptyStrings<FormValues>(initialData)
-      console.log("Submit", data)
-      
+
       switch (flowType) {
         case OryFlowType.Login: {
           const submitData: UpdateLoginFlowBody = {
@@ -92,10 +104,6 @@ export function useFormSubmit(methods: UseFormReturn<FormValues>) {
             ...(data as unknown as UpdateRegistrationFlowBody),
           }
 
-          if (submitData.method === "code" && submitData.code) {
-            submitData.resend = ""
-          }
-
           await onSubmitRegistration(flowContainer, config, {
             onRedirect,
             setFlowContainer: handleFlowUpdate,
@@ -107,6 +115,7 @@ export function useFormSubmit(methods: UseFormReturn<FormValues>) {
           const submitData = {
             ...(data as unknown as UpdateVerificationFlowBody),
           }
+
           await onSubmitVerification(flowContainer, config, {
             onRedirect,
             setFlowContainer: handleFlowUpdate,
@@ -118,6 +127,7 @@ export function useFormSubmit(methods: UseFormReturn<FormValues>) {
           const submitData: UpdateRecoveryFlowBody = {
             ...(data as unknown as UpdateRecoveryFlowBody),
           }
+
           await onSubmitRecovery(flowContainer, config, {
             onRedirect,
             setFlowContainer: handleFlowUpdate,
@@ -131,13 +141,23 @@ export function useFormSubmit(methods: UseFormReturn<FormValues>) {
             ...(filtered as unknown as UpdateSettingsFlowBody),
           }
 
-          console.log("filtered:", filtered)
+          console.log("filtered", filtered)
 
           applySelectAccountPrompt(submitData)
 
           await onSubmitSettings(flowContainer, config, {
             onRedirect,
             setFlowContainer: handleFlowUpdate,
+            body: submitData,
+          })
+          break
+        }
+        case OryFlowType.OAuth2Consent: {
+          const submitData: UpdateOAuth2ConsentFlowBody = {
+            ...(data as unknown as UpdateOAuth2ConsentFlowBody),
+          }
+          await onSubmitOAuth2Consent(flowContainer, {
+            onRedirect,
             body: submitData,
           })
           break

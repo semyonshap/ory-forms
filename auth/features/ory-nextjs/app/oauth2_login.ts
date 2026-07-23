@@ -6,18 +6,33 @@ import { OAuth2LoginRequest } from "@ory/client-fetch"
 import { getServerSession } from "./session"
 import { serverSideOAuth2Client } from "./client"
 import { QueryParams } from "../types"
-import { buildActionUrl, getPublicUrl } from "./utils"
+import { getPublicUrl } from "./utils"
 import { guessPotentiallyProxiedOrySdkUrl } from "../utils/sdk"
+import { redirectToErrorPage } from "../utils/error"
 
 export async function getOAuth2LoginFlow(
-  config: { project: { login_ui_url: string; oauth2_login_ui_url: string } },
+  config: {
+    project: {
+      login_ui_url: string
+      oauth2_login_ui_url: string
+      error_ui_url: string
+    }
+  },
   params: QueryParams | Promise<QueryParams>,
 ): Promise<OAuth2LoginRequest | null> {
   const resolved = await params
   const loginChallenge = resolved["login_challenge"]?.toString()
 
+  const baseUrl = guessPotentiallyProxiedOrySdkUrl({
+    knownProxiedUrl: await getPublicUrl(),
+  })
+
   if (!loginChallenge) {
-    return null
+    redirectToErrorPage({
+      baseUrl,
+      config,
+      error: new Error("Missing login_challenge in URL"),
+    })
   }
 
   const api = serverSideOAuth2Client()
@@ -25,8 +40,8 @@ export async function getOAuth2LoginFlow(
   let loginRequest: OAuth2LoginRequest
   try {
     loginRequest = await api.getOAuth2LoginRequest({ loginChallenge })
-  } catch {
-    return null
+  } catch (err) {
+    redirectToErrorPage({ baseUrl, config, error: err })
   }
 
   if (loginRequest.skip) {
@@ -56,7 +71,6 @@ export async function getOAuth2LoginFlow(
 
   const { login_ui_url, oauth2_login_ui_url } = config.project
 
-  const baseUrl = await getPublicUrl()
   const returnTo = new URL(oauth2_login_ui_url, baseUrl)
   returnTo.searchParams.set("login_challenge", loginChallenge)
 

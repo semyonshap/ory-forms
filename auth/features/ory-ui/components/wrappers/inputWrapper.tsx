@@ -1,6 +1,7 @@
 import { ComponentType } from "react"
 
 import { useButton, useInput } from "../../hooks"
+import { useCheckbox } from "../../hooks"
 import { FormRenderButton, NodeRenderInput } from "../../types"
 import { useFlowStore, useFlowStoreShallow } from "../../context"
 
@@ -48,6 +49,21 @@ export function ButtonWrapper({ node, attached }: NodeRenderInput) {
       props={props}
       options={options}
       attached={attached}
+    />
+  )
+}
+
+export function CheckboxWrapper({ node, attached }: NodeRenderInput) {
+  const Node = useFlowStore((state) => state.components.Node)
+
+  const { options, props } = useCheckbox(node)
+
+  return (
+    <Node.Checkbox
+      node={node}
+      attached={attached}
+      props={props}
+      options={options}
     />
   )
 }

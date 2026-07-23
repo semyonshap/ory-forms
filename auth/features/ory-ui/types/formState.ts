@@ -1,19 +1,19 @@
 import { UiNodeGroupEnum } from "@ory/client-fetch"
 import { OryFlowContainer } from "./container"
 
-export type FormStateSelectMethod = { current: "select_method" }
-export type FormStateProvideIdentifier = { current: "provide_identifier" }
 export type FormStateMethodActive = {
   current: "method_active"
   method: UiNodeGroupEnum
 }
 
 export type FlowFormState =
-  | FormStateSelectMethod
-  | FormStateProvideIdentifier
   | FormStateMethodActive
+  | { current: "select_method" }
+  | { current: "provide_identifier" }
   | { current: "success_screen" }
   | { current: "settings" }
+  | { current: "navigation" }
+  | { current: "error" }
 
 type CommonFormStateProperties = {
   isSubmitting: boolean

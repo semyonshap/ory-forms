@@ -1,15 +1,18 @@
+import { ResponseError } from "@ory/client-fetch"
 import { NextRequest, NextResponse } from "next/server"
+
 import { serverSideOAuth2Client } from "../app/client"
 
 export async function handleConsentSubmit(request: NextRequest) {
-  const formData = await request.formData()
-  const consentChallenge = formData.get("consent_challenge")?.toString()
-  const action = formData.get("action")?.toString()
-  const remember = formData.get("remember") === "true"
+  const body = await request.json()
+  const consentChallenge: string | undefined = body.consent_challenge
+  const action: string | undefined = body.action
+  const remember: boolean = !!body.remember
+  const grantScope: string[] = body.grant_scope ?? []
 
   if (!consentChallenge || !action) {
     return NextResponse.json(
-      { error: "Missing consent_challenge or action" },
+      { error: { message: "Missing consent_challenge or action" } },
       { status: 400 },
     )
   }
@@ -25,27 +28,29 @@ export async function handleConsentSubmit(request: NextRequest) {
           error_description: "The resource owner denied the request",
         },
       })
-      return NextResponse.redirect(reject.redirect_to)
+      return NextResponse.json({ redirect_to: reject.redirect_to })
     }
 
-    const consentRequest = await api.getOAuth2ConsentRequest({
-      consentChallenge,
-    })
     const accept = await api.acceptOAuth2ConsentRequest({
       consentChallenge,
       acceptOAuth2ConsentRequest: {
-        grant_scope: consentRequest.requested_scope ?? [],
-        grant_access_token_audience:
-          consentRequest.requested_access_token_audience ?? [],
+        grant_scope: grantScope,
         session: {},
         remember,
         remember_for: 3600,
       },
     })
-    return NextResponse.redirect(accept.redirect_to)
-  } catch {
+    return NextResponse.json({ redirect_to: accept.redirect_to })
+  } catch (err) {
+    if (err instanceof ResponseError) {
+      const body = await err.response
+        .json()
+        .catch(() => ({ error: { message: err.message } }))
+      return NextResponse.json(body, { status: err.response.status })
+    }
+
     return NextResponse.json(
-      { error: "Consent processing failed" },
+      { error: { message: "Consent processing failed" } },
       { status: 500 },
     )
   }

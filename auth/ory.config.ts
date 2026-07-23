@@ -7,7 +7,7 @@ export const oryConfig: OryClientConfiguration = {
   project: {
     default_locale: "en",
     default_redirect_url: "/",
-    error_ui_url: "/error",
+    error_ui_url: "/auth/error",
     locale_behavior: "force_default",
     name: "Jiko Authorization",
     logo_dark_url: "/jiko.svg",

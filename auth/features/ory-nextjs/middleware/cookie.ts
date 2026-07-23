@@ -1,5 +1,7 @@
-import { forEach } from "lodash-es"
-import { processSetCookieHeaders } from "../utils/utils"
+import { parse } from "tldts"
+import { parseSetCookie } from "set-cookie-parser"
+import { serialize, type SerializeOptions } from "cookie"
+
 import { OryMiddlewareOptions } from "./middleware"
 
 export function rewriteSetCookieHeaders(
@@ -7,16 +9,43 @@ export function rewriteSetCookieHeaders(
   upstreamResponse: Response,
   options: OryMiddlewareOptions,
 ) {
-  if (!upstreamResponse.headers.get("set-cookie")) return
+  const setCookieHeader = upstreamResponse.headers.get("set-cookie")
+  if (!setCookieHeader) return
 
-  const cookies = processSetCookieHeaders(
-    request.nextUrl.protocol,
-    upstreamResponse,
-    options,
-    request.headers,
-  )
+  const cookies = parseSetCookie(setCookieHeader, { split: true })
+  const cookieOptions = resolveCookieOptions(request, options)
+
   upstreamResponse.headers.delete("set-cookie")
-  forEach(cookies, (cookie) => {
-    upstreamResponse.headers.append("Set-Cookie", cookie)
-  })
+  for (const { name, value, ...opts } of cookies) {
+    const serialized = serialize(name, value, {
+      ...(opts as SerializeOptions),
+      ...cookieOptions,
+      encode: (v) => v,
+    })
+    upstreamResponse.headers.append("Set-Cookie", serialized)
+  }
+}
+
+function resolveCookieOptions(
+  request: { nextUrl: { protocol: string }; headers: Headers },
+  options: OryMiddlewareOptions,
+) {
+  const { headers, nextUrl } = request
+
+  const secure =
+    nextUrl.protocol === "https:" ||
+    headers.get("x-forwarded-proto") === "https"
+
+  const host = headers.get("x-forwarded-host") ?? headers.get("host")
+  const domain =
+    options.forceCookieDomain ?? (host ? guessCookieDomain(host) : undefined)
+
+  return { secure, domain }
+}
+
+function guessCookieDomain(host: string): string | undefined {
+  const hostname = host.replace(/:\d+$/, "")
+  const result = parse(hostname)
+
+  return result.isIp ? hostname : (result.domain ?? undefined)
 }

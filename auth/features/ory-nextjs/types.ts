@@ -15,10 +15,37 @@ export const initOverrides: RequestInit = {
   cache: "no-cache",
 }
 
+export type OryError = {
+  code: number
+  message?: string
+  status?: string
+  reason?: string
+  id?: string
+  timestamp?: Date
+  correlationId?: string
+}
+
 export type FlowParams = {
   id: string
   cookie: string | undefined
   return_to: string
+}
+
+export type ErrorFlow = {
+  id: string
+  active: "error"
+  ui: UiContainer
+  session: Session | null
+  return_to?: string
+  error: OryError
+}
+
+export type NavigationFlow = {
+  id: "UNSET"
+  active: "navigation"
+  ui: UiContainer
+  session: Session | null
+  return_to?: string
 }
 
 export type OAuth2ConsentFlow = {

@@ -6,11 +6,12 @@ import { OAuth2ConsentRequest, UiNode, UiTextTypeEnum } from "@ory/client-fetch"
 import { getServerSession } from "./session"
 import { serverSideOAuth2Client } from "./client"
 import { OAuth2ConsentFlow, QueryParams } from "../types"
-import { buildActionUrl, getPublicUrl } from "./utils"
+import { getPublicUrl } from "./utils"
 import { guessPotentiallyProxiedOrySdkUrl } from "../utils/sdk"
+import { redirectToErrorPage } from "../utils/error"
 
 export async function getOAuth2ConsentFlow(
-  config: { project: { login_ui_url: string } },
+  config: { project: { login_ui_url: string; error_ui_url: string } },
   params: QueryParams | Promise<QueryParams>,
 ): Promise<OAuth2ConsentFlow | null> {
   const resolved = await params
@@ -21,7 +22,11 @@ export async function getOAuth2ConsentFlow(
   })
 
   if (!consentChallenge) {
-    return null
+    redirectToErrorPage({
+      baseUrl,
+      config,
+      error: new Error("Consent challenge not found in url"),
+    })
   }
 
   const api = serverSideOAuth2Client()
@@ -29,8 +34,12 @@ export async function getOAuth2ConsentFlow(
   let consentRequest: OAuth2ConsentRequest
   try {
     consentRequest = await api.getOAuth2ConsentRequest({ consentChallenge })
-  } catch {
-    return null
+  } catch (error) {
+    redirectToErrorPage({
+      config,
+      baseUrl,
+      error,
+    })
   }
 
   if (consentRequest.skip) {
@@ -48,11 +57,14 @@ export async function getOAuth2ConsentFlow(
 
   const session = await getServerSession()
   if (!session) {
-    const loginUrl = buildActionUrl(baseUrl, config.project.login_ui_url, {
-      login_challenge: resolved["login_challenge"]?.toString(),
-    })
-    redirect(loginUrl)
+    const loginUrl = new URL(config.project.login_ui_url, baseUrl)
+    const lc = resolved["login_challenge"]?.toString()
+    if (lc) loginUrl.searchParams.set("login_challenge", lc)
+    redirect(loginUrl.toString())
   }
+
+  const action = new URL("/custom-service/consent", baseUrl)
+  action.searchParams.set("consent_challenge", consentChallenge)
 
   return {
     id: "UNSET",
@@ -60,9 +72,7 @@ export async function getOAuth2ConsentFlow(
     consent_request: consentRequest,
     session,
     ui: {
-      action: buildActionUrl(baseUrl, "/self-service/consent", {
-        consent_challenge: consentChallenge,
-      }),
+      action: action.toString(),
       method: "POST",
       nodes: [
         ...scopesToUiNodes(consentRequest.requested_scope ?? []),

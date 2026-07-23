@@ -9,10 +9,10 @@ import {
   UpdateRecoveryFlowBody,
 } from "@ory/client-fetch"
 import {
-  OnSubmitHandlerProps,
+  OryFlowType,
   OryConfiguration,
   OryFlowContainer,
-  OryFlowType,
+  OnSubmitHandlerPropsWithFlow,
 } from "../types"
 import { handleFlowError, replaceWindowFlowId } from "../utils"
 import { flowHasErrors } from "../lib"
@@ -27,7 +27,7 @@ export async function onSubmitRecovery(
     onSuccess,
     onValidationError,
     onError,
-  }: OnSubmitHandlerProps<UpdateRecoveryFlowBody>,
+  }: OnSubmitHandlerPropsWithFlow<UpdateRecoveryFlowBody>,
 ) {
   const method = String(body.method)
 

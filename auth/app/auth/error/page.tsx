@@ -1,20 +1,16 @@
-import { OryPageParams } from "@/features/ory-nextjs"
-
-/* import { Error as ErrorComponent } from "@/features/ory-elements/features/flows"
-import { getError, getServerSession, OryPageParams } from "@ory/nextjs/app"
-
 import { oryConfig } from "@/ory.config"
- */
+import { Flow, OryFlowType } from "@/features/ory-ui"
+import { getErrorFlow, OryPageParams } from "@/features/ory-nextjs"
+import { OryComponents } from "@/components/custom/oryComponents"
+
 export default async function ErrorPage(props: OryPageParams) {
-  /* const error = await getError(props.searchParams)
-  const session = await getServerSession().catch(() => null)
+  const flow = await getErrorFlow(oryConfig, props.searchParams)
 
   return (
-    <ErrorComponent
-      error={error}
+    <Flow
       config={oryConfig}
-      components={{ Card: {} }}
-      session={session ?? undefined}
+      components={OryComponents}
+      flow={{ flow, flowType: OryFlowType.Error }}
     />
-  ) */
+  )
 }
