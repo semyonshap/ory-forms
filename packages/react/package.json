@@ -1,7 +1,7 @@
 {
   "name": "@ory-forms/react",
   "version": "0.0.0",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
