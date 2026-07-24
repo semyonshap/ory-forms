@@ -1,5 +1,6 @@
 import {
   UiNodeAttributes,
+  UiNodeDivisionAttributes,
   UiNodeGroupEnum,
   UiNodeInputAttributes,
   UiNodeMeta,
@@ -18,7 +19,6 @@ import {
   InputNodeData,
   UiNodeInput,
   DivDataType,
-  DivAttributesData,
   AnchorNodeData,
 } from '../../types'
 
@@ -159,10 +159,10 @@ export function createDivNode({
   div_end: end,
   ...rest
 }: CreateDivisionNodeParams): UiNodeDiv {
-  const data: DivAttributesData = {
-    type: div_type,
-  }
-  if (end) data.end = end
+  const data: UiNodeDivisionAttributes['data'] = {}
+
+  if (div_type) data['type'] = div_type
+  if (end) data['end'] = end
 
   const attributes = {
     node_type: 'div' as const,

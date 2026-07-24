@@ -79,7 +79,7 @@ export type InputProps = ControllerRenderProps & {
   readOnly?: boolean
 }
 
-export type InputOptions = { label: string }
+export interface InputOptions { label: string }
 
 export type FormRenderInput = BaseRenderProps & {
   node: UiNodeInput

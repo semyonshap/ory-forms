@@ -79,13 +79,14 @@ export type UiNodeScript = FormNode & {
   type: 'script'
   attributes: UiNodeScriptAttributes
 }
+
 export function isUiNodeScript(node: FormNode): node is UiNodeScript {
   return node.type === 'script'
 }
 
 export type DivDataType = 'Div' | 'FormCard' | 'SettingsCard' | 'DividerCard'
 
-export type DivAttributesData = {
+export interface DivAttributesData {
   type?: DivDataType
   end?: string
 }

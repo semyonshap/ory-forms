@@ -9,7 +9,8 @@
     "restart": "pnpm build && pnpm start",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "knip": "knip"
   },
   "dependencies": {
     "@ory-forms/nextjs": "workspace:^",
