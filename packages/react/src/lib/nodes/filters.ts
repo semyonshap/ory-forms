@@ -6,7 +6,6 @@ import {
 } from '@ory/client-fetch'
 
 import {
-  allGroupEnums,
   authMethodPickerExcludedGroups,
   excludedAuthGroups,
   GroupedNodes,
@@ -23,16 +22,6 @@ export function toAuthMethodPickerOptions(visibleGroups: GroupedNodes): UiNodeGr
     .filter((group) => !authMethodPickerExcludedGroups.includes(group))
 }
 
-export function findCodeIdentifierNode(nodes: UiNode[]): UiNodeInput | undefined {
-  return nodes.find((n): n is UiNodeInput => {
-    if (!isUiNodeInput(n)) return false
-    return (
-      (n.group === UiNodeGroupEnum.IdentifierFirst && n.attributes.name === 'identifier') ||
-      (n.group === UiNodeGroupEnum.Code && n.attributes.name === 'address')
-    )
-  })
-}
-
 export function findScreenSelectionButton(nodes: UiNode[]) {
   return nodes.find(
     (n): n is UiNodeInput =>
@@ -42,20 +31,6 @@ export function findScreenSelectionButton(nodes: UiNode[]) {
 
 export function hasCodeField(nodes: UiNode[]): boolean {
   return nodes.some((node) => 'name' in node.attributes && node.attributes.name === 'code')
-}
-
-export function isSsoNode(node: UiNode): boolean {
-  return node.group === UiNodeGroupEnum.Oidc || node.group === UiNodeGroupEnum.Saml
-}
-
-export function isResendNode(node: UiNode): boolean {
-  if (!isUiNodeInput(node)) return false
-
-  const name = node.attributes.name
-  return (
-    name === 'resend' ||
-    (['email', 'recovery_confirm_address'].includes(name) && node.attributes.type === 'submit')
-  )
 }
 
 export function isCodeSent(
@@ -77,10 +52,6 @@ export function withoutSingleSignOnNodes(nodes: UiNode[]): UiNode[] {
   return nodes.filter(
     (node) => node.group !== UiNodeGroupEnum.Oidc && node.group !== UiNodeGroupEnum.Saml,
   )
-}
-
-export function isUiNodeGroupEnum(method: string): method is UiNodeGroupEnum {
-  return allGroupEnums.includes(method as UiNodeGroupEnum)
 }
 
 export function isNodeVisible(node: UiNode): node is UiNodeInput {

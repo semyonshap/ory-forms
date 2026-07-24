@@ -8,7 +8,7 @@
     "lint": "nx run-many --target=lint --all",
     "lint:fix": "nx run-many --target=lint:fix --all",
     "clean": "nx run-many --target=clean --all",
-    "check-deps": "nx run-many --target=knip --all",
+    "deps:check": "nx run-many --target=knip --all",
     "typecheck": "nx run-many --target=typecheck --all",
     "format:check": "nx format:check --all",
     "format:write": "nx format:write --all",

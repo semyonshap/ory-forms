@@ -5,7 +5,7 @@ import { FormValues, OryFlowContainer, OryFlowType } from '../../types'
 
 const prefillIdentifierFields = ['identifier', 'traits.email']
 
-export function getLoginHint(search: string): string | undefined {
+function getLoginHint(search: string): string | undefined {
   const hint = new URLSearchParams(search).get('login_hint')?.trim()
   return hint ? hint : undefined
 }

@@ -15,7 +15,7 @@ export type OryMiddlewareOptions = {
   project?: Partial<AccountExperienceConfiguration>
 }
 
-export async function proxyRequest(request: NextRequest, options: OryMiddlewareOptions) {
+async function proxyRequest(request: NextRequest, options: OryMiddlewareOptions) {
   const matchPaths = [
     '/self-service',
     '/custom-service',

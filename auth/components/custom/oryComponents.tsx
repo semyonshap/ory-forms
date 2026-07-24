@@ -12,6 +12,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui
 import { Alert, AlertDescription } from '../ui/alert'
 import JikoIcon from '../icons/jiko-icon'
 import { useCooldown } from '@/hooks/useCooldown'
+import { useIsMobile } from '@/hooks/use-mobile'
 import { cn } from '@/lib/utils'
 import {
   KeyRound,
@@ -64,6 +65,7 @@ export const OryComponents: OryClientComponents = {
     Divider: () => <Separator />,
     Settings: ({ options, attached }) => {
       const { title, description, messages } = options
+      const isMobile = useIsMobile()
 
       useEffect(() => {
         if (!messages) return
@@ -75,7 +77,7 @@ export const OryComponents: OryClientComponents = {
       }, [messages])
 
       return (
-        <Card className="w-[600px] max-w-[600px]">
+        <Card className={isMobile ? 'w-full' : 'w-[600px] max-w-[600px]'}>
           {title && (
             <CardHeader>
               <CardTitle>{title}</CardTitle>
@@ -88,8 +90,9 @@ export const OryComponents: OryClientComponents = {
     },
     Default: ({ options, attached }) => {
       const { title, description, messages } = options
+      const isMobile = useIsMobile()
       return (
-        <Card className="w-[350px] max-w-[350px]">
+        <Card className={isMobile ? 'w-full' : 'w-[350px] max-w-[350px]'}>
           {title && (
             <CardHeader>
               <JikoIcon className="pb-6 pt-2" />
@@ -286,10 +289,11 @@ export const OryComponents: OryClientComponents = {
     },
     Checkbox: ({ options, props }) => {
       const { label, description, icon: Icon } = options
+      const { onChange, ...rest } = props
       return (
         <div className="flex flex-row gap-4">
           <div>
-            <Checkbox {...props} />
+            <Checkbox onCheckedChange={onChange} {...rest} />
           </div>
           <div className="flex flex-col gap-2">
             <div className="flex flex-row gap-3">

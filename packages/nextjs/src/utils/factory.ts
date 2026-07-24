@@ -4,9 +4,7 @@ import {
   UiNodeAnchorAttributesNodeTypeEnum,
   UiNodeAttributes,
   UiNodeGroupEnum,
-  UiNodeInputAttributes,
   UiNodeMeta,
-  UiNodeTextAttributes,
   UiNodeTypeEnum,
   UiText,
   UiTextTypeEnum,
@@ -20,7 +18,7 @@ interface CreateNodeParams {
   meta?: UiNodeMeta
 }
 
-export function createNode({
+function createNode({
   type,
   attributes,
   meta = {},
@@ -34,24 +32,6 @@ export function createNode({
     messages,
     meta,
   }
-}
-
-interface CreateInputNodeParams extends Omit<CreateNodeParams, 'type' | 'attributes'> {
-  attributes: Omit<UiNodeInputAttributes, 'node_type' | 'disabled'> & {
-    disabled?: boolean
-  }
-}
-
-export function createInputNode({ attributes, ...extra }: CreateInputNodeParams) {
-  return createNode({
-    attributes: {
-      ...attributes,
-      disabled: attributes.disabled ?? false,
-      node_type: 'input',
-    },
-    type: UiNodeTypeEnum.Input,
-    ...extra,
-  })
 }
 
 interface CreateAnchorNodeParams extends Omit<CreateNodeParams, 'type' | 'attributes'> {
@@ -88,19 +68,4 @@ export function createUiText({
     type,
     context,
   }
-}
-
-interface CreateTextNodeParams extends Omit<CreateNodeParams, 'type' | 'attributes'> {
-  attributes: Omit<UiNodeTextAttributes, 'node_type'>
-}
-
-export function createTextNode({ attributes, ...extra }: CreateTextNodeParams) {
-  return createNode({
-    attributes: {
-      ...attributes,
-      node_type: 'text',
-    },
-    type: UiNodeTypeEnum.Text,
-    ...extra,
-  })
 }

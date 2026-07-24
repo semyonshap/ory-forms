@@ -20,12 +20,6 @@ export type OryError = {
   correlationId?: string
 }
 
-export type FlowParams = {
-  id: string
-  cookie: string | undefined
-  return_to: string
-}
-
 export type ErrorFlow = {
   id: string
   active: 'error'

@@ -2,13 +2,16 @@ import { useTranslation } from 'react-i18next'
 import { useController, useFormContext } from 'react-hook-form'
 import { ComponentType, useCallback, useMemo } from 'react'
 
-import { UiNodeInput } from '../types'
+import { CheckboxOptions, CheckboxProps, UiNodeInput } from '../types'
 import { normalizeKeys } from '../utils'
 import { useFlowStoreShallow } from '../context'
 
-import { useInputTranslation } from './useTranslation'
+import { useInputTranslation } from './useInputTranslation'
 
-export function useCheckbox(node: UiNodeInput) {
+export function useCheckbox(node: UiNodeInput): {
+  props: CheckboxProps
+  options: CheckboxOptions
+} {
   const { formState } = useFormContext()
   const { isReady } = formState
   const {
@@ -35,8 +38,8 @@ export function useCheckbox(node: UiNodeInput) {
   const { field } = controller
 
   const scope = isGrantScope ? (attr.value as string) : undefined
-  const onCheckedChange = useCallback(
-    (next: boolean | 'indeterminate') => {
+  const onChange = useCallback(
+    (next: boolean) => {
       if (isGrantScope && scope) {
         const current: string[] = Array.isArray(field.value) ? field.value : []
         field.onChange(next === true ? [...current, scope] : current.filter((s) => s !== scope))
@@ -49,8 +52,8 @@ export function useCheckbox(node: UiNodeInput) {
 
   let label: string
   let description: string | undefined
-  let icon: ComponentType | undefined
   let checked: boolean
+  let icon: ComponentType | undefined
 
   if (isGrantScope && scope) {
     label = t(`consent.scope.${scope}.title`, { defaultValue: scope })
@@ -64,12 +67,10 @@ export function useCheckbox(node: UiNodeInput) {
 
   return {
     props: {
+      ...field,
       checked,
-      onCheckedChange,
+      onChange,
       disabled,
-      onBlur: field.onBlur,
-      name: field.name,
-      ref: field.ref,
     },
     options: { label, description, icon },
   }

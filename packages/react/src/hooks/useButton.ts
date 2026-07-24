@@ -8,8 +8,7 @@ import { useFlowStoreShallow } from '../context'
 import { triggerToWindowCall } from '../lib/nodes'
 import { InputVariants, OryFlowType, UiNodeInput } from '../types'
 
-import { useInputTranslation } from './useTranslation'
-import { useOnload } from './useOnload'
+import { useOnload, useInputTranslation } from '.'
 
 export function useButton(node: UiNodeInput) {
   const {

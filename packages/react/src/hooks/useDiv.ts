@@ -4,7 +4,7 @@ import { useFlowStoreShallow } from '../context'
 import { getCardHeaderText, getGroupHeader } from '../lib'
 import { OryFlowContainerWithState, UiNodeDiv } from '../types'
 
-import { useFormMessages } from './useFormMessages'
+import { useFormMessages } from '.'
 
 export function useDiv(node: UiNodeDiv) {
   const { flow, formState } = useFlowStoreShallow((state) => ({

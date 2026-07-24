@@ -2,30 +2,74 @@ import { logos } from '../assets'
 import { OryComponents } from '../types'
 import { defaultGroupSorter, defaultNodeSorter } from '../lib/nodes'
 
-import { NodeImage } from './nodes/image'
-
-export function notImplemented(componentName: string) {
-  return function ComponentStub() {
-    console.warn(
-      `[Ory] Component "${componentName}" is not implemented. Please provide it via OryFlowProvider components prop.`,
-    )
-    return null
-  }
-}
-
 export const DefaultComponents: OryComponents = {
   Card: {
-    Default: notImplemented('FormCard'),
+    Default: ({ options, attached }) => {
+      const { title, description } = options ?? {}
+      return (
+        <fieldset>
+          {title && <legend>{title}</legend>}
+          {description && <p>{description}</p>}
+          {attached}
+        </fieldset>
+      )
+    },
   },
   Node: {
-    Image: NodeImage,
-    Label: notImplemented('Label'),
-    Button: notImplemented('Button'),
-    Input: notImplemented('Input'),
-    Code: notImplemented('CodeInput'),
-    Text: notImplemented('Text'),
-    Anchor: notImplemented('Anchor'),
-    Checkbox: notImplemented('Checkbox'),
+    Image: ({ node, props }) => (
+      <figure>
+        <img {...props} alt={node.meta.label?.text || ''} />
+      </figure>
+    ),
+    Label: ({ options, children }) => {
+      const { label } = options
+      return (
+        <div>
+          {label && <label>{label}</label>}
+          {children}
+        </div>
+      )
+    },
+
+    Button: ({ props, options }) => {
+      const { label } = options
+      return <button {...props}>{label}</button>
+    },
+    Input: ({ props }) => {
+      return (
+        <div>
+          <input {...props} />
+        </div>
+      )
+    },
+    Code: ({ props }) => {
+      return (
+        <div>
+          <input {...props} />
+        </div>
+      )
+    },
+    Text: ({ options }) => {
+      const { text, label } = options
+      return <p>{text || label || ''}</p>
+    },
+    Anchor: ({ props, options }) => {
+      const { label } = options
+      return (
+        <a {...props} title={label}>
+          {label || props.href}
+        </a>
+      )
+    },
+    Checkbox: ({ props, options }) => {
+      const { label } = options
+      return (
+        <label>
+          <input {...props} />
+          {label}
+        </label>
+      )
+    },
   },
   Icons: {
     Providers: {

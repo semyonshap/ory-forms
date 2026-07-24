@@ -31,7 +31,7 @@ interface CreateUiNodeParams {
   data?: NodeData | InputNodeData
 }
 
-export function createUiNode({
+function createUiNode({
   type,
   group = UiNodeGroupEnum.Default,
   messages = [],

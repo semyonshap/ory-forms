@@ -14,7 +14,7 @@ import {
 import { useFlowStoreShallow } from '../context'
 
 import { ButtonWrapper, AnchorWrapper, TextWrapper, ImageWrapper, InputWrapper } from './wrappers'
-import { NodeScript } from './nodes/nodeScript'
+import { NodeScript } from './nodes/script'
 import { DivWrapper } from './wrappers/divWrapper'
 import { CheckboxWrapper } from './wrappers/inputWrapper'
 

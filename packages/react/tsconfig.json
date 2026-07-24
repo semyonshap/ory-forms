@@ -3,7 +3,8 @@
   "compilerOptions": {
     "outDir": "dist",
     "rootDir": "src",
-    "emitDeclarationOnly": true
+    "emitDeclarationOnly": true,
+    "types": ["node"]
   },
   "lib": ["ES2021", "ES2021.Intl", "DOM", "DOM.Iterable"],
   "include": ["src"]

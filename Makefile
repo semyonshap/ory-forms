@@ -15,8 +15,8 @@ lint: ## Run ESLint
 lint-fix: ## Auto-fix ESLint issues
 	pnpm lint:fix
 
-check-deps: ## Check unused/missing dependencies
-	pnpm check-deps
+deps: ## Check unused/missing dependencies
+	pnpm deps:check
 
 format: ## Format all files (write)
 	pnpm format:write

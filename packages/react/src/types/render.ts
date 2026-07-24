@@ -53,21 +53,20 @@ export type FormRenderButton = BaseRenderProps & {
   }
 }
 
+export type CheckboxProps = ControllerRenderProps & {
+  checked: boolean
+}
+
+export interface CheckboxOptions {
+  label?: string
+  description?: string
+  icon?: IconType
+}
+
 export type FormRenderCheckbox = BaseRenderProps & {
   node: UiNodeInput
-  props: {
-    checked: boolean
-    onCheckedChange: (checked: boolean | 'indeterminate') => void
-    disabled?: boolean
-    onBlur?: () => void
-    name?: string
-    ref?: React.Ref<HTMLButtonElement>
-  }
-  options: {
-    label?: string
-    description?: string
-    icon?: IconType
-  }
+  props: CheckboxProps
+  options: CheckboxOptions
 }
 
 export type InputProps = ControllerRenderProps & {
@@ -79,7 +78,9 @@ export type InputProps = ControllerRenderProps & {
   readOnly?: boolean
 }
 
-export interface InputOptions { label: string }
+export interface InputOptions {
+  label: string
+}
 
 export type FormRenderInput = BaseRenderProps & {
   node: UiNodeInput

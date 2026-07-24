@@ -5,7 +5,7 @@ import { InputOptions, InputProps, UiNodeInput } from '../types'
 import { resolvePlaceholder } from '../i18n'
 import { useFlowStoreShallow } from '../context'
 
-import { useInputTranslation } from './useTranslation'
+import { useInputTranslation } from './useInputTranslation'
 import { useOnload } from './useOnload'
 
 export function useInput(node: UiNodeInput): {

@@ -51,7 +51,7 @@ function stringifyUrlQueryParam(param: unknown): string {
   return ''
 }
 
-export function urlQueryToSearchParams(query: ParsedUrlQuery): URLSearchParams {
+function urlQueryToSearchParams(query: ParsedUrlQuery): URLSearchParams {
   const searchParams = new URLSearchParams()
   for (const [key, value] of Object.entries(query)) {
     if (Array.isArray(value)) {

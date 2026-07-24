@@ -21,12 +21,6 @@ export function resolveLabel(text: UiText, t: TFunction): string {
   return uiTextToFormattedMessage(text, t)
 }
 
-export function resolveOptionLabel(name: string, value: unknown, t: TFunction): string {
-  const stringValue = String(value)
-  const key = `forms.option.${name}.${stringValue}`
-  return t(key, { defaultValue: stringValue })
-}
-
 export function resolvePlaceholder(uiText: UiText, t: TFunction): string {
   const fallback = t('input.placeholder', {
     placeholder: uiTextToFormattedMessage(uiText, t),

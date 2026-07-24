@@ -1,7 +1,7 @@
 import { NextRequest } from 'next/server'
 import { filterRequestHeaders } from '../utils/utils'
 
-export function getProjectApiKey() {
+function getProjectApiKey() {
   let baseUrl = ''
 
   if (process.env['ORY_PROJECT_API_TOKEN']) {

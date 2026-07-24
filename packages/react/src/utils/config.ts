@@ -9,7 +9,7 @@ import { defaultGroupSorter, defaultNodeSorter } from '../lib/nodes/sorter'
 
 import { frontendClient } from './sdk'
 
-export function normalizeUrl(url: string): string {
+function normalizeUrl(url: string): string {
   return url.replace(/\/$/, '')
 }
 
@@ -45,7 +45,7 @@ export function computeSdkConfig(config?: OryClientConfiguration['sdk']): OryCon
   return { url, options, frontend: frontendClient(url, options) }
 }
 
-export function getSdkUrl(): string {
+function getSdkUrl(): string {
   if (typeof process !== 'undefined' && process.env?.NEXT_PUBLIC_ORY_SDK_URL) {
     return process.env.NEXT_PUBLIC_ORY_SDK_URL
   }

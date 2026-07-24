@@ -1,13 +1,13 @@
 'use server'
 
 import { getServerSession } from './session'
-import { serverSideFrontendClient } from './client'
 import { ErrorFlow, OryError, QueryParams } from '../types'
-import { instanceOfFlowError, instanceOfGenericError, UiNode } from '@ory/client-fetch'
+import { UiNode } from '@ory/client-fetch'
 import { createUiText } from '../utils/factory'
 import { getLogoutFlow } from './logout'
 import { createNavigationNode } from '../utils/presets'
 import { upperFirst } from 'lodash-es'
+import { getError } from '../utils/error'
 
 export async function getErrorFlow(
   config: { project: { default_redirect_url: string } },
@@ -66,70 +66,4 @@ function getDescription(error: OryError) {
     default:
       return 'An unexpected error occurred'
   }
-}
-
-export async function getError(searchParams: QueryParams): Promise<OryError> {
-  const params = searchParams
-
-  if ('error' in params) {
-    return {
-      code: 400,
-      message: (params['error_description'] as string | undefined) ?? 'An unknown error occurred.',
-      status: params['error'] as string,
-      timestamp: new Date(),
-    }
-  }
-
-  const id = params['id']?.toString()
-  if (!id) {
-    return {
-      code: 500,
-      message: 'An unknown error occurred.',
-      status: 'unknown_error',
-      timestamp: new Date(),
-    }
-  }
-
-  const error = await serverSideFrontendClient()
-    .getFlowError({ id })
-    .then((res) => {
-      const error = res.error
-
-      if (res && instanceOfFlowError(res)) {
-        const parsed = error as OryError
-        return {
-          ...parsed,
-          id: res.id,
-          timestamp: res.created_at,
-        }
-      }
-
-      if (error && instanceOfGenericError(error)) {
-        return {
-          id: id,
-          code: error.code ?? 500,
-          message: error.message,
-          status: error.status,
-          reason: error.reason,
-          timestamp: new Date(),
-        }
-      }
-
-      return {
-        code: 500,
-        message: 'No error details provided',
-        status: 'unknown_error',
-        timestamp: new Date(),
-      }
-    })
-    .catch((error) => {
-      return {
-        code: 500,
-        message: error instanceof Error ? error.message : 'An unknown error occurred.',
-        status: 'unknown_error',
-        timestamp: new Date(),
-      }
-    })
-
-  return error
 }

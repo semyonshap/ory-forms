@@ -62,7 +62,7 @@ export const handleFlowError =
     )
   }
 
-export async function handleJsonError<T>(body: unknown, opts: FlowErrorHandlerProps<T>) {
+async function handleJsonError<T>(body: unknown, opts: FlowErrorHandlerProps<T>) {
   if (isSelfServiceFlowExpiredError(body)) {
     await opts.onError?.({
       type: 'flow_expired',
@@ -112,7 +112,7 @@ export async function handleJsonError<T>(body: unknown, opts: FlowErrorHandlerPr
   return false
 }
 
-export async function handleStatusError<T>(
+async function handleStatusError<T>(
   err: ResponseError,
   body: unknown,
   opts: FlowErrorHandlerProps<T>,
@@ -156,7 +156,7 @@ export async function handleStatusError<T>(
   return false
 }
 
-export const isFetchError = (err: unknown): err is FetchError => {
+const isFetchError = (err: unknown): err is FetchError => {
   return err instanceof FetchError
 }
 
