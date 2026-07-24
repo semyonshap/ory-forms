@@ -19,8 +19,9 @@ export function DivWrapper({ node, attached }: NodeRenderDiv) {
     return <Main.Default node={node} attached={attached} options={options} />
   }
 
-  if (type === 'SettingsCard' && Main.Settings) {
-    return <Main.Settings node={node} attached={attached} options={options} />
+  if (type === 'SettingsCard') {
+    const Compnent = Main.Settings || Main.Default
+    return <Compnent node={node} attached={attached} options={options} />
   }
 
   return <NodeDiv node={node} attached={attached} />

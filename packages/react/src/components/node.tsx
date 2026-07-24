@@ -43,12 +43,7 @@ function NodeInput({ node, attached }: NodeRenderInput) {
     case UiNodeInputAttributesTypeEnum.Button:
     case UiNodeInputAttributesTypeEnum.Submit:
       return ButtonWrapper({ node, attached })
-    default: {
-      const options = node.attributes.options
-      if (Array.isArray(options) && options.length > 0 && Node.Select)
-        return <Node.Select node={node} />
-
+    default:
       return InputWrapper({ node, attached })
-    }
   }
 }

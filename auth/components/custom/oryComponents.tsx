@@ -77,7 +77,7 @@ export const OryComponents: OryClientComponents = {
       }, [messages])
 
       return (
-        <Card className={isMobile ? 'w-full' : 'w-[600px] max-w-[600px]'}>
+        <Card className={isMobile ? 'w-full' : 'w-150 max-w-150'}>
           {title && (
             <CardHeader>
               <CardTitle>{title}</CardTitle>
@@ -92,7 +92,7 @@ export const OryComponents: OryClientComponents = {
       const { title, description, messages } = options
       const isMobile = useIsMobile()
       return (
-        <Card className={isMobile ? 'w-full' : 'w-[350px] max-w-[350px]'}>
+        <Card className={isMobile ? 'w-full' : 'w-90 max-w-90'}>
           {title && (
             <CardHeader>
               <JikoIcon className="pb-6 pt-2" />

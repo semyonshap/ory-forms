@@ -26,7 +26,7 @@ export type FormRootProps = ComponentPropsWithoutRef<'form'> & {
 export interface FlowInputProps {
   flow: OryFlowContainer
   config: OryClientConfiguration
-  components: Partial<OryClientComponents>
+  components?: Partial<OryClientComponents>
 }
 
 export type NodeSorter = (a: UiNode, b: UiNode, ctx: { flowType: string }) => number
@@ -46,10 +46,9 @@ export interface OryComponents {
     Resend?: ComponentType<FormRenderButton>
     Oidc?: ComponentType<FormRenderButton>
     Button: ComponentType<FormRenderButton>
-    Select?: ComponentType<FormRenderSelect>
     Checkbox: ComponentType<FormRenderCheckbox>
     Input: ComponentType<FormRenderInput>
-    Code: ComponentType<FormRenderInput>
+    Code?: ComponentType<FormRenderInput>
     Password?: ComponentType<FormRenderInput>
     Image: ComponentType<FormRenderImageProps>
     Text: ComponentType<FormRenderTextProps>

@@ -6,6 +6,9 @@ help: ## Show this help message
 install: ## Install dependencies
 	pnpm install
 
+dev: ## Run Dev mode
+	pnpm dev
+
 typecheck: ## Run TypeScript type checking
 	pnpm typecheck
 

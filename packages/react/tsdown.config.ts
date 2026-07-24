@@ -6,6 +6,7 @@ export default defineConfig({
   format: ['cjs', 'esm'],
   sourcemap: true,
   dts: true,
+  unbundle: true,
   deps: {
     neverBundle: [
       'react',

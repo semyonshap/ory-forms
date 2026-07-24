@@ -5,13 +5,33 @@ import { defaultGroupSorter, defaultNodeSorter } from '../lib/nodes'
 export const DefaultComponents: OryComponents = {
   Card: {
     Default: ({ options, attached }) => {
-      const { title, description } = options ?? {}
+      const { title, description, messages } = options
       return (
-        <fieldset>
-          {title && <legend>{title}</legend>}
+        <div
+          style={{
+            background: '#212121',
+            width: '400px',
+            padding: '32px',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '16px',
+            borderRadius: '16px',
+          }}
+        >
+          {title && <h2>{title}</h2>}
           {description && <p>{description}</p>}
+          {messages?.map((msg) => (
+            <p
+              key={msg.id}
+              style={{
+                color: msg.type === 'error' ? 'red' : msg.type === 'success' ? 'green' : 'white',
+              }}
+            >
+              {msg.text}
+            </p>
+          ))}
           {attached}
-        </fieldset>
+        </div>
       )
     },
   },
@@ -24,7 +44,14 @@ export const DefaultComponents: OryComponents = {
     Label: ({ options, children }) => {
       const { label } = options
       return (
-        <div>
+        <div
+          style={{
+            width: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '4px',
+          }}
+        >
           {label && <label>{label}</label>}
           {children}
         </div>
@@ -32,21 +59,39 @@ export const DefaultComponents: OryComponents = {
     },
 
     Button: ({ props, options }) => {
-      const { label } = options
-      return <button {...props}>{label}</button>
+      const { label, icon: Icon } = options
+      return (
+        <button
+          style={{
+            width: '100%',
+            maxHeight: '32px',
+            padding: '4px',
+            background: '#424242',
+            borderRadius: '8px',
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: '8px',
+          }}
+          {...props}
+        >
+          {Icon && <Icon />}
+          {label}
+        </button>
+      )
     },
     Input: ({ props }) => {
       return (
-        <div>
-          <input {...props} />
-        </div>
-      )
-    },
-    Code: ({ props }) => {
-      return (
-        <div>
-          <input {...props} />
-        </div>
+        <input
+          {...props}
+          style={{
+            width: '100%',
+            padding: '4px 16px',
+            borderRadius: '8px',
+            background: '#323232',
+          }}
+        />
       )
     },
     Text: ({ options }) => {
