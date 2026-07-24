@@ -1,8 +1,4 @@
-import {
-  UiNode,
-  UiNodeGroupEnum,
-  UiNodeInputAttributesTypeEnum,
-} from "@ory/client-fetch"
+import { UiNode, UiNodeGroupEnum, UiNodeInputAttributesTypeEnum } from '@ory/client-fetch'
 
 import {
   AnchorNodeData,
@@ -13,7 +9,7 @@ import {
   isUiNodeInput,
   OryFlowContainer,
   OryFlowType,
-} from "../../types"
+} from '../../types'
 
 export function NodeDataBuilder({
   nodes,
@@ -31,16 +27,16 @@ export function NodeDataBuilder({
       switch (n.attributes.type) {
         case UiNodeInputAttributesTypeEnum.Submit: {
           if (
-            n.attributes.name === "resend" ||
-            ["email", "recovery_confirm_address"].includes(n.attributes.name)
+            n.attributes.name === 'resend' ||
+            ['email', 'recovery_confirm_address'].includes(n.attributes.name)
           ) {
             // is Resend Button
             const data: InputNodeData = {
-              target: "code",
-              type: "resend",
-              variant: "link",
+              target: 'code',
+              type: 'resend',
+              variant: 'link',
               onClick: () => {
-                setValue("code", "")
+                setValue('code', '')
               },
             }
 
@@ -51,19 +47,19 @@ export function NodeDataBuilder({
           } else if (
             // is Submit Code button
             n.group === UiNodeGroupEnum.Code &&
-            n.attributes.name === "method"
+            n.attributes.name === 'method'
           ) {
             const data: InputNodeData = {
               onClick: () => {
-                const code = getValues("code")
+                const code = getValues('code')
                 switch (flowType) {
                   case OryFlowType.Login:
                   case OryFlowType.Registration:
-                    if (code) setValue("resend", "")
+                    if (code) setValue('resend', '')
                   case OryFlowType.Recovery:
                   case OryFlowType.Verification:
-                    setValue("email", "")
-                    setValue("code", "")
+                    setValue('email', '')
+                    setValue('code', '')
                 }
               },
             }
@@ -78,17 +74,17 @@ export function NodeDataBuilder({
             n.group === UiNodeGroupEnum.Saml
           ) {
             const data: InputNodeData = {
-              variant: "sso",
+              variant: 'sso',
             }
 
             return {
               ...n,
               data,
             }
-          } else if (n.attributes.name === "address") {
+          } else if (n.attributes.name === 'address') {
             // is Adress button in code send
             const data: InputNodeData = {
-              variant: "code",
+              variant: 'code',
             }
 
             return {
@@ -97,20 +93,20 @@ export function NodeDataBuilder({
             }
           } else if (
             n.group === UiNodeGroupEnum.Oauth2Consent &&
-            n.attributes.name === "grant_scope"
+            n.attributes.name === 'grant_scope'
           ) {
             // is Scope Checkbox
             const data: InputNodeData = {
-              variant: "scope",
+              variant: 'scope',
             }
 
             return {
               ...n,
               data,
             }
-          } else if (n.attributes.value === "reject") {
+          } else if (n.attributes.value === 'reject') {
             const data: InputNodeData = {
-              variant: "cancel",
+              variant: 'cancel',
             }
 
             return {
@@ -121,10 +117,10 @@ export function NodeDataBuilder({
         }
       }
     } else if (isUiNodeAnchor(n)) {
-      if (n.attributes.id === "logout") {
+      if (n.attributes.id === 'logout') {
         const data: AnchorNodeData = {
           ...n.data,
-          variant: "cancel",
+          variant: 'cancel',
         }
         return { ...n, data }
       }

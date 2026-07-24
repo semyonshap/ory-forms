@@ -3,8 +3,8 @@ import {
   OAuth2ConsentRequest,
   OAuth2LogoutRequest,
   Session,
-} from "@ory/client-fetch"
-import { FormState, OryError, OryFlowType } from "."
+} from '@ory/client-fetch'
+import { FormState, OryError, OryFlowType } from '.'
 
 export type HeaderLoginOptions = {
   flowType: OryFlowType.Login
@@ -57,8 +57,5 @@ export type HeaderOptions =
   | HeaderNavigationOptions
   | HeaderErrorOptions
   | {
-      flowType:
-        | OryFlowType.Verification
-        | OryFlowType.Recovery
-        | OryFlowType.Settings
+      flowType: OryFlowType.Verification | OryFlowType.Recovery | OryFlowType.Settings
     }

@@ -5,15 +5,15 @@ import {
   SettingsFlow,
   settingsUrl,
   UpdateSettingsFlowBody,
-} from "@ory/client-fetch"
+} from '@ory/client-fetch'
 import {
   OryFlowType,
   OryFlowContainer,
   OryConfiguration,
   OnSubmitHandlerPropsWithFlow,
-} from "../types"
-import { handleFlowError, replaceWindowFlowId } from "../utils"
-import { flowHasErrors } from "../lib"
+} from '../types'
+import { handleFlowError, replaceWindowFlowId } from '../utils'
+import { flowHasErrors } from '../lib'
 
 export async function onSubmitSettings(
   { flow }: OryFlowContainer,
@@ -87,10 +87,7 @@ export async function onSubmitSettings(
     .catch((err) => {
       if (isResponseError(err)) {
         if (err.response.status === 401) {
-          return onRedirect(
-            loginUrl(config) + "?return_to=" + settingsUrl(config),
-            true,
-          )
+          return onRedirect(loginUrl(config) + '?return_to=' + settingsUrl(config), true)
         }
         throw err
       }

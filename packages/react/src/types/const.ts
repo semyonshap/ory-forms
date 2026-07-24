@@ -1,4 +1,4 @@
-import { UiNodeGroupEnum } from "@ory/client-fetch"
+import { UiNodeGroupEnum } from '@ory/client-fetch'
 
 export const resendMessageId = 1070008
 
@@ -35,42 +35,42 @@ export const defaultGroupOrder: UiNodeGroupEnum[] = [
 ]
 
 export const defaultNodeOrder = [
-  "oidc",
-  "saml",
-  "identifier_first",
-  "default",
-  "profile",
-  "password",
-  "captcha",
-  "passkey",
-  "code",
-  "webauthn",
+  'oidc',
+  'saml',
+  'identifier_first',
+  'default',
+  'profile',
+  'password',
+  'captcha',
+  'passkey',
+  'code',
+  'webauthn',
 ]
 
 export const defaultHiddenMessageIds = [
-  1040009, 1060003, 1080003, 1010004, 1010014, 1010025, 1040005, 1010016,
-  1010003, 1060004, 1060005, 1060006,
+  1040009, 1060003, 1080003, 1010004, 1010014, 1010025, 1040005, 1010016, 1010003, 1060004, 1060005,
+  1060006,
 ]
 
-export const supportsSelectAccountPrompt = ["google", "github"]
+export const supportsSelectAccountPrompt = ['google', 'github']
 
 export const omittedInputKeys = [
-  "autocomplete",
-  "label",
-  "node_type",
-  "maxlength",
-  "onclick",
-  "onclickTrigger",
-  "onload",
-  "onloadTrigger",
+  'autocomplete',
+  'label',
+  'node_type',
+  'maxlength',
+  'onclick',
+  'onclickTrigger',
+  'onload',
+  'onloadTrigger',
 ] as const
 
 export const methodIconMap: Record<string, string> = {
-  password: "Password",
-  code: "Code",
-  passkey: "Passkey",
-  webauthn: "Webauthn",
-  totp: "Totp",
-  lookup_secret: "LookupSecret",
-  hardware_token: "HardwareToken",
+  password: 'Password',
+  code: 'Code',
+  passkey: 'Passkey',
+  webauthn: 'Webauthn',
+  totp: 'Totp',
+  lookup_secret: 'LookupSecret',
+  hardware_token: 'HardwareToken',
 }

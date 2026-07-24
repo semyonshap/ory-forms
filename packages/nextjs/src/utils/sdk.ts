@@ -1,12 +1,12 @@
-import { getDomain } from "tldts"
+import { getDomain } from 'tldts'
 
 function getEnv(name: string): string | undefined {
   return process.env[`NEXT_PUBLIC_${name}`] || process.env[name]
 }
 
 function orySdkUrlOrNull(): string | null {
-  const baseUrl = getEnv("ORY_SDK_URL")
-  return baseUrl ? baseUrl.replace(/\/$/, "") : null
+  const baseUrl = getEnv('ORY_SDK_URL')
+  return baseUrl ? baseUrl.replace(/\/$/, '') : null
 }
 
 export function orySdkUrl() {
@@ -14,7 +14,7 @@ export function orySdkUrl() {
 
   if (!baseUrl) {
     throw new Error(
-      "You need to set environment variable `NEXT_PUBLIC_ORY_SDK_URL` to your Ory Network SDK URL.",
+      'You need to set environment variable `NEXT_PUBLIC_ORY_SDK_URL` to your Ory Network SDK URL.',
     )
   }
 
@@ -22,25 +22,23 @@ export function orySdkUrl() {
 }
 
 function oryOAuth2UrlOrNull(): string | null {
-  const baseUrl = getEnv("ORY_OAUTH2_URL")
-  return baseUrl ? baseUrl.replace(/\/$/, "") : null
+  const baseUrl = getEnv('ORY_OAUTH2_URL')
+  return baseUrl ? baseUrl.replace(/\/$/, '') : null
 }
 
 export function oryOAuth2Url() {
   const baseUrl = oryOAuth2UrlOrNull()
 
   if (!baseUrl) {
-    throw new Error(
-      "You need to set environment variable `ORY_OAUTH2_URL` to your Hydra URL.",
-    )
+    throw new Error('You need to set environment variable `ORY_OAUTH2_URL` to your Hydra URL.')
   }
 
   return baseUrl
 }
 
 export function isProduction() {
-  const env = getEnv("VERCEL_ENV") || getEnv("NODE_ENV") || ""
-  return ["production", "prod"].indexOf(env) > -1
+  const env = getEnv('VERCEL_ENV') || getEnv('NODE_ENV') || ''
+  return ['production', 'prod'].indexOf(env) > -1
 }
 
 function isSameSite(originA: string, originB: string): boolean {
@@ -59,12 +57,9 @@ function isSameSite(originA: string, originB: string): boolean {
   return Boolean(domainA && domainB && domainA === domainB)
 }
 
-export function guessPotentiallyProxiedOrySdkUrl(options?: {
-  knownProxiedUrl?: string
-}) {
+export function guessPotentiallyProxiedOrySdkUrl(options?: { knownProxiedUrl?: string }) {
   const visitedOrigin =
-    options?.knownProxiedUrl ??
-    (typeof window !== "undefined" ? window.location.origin : undefined)
+    options?.knownProxiedUrl ?? (typeof window !== 'undefined' ? window.location.origin : undefined)
 
   const sdkUrl = orySdkUrlOrNull()
 
@@ -73,10 +68,10 @@ export function guessPotentiallyProxiedOrySdkUrl(options?: {
   }
 
   if (isProduction()) {
-    if (getEnv("VERCEL_ENV")) {
-      const productionUrl = getEnv("VERCEL_PROJECT_PRODUCTION_URL") || ""
-      if (productionUrl.indexOf("vercel.app") > -1) {
-        return `https://${productionUrl}`.replace(/\/$/, "")
+    if (getEnv('VERCEL_ENV')) {
+      const productionUrl = getEnv('VERCEL_PROJECT_PRODUCTION_URL') || ''
+      if (productionUrl.indexOf('vercel.app') > -1) {
+        return `https://${productionUrl}`.replace(/\/$/, '')
       }
     }
 
@@ -84,16 +79,16 @@ export function guessPotentiallyProxiedOrySdkUrl(options?: {
   }
 
   if (visitedOrigin) {
-    return visitedOrigin.replace(/\/$/, "")
+    return visitedOrigin.replace(/\/$/, '')
   }
 
-  if (getEnv("VERCEL_ENV")) {
-    if (getEnv("VERCEL_URL")) {
-      return `https://${getEnv("VERCEL_URL")}`.replace(/\/$/, "")
+  if (getEnv('VERCEL_ENV')) {
+    if (getEnv('VERCEL_URL')) {
+      return `https://${getEnv('VERCEL_URL')}`.replace(/\/$/, '')
     }
 
-    if (process.env["__NEXT_PRIVATE_ORIGIN"]) {
-      return process.env["__NEXT_PRIVATE_ORIGIN"].replace(/\/$/, "")
+    if (process.env['__NEXT_PRIVATE_ORIGIN']) {
+      return process.env['__NEXT_PRIVATE_ORIGIN'].replace(/\/$/, '')
     }
   }
 

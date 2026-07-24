@@ -5,7 +5,7 @@ services:
       context: ./auth
       dockerfile: Dockerfile.dev
     ports:
-      - "3000:3000"
+      - '3000:3000'
     volumes:
       - ./auth:/app
       - /app/node_modules
@@ -13,4 +13,4 @@ services:
       - NEXT_PUBLIC_ORY_SDK_URL=https://auth-dev.with-jiko.com
       - LOG_LEVEL=debug
     extra_hosts:
-      - "auth-dev.with-jiko.com:49.12.22.114"
+      - 'auth-dev.with-jiko.com:49.12.22.114'

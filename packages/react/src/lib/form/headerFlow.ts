@@ -1,5 +1,5 @@
-import { TFunction } from "i18next"
-import { UiContainer } from "@ory/client-fetch"
+import { TFunction } from 'i18next'
+import { UiContainer } from '@ory/client-fetch'
 
 import {
   HeaderOptions,
@@ -9,13 +9,9 @@ import {
   OryFlowType,
   HeaderNavigationOptions,
   HeaderErrorOptions,
-} from "../../types"
-import {
-  collectParts,
-  joinWithCommaOr,
-  normalizeContext,
-} from "./headerHelpers"
-import { hasCodeField, isCodeSent } from "../nodes"
+} from '../../types'
+import { collectParts, joinWithCommaOr, normalizeContext } from './headerHelpers'
+import { hasCodeField, isCodeSent } from '../nodes'
 
 export function getCardHeaderText(
   container: UiContainer,
@@ -41,8 +37,8 @@ export function getCardHeaderText(
       return getErrorHeader(t)
     case OryFlowType.OAuth2Logout:
       return {
-        description: "Logout",
-        title: "DEsc",
+        description: 'Logout',
+        title: 'DEsc',
       }
     default:
       return getDefaultHeader(t)
@@ -55,7 +51,7 @@ function getRecoveryHeader(container: UiContainer, t: TFunction) {
   )
   if (recoveryV2Message) {
     return {
-      title: t("recovery.title"),
+      title: t('recovery.title'),
       description: t(
         `identities.messages.${recoveryV2Message.id}`,
         normalizeContext(recoveryV2Message.context),
@@ -64,47 +60,41 @@ function getRecoveryHeader(container: UiContainer, t: TFunction) {
   }
   if (hasCodeField(container.nodes)) {
     return {
-      title: t("recovery.title"),
-      description: t("identities.messages.1060003"),
+      title: t('recovery.title'),
+      description: t('identities.messages.1060003'),
     }
   }
   return {
-    title: t("recovery.title"),
-    description: t("recovery.subtitle"),
+    title: t('recovery.title'),
+    description: t('recovery.subtitle'),
   }
 }
 
 function getSettingsHeader(t: TFunction) {
   return {
-    title: t("settings.title"),
-    description: t("settings.subtitle"),
+    title: t('settings.title'),
+    description: t('settings.subtitle'),
   }
 }
 
 function getVerificationHeader(container: UiContainer, t: TFunction) {
   if (hasCodeField(container.nodes)) {
     return {
-      title: t("verification.title"),
-      description: t("identities.messages.1080003"),
+      title: t('verification.title'),
+      description: t('identities.messages.1080003'),
     }
   }
   return {
-    title: t("verification.title"),
-    description: t("verification.subtitle"),
+    title: t('verification.title'),
+    description: t('verification.subtitle'),
   }
 }
 
-function getLoginHeader(
-  container: UiContainer,
-  opts: HeaderLoginOptions,
-  t: TFunction,
-) {
-  const accountLinkingMessage = container.messages?.find(
-    (m) => m.id === 1010016,
-  )
+function getLoginHeader(container: UiContainer, opts: HeaderLoginOptions, t: TFunction) {
+  const accountLinkingMessage = container.messages?.find((m) => m.id === 1010016)
   if (accountLinkingMessage) {
     return {
-      title: t("account-linking.title"),
+      title: t('account-linking.title'),
       description: t(
         `identities.messages.${accountLinkingMessage.id}`,
         normalizeContext(accountLinkingMessage.context),
@@ -113,43 +103,40 @@ function getLoginHeader(
   }
 
   const parts = collectParts(container.nodes, opts.flowType, t)
-  const orText = t("misc.or", "or")
+  const orText = t('misc.or', 'or')
   const stringifiedParts = joinWithCommaOr(parts, orText)
   const codeSent = isCodeSent(container.nodes, opts.formState)
 
   if (opts.flow.refresh) {
     return {
-      title: t("login.title-refresh"),
+      title: t('login.title-refresh'),
       description: codeSent
-        ? t("identities.messages.1010025")
-        : t("login.subtitle-refresh", { parts: stringifiedParts }),
+        ? t('identities.messages.1010025')
+        : t('login.subtitle-refresh', { parts: stringifiedParts }),
     }
   }
 
-  if (opts.flow.requested_aal === "aal2") {
-    let description = t("login.subtitle-aal2")
+  if (opts.flow.requested_aal === 'aal2') {
+    let description = t('login.subtitle-aal2')
     if (codeSent) {
-      description = t("identities.messages.1010025")
-    } else if (
-      opts.formState?.current === "method_active" &&
-      opts.formState.method
-    ) {
+      description = t('identities.messages.1010025')
+    } else if (opts.formState?.current === 'method_active' && opts.formState.method) {
       description = t(`login.${opts.formState.method}.subtitle`)
     }
     return {
-      title: t("login.title-aal2"),
+      title: t('login.title-aal2'),
       description,
     }
   }
 
   return {
-    title: t("login.title"),
+    title: t('login.title'),
     description:
       parts.length > 0
         ? codeSent
-          ? t("identities.messages.1010014")
-          : t("login.subtitle", { parts: stringifiedParts })
-        : "",
+          ? t('identities.messages.1010014')
+          : t('login.subtitle', { parts: stringifiedParts })
+        : '',
   }
 }
 
@@ -159,57 +146,50 @@ function getRegistrationHeader(
   t: TFunction,
 ) {
   const parts = collectParts(container.nodes, opts.flowType, t)
-  const orText = t("misc.or", "or")
+  const orText = t('misc.or', 'or')
   const codeSent = isCodeSent(container.nodes, opts.formState)
 
   return {
-    title: t("registration.title"),
+    title: t('registration.title'),
     description: codeSent
-      ? t("identities.messages.1040005")
+      ? t('identities.messages.1040005')
       : parts.length > 0
-        ? t("registration.subtitle", { parts: joinWithCommaOr(parts, orText) })
-        : "",
+        ? t('registration.subtitle', { parts: joinWithCommaOr(parts, orText) })
+        : '',
   }
 }
 
 function getConsentHeader(opts: HeaderOAuth2ConsentOptions, t: TFunction) {
   return {
-    title: t("consent.title", {
+    title: t('consent.title', {
       party: opts.flow.consent_request?.client?.client_name,
     }),
-    description: t("consent.subtitle", {
-      identifier: opts.flow.session?.identity?.traits?.email ?? "",
+    description: t('consent.subtitle', {
+      identifier: opts.flow.session?.identity?.traits?.email ?? '',
     }),
   }
 }
 
 function getNavigationHeader(opts: HeaderNavigationOptions, t: TFunction) {
   const session = opts.flow.session
-  const rawUser =
-    session?.identity?.traits?.name?.first ??
-    session?.identity?.traits?.username
+  const rawUser = session?.identity?.traits?.name?.first ?? session?.identity?.traits?.username
 
-  const user =
-    typeof rawUser === "string" && rawUser.trim() !== "" ? rawUser : "User"
+  const user = typeof rawUser === 'string' && rawUser.trim() !== '' ? rawUser : 'User'
 
   if (opts.flow.session) {
     return {
-      title: t(
-        "navigation.header.authenticated.title",
-        "Welcome back, {user}",
-        { user },
-      ),
+      title: t('navigation.header.authenticated.title', 'Welcome back, {user}', { user }),
       description: t(
-        "navigation.header.authenticated.description",
-        "Manage your account settings or sign out",
+        'navigation.header.authenticated.description',
+        'Manage your account settings or sign out',
       ),
     }
   } else {
     return {
-      title: t("navigation.header.guest.title", "Get started"),
+      title: t('navigation.header.guest.title', 'Get started'),
       description: t(
-        "navigation.header.guest.description",
-        "Sign in or create an account to continue",
+        'navigation.header.guest.description',
+        'Sign in or create an account to continue',
       ),
     }
   }
@@ -217,17 +197,17 @@ function getNavigationHeader(opts: HeaderNavigationOptions, t: TFunction) {
 
 function getErrorHeader(t: TFunction) {
   return {
-    title: t("error.title.what-happened", "What happened?"),
+    title: t('error.title.what-happened', 'What happened?'),
     description: t(
-      "error.instructions",
-      "Please try again in a few minutes or contact the website operator.",
+      'error.instructions',
+      'Please try again in a few minutes or contact the website operator.',
     ),
   }
 }
 
 function getDefaultHeader(t: TFunction) {
   return {
-    title: t("error.title", "Error"),
-    description: t("error.description", "An error occurred"),
+    title: t('error.title', 'Error'),
+    description: t('error.description', 'An error occurred'),
   }
 }

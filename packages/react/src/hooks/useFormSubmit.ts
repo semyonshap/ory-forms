@@ -5,8 +5,8 @@ import {
   UpdateRegistrationFlowBody,
   UpdateSettingsFlowBody,
   UpdateVerificationFlowBody,
-} from "@ory/client-fetch"
-import { SubmitHandler, UseFormReturn } from "react-hook-form"
+} from '@ory/client-fetch'
+import { SubmitHandler, UseFormReturn } from 'react-hook-form'
 
 import {
   onSubmitLogin,
@@ -15,48 +15,42 @@ import {
   onSubmitRegistration,
   onSubmitSettings,
   onSubmitVerification,
-} from "../services"
-import {
-  FormValues,
-  OryFlowContainer,
-  OryFlowType,
-  UpdateOAuth2ConsentFlowBody,
-} from "../types"
-import { useFlowStoreShallow } from "../context"
+} from '../services'
+import { FormValues, OryFlowContainer, OryFlowType, UpdateOAuth2ConsentFlowBody } from '../types'
+import { useFlowStoreShallow } from '../context'
 import {
   applySelectAccountPrompt,
   computeDefaultValues,
   filterSettingsFields,
   removeEmptyStrings,
-} from "../lib"
+} from '../lib'
 
 export function useFormSubmit(methods: UseFormReturn<FormValues>) {
-  const { flowContainer, config, dispatchFormState, setFlowContainer } =
-    useFlowStoreShallow((state) => ({
+  const { flowContainer, config, dispatchFormState, setFlowContainer } = useFlowStoreShallow(
+    (state) => ({
       config: state.config,
       flowContainer: state.flowContainer,
       dispatchFormState: state.dispatchFormState,
       setFlowContainer: state.setFlowContainer,
-    }))
+    }),
+  )
 
   const { flow, flowType } = flowContainer
 
   const onRedirect: OnRedirectHandler = (url, _external) => {
-    dispatchFormState({ type: "page_redirect" })
+    dispatchFormState({ type: 'page_redirect' })
     window.location.assign(url)
   }
 
-  const onSubmit: SubmitHandler<FormValues> = async (
-    initialData: FormValues,
-  ) => {
-    const isResend = initialData.method === "code" && "resend" in initialData
+  const onSubmit: SubmitHandler<FormValues> = async (initialData: FormValues) => {
+    const isResend = initialData.method === 'code' && 'resend' in initialData
 
     const startSubmit = () => {
-      if (!isResend) dispatchFormState({ type: "form_submit_start" })
+      if (!isResend) dispatchFormState({ type: 'form_submit_start' })
     }
 
     const endSubmit = () => {
-      if (!isResend) dispatchFormState({ type: "form_submit_end" })
+      if (!isResend) dispatchFormState({ type: 'form_submit_end' })
     }
 
     const handleFlowUpdate = (container: OryFlowContainer) => {
@@ -69,21 +63,21 @@ export function useFormSubmit(methods: UseFormReturn<FormValues>) {
     }
 
     const clearSensitiveData = (data: FormValues) => {
-      if ("password" in data) {
-        methods.setValue("password", "")
+      if ('password' in data) {
+        methods.setValue('password', '')
       }
-      if ("code" in data) {
-        methods.setValue("code", "")
+      if ('code' in data) {
+        methods.setValue('code', '')
       }
-      if ("totp_code" in data) {
-        methods.setValue("totp_code", "")
+      if ('totp_code' in data) {
+        methods.setValue('totp_code', '')
       }
     }
 
     startSubmit()
 
     try {
-      console.log("Submit", initialData)
+      console.log('Submit', initialData)
 
       const data = removeEmptyStrings<FormValues>(initialData)
 
@@ -141,7 +135,7 @@ export function useFormSubmit(methods: UseFormReturn<FormValues>) {
             ...(filtered as unknown as UpdateSettingsFlowBody),
           }
 
-          console.log("filtered", filtered)
+          console.log('filtered', filtered)
 
           applySelectAccountPrompt(submitData)
 

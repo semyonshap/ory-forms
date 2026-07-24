@@ -1,48 +1,42 @@
-import { FlowType, OnRedirectHandler } from "@ory/client-fetch"
+import { FlowType, OnRedirectHandler } from '@ory/client-fetch'
 
-import { headers } from "next/headers"
-import { QueryParams } from "../types"
-import { ParsedUrlQuery } from "querystring"
-import { redirect, RedirectType } from "next/navigation"
+import { headers } from 'next/headers'
+import { QueryParams } from '../types'
+import { ParsedUrlQuery } from 'querystring'
+import { redirect, RedirectType } from 'next/navigation'
 
 export async function getCookieHeader() {
   const h = await headers()
-  return h.get("cookie") ?? undefined
+  return h.get('cookie') ?? undefined
 }
 
 export const onRedirect: OnRedirectHandler = (url) => {
   redirect(url)
 }
 
-export async function toGetFlowParameter(
-  params: Promise<QueryParams> | QueryParams,
-) {
+export async function toGetFlowParameter(params: Promise<QueryParams> | QueryParams) {
   return {
-    id: (await params)["flow"]?.toString() ?? "",
+    id: (await params)['flow']?.toString() ?? '',
     cookie: await getCookieHeader(),
   }
 }
 
 export async function getPublicUrl() {
   const h = await headers()
-  const host = h.get("host")
+  const host = h.get('host')
   if (!host) {
     return undefined
   }
-  const protocol = h.get("x-forwarded-proto") || "http"
+  const protocol = h.get('x-forwarded-proto') || 'http'
   return `${protocol}://${host}`
 }
 
-export function startNewFlow(
-  params: QueryParams,
-  flowType: FlowType,
-  baseUrl: string,
-) {
+export function startNewFlow(params: QueryParams, flowType: FlowType, baseUrl: string) {
   return redirect(
     new URL(
-      "/self-service/" +
+      '/self-service/' +
         flowType.toString() +
-        "/browser?" +
+        '/browser?' +
         urlQueryToSearchParams(params).toString(),
       baseUrl,
     ).toString(),
@@ -51,13 +45,10 @@ export function startNewFlow(
 }
 
 function stringifyUrlQueryParam(param: unknown): string {
-  if (typeof param === "string") return param
-  if (
-    (typeof param === "number" && !isNaN(param)) ||
-    typeof param === "boolean"
-  )
+  if (typeof param === 'string') return param
+  if ((typeof param === 'number' && !isNaN(param)) || typeof param === 'boolean')
     return String(param)
-  return ""
+  return ''
 }
 
 export function urlQueryToSearchParams(query: ParsedUrlQuery): URLSearchParams {

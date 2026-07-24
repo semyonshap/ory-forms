@@ -1,11 +1,11 @@
-import { useTranslation } from "react-i18next"
-import { useController, useFormContext } from "react-hook-form"
-import { ComponentType, useCallback, useMemo } from "react"
+import { useTranslation } from 'react-i18next'
+import { useController, useFormContext } from 'react-hook-form'
+import { ComponentType, useCallback, useMemo } from 'react'
 
-import { UiNodeInput } from "../types"
-import { normalizeKeys } from "../utils"
-import { useFlowStoreShallow } from "../context"
-import { useInputTranslation } from "./useTranslation"
+import { UiNodeInput } from '../types'
+import { normalizeKeys } from '../utils'
+import { useFlowStoreShallow } from '../context'
+import { useInputTranslation } from './useTranslation'
 
 export function useCheckbox(node: UiNodeInput) {
   const { formState } = useFormContext()
@@ -22,7 +22,7 @@ export function useCheckbox(node: UiNodeInput) {
   const IconsSystem = useMemo(() => normalizeKeys(system ?? {}), [system])
 
   const attr = node.attributes
-  const isGrantScope = attr.name === "grant_scope"
+  const isGrantScope = attr.name === 'grant_scope'
   const disabled = attr.disabled || !isReady || isSubmitting
 
   const controller = useController({
@@ -36,24 +36,20 @@ export function useCheckbox(node: UiNodeInput) {
   let description: string | undefined
   let icon: ComponentType | undefined
   let checked: boolean
-  let onCheckedChange: (next: boolean | "indeterminate") => void
+  let onCheckedChange: (next: boolean | 'indeterminate') => void
 
   if (isGrantScope) {
     const scope = attr.value as string
 
     label = t(`consent.scope.${scope}.title`, { defaultValue: scope })
-    description = t(`consent.scope.${scope}.description`, { defaultValue: "" })
+    description = t(`consent.scope.${scope}.description`, { defaultValue: '' })
     icon = IconsSystem?.[scope] as ComponentType | undefined
 
     checked = Array.isArray(field.value) && field.value.includes(scope)
     onCheckedChange = useCallback(
-      (next: boolean | "indeterminate") => {
+      (next: boolean | 'indeterminate') => {
         const current: string[] = Array.isArray(field.value) ? field.value : []
-        field.onChange(
-          next === true
-            ? [...current, scope]
-            : current.filter((s) => s !== scope),
-        )
+        field.onChange(next === true ? [...current, scope] : current.filter((s) => s !== scope))
       },
       [field, scope],
     )
@@ -64,7 +60,7 @@ export function useCheckbox(node: UiNodeInput) {
 
     checked = field.value === true
     onCheckedChange = useCallback(
-      (next: boolean | "indeterminate") => {
+      (next: boolean | 'indeterminate') => {
         field.onChange(next === true)
       },
       [field],

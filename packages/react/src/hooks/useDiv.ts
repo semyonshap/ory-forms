@@ -1,9 +1,9 @@
-import { useTranslation } from "react-i18next"
+import { useTranslation } from 'react-i18next'
 
-import { useFlowStoreShallow } from "../context"
-import { useFormMessages } from "./useFormMessages"
-import { getCardHeaderText, getGroupHeader } from "../lib"
-import { OryFlowContainerWithState, UiNodeDiv } from "../types"
+import { useFlowStoreShallow } from '../context'
+import { useFormMessages } from './useFormMessages'
+import { getCardHeaderText, getGroupHeader } from '../lib'
+import { OryFlowContainerWithState, UiNodeDiv } from '../types'
 
 export function useDiv(node: UiNodeDiv) {
   const { flow, formState } = useFlowStoreShallow((state) => ({
@@ -19,11 +19,11 @@ export function useDiv(node: UiNodeDiv) {
   }
 
   let header = {
-    title: "",
-    description: "",
+    title: '',
+    description: '',
   }
 
-  if (node.group === "default") {
+  if (node.group === 'default') {
     header = getCardHeaderText(flow.flow.ui, contextContainer, t)
   } else {
     header = getGroupHeader(node.group, t)

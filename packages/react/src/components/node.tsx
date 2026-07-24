@@ -1,11 +1,5 @@
-import { UiNodeInputAttributesTypeEnum } from "@ory/client-fetch"
-import {
-  ButtonWrapper,
-  AnchorWrapper,
-  TextWrapper,
-  ImageWrapper,
-  InputWrapper,
-} from "./wrappers"
+import { UiNodeInputAttributesTypeEnum } from '@ory/client-fetch'
+import { ButtonWrapper, AnchorWrapper, TextWrapper, ImageWrapper, InputWrapper } from './wrappers'
 import {
   NodeRender,
   ignoredScriptGroups,
@@ -16,19 +10,18 @@ import {
   isUiNodeText,
   NodeRenderInput,
   isUiNodeDiv,
-} from "../types"
-import { NodeScript } from "./nodes/nodeScript"
-import { useFlowStoreShallow } from "../context"
-import { DivWrapper } from "./wrappers/divWrapper"
-import { CheckboxWrapper } from "./wrappers/inputWrapper"
+} from '../types'
+import { NodeScript } from './nodes/nodeScript'
+import { useFlowStoreShallow } from '../context'
+import { DivWrapper } from './wrappers/divWrapper'
+import { CheckboxWrapper } from './wrappers/inputWrapper'
 
 export const Node = ({ node, attached }: NodeRender) => {
   if (isUiNodeDiv(node)) return DivWrapper({ node, attached })
   else if (isUiNodeImage(node)) return ImageWrapper({ node, attached })
   else if (isUiNodeText(node)) return TextWrapper({ node, attached })
   else if (isUiNodeAnchor(node)) return AnchorWrapper({ node, attached })
-  else if (isUiNodeInput(node))
-    return <NodeInput node={node} attached={attached} />
+  else if (isUiNodeInput(node)) return <NodeInput node={node} attached={attached} />
   else if (isUiNodeScript(node) && !ignoredScriptGroups.includes(node.group))
     return <NodeScript node={node} />
   return null

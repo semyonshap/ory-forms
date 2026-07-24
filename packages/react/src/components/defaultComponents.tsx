@@ -1,7 +1,7 @@
-import { logos } from "../assets"
-import { OryComponents } from "../types"
-import { NodeImage } from "./nodes/image"
-import { defaultGroupSorter, defaultNodeSorter } from "../lib/nodes"
+import { logos } from '../assets'
+import { OryComponents } from '../types'
+import { NodeImage } from './nodes/image'
+import { defaultGroupSorter, defaultNodeSorter } from '../lib/nodes'
 
 export function notImplemented(componentName: string) {
   return function ComponentStub() {
@@ -14,17 +14,17 @@ export function notImplemented(componentName: string) {
 
 export const DefaultComponents: OryComponents = {
   Card: {
-    Default: notImplemented("FormCard"),
+    Default: notImplemented('FormCard'),
   },
   Node: {
     Image: NodeImage,
-    Label: notImplemented("Label"),
-    Button: notImplemented("Button"),
-    Input: notImplemented("Input"),
-    Code: notImplemented("CodeInput"),
-    Text: notImplemented("Text"),
-    Anchor: notImplemented("Anchor"),
-    Checkbox: notImplemented("Checkbox"),
+    Label: notImplemented('Label'),
+    Button: notImplemented('Button'),
+    Input: notImplemented('Input'),
+    Code: notImplemented('CodeInput'),
+    Text: notImplemented('Text'),
+    Anchor: notImplemented('Anchor'),
+    Checkbox: notImplemented('Checkbox'),
   },
   Icons: {
     Providers: {

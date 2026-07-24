@@ -1,4 +1,4 @@
-import { IconProps } from "../types"
+import { IconProps } from '../types'
 
 const Apple: React.FC<IconProps> = ({ size = 16, ...props }) => (
   <svg

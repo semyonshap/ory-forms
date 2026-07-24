@@ -1,8 +1,8 @@
-import { UiNodeGroupEnum } from "@ory/client-fetch"
-import { Dispatch } from "react"
+import { UiNodeGroupEnum } from '@ory/client-fetch'
+import { Dispatch } from 'react'
 
-import { createInputNode, createUiText } from "./factory"
-import { BuildContext, FormStateAction } from "../../types"
+import { createInputNode, createUiText } from './factory'
+import { BuildContext, FormStateAction } from '../../types'
 
 export function BuildAuthMethodList({
   groups,
@@ -18,16 +18,16 @@ export function BuildAuthMethodList({
       group,
       attributes: {
         name: `method`,
-        type: "submit",
+        type: 'submit',
         value: group,
         disabled: false,
       },
       data: {
-        type: "method",
+        type: 'method',
         description: t(`two-step.${group}.description`),
         onClick: () =>
           dispatchFormState({
-            type: "action_select_method",
+            type: 'action_select_method',
             method: group,
           }),
       },

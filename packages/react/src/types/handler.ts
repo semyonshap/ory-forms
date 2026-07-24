@@ -5,13 +5,9 @@ import {
   UpdateRegistrationFlowBody,
   UpdateSettingsFlowBody,
   UpdateVerificationFlowBody,
-} from "@ory/client-fetch"
-import { OryFlowContainer } from "./container"
-import {
-  OryErrorHandler,
-  OrySuccessHandler,
-  OryValidationErrorHandler,
-} from "./event"
+} from '@ory/client-fetch'
+import { OryFlowContainer } from './container'
+import { OryErrorHandler, OrySuccessHandler, OryValidationErrorHandler } from './event'
 
 export type OnSubmitHandlerProps<T> = {
   body: T

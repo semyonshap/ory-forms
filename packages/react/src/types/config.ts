@@ -2,7 +2,7 @@ import {
   AccountExperienceConfiguration,
   ConfigurationParameters,
   FrontendApi,
-} from "@ory/client-fetch"
+} from '@ory/client-fetch'
 
 export type OryProject = AccountExperienceConfiguration & {
   oauth2_login_ui_url: string

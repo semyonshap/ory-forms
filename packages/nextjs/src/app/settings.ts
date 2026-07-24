@@ -1,13 +1,12 @@
-"use server"
+'use server'
 
-import { FlowType, SettingsFlow } from "@ory/client-fetch"
+import { FlowType, SettingsFlow } from '@ory/client-fetch'
 
-import { initOverrides, QueryParams } from "../types"
-import { guessPotentiallyProxiedOrySdkUrl } from "../utils/sdk"
-import { serverSideFrontendClient } from "./client"
-import { getFlowFactory } from "./flow"
-import { getPublicUrl, toGetFlowParameter } from "./utils"
-
+import { initOverrides, QueryParams } from '../types'
+import { guessPotentiallyProxiedOrySdkUrl } from '../utils/sdk'
+import { serverSideFrontendClient } from './client'
+import { getFlowFactory } from './flow'
+import { getPublicUrl, toGetFlowParameter } from './utils'
 
 export async function getSettingsFlow(
   config: { project: { settings_ui_url: string } },

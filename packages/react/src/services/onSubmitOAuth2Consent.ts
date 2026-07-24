@@ -2,30 +2,22 @@ import type {
   OAuth2ConsentFlowContainer,
   OnSubmitHandlerProps,
   UpdateOAuth2ConsentFlowBody,
-} from "../types"
-import { OryFlowType } from "../types"
+} from '../types'
+import { OryFlowType } from '../types'
 
 export async function onSubmitOAuth2Consent(
   flowContainer: OAuth2ConsentFlowContainer,
-  {
-    body,
-    onRedirect,
-    onSuccess,
-    onError,
-  }: OnSubmitHandlerProps<UpdateOAuth2ConsentFlowBody>,
+  { body, onRedirect, onSuccess, onError }: OnSubmitHandlerProps<UpdateOAuth2ConsentFlowBody>,
 ) {
   const response = await fetch(flowContainer.flow.ui.action, {
-    method: "POST",
+    method: 'POST',
     body: JSON.stringify(body),
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
   })
   const oauth2Success = await response.json()
-  if (
-    oauth2Success.redirect_to &&
-    typeof oauth2Success.redirect_to === "string"
-  ) {
+  if (oauth2Success.redirect_to && typeof oauth2Success.redirect_to === 'string') {
     await onSuccess?.({
       flowType: OryFlowType.OAuth2Consent,
       consentRequest: flowContainer.flow.consent_request,
@@ -34,7 +26,7 @@ export async function onSubmitOAuth2Consent(
     return
   }
   await onError?.({
-    type: "consent_error",
+    type: 'consent_error',
     flowType: OryFlowType.OAuth2Consent,
     consentRequest: flowContainer.flow.consent_request,
   })

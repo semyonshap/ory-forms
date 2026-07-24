@@ -1,6 +1,6 @@
-import { UiNode, UiNodeGroupEnum } from "@ory/client-fetch"
-import { allGroupEnums, excludedAuthGroups, GroupedNodes } from "../../types"
-import { isNodeVisible } from "./filters"
+import { UiNode, UiNodeGroupEnum } from '@ory/client-fetch'
+import { allGroupEnums, excludedAuthGroups, GroupedNodes } from '../../types'
+import { isNodeVisible } from './filters'
 
 export function getNodeGroupsWithVisibleNodes(nodes: UiNode[]): GroupedNodes {
   const groups: Partial<Record<UiNodeGroupEnum, UiNode[]>> = {}
@@ -35,18 +35,15 @@ export function nodesToAuthMethodGroups(
   const groups: Partial<Record<UiNodeGroupEnum, UiNode[]>> = {}
 
   for (const node of nodes) {
-    if (node.type === "script") continue
+    if (node.type === 'script') continue
     const groupNodes = groups[node.group] ?? []
     groupNodes.push(node)
     groups[node.group] = groupNodes
   }
 
   const excludeSet = new Set([...excludedAuthGroups, ...excludeAuthMethods])
-  return allGroupEnums.filter(
-    (group) => groups[group]?.length && !excludeSet.has(group),
-  )
+  return allGroupEnums.filter((group) => groups[group]?.length && !excludeSet.has(group))
 }
-
 
 export function getFinalNodes(
   uniqueGroups: GroupedNodes,
@@ -56,13 +53,9 @@ export function getFinalNodes(
     ...(uniqueGroups.identifier_first ?? []),
     ...(uniqueGroups.default ?? []),
     ...(uniqueGroups.captcha ?? []),
-  ].filter(
-    (node) => "type" in node.attributes && node.attributes.type === "hidden",
-  )
+  ].filter((node) => 'type' in node.attributes && node.attributes.type === 'hidden')
 
-  const selectedNodes = selectedGroup
-    ? (uniqueGroups[selectedGroup] ?? [])
-    : []
+  const selectedNodes = selectedGroup ? (uniqueGroups[selectedGroup] ?? []) : []
 
   return [...hiddenGroupNodes, ...selectedNodes]
 }

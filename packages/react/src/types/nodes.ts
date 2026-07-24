@@ -7,22 +7,15 @@ import {
   UiNodeInputAttributes,
   UiNodeScriptAttributes,
   UiNodeTextAttributes,
-} from "@ory/client-fetch"
+} from '@ory/client-fetch'
 
 export type GroupedNodes = Partial<Record<UiNodeGroupEnum, UiNode[]>>
 
-export type InputVariants =
-  | "button"
-  | "submit"
-  | "link"
-  | "cancel"
-  | "sso"
-  | "code"
-  | "scope"
+export type InputVariants = 'button' | 'submit' | 'link' | 'cancel' | 'sso' | 'code' | 'scope'
 
-export type AnchorVariants = "button" | "link" | "cancel"
+export type AnchorVariants = 'button' | 'link' | 'cancel'
 
-export type ButtonDataType = "method" | "resend" | "oidc"
+export type ButtonDataType = 'method' | 'resend' | 'oidc'
 
 export type NodeData = {
   type?: ButtonDataType
@@ -45,52 +38,52 @@ export type FormNode = UiNode & {
 }
 
 export type UiNodeInput = FormNode & {
-  type: "input"
+  type: 'input'
   attributes: UiNodeInputAttributes
   data?: InputNodeData
 }
 
 export function isUiNodeInput(node: FormNode): node is UiNodeInput {
-  return node.type === "input"
+  return node.type === 'input'
 }
 
 export type UiNodeImage = FormNode & {
-  type: "img"
+  type: 'img'
   attributes: UiNodeImageAttributes
 }
 
 export function isUiNodeImage(node: FormNode): node is UiNodeImage {
-  return node.type === "img"
+  return node.type === 'img'
 }
 
 export type UiNodeAnchor = FormNode & {
-  type: "a"
+  type: 'a'
   attributes: UiNodeAnchorAttributes
   data?: AnchorNodeData
 }
 
 export function isUiNodeAnchor(node: FormNode): node is UiNodeAnchor {
-  return node.type === "a"
+  return node.type === 'a'
 }
 
 export type UiNodeText = FormNode & {
-  type: "text"
+  type: 'text'
   attributes: UiNodeTextAttributes
 }
 
 export function isUiNodeText(node: FormNode): node is UiNodeText {
-  return node.type === "text"
+  return node.type === 'text'
 }
 
 export type UiNodeScript = FormNode & {
-  type: "script"
+  type: 'script'
   attributes: UiNodeScriptAttributes
 }
 export function isUiNodeScript(node: FormNode): node is UiNodeScript {
-  return node.type === "script"
+  return node.type === 'script'
 }
 
-export type DivDataType = "Div" | "FormCard" | "SettingsCard" | "DividerCard"
+export type DivDataType = 'Div' | 'FormCard' | 'SettingsCard' | 'DividerCard'
 
 export type DivAttributesData = {
   type?: DivDataType
@@ -98,20 +91,15 @@ export type DivAttributesData = {
 }
 
 export type UiNodeDiv = FormNode & {
-  type: "div"
+  type: 'div'
   attributes: UiNodeDivisionAttributes & {
     data?: DivAttributesData
   }
 }
 
 export function isUiNodeDiv(node: FormNode): node is UiNodeDiv {
-  return node.type === "div"
+  return node.type === 'div'
 }
 
 export type UiNodeFixed =
-  | UiNodeInput
-  | UiNodeImage
-  | UiNodeAnchor
-  | UiNodeText
-  | UiNodeScript
-  | UiNodeDiv
+  UiNodeInput | UiNodeImage | UiNodeAnchor | UiNodeText | UiNodeScript | UiNodeDiv

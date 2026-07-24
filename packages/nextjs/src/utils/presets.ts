@@ -1,5 +1,5 @@
-import { createAnchorNode, createUiText } from "./factory"
-import { startCase } from "lodash-es"
+import { createAnchorNode, createUiText } from './factory'
+import { startCase } from 'lodash-es'
 
 export function createNavigationNode(id: string, href: string) {
   return createAnchorNode({

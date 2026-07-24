@@ -1,6 +1,6 @@
-"use client"
+'use client'
 
-import { useCallback, useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 export function useCooldown(seconds: number = 60) {
   const [remaining, setRemaining] = useState(0)

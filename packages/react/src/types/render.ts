@@ -4,7 +4,7 @@ import {
   UiNodeImageAttributes,
   UiNodeInputAttributesTypeEnum,
   UiTextTypeEnum,
-} from "@ory/client-fetch"
+} from '@ory/client-fetch'
 import {
   FormNode,
   FormState,
@@ -20,10 +20,10 @@ import {
   InputVariants,
   AnchorVariants,
   FormValues,
-} from "."
-import { MouseEventHandler, PropsWithChildren, ReactNode } from "react"
-import { TFunction } from "i18next"
-import { FieldValues, UseFormGetValues, UseFormSetValue } from "react-hook-form"
+} from '.'
+import { MouseEventHandler, PropsWithChildren, ReactNode } from 'react'
+import { TFunction } from 'i18next'
+import { FieldValues, UseFormGetValues, UseFormSetValue } from 'react-hook-form'
 
 export type MessageProps = {
   id: number
@@ -56,7 +56,7 @@ export type FormRenderCheckbox = BaseRenderProps & {
   node: UiNodeInput
   props: {
     checked: boolean
-    onCheckedChange: (checked: boolean | "indeterminate") => void
+    onCheckedChange: (checked: boolean | 'indeterminate') => void
     disabled?: boolean
     onBlur?: () => void
     name?: string

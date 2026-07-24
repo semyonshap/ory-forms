@@ -1,30 +1,27 @@
-import { UiNodeGroupEnum, UpdateSettingsFlowBody } from "@ory/client-fetch"
-import { FormValues, supportsSelectAccountPrompt } from "../../types"
+import { UiNodeGroupEnum, UpdateSettingsFlowBody } from '@ory/client-fetch'
+import { FormValues, supportsSelectAccountPrompt } from '../../types'
 
 const settingsMethodFields: Record<string, string[]> = {
-  [UiNodeGroupEnum.Profile]: ["traits"],
-  [UiNodeGroupEnum.Password]: ["password"],
-  [UiNodeGroupEnum.Totp]: ["totp_code", "totp_unlink", "totp_secret_key"],
-  [UiNodeGroupEnum.Oidc]: ["link", "unlink", "traits"],
+  [UiNodeGroupEnum.Profile]: ['traits'],
+  [UiNodeGroupEnum.Password]: ['password'],
+  [UiNodeGroupEnum.Totp]: ['totp_code', 'totp_unlink', 'totp_secret_key'],
+  [UiNodeGroupEnum.Oidc]: ['link', 'unlink', 'traits'],
   [UiNodeGroupEnum.LookupSecret]: [
-    "lookup_secret_confirm",
-    "lookup_secret_disable",
-    "lookup_secret_regenerate",
-    "lookup_secret_reveal",
+    'lookup_secret_confirm',
+    'lookup_secret_disable',
+    'lookup_secret_regenerate',
+    'lookup_secret_reveal',
   ],
-  [UiNodeGroupEnum.Passkey]: ["passkey_remove", "passkey_settings_register"],
+  [UiNodeGroupEnum.Passkey]: ['passkey_remove', 'passkey_settings_register'],
   [UiNodeGroupEnum.Webauthn]: [
-    "webauthn_register",
-    "webauthn_register_displayname",
-    "webauthn_remove",
+    'webauthn_register',
+    'webauthn_register_displayname',
+    'webauthn_remove',
   ],
-  [UiNodeGroupEnum.Saml]: ["link", "unlink", "traits"],
+  [UiNodeGroupEnum.Saml]: ['link', 'unlink', 'traits'],
 }
 
-export function filterSettingsFields(
-  data: FormValues,
-  method: string,
-): FormValues {
+export function filterSettingsFields(data: FormValues, method: string): FormValues {
   const allowed = settingsMethodFields[method]
   if (!allowed) return data
 
@@ -49,6 +46,6 @@ export function applySelectAccountPrompt(data: UpdateSettingsFlowBody): void {
     data.link &&
     supportsSelectAccountPrompt.includes(data.link)
   ) {
-    data.upstream_parameters = { prompt: "select_account" }
+    data.upstream_parameters = { prompt: 'select_account' }
   }
 }

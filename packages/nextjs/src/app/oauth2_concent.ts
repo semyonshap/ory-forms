@@ -1,21 +1,21 @@
-"use server"
+'use server'
 
-import { redirect } from "next/navigation"
-import { OAuth2ConsentRequest, UiNode, UiTextTypeEnum } from "@ory/client-fetch"
+import { redirect } from 'next/navigation'
+import { OAuth2ConsentRequest, UiNode, UiTextTypeEnum } from '@ory/client-fetch'
 
-import { getServerSession } from "./session"
-import { serverSideOAuth2Client } from "./client"
-import { OAuth2ConsentFlow, QueryParams } from "../types"
-import { getPublicUrl } from "./utils"
-import { guessPotentiallyProxiedOrySdkUrl } from "../utils/sdk"
-import { redirectToErrorPage } from "../utils/error"
+import { getServerSession } from './session'
+import { serverSideOAuth2Client } from './client'
+import { OAuth2ConsentFlow, QueryParams } from '../types'
+import { getPublicUrl } from './utils'
+import { guessPotentiallyProxiedOrySdkUrl } from '../utils/sdk'
+import { redirectToErrorPage } from '../utils/error'
 
 export async function getOAuth2ConsentFlow(
   config: { project: { login_ui_url: string; error_ui_url: string } },
   params: QueryParams | Promise<QueryParams>,
 ): Promise<OAuth2ConsentFlow | null> {
   const resolved = await params
-  const consentChallenge = resolved["consent_challenge"]?.toString()
+  const consentChallenge = resolved['consent_challenge']?.toString()
 
   const baseUrl = guessPotentiallyProxiedOrySdkUrl({
     knownProxiedUrl: await getPublicUrl(),
@@ -25,7 +25,7 @@ export async function getOAuth2ConsentFlow(
     redirectToErrorPage({
       baseUrl,
       config,
-      error: new Error("Consent challenge not found in url"),
+      error: new Error('Consent challenge not found in url'),
     })
   }
 
@@ -47,8 +47,7 @@ export async function getOAuth2ConsentFlow(
       consentChallenge,
       acceptOAuth2ConsentRequest: {
         grant_scope: consentRequest.requested_scope ?? [],
-        grant_access_token_audience:
-          consentRequest.requested_access_token_audience ?? [],
+        grant_access_token_audience: consentRequest.requested_access_token_audience ?? [],
         session: {},
       },
     })
@@ -58,22 +57,22 @@ export async function getOAuth2ConsentFlow(
   const session = await getServerSession()
   if (!session) {
     const loginUrl = new URL(config.project.login_ui_url, baseUrl)
-    const lc = resolved["login_challenge"]?.toString()
-    if (lc) loginUrl.searchParams.set("login_challenge", lc)
+    const lc = resolved['login_challenge']?.toString()
+    if (lc) loginUrl.searchParams.set('login_challenge', lc)
     redirect(loginUrl.toString())
   }
 
-  const action = new URL("/custom-service/consent", baseUrl)
-  action.searchParams.set("consent_challenge", consentChallenge)
+  const action = new URL('/custom-service/consent', baseUrl)
+  action.searchParams.set('consent_challenge', consentChallenge)
 
   return {
-    id: "UNSET",
-    active: "oauth2_consent",
+    id: 'UNSET',
+    active: 'oauth2_consent',
     consent_request: consentRequest,
     session,
     ui: {
       action: action.toString(),
-      method: "POST",
+      method: 'POST',
       nodes: [
         ...scopesToUiNodes(consentRequest.requested_scope ?? []),
         rememberCheckbox,
@@ -88,8 +87,8 @@ export async function getOAuth2ConsentFlow(
 
 function scopesToUiNodes(scopes: string[]): UiNode[] {
   return scopes.map((scope) => ({
-    type: "input",
-    group: "oauth2_consent",
+    type: 'input',
+    group: 'oauth2_consent',
     meta: {
       label: {
         id: 9999111,
@@ -98,10 +97,10 @@ function scopesToUiNodes(scopes: string[]): UiNode[] {
       },
     },
     attributes: {
-      node_type: "input",
+      node_type: 'input',
       name: `grant_scope`,
       value: scope,
-      type: "checkbox",
+      type: 'checkbox',
       disabled: false,
     },
     messages: [],
@@ -110,14 +109,14 @@ function scopesToUiNodes(scopes: string[]): UiNode[] {
 
 function challengeNode(challenge: string): UiNode {
   return {
-    type: "input",
-    group: "oauth2_consent",
+    type: 'input',
+    group: 'oauth2_consent',
     meta: {},
     attributes: {
-      node_type: "input",
-      name: "consent_challenge",
+      node_type: 'input',
+      name: 'consent_challenge',
       value: challenge,
-      type: "hidden",
+      type: 'hidden',
       disabled: false,
     },
     messages: [],
@@ -125,60 +124,60 @@ function challengeNode(challenge: string): UiNode {
 }
 
 const rememberCheckbox: UiNode = {
-  type: "input",
-  group: "oauth2_consent",
+  type: 'input',
+  group: 'oauth2_consent',
   meta: {
     label: {
       id: 9999111,
-      text: "Remember my decision",
+      text: 'Remember my decision',
       type: UiTextTypeEnum.Info,
     },
   },
   attributes: {
-    node_type: "input",
-    name: "remember",
+    node_type: 'input',
+    name: 'remember',
     value: false,
-    type: "checkbox",
+    type: 'checkbox',
     disabled: false,
   },
   messages: [],
 }
 
 const acceptButton: UiNode = {
-  type: "input",
-  group: "oauth2_consent",
+  type: 'input',
+  group: 'oauth2_consent',
   meta: {
     label: {
       id: 9999111,
-      text: "Accept",
+      text: 'Accept',
       type: UiTextTypeEnum.Info,
     },
   },
   attributes: {
-    node_type: "input",
-    name: "action",
-    value: "accept",
-    type: "submit",
+    node_type: 'input',
+    name: 'action',
+    value: 'accept',
+    type: 'submit',
     disabled: false,
   },
   messages: [],
 }
 
 const rejectButton: UiNode = {
-  type: "input",
-  group: "oauth2_consent",
+  type: 'input',
+  group: 'oauth2_consent',
   meta: {
     label: {
       id: 9999111,
-      text: "Reject",
+      text: 'Reject',
       type: UiTextTypeEnum.Info,
     },
   },
   attributes: {
-    node_type: "input",
-    name: "action",
-    value: "reject",
-    type: "submit",
+    node_type: 'input',
+    name: 'action',
+    value: 'reject',
+    type: 'submit',
     disabled: false,
   },
   messages: [],

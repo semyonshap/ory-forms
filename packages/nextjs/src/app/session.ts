@@ -1,8 +1,8 @@
-"use server"
+'use server'
 
-import { Session } from "@ory/client-fetch"
-import { serverSideFrontendClient } from "./client"
-import { getCookieHeader } from "./utils"
+import { Session } from '@ory/client-fetch'
+import { serverSideFrontendClient } from './client'
+import { getCookieHeader } from './utils'
 
 export async function getServerSession(): Promise<Session | null> {
   const cookie = await getCookieHeader()

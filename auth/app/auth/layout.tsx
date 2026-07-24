@@ -1,6 +1,6 @@
 // Copyright © 2024 Ory Corp
 // SPDX-License-Identifier: Apache-2.0
-import { PropsWithChildren } from "react"
+import { PropsWithChildren } from 'react'
 
 export default function DefaultCardLayout({ children }: PropsWithChildren) {
   return (

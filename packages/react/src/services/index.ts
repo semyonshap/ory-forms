@@ -1,6 +1,6 @@
-export { onSubmitLogin } from "./onSubmitLogin"
-export { onSubmitRegistration } from "./onSubmitRegistration"
-export { onSubmitRecovery } from "./onSubmitRecovery"
-export { onSubmitSettings } from "./onSubmitSettings"
-export { onSubmitVerification } from "./onSubmitVerification"
-export { onSubmitOAuth2Consent } from "./onSubmitOAuth2Consent"
+export { onSubmitLogin } from './onSubmitLogin'
+export { onSubmitRegistration } from './onSubmitRegistration'
+export { onSubmitRecovery } from './onSubmitRecovery'
+export { onSubmitSettings } from './onSubmitSettings'
+export { onSubmitVerification } from './onSubmitVerification'
+export { onSubmitOAuth2Consent } from './onSubmitOAuth2Consent'

@@ -1,6 +1,6 @@
 export interface UpdateOAuth2ConsentFlowBody {
   consent_challenge: string
-  action: "accept" | "reject"
+  action: 'accept' | 'reject'
   grant_scope?: string[]
   remember?: boolean
 }

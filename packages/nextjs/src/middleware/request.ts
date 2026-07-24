@@ -1,13 +1,13 @@
-import { filterRequestHeaders } from "../utils/utils"
+import { filterRequestHeaders } from '../utils/utils'
 
 export function getProjectApiKey() {
-  let baseUrl = ""
+  let baseUrl = ''
 
-  if (process.env["ORY_PROJECT_API_TOKEN"]) {
-    baseUrl = process.env["ORY_PROJECT_API_TOKEN"]
+  if (process.env['ORY_PROJECT_API_TOKEN']) {
+    baseUrl = process.env['ORY_PROJECT_API_TOKEN']
   }
 
-  return baseUrl.replace(/\/$/, "")
+  return baseUrl.replace(/\/$/, '')
 }
 
 export function buildUpstreamUrl(
@@ -36,13 +36,10 @@ export async function buildUpstreamHeaders(
   selfUrl: string,
   forwardAdditionalHeaders?: string[],
 ) {
-  const headers = filterRequestHeaders(
-    await request.headers,
-    forwardAdditionalHeaders,
-  )
-  headers.set("Host", upstreamUrl.host)
-  headers.set("Ory-Base-URL-Rewrite", selfUrl.toString())
-  headers.set("Ory-Base-URL-Rewrite-Token", getProjectApiKey())
-  headers.set("Ory-No-Custom-Domain-Redirect", "true")
+  const headers = filterRequestHeaders(await request.headers, forwardAdditionalHeaders)
+  headers.set('Host', upstreamUrl.host)
+  headers.set('Ory-Base-URL-Rewrite', selfUrl.toString())
+  headers.set('Ory-Base-URL-Rewrite-Token', getProjectApiKey())
+  headers.set('Ory-No-Custom-Domain-Redirect', 'true')
   return headers
 }

@@ -1,11 +1,6 @@
-import { UiNode, UiNodeGroupEnum } from "@ory/client-fetch"
-import { OryFlowContainer } from "./container"
-import {
-  ComponentPropsWithoutRef,
-  ComponentType,
-  FormEventHandler,
-  PropsWithChildren,
-} from "react"
+import { UiNode, UiNodeGroupEnum } from '@ory/client-fetch'
+import { OryFlowContainer } from './container'
+import { ComponentPropsWithoutRef, ComponentType, FormEventHandler, PropsWithChildren } from 'react'
 import {
   FormRenderSelect,
   FormRenderInput,
@@ -18,15 +13,12 @@ import {
   FormRenderCardProps,
   FormRenderCardDivider,
   FormRenderCheckbox,
-} from "./render"
-import { OryClientConfiguration } from "./config"
+} from './render'
+import { OryClientConfiguration } from './config'
 
-export type FormValues = Record<
-  string,
-  string | boolean | number | string[] | undefined
->
+export type FormValues = Record<string, string | boolean | number | string[] | undefined>
 
-export type FormRootProps = ComponentPropsWithoutRef<"form"> & {
+export type FormRootProps = ComponentPropsWithoutRef<'form'> & {
   onSubmit: FormEventHandler<HTMLFormElement>
 }
 
@@ -36,11 +28,7 @@ export type FlowInputProps = {
   components: Partial<OryClientComponents>
 }
 
-export type NodeSorter = (
-  a: UiNode,
-  b: UiNode,
-  ctx: { flowType: string },
-) => number
+export type NodeSorter = (a: UiNode, b: UiNode, ctx: { flowType: string }) => number
 
 export type GroupSorter = (a: UiNodeGroupEnum, b: UiNodeGroupEnum) => number
 
@@ -105,12 +93,12 @@ export type OryComponents = {
 }
 
 export type OryClientComponents = {
-  Card: OryComponents["Card"]
-  Node: Omit<OryComponents["Node"], "Image" | "Password"> & {
+  Card: OryComponents['Card']
+  Node: Omit<OryComponents['Node'], 'Image' | 'Password'> & {
     Image?: ComponentType<FormRenderImageProps>
   }
   Icons?: {
-    Providers?: Partial<OryComponents["Icons"]["Providers"]>
-    System?: Partial<OryComponents["Icons"]["System"]>
+    Providers?: Partial<OryComponents['Icons']['Providers']>
+    System?: Partial<OryComponents['Icons']['System']>
   }
-} & Partial<Pick<OryComponents, "nodeSorter" | "groupSorter">>
+} & Partial<Pick<OryComponents, 'nodeSorter' | 'groupSorter'>>

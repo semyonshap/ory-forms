@@ -1,31 +1,24 @@
-import { useTranslation } from "react-i18next"
-import { useForm, useFormContext } from "react-hook-form"
+import { useTranslation } from 'react-i18next'
+import { useForm, useFormContext } from 'react-hook-form'
 
-import { Builder } from "../../lib"
-import { renderNodes } from "../render"
-import { useFormSubmit } from "../../hooks"
-import { useFlowStoreShallow } from "../../context"
-import { useMemo } from "react"
-import React from "react"
+import { Builder } from '../../lib'
+import { renderNodes } from '../render'
+import { useFormSubmit } from '../../hooks'
+import { useFlowStoreShallow } from '../../context'
+import { useMemo } from 'react'
+import React from 'react'
 
 export function FormWrapper() {
-  const {
-    config,
-    flowContainer,
-    formState,
-    Card,
-    dispatchFormState,
-    nodeSorter,
-    groupSorter,
-  } = useFlowStoreShallow((state) => ({
-    config: state.config,
-    flowContainer: state.flowContainer,
-    formState: state.formState,
-    Card: state.components.Card,
-    dispatchFormState: state.dispatchFormState,
-    nodeSorter: state.components.nodeSorter,
-    groupSorter: state.components.groupSorter,
-  }))
+  const { config, flowContainer, formState, Card, dispatchFormState, nodeSorter, groupSorter } =
+    useFlowStoreShallow((state) => ({
+      config: state.config,
+      flowContainer: state.flowContainer,
+      formState: state.formState,
+      Card: state.components.Card,
+      dispatchFormState: state.dispatchFormState,
+      nodeSorter: state.components.nodeSorter,
+      groupSorter: state.components.groupSorter,
+    }))
 
   const { setValue, getValues } = useForm()
 

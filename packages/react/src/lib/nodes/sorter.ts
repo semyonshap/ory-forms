@@ -1,9 +1,5 @@
-import {
-  isUiNodeInputAttributes,
-  UiNode,
-  UiNodeGroupEnum,
-} from "@ory/client-fetch"
-import { defaultGroupOrder, defaultNodeOrder } from "../../types"
+import { isUiNodeInputAttributes, UiNode, UiNodeGroupEnum } from '@ory/client-fetch'
+import { defaultGroupOrder, defaultNodeOrder } from '../../types'
 
 const Slot = {
   Inputs: 0,
@@ -15,7 +11,7 @@ const Slot = {
 function isUiNodeButton(node: UiNode) {
   return (
     isUiNodeInputAttributes(node.attributes) &&
-    (node.attributes.type === "submit" || node.attributes.type === "button")
+    (node.attributes.type === 'submit' || node.attributes.type === 'button')
   )
 }
 
@@ -29,19 +25,19 @@ function makeUiNodeComparator({ groupOrder = defaultNodeOrder } = {}) {
     }
     const { type } = node.attributes
 
-    if (node.group === "webauthn" && type !== "submit" && type !== "button") {
+    if (node.group === 'webauthn' && type !== 'submit' && type !== 'button') {
       return Slot.Buttons
     }
 
-    if (type === "checkbox") {
+    if (type === 'checkbox') {
       return Slot.Checkboxes
     }
 
-    if (node.group === "captcha") {
+    if (node.group === 'captcha') {
       return Slot.Captcha
     }
 
-    if (type === "submit" || type === "button") {
+    if (type === 'submit' || type === 'button') {
       return Slot.Buttons
     }
 
@@ -61,7 +57,7 @@ function makeUiNodeComparator({ groupOrder = defaultNodeOrder } = {}) {
       return ga - gb
     }
 
-    if (a.group === "webauthn" && b.group === "webauthn") {
+    if (a.group === 'webauthn' && b.group === 'webauthn') {
       const aIsButton = isUiNodeButton(a)
       const bIsButton = isUiNodeButton(b)
       if (aIsButton !== bIsButton) {
@@ -77,10 +73,7 @@ export const defaultNodeSorter = makeUiNodeComparator({
   groupOrder: defaultNodeOrder,
 })
 
-export function defaultGroupSorter(
-  a: UiNodeGroupEnum,
-  b: UiNodeGroupEnum,
-): number {
+export function defaultGroupSorter(a: UiNodeGroupEnum, b: UiNodeGroupEnum): number {
   const aGroupWeight = defaultGroupOrder.indexOf(a) ?? 999
   const bGroupWeight = defaultGroupOrder.indexOf(b) ?? 999
 

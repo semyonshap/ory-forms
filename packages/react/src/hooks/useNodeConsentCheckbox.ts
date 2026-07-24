@@ -1,11 +1,11 @@
-import { useCallback, useMemo } from "react"
-import { useFormContext } from "react-hook-form"
-import { UiNodeInput } from "../types"
+import { useCallback, useMemo } from 'react'
+import { useFormContext } from 'react-hook-form'
+import { UiNodeInput } from '../types'
 
 export function useNodeConsentCheckbox(node: UiNodeInput) {
   const attributes = node.attributes
   const { setValue, watch, formState } = useFormContext()
-  const scopes = watch("grant_scope")
+  const scopes = watch('grant_scope')
 
   const checked = useMemo(() => {
     if (Array.isArray(scopes)) {
@@ -16,16 +16,13 @@ export function useNodeConsentCheckbox(node: UiNodeInput) {
 
   const handleChange = useCallback(
     (checked: boolean) => {
-      const currentScopes = watch("grant_scope")
+      const currentScopes = watch('grant_scope')
       if (Array.isArray(currentScopes)) {
         if (checked) {
-          setValue(
-            "grant_scope",
-            Array.from(new Set([...currentScopes, attributes.value])),
-          )
+          setValue('grant_scope', Array.from(new Set([...currentScopes, attributes.value])))
         } else {
           setValue(
-            "grant_scope",
+            'grant_scope',
             currentScopes.filter((scope: string) => scope !== attributes.value),
           )
         }

@@ -1,4 +1,4 @@
-import React from "react"
+import React from 'react'
 
 const JikoIcon: React.FC<React.SVGProps<SVGSVGElement>> = ({ className }) => (
   <svg

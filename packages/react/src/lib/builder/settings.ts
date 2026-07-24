@@ -1,5 +1,5 @@
-import { TFunction } from "i18next"
-import { UiNode, UiNodeGroupEnum } from "@ory/client-fetch"
+import { TFunction } from 'i18next'
+import { UiNode, UiNodeGroupEnum } from '@ory/client-fetch'
 import {
   InputNodeData,
   isUiNodeImage,
@@ -7,54 +7,37 @@ import {
   isUiNodeText,
   UiNodeInput,
   UiNodeText,
-} from "../../types"
-import {
-  createDivGroup,
-  createInputNode,
-  createTextNode,
-  createUiText,
-} from "../nodes/factory"
+} from '../../types'
+import { createDivGroup, createInputNode, createTextNode, createUiText } from '../nodes/factory'
 
-export function SettingsBuilder(
-  group: UiNodeGroupEnum,
-  nodes: UiNode[],
-  t: TFunction,
-) {
+export function SettingsBuilder(group: UiNodeGroupEnum, nodes: UiNode[], t: TFunction) {
   let keyFooter
 
   switch (group) {
     case UiNodeGroupEnum.Totp: {
-      const unlink = nodes.find(
-        (n) => isUiNodeInput(n) && n.attributes.name === "totp_unlink",
-      )
+      const unlink = nodes.find((n) => isUiNodeInput(n) && n.attributes.name === 'totp_unlink')
 
-      keyFooter = unlink
-        ? "settings.totp.info.linked"
-        : "settings.totp.info.not-linked"
+      keyFooter = unlink ? 'settings.totp.info.linked' : 'settings.totp.info.not-linked'
 
       const secretKeyText = nodes.find(
-        (n): n is UiNodeText =>
-          isUiNodeText(n) && n.attributes.id === "totp_secret_key",
+        (n): n is UiNodeText => isUiNodeText(n) && n.attributes.id === 'totp_secret_key',
       )
-      const secretQr = nodes.find(
-        (n) => isUiNodeImage(n) && n.attributes.id === "totp_qr",
-      )
+      const secretQr = nodes.find((n) => isUiNodeImage(n) && n.attributes.id === 'totp_qr')
       const secretCode = nodes.find(
-        (n): n is UiNodeInput =>
-          isUiNodeInput(n) && n.attributes.name === "totp_code",
+        (n): n is UiNodeInput => isUiNodeInput(n) && n.attributes.name === 'totp_code',
       )
 
       if (secretKeyText && secretQr && secretCode) {
         const secretKeyInput = createInputNode({
           group,
           attributes: {
-            name: "totp_secret_key",
-            type: "text",
+            name: 'totp_secret_key',
+            type: 'text',
             disabled: false,
             value: secretKeyText.attributes.text?.text,
             label: createUiText({
               keyOrId: 1050017,
-              text: "Authenticator Secret",
+              text: 'Authenticator Secret',
               t,
             }),
           },
@@ -62,15 +45,15 @@ export function SettingsBuilder(
 
         const secretRightGroup = createDivGroup({
           id: `${group}-secret-right-div`,
-          class: "w-full flex flex-col gap-2",
-          div_type: "Div",
+          class: 'w-full flex flex-col gap-2',
+          div_type: 'Div',
           children: [secretKeyInput, secretCode],
         })
 
         const secretGroup = createDivGroup({
           id: `${group}-secret-div`,
-          class: "flex flex-row gap-4",
-          div_type: "Div",
+          class: 'flex flex-row gap-4',
+          div_type: 'Div',
           children: [secretQr, ...secretRightGroup],
         })
 
@@ -83,9 +66,9 @@ export function SettingsBuilder(
     case UiNodeGroupEnum.Oidc:
       keyFooter = `settings.${group}.info`
       nodes.forEach((n) => {
-        if (isUiNodeInput(n) && n.attributes.type === "submit") {
+        if (isUiNodeInput(n) && n.attributes.type === 'submit') {
           const data: InputNodeData = {
-            type: "oidc",
+            type: 'oidc',
           }
           n.data = { ...n.data, ...data }
         }
@@ -98,17 +81,14 @@ export function SettingsBuilder(
     }
     case UiNodeGroupEnum.LookupSecret: {
       const codesNode = nodes.find(
-        (n): n is UiNodeText =>
-          isUiNodeText(n) && n.attributes.id === "lookup_secret_codes",
+        (n): n is UiNodeText => isUiNodeText(n) && n.attributes.id === 'lookup_secret_codes',
       )
 
       if (codesNode) {
         const ctx = codesNode.attributes.text.context as Record<string, unknown>
 
         const secrets: string[] = Array.isArray(ctx?.secrets)
-          ? ctx.secrets.map((i: Record<string, unknown>) =>
-              String(i.text ?? ""),
-            )
+          ? ctx.secrets.map((i: Record<string, unknown>) => String(i.text ?? ''))
           : []
 
         const codeNodes = secrets.map((code) =>
@@ -116,7 +96,7 @@ export function SettingsBuilder(
             group,
             attributes: {
               name: code,
-              type: "text",
+              type: 'text',
               disabled: false,
               value: code,
             },
@@ -128,8 +108,8 @@ export function SettingsBuilder(
 
         const codesDiv = createDivGroup({
           id: `${group}-codes`,
-          class: "grid grid-cols-3 gap-2",
-          div_type: "Div",
+          class: 'grid grid-cols-3 gap-2',
+          div_type: 'Div',
           children: codeNodes,
         })
 
@@ -146,7 +126,7 @@ export function SettingsBuilder(
       id: `${group}-footer-description`,
       text: createUiText({
         keyOrId: keyFooter,
-        text: "",
+        text: '',
         t,
       }),
     })
@@ -158,27 +138,22 @@ export function SettingsBuilder(
   for (let i = nodes.length - 1; i >= 0; i--) {
     const n = nodes[i]
     const id = n.meta.label?.id
-    if (
-      isUiNodeInput(n) &&
-      n.attributes.type === "submit" &&
-      id &&
-      submitIds.includes(id)
-    ) {
+    if (isUiNodeInput(n) && n.attributes.type === 'submit' && id && submitIds.includes(id)) {
       if (n.meta.label?.id === 1050016) {
-        n.data = { ...n.data, variant: "cancel" }
+        n.data = { ...n.data, variant: 'cancel' }
       }
       footerChildren.push(nodes.splice(i, 1)[0])
     }
   }
 
   const footerJustify =
-    footerChildren.length === 1 && footerChildren[0].type === "text"
-      ? "justify-start"
-      : "justify-end"
+    footerChildren.length === 1 && footerChildren[0].type === 'text'
+      ? 'justify-start'
+      : 'justify-end'
 
   const submitGroup = createDivGroup({
     id: `${group}-footer`,
-    div_type: "Div",
+    div_type: 'Div',
     class: `flex ${footerJustify} gap-4 mt-2`,
     children: footerChildren,
   })
@@ -187,7 +162,7 @@ export function SettingsBuilder(
 
   return createDivGroup({
     id: `${group}-card`,
-    div_type: "SettingsCard",
+    div_type: 'SettingsCard',
     children: nodes,
     group,
   })

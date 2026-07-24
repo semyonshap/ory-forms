@@ -1,8 +1,8 @@
-import { useTranslation } from "react-i18next"
+import { useTranslation } from 'react-i18next'
 
-import { useFlowStore } from "../../context"
-import { NodeRenderText } from "../../types"
-import { uiTextToFormattedMessage } from "../../i18n"
+import { useFlowStore } from '../../context'
+import { NodeRenderText } from '../../types'
+import { uiTextToFormattedMessage } from '../../i18n'
 
 export function TextWrapper({ node, attached }: NodeRenderText) {
   const Node = useFlowStore((state) => state.components.Node)

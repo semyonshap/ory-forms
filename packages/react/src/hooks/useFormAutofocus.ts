@@ -1,17 +1,17 @@
-import { useEffect, useRef } from "react"
-import { UiNode } from "@ory/client-fetch"
-import { UseFormSetFocus } from "react-hook-form"
+import { useEffect, useRef } from 'react'
+import { UiNode } from '@ory/client-fetch'
+import { UseFormSetFocus } from 'react-hook-form'
 
-import { isNodeVisible } from "../lib/nodes"
-import { FormValues, isUiNodeInput, OryFlowType } from "../types"
+import { isNodeVisible } from '../lib/nodes'
+import { FormValues, isUiNodeInput, OryFlowType } from '../types'
 
 function pickAutofocusField(nodes: UiNode[]): string | undefined {
   const node = nodes.find((node) => {
     return (
       isNodeVisible(node) &&
-      (node.attributes.type === "text" ||
-        node.attributes.type === "email" ||
-        node.attributes.type === "password")
+      (node.attributes.type === 'text' ||
+        node.attributes.type === 'email' ||
+        node.attributes.type === 'password')
     )
   })
   if (!node || !isUiNodeInput(node)) {

@@ -1,13 +1,13 @@
-import { createStore } from "zustand"
-import { createContext, Dispatch } from "react"
+import { createStore } from 'zustand'
+import { createContext, Dispatch } from 'react'
 import {
   OryConfiguration,
   OryFlowContainer,
   FormState,
   FormStateAction,
   OryComponents,
-} from "../types"
-import { updateFormState, initFormState } from "../lib/form"
+} from '../types'
+import { updateFormState, initFormState } from '../lib/form'
 
 export interface FlowStoreState {
   config: OryConfiguration
@@ -21,10 +21,7 @@ export interface FlowStoreState {
 export type FlowStore = ReturnType<typeof createFlowStore>
 
 export const createFlowStore = (
-  initProps: Omit<
-    FlowStoreState,
-    "formState" | "setFlowContainer" | "dispatchFormState"
-  >,
+  initProps: Omit<FlowStoreState, 'formState' | 'setFlowContainer' | 'dispatchFormState'>,
 ) => {
   return createStore<FlowStoreState>((set) => ({
     ...initProps,
@@ -35,7 +32,7 @@ export const createFlowStore = (
         ...state,
         flowContainer: flow,
         formState: updateFormState(state.formState, {
-          type: "action_flow_update",
+          type: 'action_flow_update',
           flow,
         }),
       }))

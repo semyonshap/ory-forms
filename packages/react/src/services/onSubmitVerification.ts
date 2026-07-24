@@ -1,16 +1,12 @@
-import {
-  UpdateVerificationFlowBody,
-  VerificationFlow,
-  verificationUrl,
-} from "@ory/client-fetch"
+import { UpdateVerificationFlowBody, VerificationFlow, verificationUrl } from '@ory/client-fetch'
 import {
   OryFlowType,
   OryConfiguration,
   OryFlowContainer,
   OnSubmitHandlerPropsWithFlow,
-} from "../types"
-import { handleFlowError, replaceWindowFlowId } from "../utils"
-import { flowHasErrors } from "../lib"
+} from '../types'
+import { handleFlowError, replaceWindowFlowId } from '../utils'
+import { flowHasErrors } from '../lib'
 
 export async function onSubmitVerification(
   { flow }: OryFlowContainer,

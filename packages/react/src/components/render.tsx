@@ -1,8 +1,8 @@
-import { ReactNode } from "react"
+import { ReactNode } from 'react'
 
-import { Node } from "./node"
-import { getNodeId } from "../lib"
-import { FormContext, FormNode, isUiNodeDiv } from "../types"
+import { Node } from './node'
+import { getNodeId } from '../lib'
+import { FormContext, FormNode, isUiNodeDiv } from '../types'
 
 export type OutputNode = {
   node: FormNode
@@ -45,21 +45,12 @@ function renderRange(
       }
 
       if (!!divType && !!divEnd) {
-        const { result: children, nextIndex } = renderRange(
-          nodes,
-          contextMap,
-          i + 1,
-          divEnd,
-        )
+        const { result: children, nextIndex } = renderRange(nodes, contextMap, i + 1, divEnd)
 
         result.push({
           node,
           element: (
-            <Node
-              key={getNodeId(node)}
-              node={node}
-              attached={children.map((c) => c.element)}
-            />
+            <Node key={getNodeId(node)} node={node} attached={children.map((c) => c.element)} />
           ),
         })
         i = nextIndex
@@ -72,7 +63,7 @@ function renderRange(
       continue
     }
 
-    const name = "name" in node.attributes && node.attributes.name
+    const name = 'name' in node.attributes && node.attributes.name
     const attached = name ? contextMap[name] : undefined
 
     result.push({

@@ -1,9 +1,9 @@
 /* Copyright © 2024 Ory Corp */
 /* SPDX-License-Identifier: Apache-2.0 */
 
-@import "tailwindcss";
+@import 'tailwindcss';
 
-@import "tw-animate-css";
+@import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
 

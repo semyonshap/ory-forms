@@ -1,16 +1,14 @@
-"use server"
+'use server'
 
-import { LogoutFlow } from "@ory/client-fetch"
+import { LogoutFlow } from '@ory/client-fetch'
 
-import { headers } from "next/headers"
-import { rewriteJsonResponse } from "../utils/rewrite"
-import { guessPotentiallyProxiedOrySdkUrl } from "../utils/sdk"
-import { serverSideFrontendClient } from "./client"
-import { getPublicUrl } from "./utils"
+import { headers } from 'next/headers'
+import { rewriteJsonResponse } from '../utils/rewrite'
+import { guessPotentiallyProxiedOrySdkUrl } from '../utils/sdk'
+import { serverSideFrontendClient } from './client'
+import { getPublicUrl } from './utils'
 
-export async function getLogoutFlow({
-  returnTo,
-}: { returnTo?: string } = {}): Promise<LogoutFlow> {
+export async function getLogoutFlow({ returnTo }: { returnTo?: string } = {}): Promise<LogoutFlow> {
   const h = await headers()
 
   const knownProxiedUrl = await getPublicUrl()
@@ -19,7 +17,7 @@ export async function getLogoutFlow({
   })
   return serverSideFrontendClient()
     .createBrowserLogoutFlow({
-      cookie: h.get("cookie") ?? "",
+      cookie: h.get('cookie') ?? '',
       returnTo,
     })
     .then((v: LogoutFlow): LogoutFlow => rewriteJsonResponse(v, url))

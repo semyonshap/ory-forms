@@ -1,17 +1,10 @@
-import {
-  isArray,
-  isObject,
-  isString,
-  isNil,
-  isEmpty,
-  transform,
-} from "lodash-es"
+import { isArray, isObject, isString, isNil, isEmpty, transform } from 'lodash-es'
 
 export function removeEmptyStrings<T>(input: T): T {
   if (isArray(input)) {
     const cleaned = input.map((item) => removeEmptyStrings(item))
     return cleaned.filter(
-      (item) => !(isString(item) && item === "") && !isNil(item),
+      (item) => !(isString(item) && item === '') && !isNil(item),
     ) as unknown as T
   }
 
@@ -32,7 +25,7 @@ export function removeEmptyStrings<T>(input: T): T {
         if (!isEmpty(cleaned)) {
           acc[key] = cleaned
         }
-      } else if (isString(value) && value === "") {
+      } else if (isString(value) && value === '') {
       } else if (!isNil(value)) {
         acc[key] = value
       }

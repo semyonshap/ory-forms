@@ -1,19 +1,12 @@
-import {
-  Configuration,
-  ConfigurationParameters,
-  FrontendApi,
-} from "@ory/client-fetch"
+import { Configuration, ConfigurationParameters, FrontendApi } from '@ory/client-fetch'
 
-export function frontendClient(
-  sdkUrl: string,
-  opts: Partial<ConfigurationParameters> = {},
-) {
+export function frontendClient(sdkUrl: string, opts: Partial<ConfigurationParameters> = {}) {
   const config = new Configuration({
     ...opts,
-    basePath: sdkUrl.replace(/\/$/, ""),
-    credentials: "include",
+    basePath: sdkUrl.replace(/\/$/, ''),
+    credentials: 'include',
     headers: {
-      Accept: "application/json",
+      Accept: 'application/json',
     },
   })
 

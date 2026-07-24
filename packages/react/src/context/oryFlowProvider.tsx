@@ -1,8 +1,8 @@
-import { useState } from "react"
+import { useState } from 'react'
 
-import { FlowInputProps } from "../types"
-import { createFlowStore, FlowStoreContext } from "./oryStore"
-import { computeSdkConfig, computeComponents } from "../utils"
+import { FlowInputProps } from '../types'
+import { createFlowStore, FlowStoreContext } from './oryStore'
+import { computeSdkConfig, computeComponents } from '../utils'
 
 interface OryFlowProviderProps extends FlowInputProps {
   children: React.ReactNode
@@ -27,9 +27,5 @@ export function OryFlowProvider({
     }),
   )
 
-  return (
-    <FlowStoreContext.Provider value={store}>
-      {children}
-    </FlowStoreContext.Provider>
-  )
+  return <FlowStoreContext.Provider value={store}>{children}</FlowStoreContext.Provider>
 }

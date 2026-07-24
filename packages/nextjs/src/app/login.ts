@@ -1,12 +1,12 @@
-"use server"
+'use server'
 
-import { FlowType, LoginFlow } from "@ory/client-fetch"
+import { FlowType, LoginFlow } from '@ory/client-fetch'
 
-import { initOverrides, QueryParams } from "../types"
-import { guessPotentiallyProxiedOrySdkUrl } from "../utils/sdk"
-import { serverSideFrontendClient } from "./client"
-import { getFlowFactory } from "./flow"
-import { getPublicUrl, toGetFlowParameter } from "./utils"
+import { initOverrides, QueryParams } from '../types'
+import { guessPotentiallyProxiedOrySdkUrl } from '../utils/sdk'
+import { serverSideFrontendClient } from './client'
+import { getFlowFactory } from './flow'
+import { getPublicUrl, toGetFlowParameter } from './utils'
 
 export async function getLoginFlow(
   config: { project: { login_ui_url: string } },
@@ -15,10 +15,7 @@ export async function getLoginFlow(
   return getFlowFactory(
     await params,
     async () =>
-      serverSideFrontendClient().getLoginFlowRaw(
-        await toGetFlowParameter(params),
-        initOverrides,
-      ),
+      serverSideFrontendClient().getLoginFlowRaw(await toGetFlowParameter(params), initOverrides),
     FlowType.Login,
     guessPotentiallyProxiedOrySdkUrl({
       knownProxiedUrl: await getPublicUrl(),

@@ -1,9 +1,4 @@
-import {
-  OAuth2ConsentRequest,
-  OAuth2LogoutRequest,
-  Session,
-  UiContainer,
-} from "@ory/client-fetch"
+import { OAuth2ConsentRequest, OAuth2LogoutRequest, Session, UiContainer } from '@ory/client-fetch'
 
 export type QueryParams = { [key: string]: string | string[] | undefined }
 
@@ -12,7 +7,7 @@ export interface OryPageParams {
 }
 
 export const initOverrides: RequestInit = {
-  cache: "no-cache",
+  cache: 'no-cache',
 }
 
 export type OryError = {
@@ -33,7 +28,7 @@ export type FlowParams = {
 
 export type ErrorFlow = {
   id: string
-  active: "error"
+  active: 'error'
   ui: UiContainer
   session: Session | null
   return_to?: string
@@ -41,16 +36,16 @@ export type ErrorFlow = {
 }
 
 export type NavigationFlow = {
-  id: "UNSET"
-  active: "navigation"
+  id: 'UNSET'
+  active: 'navigation'
   ui: UiContainer
   session: Session | null
   return_to?: string
 }
 
 export type OAuth2ConsentFlow = {
-  id: "UNSET"
-  active: "oauth2_consent"
+  id: 'UNSET'
+  active: 'oauth2_consent'
   ui: UiContainer
   session: Session
   return_to?: string
@@ -58,8 +53,8 @@ export type OAuth2ConsentFlow = {
 }
 
 export type OAuth2LogoutFlow = {
-  id: "UNSET"
-  active: "oauth2_logout"
+  id: 'UNSET'
+  active: 'oauth2_logout'
   ui: UiContainer
   return_to?: string
   logout_request: OAuth2LogoutRequest

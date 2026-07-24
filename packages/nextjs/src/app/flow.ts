@@ -1,10 +1,10 @@
-import { redirect, RedirectType } from "next/navigation"
-import { FlowType, handleFlowError, ApiResponse } from "@ory/client-fetch"
+import { redirect, RedirectType } from 'next/navigation'
+import { FlowType, handleFlowError, ApiResponse } from '@ory/client-fetch'
 
-import { QueryParams } from "../types"
-import { startNewFlow, onRedirect } from "./utils"
-import { onValidationError } from "../utils/utils"
-import { rewriteJsonResponse } from "../utils/rewrite"
+import { QueryParams } from '../types'
+import { startNewFlow, onRedirect } from './utils'
+import { onValidationError } from '../utils/utils'
+import { rewriteJsonResponse } from '../utils/rewrite'
 
 export async function getFlowFactory<T extends object>(
   params: QueryParams,
@@ -29,16 +29,14 @@ export async function getFlowFactory<T extends object>(
     return redirect(redirectTo.toString(), RedirectType.replace)
   }
 
-  if (!params["flow"]) {
+  if (!params['flow']) {
     return onRestartFlow()
   }
 
   try {
     const rawResponse = await fetchFlowRaw()
     const parsed = await rawResponse.value()
-    return options.disableRewrite
-      ? parsed
-      : rewriteJsonResponse(parsed, baseUrl)
+    return options.disableRewrite ? parsed : rewriteJsonResponse(parsed, baseUrl)
   } catch (error) {
     const errorHandler = handleFlowError({
       onValidationError,

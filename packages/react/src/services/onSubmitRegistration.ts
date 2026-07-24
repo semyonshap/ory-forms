@@ -3,15 +3,15 @@ import {
   RegistrationFlow,
   registrationUrl,
   UpdateRegistrationFlowBody,
-} from "@ory/client-fetch"
+} from '@ory/client-fetch'
 import {
   OryFlowType,
   OryConfiguration,
   RegistrationFlowContainer,
   OnSubmitHandlerPropsWithFlow,
-} from "../types"
-import { handleFlowError, replaceWindowFlowId } from "../utils"
-import { flowHasErrors } from "../lib"
+} from '../types'
+import { handleFlowError, replaceWindowFlowId } from '../utils'
+import { flowHasErrors } from '../lib'
 
 export async function onSubmitRegistration(
   { flow }: RegistrationFlowContainer,

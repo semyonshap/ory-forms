@@ -10,7 +10,7 @@ import {
   UiNodeTypeEnum,
   UiText,
   UiTextTypeEnum,
-} from "@ory/client-fetch"
+} from '@ory/client-fetch'
 
 interface CreateNodeParams {
   type: UiNodeTypeEnum
@@ -36,41 +36,29 @@ export function createNode({
   }
 }
 
-interface CreateInputNodeParams extends Omit<
-  CreateNodeParams,
-  "type" | "attributes"
-> {
-  attributes: Omit<UiNodeInputAttributes, "node_type" | "disabled"> & {
+interface CreateInputNodeParams extends Omit<CreateNodeParams, 'type' | 'attributes'> {
+  attributes: Omit<UiNodeInputAttributes, 'node_type' | 'disabled'> & {
     disabled?: boolean
   }
 }
 
-export function createInputNode({
-  attributes,
-  ...extra
-}: CreateInputNodeParams) {
+export function createInputNode({ attributes, ...extra }: CreateInputNodeParams) {
   return createNode({
     attributes: {
       ...attributes,
       disabled: attributes.disabled ?? false,
-      node_type: "input",
+      node_type: 'input',
     },
     type: UiNodeTypeEnum.Input,
     ...extra,
   })
 }
 
-interface CreateAnchorNodeParams extends Omit<
-  CreateNodeParams,
-  "type" | "attributes"
-> {
-  attributes: Omit<UiNodeAnchorAttributes, "node_type">
+interface CreateAnchorNodeParams extends Omit<CreateNodeParams, 'type' | 'attributes'> {
+  attributes: Omit<UiNodeAnchorAttributes, 'node_type'>
 }
 
-export function createAnchorNode({
-  attributes,
-  ...rest
-}: CreateAnchorNodeParams) {
+export function createAnchorNode({ attributes, ...rest }: CreateAnchorNodeParams) {
   return createNode({
     type: UiNodeTypeEnum.A,
     attributes: {
@@ -102,18 +90,15 @@ export function createUiText({
   }
 }
 
-interface CreateTextNodeParams extends Omit<
-  CreateNodeParams,
-  "type" | "attributes"
-> {
-  attributes: Omit<UiNodeTextAttributes, "node_type">
+interface CreateTextNodeParams extends Omit<CreateNodeParams, 'type' | 'attributes'> {
+  attributes: Omit<UiNodeTextAttributes, 'node_type'>
 }
 
 export function createTextNode({ attributes, ...extra }: CreateTextNodeParams) {
   return createNode({
     attributes: {
       ...attributes,
-      node_type: "text",
+      node_type: 'text',
     },
     type: UiNodeTypeEnum.Text,
     ...extra,

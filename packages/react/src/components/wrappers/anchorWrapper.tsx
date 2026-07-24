@@ -1,10 +1,10 @@
-import { useTranslation } from "react-i18next"
-import { getNodeLabel, UiNodeAnchorAttributes } from "@ory/client-fetch"
+import { useTranslation } from 'react-i18next'
+import { getNodeLabel, UiNodeAnchorAttributes } from '@ory/client-fetch'
 
-import { useFlowStore } from "../../context"
-import { omitInputAttributes } from "../../utils"
-import { NodeRenderAnchor } from "../../types"
-import { uiTextToFormattedMessage } from "../../i18n"
+import { useFlowStore } from '../../context'
+import { omitInputAttributes } from '../../utils'
+import { NodeRenderAnchor } from '../../types'
+import { uiTextToFormattedMessage } from '../../i18n'
 
 export function AnchorWrapper({ node, attached }: NodeRenderAnchor) {
   const Node = useFlowStore((state) => state.components.Node)
@@ -18,7 +18,7 @@ export function AnchorWrapper({ node, attached }: NodeRenderAnchor) {
     <Node.Anchor
       node={node}
       props={{ ...props }}
-      options={{ label: formattedLabel, variant: node.data?.variant || "button" }}
+      options={{ label: formattedLabel, variant: node.data?.variant || 'button' }}
       attached={attached}
     />
   )

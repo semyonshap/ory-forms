@@ -1,30 +1,27 @@
-import { UiNodeInputAttributes } from "@ory/client-fetch"
-import { useCallback, useEffect, useState } from "react"
-import { useEventListener, useTimeout } from "usehooks-ts"
-import { triggerToFunction } from "../lib/nodes"
+import { UiNodeInputAttributes } from '@ory/client-fetch'
+import { useCallback, useEffect, useState } from 'react'
+import { useEventListener, useTimeout } from 'usehooks-ts'
+import { triggerToFunction } from '../lib/nodes'
 
 interface UsePasskeyOptions {
   passkeyNode: { attributes: UiNodeInputAttributes }
   disabled?: boolean
 }
 
-export function useMethodPasskey({
-  passkeyNode,
-  disabled = false,
-}: UsePasskeyOptions) {
+export function useMethodPasskey({ passkeyNode, disabled = false }: UsePasskeyOptions) {
   const [isInitialized, setIsInitialized] = useState(false)
   const [failedToLoad, setFailedToLoad] = useState(false)
 
   useEffect(() => {
     if (!passkeyNode.attributes.onclickTrigger) {
-      console.error("Passkey node does not have onclickTrigger")
+      console.error('Passkey node does not have onclickTrigger')
       return
     }
     const fn = triggerToFunction(passkeyNode.attributes.onclickTrigger)
-    setIsInitialized(typeof fn === "function")
+    setIsInitialized(typeof fn === 'function')
   }, [passkeyNode])
 
-  useEventListener("oryWebAuthnInitialized" as keyof WindowEventMap, () => {
+  useEventListener('oryWebAuthnInitialized' as keyof WindowEventMap, () => {
     setIsInitialized(true)
   })
 
@@ -36,14 +33,14 @@ export function useMethodPasskey({
 
   const handleClick = useCallback(() => {
     if (!passkeyNode.attributes.onclickTrigger) {
-      console.error("Passkey node does not have onclickTrigger")
+      console.error('Passkey node does not have onclickTrigger')
       return
     }
     const fn = triggerToFunction(passkeyNode.attributes.onclickTrigger)
     if (fn) {
       fn()
     } else {
-      console.error("Passkey node trigger function not found")
+      console.error('Passkey node trigger function not found')
     }
   }, [passkeyNode])
 

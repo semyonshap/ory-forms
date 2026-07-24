@@ -1,14 +1,14 @@
-"use server"
+'use server'
 
-import { redirect } from "next/navigation"
-import { OAuth2LoginRequest } from "@ory/client-fetch"
+import { redirect } from 'next/navigation'
+import { OAuth2LoginRequest } from '@ory/client-fetch'
 
-import { getServerSession } from "./session"
-import { serverSideOAuth2Client } from "./client"
-import { QueryParams } from "../types"
-import { getPublicUrl } from "./utils"
-import { guessPotentiallyProxiedOrySdkUrl } from "../utils/sdk"
-import { redirectToErrorPage } from "../utils/error"
+import { getServerSession } from './session'
+import { serverSideOAuth2Client } from './client'
+import { QueryParams } from '../types'
+import { getPublicUrl } from './utils'
+import { guessPotentiallyProxiedOrySdkUrl } from '../utils/sdk'
+import { redirectToErrorPage } from '../utils/error'
 
 export async function getOAuth2LoginFlow(
   config: {
@@ -21,7 +21,7 @@ export async function getOAuth2LoginFlow(
   params: QueryParams | Promise<QueryParams>,
 ): Promise<OAuth2LoginRequest | null> {
   const resolved = await params
-  const loginChallenge = resolved["login_challenge"]?.toString()
+  const loginChallenge = resolved['login_challenge']?.toString()
 
   const baseUrl = guessPotentiallyProxiedOrySdkUrl({
     knownProxiedUrl: await getPublicUrl(),
@@ -31,7 +31,7 @@ export async function getOAuth2LoginFlow(
     redirectToErrorPage({
       baseUrl,
       config,
-      error: new Error("Missing login_challenge in URL"),
+      error: new Error('Missing login_challenge in URL'),
     })
   }
 
@@ -72,10 +72,10 @@ export async function getOAuth2LoginFlow(
   const { login_ui_url, oauth2_login_ui_url } = config.project
 
   const returnTo = new URL(oauth2_login_ui_url, baseUrl)
-  returnTo.searchParams.set("login_challenge", loginChallenge)
+  returnTo.searchParams.set('login_challenge', loginChallenge)
 
   const loginUrl = new URL(login_ui_url, await getPublicUrl())
-  loginUrl.searchParams.set("return_to", returnTo.toString())
+  loginUrl.searchParams.set('return_to', returnTo.toString())
 
   redirect(loginUrl.toString())
 }

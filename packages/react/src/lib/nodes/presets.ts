@@ -1,6 +1,6 @@
-import { initFlowUrl } from "../../utils"
-import { BuildContext, isUiNodeInput } from "../../types"
-import { BuildReturnTo } from "./logout"
+import { initFlowUrl } from '../../utils'
+import { BuildContext, isUiNodeInput } from '../../types'
+import { BuildReturnTo } from './logout'
 import {
   createAnchorNode,
   createInputNode,
@@ -8,7 +8,7 @@ import {
   createDivNode,
   createTextNode,
   createUiText,
-} from "./factory"
+} from './factory'
 
 export function BuildSignUp({
   config: {
@@ -18,31 +18,31 @@ export function BuildSignUp({
   t,
 }: BuildContext) {
   const nodeTextSignUpLabel = createTextNode({
-    id: "registration-label",
+    id: 'registration-label',
     text: createUiText({
-      keyOrId: "login.registration-label",
+      keyOrId: 'login.registration-label',
       text: "Don't have an account?",
       t,
     }),
   })
 
   const nodeAnchorSignUp = createAnchorNode({
-    id: "registration-button",
-    href: initFlowUrl(sdkUrl, "registration", flow),
+    id: 'registration-button',
+    href: initFlowUrl(sdkUrl, 'registration', flow),
     title: createUiText({
-      keyOrId: "login.registration-button",
-      text: "Sign up",
+      keyOrId: 'login.registration-button',
+      text: 'Sign up',
       t,
     }),
     data: {
-      variant: "link"
-    }
+      variant: 'link',
+    },
   })
 
   return createDivGroup({
-    id: "registration-div",
-    class: "inline-flex gap-2",
-    div_type: "Div",
+    id: 'registration-div',
+    class: 'inline-flex gap-2',
+    div_type: 'Div',
     children: [nodeTextSignUpLabel, nodeAnchorSignUp],
   })
 }
@@ -50,53 +50,45 @@ export function BuildSignUp({
 export function BuildDivider() {
   return createDivNode({
     id: `divider-${crypto.randomUUID()}`,
-    div_type: "DividerCard",
+    div_type: 'DividerCard',
   })
 }
 
-export function BuildRecover({
-  config,
-  flowContainer: { flow },
-  t,
-}: BuildContext) {
+export function BuildRecover({ config, flowContainer: { flow }, t }: BuildContext) {
   const identifierNode = flow.ui.nodes
     .filter(isUiNodeInput)
-    .find((n) => n.attributes.name === "identifier")
+    .find((n) => n.attributes.name === 'identifier')
 
   if (!identifierNode) return null
 
   return createAnchorNode({
-    id: "recover-anchor",
-    href: initFlowUrl(config.sdk.url, "recovery", flow),
+    id: 'recover-anchor',
+    href: initFlowUrl(config.sdk.url, 'recovery', flow),
     title: createUiText({
-      keyOrId: "forms.label.recover-account",
-      text: "Recover Account",
+      keyOrId: 'forms.label.recover-account',
+      text: 'Recover Account',
       t,
     }),
-    data: { target: identifierNode.attributes.name, variant: "link" },
+    data: { target: identifierNode.attributes.name, variant: 'link' },
   })
 }
 
-export function BuildForgotPassword({
-  config,
-  flowContainer: { flow },
-  t,
-}: BuildContext) {
+export function BuildForgotPassword({ config, flowContainer: { flow }, t }: BuildContext) {
   const passwordNode = flow.ui.nodes
     .filter(isUiNodeInput)
-    .find((n) => n.attributes.type === "password")
+    .find((n) => n.attributes.type === 'password')
 
   if (!passwordNode) return null
 
   return createAnchorNode({
-    id: "recover-anchor",
-    href: initFlowUrl(config.sdk.url, "recovery", flow),
+    id: 'recover-anchor',
+    href: initFlowUrl(config.sdk.url, 'recovery', flow),
     title: createUiText({
-      keyOrId: "forms.label.forgot-password",
-      text: "Forgot Password?",
+      keyOrId: 'forms.label.forgot-password',
+      text: 'Forgot Password?',
       t,
     }),
-    data: { target: passwordNode.attributes.name, variant: "link" },
+    data: { target: passwordNode.attributes.name, variant: 'link' },
   })
 }
 
@@ -108,18 +100,18 @@ export function BuildChooseMethod({
 }) {
   return createInputNode({
     attributes: {
-      name: "choose-method-button",
-      type: "button",
+      name: 'choose-method-button',
+      type: 'button',
       disabled: false,
     },
     data: {
       onClick,
-      variant: "link",
+      variant: 'link',
     },
     meta: {
       label: createUiText({
-        keyOrId: "login.2fa.method.go-back",
-        text: "Choose another method",
+        keyOrId: 'login.2fa.method.go-back',
+        text: 'Choose another method',
         t,
       }),
     },
@@ -134,18 +126,18 @@ export function BuildSelectAnother({
 }) {
   return createInputNode({
     attributes: {
-      name: "select-another-button",
+      name: 'select-another-button',
       disabled: false,
-      type: "button",
+      type: 'button',
     },
     data: {
       onClick,
-      variant: "link",
+      variant: 'link',
     },
     meta: {
       label: createUiText({
-        keyOrId: "card.footer.select-another-method",
-        text: "Select another method",
+        keyOrId: 'card.footer.select-another-method',
+        text: 'Select another method',
         t,
       }),
     },
@@ -158,11 +150,11 @@ export function BuildGoBackCode(ctx: BuildContext) {
   const { t } = ctx
 
   return createAnchorNode({
-    id: "go-back-anchor",
+    id: 'go-back-anchor',
     href: returnTo,
     title: createUiText({
-      keyOrId: "login.2fa.go-back.link",
-      text: "Go back",
+      keyOrId: 'login.2fa.go-back.link',
+      text: 'Go back',
       t,
     }),
   })
@@ -176,31 +168,31 @@ export function BuildSignIn({
   t,
 }: BuildContext) {
   const nodeTextSignInLabel = createTextNode({
-    id: "login-label",
+    id: 'login-label',
     text: createUiText({
-      keyOrId: "registration.login-label",
-      text: "Already have an account?",
+      keyOrId: 'registration.login-label',
+      text: 'Already have an account?',
       t,
     }),
   })
 
   const nodeAnchorSignIn = createAnchorNode({
-    id: "login-button",
-    href: initFlowUrl(sdkUrl, "login", flow),
+    id: 'login-button',
+    href: initFlowUrl(sdkUrl, 'login', flow),
     title: createUiText({
-      keyOrId: "registration.login-button",
-      text: "Sign in",
+      keyOrId: 'registration.login-button',
+      text: 'Sign in',
       t,
     }),
     data: {
-      variant: "link",
+      variant: 'link',
     },
   })
 
   return createDivGroup({
-    id: "login-div",
-    class: "inline-flex gap-2",
-    div_type: "Div",
+    id: 'login-div',
+    class: 'inline-flex gap-2',
+    div_type: 'Div',
     children: [nodeTextSignInLabel, nodeAnchorSignIn],
   })
 }

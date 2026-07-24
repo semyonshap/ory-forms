@@ -1,6 +1,6 @@
-import { LogoutFlow } from "@ory/client-fetch"
-import { useCallback, useEffect, useState } from "react"
-import { OryConfiguration } from "../types"
+import { LogoutFlow } from '@ory/client-fetch'
+import { useCallback, useEffect, useState } from 'react'
+import { OryConfiguration } from '../types'
 
 export function onLogout(config: OryConfiguration) {
   const [logoutFlow, setLogoutFlow] = useState<LogoutFlow | undefined>()
@@ -8,14 +8,12 @@ export function onLogout(config: OryConfiguration) {
 
   const fetchLogoutFlow = useCallback(async () => {
     try {
-      const flow = await config.sdk.frontend
-        .createBrowserLogoutFlow()
-        .catch((err) => {
-          if (err.response?.status !== 401) {
-            throw err
-          }
-          return undefined
-        })
+      const flow = await config.sdk.frontend.createBrowserLogoutFlow().catch((err) => {
+        if (err.response?.status !== 401) {
+          throw err
+        }
+        return undefined
+      })
       setLogoutFlow(flow)
     } finally {
       setIsLoading(false)

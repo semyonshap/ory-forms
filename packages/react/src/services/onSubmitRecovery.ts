@@ -7,15 +7,15 @@ import {
   RecoveryFlow,
   recoveryUrl,
   UpdateRecoveryFlowBody,
-} from "@ory/client-fetch"
+} from '@ory/client-fetch'
 import {
   OryFlowType,
   OryConfiguration,
   OryFlowContainer,
   OnSubmitHandlerPropsWithFlow,
-} from "../types"
-import { handleFlowError, replaceWindowFlowId } from "../utils"
-import { flowHasErrors } from "../lib"
+} from '../types'
+import { handleFlowError, replaceWindowFlowId } from '../utils'
+import { flowHasErrors } from '../lib'
 
 export async function onSubmitRecovery(
   { flow }: OryFlowContainer,
@@ -68,10 +68,8 @@ export async function onSubmitRecovery(
             onRedirect(recoveryUrl(config), true)
           }
         },
-        onValidationError: async (
-          body: RecoveryFlow | { error: GenericError },
-        ) => {
-          if ("error" in body) {
+        onValidationError: async (body: RecoveryFlow | { error: GenericError }) => {
+          if ('error' in body) {
             handleContinueWithRecoveryUIError(body.error, config, onRedirect)
             return
           } else {
@@ -100,20 +98,12 @@ function handleContinueWithRecoveryUIError(
   config: OryConfiguration,
   onRedirect: OnRedirectHandler,
 ) {
-  if (
-    "continue_with" in error.details &&
-    Array.isArray(error.details.continue_with)
-  ) {
-    const continueWithRecovery = (
-      error.details.continue_with as ContinueWith[]
-    ).find(instanceOfContinueWithRecoveryUi)
-    if (continueWithRecovery?.action === "show_recovery_ui") {
-      onRedirect(
-        config.project.recovery_ui_url +
-          "?flow=" +
-          continueWithRecovery?.flow.id,
-        false,
-      )
+  if ('continue_with' in error.details && Array.isArray(error.details.continue_with)) {
+    const continueWithRecovery = (error.details.continue_with as ContinueWith[]).find(
+      instanceOfContinueWithRecoveryUi,
+    )
+    if (continueWithRecovery?.action === 'show_recovery_ui') {
+      onRedirect(config.project.recovery_ui_url + '?flow=' + continueWithRecovery?.flow.id, false)
       return
     }
   }

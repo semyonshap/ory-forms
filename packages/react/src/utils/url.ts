@@ -1,10 +1,7 @@
-function buildUrl(
-  base: string,
-  params: Record<string, string | undefined | null>,
-): string {
+function buildUrl(base: string, params: Record<string, string | undefined | null>): string {
   const url = new URL(base)
   for (const [key, value] of Object.entries(params)) {
-    if (value !== undefined && value !== null && value !== "") {
+    if (value !== undefined && value !== null && value !== '') {
       url.searchParams.set(key, value)
     }
   }
@@ -39,9 +36,9 @@ export function initFlowUrl(
   const base = `${sdkUrl}/self-service/${flowType}/browser`
 
   let returnTo = flow.return_to
-  if (!returnTo && typeof window !== "undefined") {
+  if (!returnTo && typeof window !== 'undefined') {
     const params = new URLSearchParams(window.location.search)
-    const fromQuery = params.get("return_to")
+    const fromQuery = params.get('return_to')
     if (fromQuery) returnTo = fromQuery
   }
 
@@ -54,6 +51,6 @@ export function initFlowUrl(
 
 export function replaceWindowFlowId(flow: string) {
   const url = new URL(window.location.href)
-  url.searchParams.set("flow", flow)
+  url.searchParams.set('flow', flow)
   window.location.href = url.toString()
 }

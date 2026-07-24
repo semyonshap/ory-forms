@@ -7,7 +7,7 @@ import {
   UiNodeTypeEnum,
   UiText,
   UiTextTypeEnum,
-} from "@ory/client-fetch"
+} from '@ory/client-fetch'
 import {
   FormNode,
   UiNodeAnchor,
@@ -19,8 +19,8 @@ import {
   DivDataType,
   DivAttributesData,
   AnchorNodeData,
-} from "../../types"
-import { TFunction } from "i18next"
+} from '../../types'
+import { TFunction } from 'i18next'
 
 interface CreateUiNodeParams {
   type: UiNodeTypeEnum
@@ -49,10 +49,7 @@ export function createUiNode({
   }
 }
 
-interface CreateAnchorNodeParams extends Omit<
-  CreateUiNodeParams,
-  "type" | "attributes" | "data"
-> {
+interface CreateAnchorNodeParams extends Omit<CreateUiNodeParams, 'type' | 'attributes' | 'data'> {
   id: string
   href: string
   title: UiText
@@ -66,7 +63,7 @@ export function createAnchorNode({
   ...rest
 }: CreateAnchorNodeParams): UiNodeAnchor {
   const attributes = {
-    node_type: "a" as const,
+    node_type: 'a' as const,
     id,
     href,
     title,
@@ -79,21 +76,14 @@ export function createAnchorNode({
   }) as UiNodeAnchor
 }
 
-export interface CreateTextNodeParams extends Omit<
-  CreateUiNodeParams,
-  "type" | "attributes"
-> {
+export interface CreateTextNodeParams extends Omit<CreateUiNodeParams, 'type' | 'attributes'> {
   id: string
   text: UiText
 }
 
-export function createTextNode({
-  id,
-  text,
-  ...rest
-}: CreateTextNodeParams): UiNodeText {
+export function createTextNode({ id, text, ...rest }: CreateTextNodeParams): UiNodeText {
   const attributes = {
-    node_type: "text" as const,
+    node_type: 'text' as const,
     id,
     text,
   }
@@ -105,11 +95,8 @@ export function createTextNode({
   }) as UiNodeText
 }
 
-interface CreateInputNodeParams extends Omit<
-  CreateUiNodeParams,
-  "type" | "attributes"
-> {
-  attributes: Omit<UiNodeInputAttributes, "node_type">
+interface CreateInputNodeParams extends Omit<CreateUiNodeParams, 'type' | 'attributes'> {
+  attributes: Omit<UiNodeInputAttributes, 'node_type'>
   data?: InputNodeData
 }
 
@@ -120,7 +107,7 @@ export function createInputNode({
 }: CreateInputNodeParams): UiNodeInput {
   const renderAttributes: UiNodeInputAttributes = {
     ...attributes,
-    node_type: "input",
+    node_type: 'input',
   }
 
   return createUiNode({
@@ -146,11 +133,9 @@ export function createUiText({
   context,
   t,
 }: CreateUiTextParams): UiText {
-  const isStringKey = typeof keyOrId === "string"
+  const isStringKey = typeof keyOrId === 'string'
   const resolvedText =
-    isStringKey && t
-      ? t(keyOrId, { defaultValue: text, ...(context || {}) })
-      : text
+    isStringKey && t ? t(keyOrId, { defaultValue: text, ...(context || {}) }) : text
 
   return {
     id: isStringKey ? 0 : keyOrId,
@@ -160,10 +145,7 @@ export function createUiText({
   }
 }
 
-interface CreateDivisionNodeParams extends Omit<
-  CreateUiNodeParams,
-  "type" | "attributes"
-> {
+interface CreateDivisionNodeParams extends Omit<CreateUiNodeParams, 'type' | 'attributes'> {
   id: string
   class?: string
   div_type?: DivDataType
@@ -183,7 +165,7 @@ export function createDivNode({
   if (end) data.end = end
 
   const attributes = {
-    node_type: "div" as const,
+    node_type: 'div' as const,
     id,
     _class: className,
     data,

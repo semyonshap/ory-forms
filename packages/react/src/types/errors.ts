@@ -1,6 +1,6 @@
-import { OnRedirectHandler } from "@ory/client-fetch"
-import { OryFlowType } from "./container"
-import { OryErrorHandler } from "./event"
+import { OnRedirectHandler } from '@ory/client-fetch'
+import { OryFlowType } from './container'
+import { OryErrorHandler } from './event'
 
 export type ValidationErrorHandler<T> = (body: T) => void | Promise<void>
 
