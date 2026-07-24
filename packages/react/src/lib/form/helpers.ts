@@ -1,25 +1,23 @@
-import set from "lodash/set"
-import { FormValues, OryFlowContainer, OryFlowType } from "../../types"
-import { isUiNodeInputAttributes, UiContainer, UiNode } from "@ory/client-fetch"
+import set from 'lodash-es/set'
+import { FormValues, OryFlowContainer, OryFlowType } from '../../types'
+import { isUiNodeInputAttributes, UiContainer, UiNode } from '@ory/client-fetch'
 
-const prefillIdentifierFields = ["identifier", "traits.email"]
+const prefillIdentifierFields = ['identifier', 'traits.email']
 
 export function getLoginHint(search: string): string | undefined {
-  const hint = new URLSearchParams(search).get("login_hint")?.trim()
+  const hint = new URLSearchParams(search).get('login_hint')?.trim()
   return hint ? hint : undefined
 }
 
 function searchOf(url: string | undefined): string {
   if (!url) {
-    return ""
+    return ''
   }
-  const index = url.indexOf("?")
-  return index === -1 ? "" : url.slice(index)
+  const index = url.indexOf('?')
+  return index === -1 ? '' : url.slice(index)
 }
 
-export function resolveLoginHint(
-  flowContainer: OryFlowContainer,
-): string | undefined {
+export function resolveLoginHint(flowContainer: OryFlowContainer): string | undefined {
   if (
     flowContainer.flowType !== OryFlowType.Login &&
     flowContainer.flowType !== OryFlowType.Registration
@@ -32,8 +30,7 @@ export function resolveLoginHint(
     return fromRequestUrl
   }
 
-  const fromOidc =
-    flowContainer.flow.oauth2_login_request?.oidc_context?.login_hint?.trim()
+  const fromOidc = flowContainer.flow.oauth2_login_request?.oidc_context?.login_hint?.trim()
   return fromOidc ? fromOidc : undefined
 }
 
@@ -52,16 +49,16 @@ export function computeDefaultValues(
       continue
     }
 
-    if (attrs.name === "method" || attrs.type === "submit") {
+    if (attrs.name === 'method' || attrs.type === 'submit') {
       continue
     }
 
-    if (attrs.type === "checkbox" && typeof attrs.value === "undefined") {
+    if (attrs.type === 'checkbox' && typeof attrs.value === 'undefined') {
       set(defaults, attrs.name, false)
       continue
     }
 
-    if (attrs.name.startsWith("grant_scope")) {
+    if (attrs.name.startsWith('grant_scope')) {
       const scope = attrs.value as string
       if (Array.isArray(defaults.grant_scope)) {
         defaults.grant_scope.push(scope)
@@ -71,7 +68,7 @@ export function computeDefaultValues(
       continue
     }
 
-    set(defaults, attrs.name, attrs.value ?? "")
+    set(defaults, attrs.name, attrs.value ?? '')
   }
 
   if (flow.active) {
@@ -95,14 +92,13 @@ function prefillIdentifierFromHint(
 
   for (const name of prefillIdentifierFields) {
     const node = nodes.find(
-      (n) =>
-        isUiNodeInputAttributes(n.attributes) && n.attributes.name === name,
+      (n) => isUiNodeInputAttributes(n.attributes) && n.attributes.name === name,
     )
     if (!node || !isUiNodeInputAttributes(node.attributes)) {
       continue
     }
     const current = node.attributes.value
-    if (current === undefined || current === null || current === "") {
+    if (current === undefined || current === null || current === '') {
       set(defaults, name, hint)
       return
     }
@@ -110,8 +106,8 @@ function prefillIdentifierFromHint(
 }
 
 export function flowHasErrors(ui: UiContainer): boolean {
-  if (ui.messages?.some((m) => m.type === "error")) {
+  if (ui.messages?.some((m) => m.type === 'error')) {
     return true
   }
-  return ui.nodes.some((node) => node.messages.some((m) => m.type === "error"))
+  return ui.nodes.some((node) => node.messages.some((m) => m.type === 'error'))
 }

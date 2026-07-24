@@ -6,14 +6,13 @@
     "build:react": "nx run @ory-forms/react:build --skip-nx-cache",
     "build:nextjs": "nx run @ory-forms/nextjs:build --skip-nx-cache",
     "lint": "nx run-many --target=lint --all",
-    "test": "nx run-many --target=test --all",
     "clean": "nx run-many --target=clean --all",
+    "typecheck": "nx run-many --target=typecheck --all",
     "format": "prettier --write \"packages/**/*.{ts,tsx,json}\"",
     "release": "nx release",
     "changeset": "changeset",
     "version": "changeset version",
-    "publish": "changeset publish",
-    "typecheck": "tsc --noEmit"
+    "publish": "changeset publish"
   },
   "repository": {
     "type": "git",

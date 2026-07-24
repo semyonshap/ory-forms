@@ -12,8 +12,8 @@ import {
   isSelfServiceFlowExpiredError,
   isNeedsPrivilegedSessionError,
   isBrowserLocationChangeRequired,
-} from "@ory/client-fetch"
-import { FlowErrorHandlerProps } from "../types"
+} from '@ory/client-fetch'
+import { FlowErrorHandlerProps } from '../types'
 
 export const handleFlowError =
   <T>(opts: FlowErrorHandlerProps<T>) =>
@@ -22,27 +22,27 @@ export const handleFlowError =
       if (isFetchError(err)) {
         throw new FetchError(
           err,
-          "Unable to call the API endpoint. Ensure that CORS is set up correctly and that you have provided a valid SDK URL to Ory Elements.",
+          'Unable to call the API endpoint. Ensure that CORS is set up correctly and that you have provided a valid SDK URL to Ory Elements.',
         )
       }
       throw err
     }
     const body = await toBody(err.response)
 
-    const contentType = err.response.headers.get("content-type") || ""
-    if (contentType.includes("application/json")) {
+    const contentType = err.response.headers.get('content-type') || ''
+    if (contentType.includes('application/json')) {
       if (await handleJsonError(body, opts)) return
       if (await handleStatusError(err, body, opts)) return
 
       throw new ResponseError(
         err.response,
-        "The Ory API endpoint returned a response code the SDK does not know how to handle. Please check the network tab for more information. Received response: " +
+        'The Ory API endpoint returned a response code the SDK does not know how to handle. Please check the network tab for more information. Received response: ' +
           (await err.response.json()),
       )
     } else if (
-      contentType.includes("text/") ||
-      contentType.includes("html") ||
-      contentType.includes("xml")
+      contentType.includes('text/') ||
+      contentType.includes('html') ||
+      contentType.includes('xml')
     ) {
       await logResponseError(err.response, true)
       throw new ResponseError(
@@ -55,19 +55,16 @@ export const handleFlowError =
 
     throw new ResponseError(
       err.response,
-      "The Ory API endpoint returned unexpected content type `" +
+      'The Ory API endpoint returned unexpected content type `' +
         contentType +
-        "`.  Check your console output for details.",
+        '`.  Check your console output for details.',
     )
   }
 
-export async function handleJsonError<T>(
-  body: unknown,
-  opts: FlowErrorHandlerProps<T>,
-) {
+export async function handleJsonError<T>(body: unknown, opts: FlowErrorHandlerProps<T>) {
   if (isSelfServiceFlowExpiredError(body)) {
     await opts.onError?.({
-      type: "flow_expired",
+      type: 'flow_expired',
       flowType: opts.flowType,
       body,
     })
@@ -79,10 +76,7 @@ export async function handleJsonError<T>(
     }
 
     for (const continueWith of errBody.error.details?.continue_with || []) {
-      if (
-        continueWith.action === "show_verification_ui" &&
-        continueWith.flow.url
-      ) {
+      if (continueWith.action === 'show_verification_ui' && continueWith.flow.url) {
         opts.onRedirect(continueWith.flow.url, true)
         return true
       }
@@ -90,10 +84,7 @@ export async function handleJsonError<T>(
 
     opts.onRedirect(verificationUrl(opts.config), true)
     return true
-  } else if (
-    isBrowserLocationChangeRequired(body) &&
-    body.redirect_browser_to
-  ) {
+  } else if (isBrowserLocationChangeRequired(body) && body.redirect_browser_to) {
     opts.onRedirect(body.redirect_browser_to, true)
     return true
   } else if (isNeedsPrivilegedSessionError(body) && body.redirect_browser_to) {
@@ -101,7 +92,7 @@ export async function handleJsonError<T>(
     return true
   } else if (isSelfServiceFlowReplaced(body)) {
     await opts.onError?.({
-      type: "flow_replaced",
+      type: 'flow_replaced',
       flowType: opts.flowType,
       body,
     })
@@ -109,7 +100,7 @@ export async function handleJsonError<T>(
     return true
   } else if (isCsrfError(body)) {
     await opts.onError?.({
-      type: "csrf_error",
+      type: 'csrf_error',
       flowType: opts.flowType,
       body,
     })
@@ -128,7 +119,7 @@ export async function handleStatusError<T>(
   switch (err.response.status) {
     case 404: // Does not exist
       await opts.onError?.({
-        type: "flow_not_found",
+        type: 'flow_not_found',
         flowType: opts.flowType,
       })
       opts.onRestartFlow()
@@ -136,7 +127,7 @@ export async function handleStatusError<T>(
     case 410: // Expired
       // Re-initialize the flow
       await opts.onError?.({
-        type: "flow_not_found",
+        type: 'flow_not_found',
         flowType: opts.flowType,
       })
       opts.onRestartFlow()
@@ -146,7 +137,7 @@ export async function handleStatusError<T>(
       return true
     case 403: // This typically happens with CSRF violations.
       await opts.onError?.({
-        type: "csrf_error",
+        type: 'csrf_error',
         flowType: opts.flowType,
         body: body as GenericError,
       })
@@ -155,7 +146,7 @@ export async function handleStatusError<T>(
     case 422: {
       throw new ResponseError(
         err.response,
-        "The API returned an error code indicating a required redirect, but the SDK is outdated and does not know how to handle the action. Received response: " +
+        'The API returned an error code indicating a required redirect, but the SDK is outdated and does not know how to handle the action. Received response: ' +
           (await err.response.json()),
       )
     }
@@ -168,12 +159,8 @@ export const isFetchError = (err: unknown): err is FetchError => {
   return err instanceof FetchError
 }
 
-async function logResponseError(
-  response: Response,
-  printBody: boolean,
-  wrap?: unknown[],
-) {
-  console.error("Unable to decode API response", {
+async function logResponseError(response: Response, printBody: boolean, wrap?: unknown[]) {
+  console.error('Unable to decode API response', {
     response: {
       status: response.status,
       headers: Object.fromEntries(response.headers.entries()),

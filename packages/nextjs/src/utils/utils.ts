@@ -1,9 +1,9 @@
-import { pick } from "lodash-es"
-import { ApiResponse } from "@ory/client-fetch"
+import { pick } from 'lodash-es'
+import { ApiResponse } from '@ory/client-fetch'
 
-import { rewriteJsonResponse } from "./rewrite"
-import { FlowParams, QueryParams } from "../types"
-import { defaultForwardedHeaders } from "../const"
+import { rewriteJsonResponse } from './rewrite'
+import { FlowParams, QueryParams } from '../types'
+import { defaultForwardedHeaders } from '../const'
 
 export function onValidationError<T>(value: T): T {
   return value
@@ -14,9 +14,9 @@ export async function toFlowParams(
   getCookieHeader: () => Promise<string | undefined>,
 ): Promise<FlowParams> {
   return {
-    id: params["flow"]?.toString() ?? "",
+    id: params['flow']?.toString() ?? '',
     cookie: await getCookieHeader(),
-    return_to: params["return_to"]?.toString() ?? "",
+    return_to: params['return_to']?.toString() ?? '',
   }
 }
 
@@ -24,10 +24,7 @@ export function filterRequestHeaders(
   headers: Headers,
   forwardAdditionalHeaders?: string[],
 ): Headers {
-  const allowedKeys = [
-    ...defaultForwardedHeaders,
-    ...(forwardAdditionalHeaders ?? []),
-  ]
+  const allowedKeys = [...defaultForwardedHeaders, ...(forwardAdditionalHeaders ?? [])]
   const headersObj = Object.fromEntries(headers.entries())
   const filtered = pick(headersObj, allowedKeys)
   return new Headers(filtered)
@@ -37,10 +34,7 @@ export function joinUrlPaths(baseUrl: string, relativeUrl: string): string {
   const base = new URL(baseUrl)
   const relative = new URL(relativeUrl, baseUrl)
 
-  relative.pathname =
-    base.pathname.replace(/\/$/, "") +
-    "/" +
-    relative.pathname.replace(/^\//, "")
+  relative.pathname = base.pathname.replace(/\/$/, '') + '/' + relative.pathname.replace(/^\//, '')
 
   return new URL(relative.toString(), baseUrl).href
 }

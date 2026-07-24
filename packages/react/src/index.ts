@@ -1,2 +1,2 @@
-export { OryFlowType } from "./types"
-export { Flow } from "./components"
+export * from './types'
+export { Flow } from './components'
