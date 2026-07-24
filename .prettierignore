@@ -8,3 +8,13 @@ coverage
 .next
 .nx
 *.tsbuildinfo
+
+pnpm-lock.yaml
+package-lock.json
+
+*.log
+*.map
+
+*.png
+*.jpg
+*.svg

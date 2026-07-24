@@ -8,9 +8,7 @@
     "start": "next start",
     "restart": "pnpm build && pnpm start",
     "lint": "eslint",
-    "typecheck": "tsc --noEmit",
-    "test": "jest",
-    "test:watch": "jest --watch"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@ory-forms/nextjs": "workspace:^",

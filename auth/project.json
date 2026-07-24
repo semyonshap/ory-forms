@@ -1,0 +1,28 @@
+{
+  "name": "frontend",
+  "$schema": "../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "auth",
+  "projectType": "application",
+  "targets": {
+    "dev": {
+      "executor": "nx:run-script",
+      "options": { "script": "dev" }
+    },
+    "build": {
+      "executor": "nx:run-script",
+      "dependsOn": ["^build"],
+      "outputs": ["{projectRoot}/.next"],
+      "options": { "script": "build" }
+    },
+    "typecheck": {
+      "executor": "nx:run-script",
+      "dependsOn": ["^build"],
+      "options": { "script": "typecheck" }
+    },
+    "lint": {
+      "executor": "nx:run-script",
+      "options": { "script": "lint" }
+    }
+  },
+  "tags": ["type:app", "scope:auth"]
+}

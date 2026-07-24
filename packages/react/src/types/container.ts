@@ -8,19 +8,19 @@ import {
   SettingsFlow,
   UiContainer,
   VerificationFlow,
-} from "@ory/client-fetch"
-import { FormState } from "."
+} from '@ory/client-fetch'
+import { FormState } from '.'
 
 export enum OryFlowType {
-  Login = "login",
-  Registration = "registration",
-  Recovery = "recovery",
-  Verification = "verification",
-  Settings = "settings",
-  OAuth2Consent = "oauth2_consent",
-  OAuth2Logout = "oauth2_logout",
-  Error = "error",
-  Navigation = "navigation",
+  Login = 'login',
+  Registration = 'registration',
+  Recovery = 'recovery',
+  Verification = 'verification',
+  Settings = 'settings',
+  OAuth2Consent = 'oauth2_consent',
+  OAuth2Logout = 'oauth2_logout',
+  Error = 'error',
+  Navigation = 'navigation',
 }
 
 export type LoginFlowContainer = {
@@ -84,8 +84,8 @@ export type OryFlowContainerWithState = OryFlowContainer & {
 }
 
 export type OAuth2ConsentFlow = {
-  id: "UNSET"
-  active: "oauth2_consent"
+  id: 'UNSET'
+  active: 'oauth2_consent'
   ui: UiContainer
   consent_request: OAuth2ConsentRequest
   session: Session
@@ -93,16 +93,16 @@ export type OAuth2ConsentFlow = {
 }
 
 export type OAuth2LogoutFlow = {
-  id: "UNSET"
-  active: "oauth2_logout"
+  id: 'UNSET'
+  active: 'oauth2_logout'
   ui: UiContainer
   return_to?: string
   logout_request: OAuth2LogoutRequest
 }
 
 export type NavigationFlow = {
-  id: "UNSET"
-  active: "navigation"
+  id: 'UNSET'
+  active: 'navigation'
   ui: UiContainer
   session: Session | null
   return_to?: string
@@ -110,7 +110,7 @@ export type NavigationFlow = {
 
 export type ErrorFlow = {
   id: string
-  active: "error"
+  active: 'error'
   ui: UiContainer
   error: OryError
   session: Session | null

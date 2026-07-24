@@ -1,0 +1,28 @@
+{
+  "name": "@ory-forms/nextjs",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/nextjs/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "nx:run-script",
+      "dependsOn": ["^build"],
+      "outputs": ["{projectRoot}/dist"],
+      "options": { "script": "build" }
+    },
+    "typecheck": {
+      "executor": "nx:run-script",
+      "dependsOn": ["^build"],
+      "options": { "script": "typecheck" }
+    },
+    "lint": {
+      "executor": "nx:run-script",
+      "options": { "script": "lint" }
+    },
+    "clean": {
+      "executor": "nx:run-script",
+      "options": { "script": "clean" }
+    }
+  },
+  "tags": ["type:lib", "scope:nextjs"]
+}

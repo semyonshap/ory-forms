@@ -12,5 +12,11 @@ typecheck: ## Run TypeScript type checking
 lint: ## Run ESLint
 	pnpm lint
 
+format: ## Format all files (write)
+	pnpm format:write
+
+format-check: ## Check formatting (CI)
+	pnpm format:check
+
 clean: ## Delete dist folder
 	pnpm clean
