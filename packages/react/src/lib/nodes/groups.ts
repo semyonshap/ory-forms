@@ -1,5 +1,7 @@
 import { UiNode, UiNodeGroupEnum } from '@ory/client-fetch'
+
 import { allGroupEnums, excludedAuthGroups, GroupedNodes } from '../../types'
+
 import { isNodeVisible } from './filters'
 
 export function getNodeGroupsWithVisibleNodes(nodes: UiNode[]): GroupedNodes {

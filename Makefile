@@ -12,6 +12,9 @@ typecheck: ## Run TypeScript type checking
 lint: ## Run ESLint
 	pnpm lint
 
+lint-fix: ## Auto-fix ESLint issues
+	pnpm lint:fix
+
 format: ## Format all files (write)
 	pnpm format:write
 

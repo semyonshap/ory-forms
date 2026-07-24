@@ -1,3 +1,5 @@
+import { OryComponents } from '../types'
+
 import Apple from './apple'
 import Auth0 from './auth0'
 import Discord from './discord'
@@ -12,7 +14,6 @@ import Spotify from './spotify'
 import X from './x'
 import Yandex from './yandex'
 
-import { OryComponents } from '../types'
 
 export const logos: OryComponents['Icons']['Providers'] = {
   Apple,

@@ -1,14 +1,15 @@
 import { useDebounceValue } from 'usehooks-ts'
 import { useFormContext } from 'react-hook-form'
 import { ComponentType, useCallback, useEffect, useMemo } from 'react'
+import { UiNodeInputAttributesTypeEnum } from '@ory/client-fetch'
 
 import { normalizeKeys } from '../utils'
 import { useFlowStoreShallow } from '../context'
 import { triggerToWindowCall } from '../lib/nodes'
+import { InputVariants, OryFlowType, UiNodeInput } from '../types'
+
 import { useInputTranslation } from './useTranslation'
 import { useOnload } from './useOnload'
-import { UiNodeInputAttributesTypeEnum } from '@ory/client-fetch'
-import { InputVariants, OryFlowType, UiNodeInput } from '../types'
 
 export function useButton(node: UiNodeInput) {
   const {
@@ -49,7 +50,7 @@ export function useButton(node: UiNodeInput) {
     if (attr.onclickTrigger) {
       triggerToWindowCall(attr.onclickTrigger)
     }
-  }, [node, attr, setValue, setClicked])
+  }, [node, attr, setValue, setClicked, flowType])
 
   const disabled = attr.disabled || !isReady || !oryFormState.isReady || oryFormState.isSubmitting
 
@@ -69,7 +70,8 @@ export function useButton(node: UiNodeInput) {
 
   let icon: ComponentType | undefined
 
-  let type: InputVariants = attr.type === UiNodeInputAttributesTypeEnum.Submit ? 'submit' : 'button'
+  const type: InputVariants =
+    attr.type === UiNodeInputAttributesTypeEnum.Submit ? 'submit' : 'button'
 
   let htmlType = type
 

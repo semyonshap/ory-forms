@@ -3,7 +3,6 @@ import {
   isUiNodeScriptAttributes,
   UiNode,
   UiNodeGroupEnum,
-  UiNodeInputAttributes,
 } from '@ory/client-fetch'
 
 import {

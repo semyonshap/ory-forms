@@ -6,6 +6,7 @@ import {
   OryClientConfiguration,
 } from '../types'
 import { defaultGroupSorter, defaultNodeSorter } from '../lib/nodes/sorter'
+
 import { frontendClient } from './sdk'
 
 export function normalizeUrl(url: string): string {

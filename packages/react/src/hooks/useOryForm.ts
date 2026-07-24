@@ -1,7 +1,9 @@
 import { useForm } from 'react-hook-form'
-import { useFormAutofocus } from './useFormAutofocus'
+
 import { computeDefaultValues, resolveLoginHint } from '../lib/form/helpers'
 import { OryFlowContainer } from '../types'
+
+import { useFormAutofocus } from './useFormAutofocus'
 
 export function useOryForm(flowContainer: OryFlowContainer) {
   const nodes = flowContainer.flow.ui.nodes

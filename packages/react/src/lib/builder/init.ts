@@ -1,3 +1,6 @@
+import { isUiNodeScriptAttributes, LogoutFlow, UiNode, UiNodeGroupEnum } from '@ory/client-fetch'
+import { Dispatch } from 'react'
+
 import {
   BuildContext,
   BuildFormContext,
@@ -24,8 +27,6 @@ import {
   getNodeGroupsWithVisibleNodes,
   nodesToAuthMethodGroups,
 } from '../nodes/groups'
-import { isUiNodeScriptAttributes, UiNode, UiNodeGroupEnum } from '@ory/client-fetch'
-import { Dispatch } from 'react'
 import {
   findScreenSelectionButton,
   isNodeVisible,
@@ -33,6 +34,7 @@ import {
 } from '../nodes/filters'
 import { createDivGroup } from '../nodes/factory'
 import { getFunctionalNodes, toAuthMethodPickerOptions } from '../nodes/filters'
+
 import { NodeDataBuilder } from './nodeData'
 import { SettingsBuilder } from './settings'
 
@@ -46,11 +48,15 @@ export function Builder({
   dispatchFormState,
   nodeSorter,
   groupSorter,
+  logoutFlow,
+  logoutLoading,
 }: BuildContext &
   BuildFormContext & {
     dispatchFormState: Dispatch<FormStateAction>
     nodeSorter: NodeSorter
     groupSorter: GroupSorter
+    logoutFlow: LogoutFlow | undefined
+    logoutLoading: boolean
   }) {
   const ctx: BuildContext = {
     config,
@@ -108,7 +114,7 @@ export function Builder({
       switch (flowType) {
         case OryFlowType.Login: {
           if (showLogout(flow, formState, authMethods)) {
-            const logout = BuildLogout(ctx)
+            const logout = BuildLogout(ctx, logoutFlow, logoutLoading)
             result.push(...logout)
           } else {
             if (config.project.registration_enabled) {

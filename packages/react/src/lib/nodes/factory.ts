@@ -2,12 +2,13 @@ import {
   UiNodeAttributes,
   UiNodeGroupEnum,
   UiNodeInputAttributes,
-  UiNodeInputAttributesTypeEnum,
   UiNodeMeta,
   UiNodeTypeEnum,
   UiText,
   UiTextTypeEnum,
 } from '@ory/client-fetch'
+import { TFunction } from 'i18next'
+
 import {
   FormNode,
   UiNodeAnchor,
@@ -20,12 +21,11 @@ import {
   DivAttributesData,
   AnchorNodeData,
 } from '../../types'
-import { TFunction } from 'i18next'
 
 interface CreateUiNodeParams {
   type: UiNodeTypeEnum
   group?: UiNodeGroupEnum
-  messages?: Array<UiText>
+  messages?: UiText[]
   meta?: UiNodeMeta
   attributes: UiNodeAttributes
   data?: NodeData | InputNodeData

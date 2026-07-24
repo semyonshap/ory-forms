@@ -24,7 +24,7 @@ export function InputWrapper({ node, attached }: NodeRenderInput) {
 
   return (
     <Node.Label node={node} options={options} attached={attached}>
-      <Component node={node} props={props} attached={attached} />
+      <Component node={node} props={props} options={options} attached={attached} />
     </Node.Label>
   )
 }

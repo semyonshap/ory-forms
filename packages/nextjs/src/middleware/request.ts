@@ -1,3 +1,4 @@
+import { NextRequest } from 'next/server'
 import { filterRequestHeaders } from '../utils/utils'
 
 export function getProjectApiKey() {
@@ -10,18 +11,7 @@ export function getProjectApiKey() {
   return baseUrl.replace(/\/$/, '')
 }
 
-export function buildUpstreamUrl(
-  request: {
-    nextUrl: {
-      clone(): any
-      hostname: any
-      host: any
-      protocol: any
-      port: any
-    }
-  },
-  matchBaseUrl: URL,
-) {
+export function buildUpstreamUrl(request: NextRequest, matchBaseUrl: URL) {
   const upstreamUrl = request.nextUrl.clone()
   upstreamUrl.hostname = matchBaseUrl.hostname
   upstreamUrl.host = matchBaseUrl.host
@@ -31,7 +21,7 @@ export function buildUpstreamUrl(
 }
 
 export async function buildUpstreamHeaders(
-  request: { headers: Headers },
+  request: NextRequest,
   upstreamUrl: URL,
   selfUrl: string,
   forwardAdditionalHeaders?: string[],

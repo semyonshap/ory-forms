@@ -1,9 +1,10 @@
 import { useTranslation } from 'react-i18next'
 
 import { useFlowStoreShallow } from '../context'
-import { useFormMessages } from './useFormMessages'
 import { getCardHeaderText, getGroupHeader } from '../lib'
 import { OryFlowContainerWithState, UiNodeDiv } from '../types'
+
+import { useFormMessages } from './useFormMessages'
 
 export function useDiv(node: UiNodeDiv) {
   const { flow, formState } = useFlowStoreShallow((state) => ({

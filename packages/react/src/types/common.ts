@@ -1,6 +1,7 @@
 import { UiNode, UiNodeGroupEnum } from '@ory/client-fetch'
+import { ComponentPropsWithoutRef, ComponentType, FormEventHandler } from 'react'
+
 import { OryFlowContainer } from './container'
-import { ComponentPropsWithoutRef, ComponentType, FormEventHandler, PropsWithChildren } from 'react'
 import {
   FormRenderSelect,
   FormRenderInput,
@@ -22,7 +23,7 @@ export type FormRootProps = ComponentPropsWithoutRef<'form'> & {
   onSubmit: FormEventHandler<HTMLFormElement>
 }
 
-export type FlowInputProps = {
+export interface FlowInputProps {
   flow: OryFlowContainer
   config: OryClientConfiguration
   components: Partial<OryClientComponents>
@@ -32,7 +33,7 @@ export type NodeSorter = (a: UiNode, b: UiNode, ctx: { flowType: string }) => nu
 
 export type GroupSorter = (a: UiNodeGroupEnum, b: UiNodeGroupEnum) => number
 
-export type OryComponents = {
+export interface OryComponents {
   Card: {
     Default: ComponentType<FormRenderCardProps>
     Settings?: ComponentType<FormRenderCardProps>

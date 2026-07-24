@@ -1,7 +1,7 @@
 import { UiNodeScript } from '../../types'
 
 export const NodeScript = ({ node }: { node: UiNodeScript }) => {
-  const { crossorigin, referrerpolicy, node_type: _nodeType, ...attributes } = node.attributes
+  const { crossorigin, referrerpolicy, node_type: _, ...attributes } = node.attributes
 
   return (
     <script

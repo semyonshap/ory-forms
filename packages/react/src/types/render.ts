@@ -5,6 +5,10 @@ import {
   UiNodeInputAttributesTypeEnum,
   UiTextTypeEnum,
 } from '@ory/client-fetch'
+import { PropsWithChildren, ReactNode } from 'react'
+import { TFunction } from 'i18next'
+import { ControllerRenderProps, UseFormGetValues, UseFormSetValue } from 'react-hook-form'
+
 import {
   FormNode,
   FormState,
@@ -21,17 +25,14 @@ import {
   AnchorVariants,
   FormValues,
 } from '.'
-import { MouseEventHandler, PropsWithChildren, ReactNode } from 'react'
-import { TFunction } from 'i18next'
-import { FieldValues, UseFormGetValues, UseFormSetValue } from 'react-hook-form'
 
-export type MessageProps = {
+export interface MessageProps {
   id: number
   text: string
   type: UiTextTypeEnum
 }
 
-export type BaseRenderProps = {
+export interface BaseRenderProps {
   attached?: ReactNode
 }
 
@@ -40,7 +41,7 @@ export type FormRenderButton = BaseRenderProps & {
   props: {
     name: string
     value: string | number | readonly string[] | undefined
-    onClick: (event: any) => void
+    onClick: (event: React.MouseEvent) => void
     disabled?: boolean
   }
   options: {
@@ -69,24 +70,21 @@ export type FormRenderCheckbox = BaseRenderProps & {
   }
 }
 
+export type InputProps = ControllerRenderProps & {
+  id: string
+  type: UiNodeInputAttributesTypeEnum
+  placeholder: string
+  maxLength?: number
+  autoComplete?: string
+  readOnly?: boolean
+}
+
+export type InputOptions = { label: string }
+
 export type FormRenderInput = BaseRenderProps & {
   node: UiNodeInput
-  props: {
-    id: string
-    name: string
-    value: string | number | readonly string[] | undefined
-
-    onClick?: MouseEventHandler
-    onChange?: (event: any) => void
-    onBlur: () => void
-    ref?: (instance: any) => void
-
-    disabled?: boolean
-    type: UiNodeInputAttributesTypeEnum
-    maxLength?: number
-    autoComplete?: string
-    placeholder: string
-  }
+  props: InputProps
+  options: InputOptions
 }
 
 type OmittedAnchorKeys = (typeof omittedInputKeys)[number]
@@ -129,7 +127,7 @@ export type FormRenderDivProps = BaseRenderProps & {
   node: UiNodeDiv
 }
 
-export type FormRenderCardDivider = {
+export interface FormRenderCardDivider {
   node: UiNodeDiv
 }
 
@@ -149,7 +147,7 @@ export type IconType = React.ComponentType<IconProps>
 
 export type FormContext = Partial<Record<string, React.ReactNode[]>>
 
-export type Attached = {
+export interface Attached {
   attached?: ReactNode
 }
 

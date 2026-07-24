@@ -1,8 +1,9 @@
 import { UiNodeGroupEnum } from '@ory/client-fetch'
 import { Dispatch } from 'react'
 
-import { createInputNode, createUiText } from './factory'
 import { BuildContext, FormStateAction } from '../../types'
+
+import { createInputNode, createUiText } from './factory'
 
 export function BuildAuthMethodList({
   groups,

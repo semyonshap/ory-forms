@@ -1,5 +1,5 @@
 import { UiNodeInputAttributesTypeEnum } from '@ory/client-fetch'
-import { ButtonWrapper, AnchorWrapper, TextWrapper, ImageWrapper, InputWrapper } from './wrappers'
+
 import {
   NodeRender,
   ignoredScriptGroups,
@@ -11,8 +11,10 @@ import {
   NodeRenderInput,
   isUiNodeDiv,
 } from '../types'
-import { NodeScript } from './nodes/nodeScript'
 import { useFlowStoreShallow } from '../context'
+
+import { ButtonWrapper, AnchorWrapper, TextWrapper, ImageWrapper, InputWrapper } from './wrappers'
+import { NodeScript } from './nodes/nodeScript'
 import { DivWrapper } from './wrappers/divWrapper'
 import { CheckboxWrapper } from './wrappers/inputWrapper'
 
@@ -41,11 +43,12 @@ function NodeInput({ node, attached }: NodeRenderInput) {
     case UiNodeInputAttributesTypeEnum.Button:
     case UiNodeInputAttributesTypeEnum.Submit:
       return ButtonWrapper({ node, attached })
-    default:
+    default: {
       const options = node.attributes.options
       if (Array.isArray(options) && options.length > 0 && Node.Select)
         return <Node.Select node={node} />
 
       return InputWrapper({ node, attached })
+    }
   }
 }

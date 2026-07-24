@@ -1,13 +1,17 @@
 import { useEffect } from 'react'
 import { useController, useFormContext } from 'react-hook-form'
 
-import { UiNodeInput } from '../types'
+import { InputOptions, InputProps, UiNodeInput } from '../types'
 import { resolvePlaceholder } from '../i18n'
 import { useFlowStoreShallow } from '../context'
+
 import { useInputTranslation } from './useTranslation'
 import { useOnload } from './useOnload'
 
-export function useInput(node: UiNodeInput) {
+export function useInput(node: UiNodeInput): {
+  props: InputProps
+  options: InputOptions
+} {
   const {
     setValue,
     control,
@@ -23,7 +27,7 @@ export function useInput(node: UiNodeInput) {
 
   const attr = node.attributes
 
-  const { name, type, maxlength, autocomplete, onclickTrigger } = attr
+  const { name, type, maxlength, autocomplete } = attr
 
   const controller = useController({
     name,
@@ -32,17 +36,11 @@ export function useInput(node: UiNodeInput) {
     shouldUnregister: true,
   })
 
-  /* const onClick = useCallback(() => {
-    if (onclickTrigger) {
-      triggerToWindowCall(onclickTrigger)
-    }
-  }, [onclickTrigger]) */
-
   useEffect(() => {
     if (attr.value) {
       setValue(attr.name, attr.value)
     }
-  }, [attr.value])
+  }, [attr.value, attr.name, setValue])
 
   const disabled = attr.disabled || !isReady || isSubmitting
 
@@ -54,11 +52,11 @@ export function useInput(node: UiNodeInput) {
       ...controller.field,
       value: controller.field.value ?? '',
       id: name,
+      placeholder,
       type,
       maxLength: maxlength,
       autoComplete: autocomplete,
       disabled,
-      placeholder,
       readOnly: node.data?.readOnly,
     },
     options: {

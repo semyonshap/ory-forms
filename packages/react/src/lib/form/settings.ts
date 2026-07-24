@@ -1,4 +1,5 @@
 import { UiNodeGroupEnum, UpdateSettingsFlowBody } from '@ory/client-fetch'
+
 import { FormValues, supportsSelectAccountPrompt } from '../../types'
 
 const settingsMethodFields: Record<string, string[]> = {

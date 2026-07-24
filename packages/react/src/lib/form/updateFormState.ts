@@ -1,6 +1,7 @@
+import { FormState, FormStateAction, OryFlowContainer } from '../../types'
+
 import { parseStateFromFlow } from './parseFormState'
 
-import { FormState, FormStateAction, OryFlowContainer } from '../../types'
 
 export function initFormState(flow: OryFlowContainer): FormState {
   return {

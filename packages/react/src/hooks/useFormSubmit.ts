@@ -35,9 +35,9 @@ export function useFormSubmit(methods: UseFormReturn<FormValues>) {
     }),
   )
 
-  const { flow, flowType } = flowContainer
+  const { flowType } = flowContainer
 
-  const onRedirect: OnRedirectHandler = (url, _external) => {
+  const onRedirect: OnRedirectHandler = (url) => {
     dispatchFormState({ type: 'page_redirect' })
     window.location.assign(url)
   }

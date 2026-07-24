@@ -19,6 +19,14 @@ export default tseslint.config(
     },
     rules: {
       ...pluginReactHooks.configs.recommended.rules,
+      'react/prop-types': 'off',
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        {
+          varsIgnorePattern: '^_',
+          argsIgnorePattern: '^_',
+        },
+      ],
       'import/order': [
         'warn',
         {

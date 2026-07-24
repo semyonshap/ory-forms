@@ -1,6 +1,7 @@
 import { UiText } from '@ory/client-fetch'
-import { uiTextToFormattedMessage } from '.'
 import { TFunction } from 'i18next'
+
+import { uiTextToFormattedMessage } from '.'
 
 function isDynamicText(text: UiText): text is UiText & { context: { name: string } } {
   return (

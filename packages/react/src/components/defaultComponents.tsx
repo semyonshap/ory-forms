@@ -1,7 +1,8 @@
 import { logos } from '../assets'
 import { OryComponents } from '../types'
-import { NodeImage } from './nodes/image'
 import { defaultGroupSorter, defaultNodeSorter } from '../lib/nodes'
+
+import { NodeImage } from './nodes/image'
 
 export function notImplemented(componentName: string) {
   return function ComponentStub() {

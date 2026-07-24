@@ -5,7 +5,7 @@ import { useFlowStore } from '../../context'
 
 export function DivWrapper({ node, attached }: NodeRenderDiv) {
   const Main = useFlowStore((state) => state.components.Card)
-
+  const { options } = useDiv(node)
   const type = node.attributes.data?.type
 
   if (!type || type === 'Div') return <NodeDiv node={node} attached={attached} />
@@ -14,8 +14,6 @@ export function DivWrapper({ node, attached }: NodeRenderDiv) {
     if (Main.Divider) return <Main.Divider node={node} />
     else return null
   }
-
-  const { options } = useDiv(node)
 
   if (type === 'FormCard') {
     return <Main.Default node={node} attached={attached} options={options} />

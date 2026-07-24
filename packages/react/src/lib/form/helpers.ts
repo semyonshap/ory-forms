@@ -1,6 +1,7 @@
 import set from 'lodash-es/set'
-import { FormValues, OryFlowContainer, OryFlowType } from '../../types'
 import { isUiNodeInputAttributes, UiContainer, UiNode } from '@ory/client-fetch'
+
+import { FormValues, OryFlowContainer, OryFlowType } from '../../types'
 
 const prefillIdentifierFields = ['identifier', 'traits.email']
 

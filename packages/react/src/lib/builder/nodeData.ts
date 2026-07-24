@@ -56,10 +56,12 @@ export function NodeDataBuilder({
                   case OryFlowType.Login:
                   case OryFlowType.Registration:
                     if (code) setValue('resend', '')
+                    break
                   case OryFlowType.Recovery:
                   case OryFlowType.Verification:
                     setValue('email', '')
                     setValue('code', '')
+                    break
                 }
               },
             }

@@ -8,10 +8,10 @@ import {
   HeaderRegistrationOptions,
   OryFlowType,
   HeaderNavigationOptions,
-  HeaderErrorOptions,
 } from '../../types'
-import { collectParts, joinWithCommaOr, normalizeContext } from './headerHelpers'
 import { hasCodeField, isCodeSent } from '../nodes'
+
+import { collectParts, joinWithCommaOr, normalizeContext } from './headerHelpers'
 
 export function getCardHeaderText(
   container: UiContainer,

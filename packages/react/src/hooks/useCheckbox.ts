@@ -5,6 +5,7 @@ import { ComponentType, useCallback, useMemo } from 'react'
 import { UiNodeInput } from '../types'
 import { normalizeKeys } from '../utils'
 import { useFlowStoreShallow } from '../context'
+
 import { useInputTranslation } from './useTranslation'
 
 export function useCheckbox(node: UiNodeInput) {
@@ -20,6 +21,7 @@ export function useCheckbox(node: UiNodeInput) {
 
   const { t } = useTranslation()
   const IconsSystem = useMemo(() => normalizeKeys(system ?? {}), [system])
+  const { formattedLabel } = useInputTranslation(node)
 
   const attr = node.attributes
   const isGrantScope = attr.name === 'grant_scope'
@@ -32,39 +34,32 @@ export function useCheckbox(node: UiNodeInput) {
   })
   const { field } = controller
 
+  const scope = isGrantScope ? (attr.value as string) : undefined
+  const onCheckedChange = useCallback(
+    (next: boolean | 'indeterminate') => {
+      if (isGrantScope && scope) {
+        const current: string[] = Array.isArray(field.value) ? field.value : []
+        field.onChange(next === true ? [...current, scope] : current.filter((s) => s !== scope))
+      } else {
+        field.onChange(next === true)
+      }
+    },
+    [field, scope, isGrantScope],
+  )
+
   let label: string
   let description: string | undefined
   let icon: ComponentType | undefined
   let checked: boolean
-  let onCheckedChange: (next: boolean | 'indeterminate') => void
 
-  if (isGrantScope) {
-    const scope = attr.value as string
-
+  if (isGrantScope && scope) {
     label = t(`consent.scope.${scope}.title`, { defaultValue: scope })
     description = t(`consent.scope.${scope}.description`, { defaultValue: '' })
     icon = IconsSystem?.[scope] as ComponentType | undefined
-
     checked = Array.isArray(field.value) && field.value.includes(scope)
-    onCheckedChange = useCallback(
-      (next: boolean | 'indeterminate') => {
-        const current: string[] = Array.isArray(field.value) ? field.value : []
-        field.onChange(next === true ? [...current, scope] : current.filter((s) => s !== scope))
-      },
-      [field, scope],
-    )
   } else {
-    const { formattedLabel } = useInputTranslation(node)
-
     label = formattedLabel
-
     checked = field.value === true
-    onCheckedChange = useCallback(
-      (next: boolean | 'indeterminate') => {
-        field.onChange(next === true)
-      },
-      [field],
-    )
   }
 
   return {

@@ -1,12 +1,12 @@
 import { useTranslation } from 'react-i18next'
 import { useForm, useFormContext } from 'react-hook-form'
+import { useMemo } from 'react'
+import React from 'react'
 
 import { Builder } from '../../lib'
 import { renderNodes } from '../render'
-import { useFormSubmit } from '../../hooks'
+import { useFormSubmit, useLogout } from '../../hooks'
 import { useFlowStoreShallow } from '../../context'
-import { useMemo } from 'react'
-import React from 'react'
 
 export function FormWrapper() {
   const { config, flowContainer, formState, Card, dispatchFormState, nodeSorter, groupSorter } =
@@ -24,6 +24,7 @@ export function FormWrapper() {
 
   const { t } = useTranslation()
   const { flow } = flowContainer
+  const { logoutFlow, isLoading: logoutLoading } = useLogout(config)
 
   const nodes = useMemo(() => {
     return Builder({
@@ -36,8 +37,22 @@ export function FormWrapper() {
       dispatchFormState,
       nodeSorter,
       groupSorter,
+      logoutFlow,
+      logoutLoading,
     })
-  }, [formState, flowContainer, dispatchFormState])
+  }, [
+    formState,
+    flowContainer,
+    dispatchFormState,
+    config,
+    t,
+    getValues,
+    setValue,
+    nodeSorter,
+    groupSorter,
+    logoutFlow,
+    logoutLoading,
+  ])
 
   const methods = useFormContext()
   const onSubmit = useFormSubmit(methods)

@@ -6,8 +6,9 @@ import { FormProvider } from 'react-hook-form'
 import libraryI18n from '../i18n'
 import { useOryForm } from '../hooks'
 import { FlowInputProps } from '../types'
-import { FormWrapper } from './wrappers'
 import { OryFlowProvider } from '../context'
+
+import { FormWrapper } from './wrappers'
 
 export function Flow({ flow, config, components }: FlowInputProps) {
   const { methods } = useOryForm(flow)

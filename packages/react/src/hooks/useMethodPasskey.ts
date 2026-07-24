@@ -1,6 +1,7 @@
 import { UiNodeInputAttributes } from '@ory/client-fetch'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { useEventListener, useTimeout } from 'usehooks-ts'
+
 import { triggerToFunction } from '../lib/nodes'
 
 interface UsePasskeyOptions {
@@ -9,24 +10,20 @@ interface UsePasskeyOptions {
 }
 
 export function useMethodPasskey({ passkeyNode, disabled = false }: UsePasskeyOptions) {
-  const [isInitialized, setIsInitialized] = useState(false)
   const [failedToLoad, setFailedToLoad] = useState(false)
 
-  useEffect(() => {
-    if (!passkeyNode.attributes.onclickTrigger) {
-      console.error('Passkey node does not have onclickTrigger')
-      return
-    }
-    const fn = triggerToFunction(passkeyNode.attributes.onclickTrigger)
-    setIsInitialized(typeof fn === 'function')
-  }, [passkeyNode])
+  const fn = passkeyNode.attributes.onclickTrigger
+    ? triggerToFunction(passkeyNode.attributes.onclickTrigger)
+    : undefined
+  const isInitialized = typeof fn === 'function'
+  const [_, setIsInitialized] = useState(isInitialized)
 
   useEventListener('oryWebAuthnInitialized' as keyof WindowEventMap, () => {
     setIsInitialized(true)
   })
 
   useTimeout(() => {
-    if (!isInitialized) {
+    if (!isInitialized && isInitialized !== undefined) {
       setFailedToLoad(true)
     }
   }, 5000)

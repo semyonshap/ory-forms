@@ -1,10 +1,11 @@
 import { ReactNode } from 'react'
 
-import { Node } from './node'
 import { getNodeId } from '../lib'
 import { FormContext, FormNode, isUiNodeDiv } from '../types'
 
-export type OutputNode = {
+import { Node } from './node'
+
+export interface OutputNode {
   node: FormNode
   element: ReactNode
 }

@@ -1,5 +1,6 @@
 import { TFunction } from 'i18next'
 import { UiNode, UiNodeGroupEnum } from '@ory/client-fetch'
+
 import {
   InputNodeData,
   isUiNodeImage,
@@ -119,7 +120,7 @@ export function SettingsBuilder(group: UiNodeGroupEnum, nodes: UiNode[], t: TFun
     }
   }
 
-  let footerChildren: UiNode[] = []
+  const footerChildren: UiNode[] = []
 
   if (keyFooter) {
     const textNode = createTextNode({

@@ -6,6 +6,7 @@ import {
   settingsUrl,
   UpdateSettingsFlowBody,
 } from '@ory/client-fetch'
+
 import {
   OryFlowType,
   OryFlowContainer,
@@ -47,7 +48,6 @@ export async function onSubmitSettings(
         onRedirect,
       })
 
-      // eslint-disable-next-line promise/always-return
       if (didContinueWith) {
         return
       }

@@ -28,11 +28,12 @@ export async function getOAuth2LoginFlow(
   })
 
   if (!loginChallenge) {
-    redirectToErrorPage({
+    await redirectToErrorPage({
       baseUrl,
       config,
       error: new Error('Missing login_challenge in URL'),
     })
+    return null
   }
 
   const api = serverSideOAuth2Client()
@@ -41,7 +42,8 @@ export async function getOAuth2LoginFlow(
   try {
     loginRequest = await api.getOAuth2LoginRequest({ loginChallenge })
   } catch (err) {
-    redirectToErrorPage({ baseUrl, config, error: err })
+    await redirectToErrorPage({ baseUrl, config, error: err })
+    return null
   }
 
   if (loginRequest.skip) {

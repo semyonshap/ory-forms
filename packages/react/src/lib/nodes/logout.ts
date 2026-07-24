@@ -1,7 +1,8 @@
+import { LoginFlow, LogoutFlow } from '@ory/client-fetch'
+
 import { restartFlowUrl } from '../../utils'
 import { BuildContext, FormState } from '../../types'
-import { onLogout } from '../../hooks/useLogout'
-import { LoginFlow } from '@ory/client-fetch'
+
 import { createAnchorNode, createDivGroup, createTextNode, createUiText } from './factory'
 
 export function BuildReturnTo({
@@ -24,12 +25,14 @@ export function BuildReturnTo({
   return returnTo
 }
 
-export function BuildLogout(ctx: BuildContext) {
+export function BuildLogout(
+  ctx: BuildContext,
+  logoutFlow: LogoutFlow | undefined,
+  logoutLoading: boolean,
+) {
   const returnTo = BuildReturnTo(ctx)
 
-  const { config, t } = ctx
-
-  const { logoutFlow, didLoad } = onLogout(config)
+  const { t } = ctx
 
   const nodeLogoutLabel = createTextNode({
     id: 'logout-label',
@@ -40,7 +43,7 @@ export function BuildLogout(ctx: BuildContext) {
     }),
   })
 
-  const isLogoutReady = !didLoad || logoutFlow
+  const isLogoutReady = !logoutLoading || logoutFlow
 
   const nodeAnchorLogout = createAnchorNode({
     id: 'logout-anchor',

@@ -26,8 +26,8 @@ const Facebook: React.FC<IconProps> = ({ size = 16, ...props }) => (
         y2="29.917"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#18ACFE" />
-        <stop offset="1" stop-color="#0163E0" />
+        <stop stopColor="#18ACFE" />
+        <stop offset="1" stopColor="#0163E0" />
       </linearGradient>
     </defs>
   </svg>

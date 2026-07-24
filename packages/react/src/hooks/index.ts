@@ -6,6 +6,7 @@ export { useCheckbox } from './useCheckbox'
 export { useMethodPasskey } from './useMethodPasskey'
 export { useNodeConsentCheckbox } from './useNodeConsentCheckbox'
 
+export { useLogout } from './useLogout'
 export { useFormSubmit } from './useFormSubmit'
 export { useFormMessages } from './useFormMessages'
 export { useFormAutofocus } from './useFormAutofocus'

@@ -9,6 +9,7 @@ import {
   UiContainer,
   VerificationFlow,
 } from '@ory/client-fetch'
+
 import { FormState } from '.'
 
 export enum OryFlowType {
@@ -23,47 +24,47 @@ export enum OryFlowType {
   Navigation = 'navigation',
 }
 
-export type LoginFlowContainer = {
+export interface LoginFlowContainer {
   flowType: OryFlowType.Login
   flow: LoginFlow
 }
 
-export type RegistrationFlowContainer = {
+export interface RegistrationFlowContainer {
   flowType: OryFlowType.Registration
   flow: RegistrationFlow
 }
 
-export type RecoveryFlowContainer = {
+export interface RecoveryFlowContainer {
   flowType: OryFlowType.Recovery
   flow: RecoveryFlow
 }
 
-export type VerificationFlowContainer = {
+export interface VerificationFlowContainer {
   flowType: OryFlowType.Verification
   flow: VerificationFlow
 }
 
-export type SettingsFlowContainer = {
+export interface SettingsFlowContainer {
   flowType: OryFlowType.Settings
   flow: SettingsFlow
 }
 
-export type OAuth2ConsentFlowContainer = {
+export interface OAuth2ConsentFlowContainer {
   flowType: OryFlowType.OAuth2Consent
   flow: OAuth2ConsentFlow
 }
 
-export type OAuth2LogoutFlowContainer = {
+export interface OAuth2LogoutFlowContainer {
   flowType: OryFlowType.OAuth2Logout
   flow: OAuth2LogoutFlow
 }
 
-export type NavigationFlowContainer = {
+export interface NavigationFlowContainer {
   flowType: OryFlowType.Navigation
   flow: NavigationFlow
 }
 
-export type ErrorFlowContainer = {
+export interface ErrorFlowContainer {
   flowType: OryFlowType.Error
   flow: ErrorFlow
 }
@@ -83,7 +84,7 @@ export type OryFlowContainerWithState = OryFlowContainer & {
   formState: FormState
 }
 
-export type OAuth2ConsentFlow = {
+export interface OAuth2ConsentFlow {
   id: 'UNSET'
   active: 'oauth2_consent'
   ui: UiContainer
@@ -92,7 +93,7 @@ export type OAuth2ConsentFlow = {
   return_to?: string
 }
 
-export type OAuth2LogoutFlow = {
+export interface OAuth2LogoutFlow {
   id: 'UNSET'
   active: 'oauth2_logout'
   ui: UiContainer
@@ -100,7 +101,7 @@ export type OAuth2LogoutFlow = {
   logout_request: OAuth2LogoutRequest
 }
 
-export type NavigationFlow = {
+export interface NavigationFlow {
   id: 'UNSET'
   active: 'navigation'
   ui: UiContainer
@@ -108,7 +109,7 @@ export type NavigationFlow = {
   return_to?: string
 }
 
-export type ErrorFlow = {
+export interface ErrorFlow {
   id: string
   active: 'error'
   ui: UiContainer
@@ -117,7 +118,7 @@ export type ErrorFlow = {
   return_to?: string
 }
 
-export type OryError = {
+export interface OryError {
   code: number
   message?: string
   status?: string

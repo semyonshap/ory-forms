@@ -4,6 +4,7 @@ import {
   registrationUrl,
   UpdateRegistrationFlowBody,
 } from '@ory/client-fetch'
+
 import {
   OryFlowType,
   OryConfiguration,
@@ -47,7 +48,6 @@ export async function onSubmitRegistration(
         onRedirect,
       })
 
-      // eslint-disable-next-line promise/always-return
       if (didContinueWith) {
         return
       }

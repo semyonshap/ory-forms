@@ -11,16 +11,17 @@ import {
   SettingsFlow,
   VerificationFlow,
 } from '@ory/client-fetch'
+
 import { OryFlowType } from './container'
 
-export type OryLoginSuccessEvent = {
+export interface OryLoginSuccessEvent {
   flowType: OryFlowType.Login
   flow: LoginFlow
   session: Session
   method: string
 }
 
-export type OryRegistrationSuccessEvent = {
+export interface OryRegistrationSuccessEvent {
   flowType: OryFlowType.Registration
   flow: RegistrationFlow
   identity: Identity
@@ -28,25 +29,25 @@ export type OryRegistrationSuccessEvent = {
   method: string
 }
 
-export type OryVerificationSuccessEvent = {
+export interface OryVerificationSuccessEvent {
   flowType: OryFlowType.Verification
   flow: VerificationFlow
   method: string
 }
 
-export type OryRecoverySuccessEvent = {
+export interface OryRecoverySuccessEvent {
   flowType: OryFlowType.Recovery
   flow: RecoveryFlow
   method: string
 }
 
-export type OrySettingsSuccessEvent = {
+export interface OrySettingsSuccessEvent {
   flowType: OryFlowType.Settings
   flow: SettingsFlow
   method: string
 }
 
-export type OryConsentSuccessEvent = {
+export interface OryConsentSuccessEvent {
   flowType: OryFlowType.OAuth2Consent
   consentRequest: OAuth2ConsentRequest
 }

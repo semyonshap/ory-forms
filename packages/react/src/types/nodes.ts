@@ -17,7 +17,7 @@ export type AnchorVariants = 'button' | 'link' | 'cancel'
 
 export type ButtonDataType = 'method' | 'resend' | 'oidc'
 
-export type NodeData = {
+export interface NodeData {
   type?: ButtonDataType
   target?: string
 }

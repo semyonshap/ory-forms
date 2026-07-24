@@ -22,11 +22,12 @@ export async function getOAuth2ConsentFlow(
   })
 
   if (!consentChallenge) {
-    redirectToErrorPage({
+    await redirectToErrorPage({
       baseUrl,
       config,
       error: new Error('Consent challenge not found in url'),
     })
+    return null
   }
 
   const api = serverSideOAuth2Client()
@@ -35,11 +36,12 @@ export async function getOAuth2ConsentFlow(
   try {
     consentRequest = await api.getOAuth2ConsentRequest({ consentChallenge })
   } catch (error) {
-    redirectToErrorPage({
+    await redirectToErrorPage({
       config,
       baseUrl,
       error,
     })
+    return null
   }
 
   if (consentRequest.skip) {
