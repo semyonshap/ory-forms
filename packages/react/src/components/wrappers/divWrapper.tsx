@@ -1,7 +1,8 @@
+import React from 'react'
+
 import { useCard } from '../../hooks'
 import { WrapperDiv } from '../../types'
 import { useFlowStore } from '../../context'
-import React from 'react'
 
 export function DivWrapper({ node, attached }: WrapperDiv) {
   const Main = useFlowStore((state) => state.components.Card)
@@ -18,6 +19,6 @@ export function DivWrapper({ node, attached }: WrapperDiv) {
   } else if (type === 'Card') {
     return <Main.Card node={node} attached={attached} props={props} options={options} />
   } else {
-    return <React.Fragment children={attached} />
+    return <React.Fragment>{attached}</React.Fragment>
   }
 }

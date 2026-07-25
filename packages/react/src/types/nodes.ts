@@ -7,14 +7,15 @@ import {
   UiNodeScriptAttributes,
   UiNodeTextAttributes,
 } from '@ory/client-fetch'
+
 import { VariantsAnchor, TypeDiv, VariantsDiv, VariantsInput } from '.'
 
-export type NodeDataAnchor = {
+export interface NodeDataAnchor {
   variant?: VariantsAnchor
   target?: string
 }
 
-export type NodeDataInput = {
+export interface NodeDataInput {
   variant?: VariantsInput
   onClick?: () => void
   description?: string
@@ -22,7 +23,7 @@ export type NodeDataInput = {
   target?: string
 }
 
-export type NodeDataDiv = {
+export interface NodeDataDiv {
   variant?: VariantsDiv
   type?: TypeDiv
   end?: string

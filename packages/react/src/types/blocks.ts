@@ -157,14 +157,14 @@ export type BlockText = BaseBlockProps & {
 
 // Card
 
-export type BlockPropsCard = {
+export interface BlockPropsCard {
   key: string
   action: string
   method: string
   onSubmit: (e?: React.BaseSyntheticEvent) => Promise<void>
 }
 
-export type BlockOptionsCard = {
+export interface BlockOptionsCard {
   flowType: OryFlowType
   title?: string
   description?: string

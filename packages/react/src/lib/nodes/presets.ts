@@ -1,4 +1,4 @@
-import { LoginFlow, LogoutFlow } from '@ory/client-fetch'
+import { LoginFlow } from '@ory/client-fetch'
 
 import { initFlowUrl } from '../../utils'
 import { BuildContext, isUiNodeInput, FormState, BuilderLogoutFlow } from '../../types'

@@ -39,7 +39,7 @@ function renderRange(
         return { result, nextIndex: i + 1 }
       }
 
-      if (!!divEnd) {
+      if (divEnd) {
         const { result: children, nextIndex } = renderRange(nodes, contextMap, i + 1, divEnd)
 
         result.push(<Node key={getNodeId(node)} node={node} attached={children} />)

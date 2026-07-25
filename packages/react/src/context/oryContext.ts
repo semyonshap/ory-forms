@@ -2,9 +2,10 @@ import { useMemo, useContext } from 'react'
 import { useStore } from 'zustand'
 import { useShallow } from 'zustand/shallow'
 
-import { FlowStoreContext, FlowStoreState } from './oryStore'
 import { FlowFormState, FormState } from '../types'
 import { parseStateFromFlow } from '../lib'
+
+import { FlowStoreContext, FlowStoreState } from './oryStore'
 
 export function useFlowStore<T>(selector: (state: FlowStoreState) => T): T {
   const store = useContext(FlowStoreContext)

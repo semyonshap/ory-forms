@@ -1,5 +1,7 @@
 import { LogoutFlow, UiNode, UiNodeGroupEnum } from '@ory/client-fetch'
 import { UseFormGetValues, UseFormSetValue } from 'react-hook-form'
+import { TFunction } from 'i18next'
+import { ReactNode } from 'react'
 
 import {
   FormNode,
@@ -15,8 +17,6 @@ import {
   UiNodeInput,
   UiNodeText,
 } from '.'
-import { TFunction } from 'i18next'
-import { ReactNode } from 'react'
 
 // Builder
 
