@@ -18,9 +18,9 @@ export function computeComponents(components?: Partial<OryClientComponents>): Or
   const overrides = components ?? {}
 
   return {
-    Card: {
-      ...defaultComponents.Card,
-      ...overrides.Card,
+    Layout: {
+      ...defaultComponents.Layout,
+      ...overrides.Layout,
     },
     Node: {
       ...defaultComponents.Node,

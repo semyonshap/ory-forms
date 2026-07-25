@@ -34,8 +34,10 @@ import {
 } from 'lucide-react'
 import { Separator } from '../ui/separator'
 import { toast } from 'sonner'
-import { Children, useEffect } from 'react'
+import { Children, useEffect, useState } from 'react'
 import { Checkbox } from '../ui/checkbox'
+import { Turnstile } from '@marsidev/react-turnstile'
+import { Dialog, DialogContent, DialogTrigger } from '../ui/dialog'
 
 export const OryComponents: OryClientComponents = {
   Icons: {
@@ -57,7 +59,7 @@ export const OryComponents: OryClientComponents = {
       Phone: Phone,
     },
   },
-  Card: {
+  Layout: {
     Form: ({ children, options }) => {
       const { flowType, messages } = options
 
@@ -118,7 +120,9 @@ export const OryComponents: OryClientComponents = {
                     key={`${msg.id}-${index}`}
                     variant={msg.type === 'error' ? 'destructive' : 'default'}
                   >
-                    <AlertDescription className="whitespace-pre-wrap">{msg.text}</AlertDescription>
+                    <AlertDescription className="whitespace-pre-wrap break-all">
+                      {msg.text}
+                    </AlertDescription>
                   </Alert>
                 ))}
               {attached}
@@ -275,6 +279,23 @@ export const OryComponents: OryClientComponents = {
     },
     Input: ({ props }) => {
       return <Input {...props} />
+    },
+    Captcha: ({ options }) => {
+      const { callbacks } = options
+      return (
+        <Turnstile
+          siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
+          options={{
+            size: 'flexible',
+            theme: 'dark',
+            appearance: 'interaction-only',
+          }}
+          onSuccess={callbacks.onSuccess}
+          onError={callbacks.onError}
+          onExpire={callbacks.onExpire}
+          onBeforeInteractive={callbacks.onBeforeInteractive}
+        />
+      )
     },
     Code: ({ props }) => {
       const { value, maxLength, ...restInputProps } = props

@@ -1,4 +1,4 @@
-import { LoginFlow } from '@ory/client-fetch'
+import { LoginFlow, UiNodeGroupEnum } from '@ory/client-fetch'
 
 import { initFlowUrl } from '../../utils'
 import { BuildContext, isUiNodeInput, FormState, BuilderLogoutFlow } from '../../types'
@@ -199,7 +199,24 @@ export function BuildSignIn({
   })
 }
 
-export function BuildReturnTo({
+export function BuildCaptcha() {
+  return createInputNode({
+    attributes: {
+      name: 'captcha_turnstile_options',
+      type: 'hidden',
+      disabled: false,
+    },
+    group: UiNodeGroupEnum.Captcha,
+    meta: {
+      label: createUiText({
+        keyOrId: 0,
+        text: 'Security verification',
+      }),
+    },
+  })
+}
+
+function BuildReturnTo({
   config: {
     project: { default_redirect_url },
     sdk: { url: sdkUrl },

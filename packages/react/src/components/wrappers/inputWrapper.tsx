@@ -1,6 +1,6 @@
 import { ComponentType } from 'react'
 
-import { useButton, useInput, useCheckbox } from '../../hooks'
+import { useButton, useInput, useCheckbox, useCaptcha } from '../../hooks'
 import { BlockButton, WrapperInput } from '../../types'
 import { useFlowStore, useFlowStoreShallow } from '../../context'
 
@@ -51,4 +51,14 @@ export function CheckboxWrapper({ node, attached }: WrapperInput) {
   const { options, props } = useCheckbox(node)
 
   return <Node.Checkbox node={node} attached={attached} props={props} options={options} />
+}
+
+export function CaptchaWrapper({ node, attached }: WrapperInput) {
+  const Captcha = useFlowStore((state) => state.components.Node.Captcha)
+
+  if (!Captcha) return null
+
+  const { options } = useCaptcha(node)
+
+  return <Captcha node={node} options={options} attached={attached} />
 }

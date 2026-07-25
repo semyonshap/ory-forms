@@ -1,18 +1,22 @@
 import { createStore } from 'zustand'
 import { createContext } from 'react'
-import { UiNodeGroupEnum } from '@ory/client-fetch'
+import { UiNode, UiNodeGroupEnum } from '@ory/client-fetch'
 
-import { OryConfiguration, OryFlowContainer, OryComponents } from '../types'
+import { OryConfiguration, OryFlowContainer, OryComponents, FlowFormState } from '../types'
 
 export interface FlowStoreState {
   config: OryConfiguration
   components: OryComponents
   flowContainer: OryFlowContainer
+  overrideState?: FlowFormState
   selectedMethod?: UiNodeGroupEnum
   loadingInputs: Set<UiNodeGroupEnum>
+  extraNodes: UiNode[]
+
   setFlowContainer: (flow: OryFlowContainer) => void
-  selectMethod: (method: UiNodeGroupEnum) => void
-  clearMethod: () => void
+  setOverrideState: (state?: FlowFormState) => void
+  selectMethod: (method?: UiNodeGroupEnum) => void
+  setExtraNodes: (nodes: UiNode[]) => void
   inputLoading: (group: UiNodeGroupEnum) => void
   inputReady: (input: UiNodeGroupEnum) => void
 }
@@ -27,10 +31,14 @@ export const createFlowStore = (initProps: {
   return createStore<FlowStoreState>((set, get) => ({
     ...initProps,
     selectedMethod: undefined,
+    overrideState: undefined,
     loadingInputs: new Set(),
+    extraNodes: [],
 
     setFlowContainer: (flow) => {
       const { selectedMethod } = get()
+      set({ overrideState: undefined, extraNodes: [] })
+
       if (selectedMethod) {
         set({ flowContainer: flow, loadingInputs: new Set() })
       } else {
@@ -38,9 +46,13 @@ export const createFlowStore = (initProps: {
       }
     },
 
-    selectMethod: (method) => set({ selectedMethod: method }),
+    selectMethod: (method) => set({ selectedMethod: method, overrideState: undefined }),
 
-    clearMethod: () => set({ selectedMethod: undefined }),
+    setExtraNodes: (nodes) => set({ extraNodes: nodes }),
+
+    setOverrideState: (state) => {
+      set({ overrideState: state })
+    },
 
     inputLoading: (group) => {
       set((state) => {

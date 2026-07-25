@@ -5,6 +5,7 @@ export { useCard } from './useCard'
 export { useOryForm } from './useOryForm'
 export { useCheckbox } from './useCheckbox'
 export { useMethodPasskey } from './useMethodPasskey'
+export { useCaptcha } from './useCaptcha'
 
 export { useInputTranslation } from './useInputTranslation'
 export { useLogout } from './useLogout'

@@ -17,7 +17,9 @@ import {
   onSubmitVerification,
 } from '../services'
 import { FormValues, OryFlowContainer, OryFlowType, UpdateOAuth2ConsentFlowBody } from '../types'
+import { CaptchaRequiredError } from '../utils'
 import { useFlowStoreShallow } from '../context'
+import { BuildCaptcha } from '../lib'
 import {
   applySelectAccountPrompt,
   computeDefaultValues,
@@ -26,12 +28,14 @@ import {
 } from '../lib'
 
 export function useFormSubmit(methods: UseFormReturn<FormValues>) {
-  const { flowContainer, config, setFlowContainer } = useFlowStoreShallow((state) => ({
-    config: state.config,
-    flowContainer: state.flowContainer,
-    setFlowContainer: state.setFlowContainer,
-  }))
-
+  const { flowContainer, config, setFlowContainer, setExtraNodes } = useFlowStoreShallow(
+    (state) => ({
+      config: state.config,
+      flowContainer: state.flowContainer,
+      setFlowContainer: state.setFlowContainer,
+      setExtraNodes: state.setExtraNodes,
+    }),
+  )
   const { flowType } = flowContainer
 
   const onRedirect: OnRedirectHandler = (url) => {
@@ -63,81 +67,90 @@ export function useFormSubmit(methods: UseFormReturn<FormValues>) {
 
     const data = removeEmptyStrings<FormValues>(initialData)
 
-    switch (flowType) {
-      case OryFlowType.Login: {
-        const submitData: UpdateLoginFlowBody = {
-          ...(data as unknown as UpdateLoginFlowBody),
+    try {
+      switch (flowType) {
+        case OryFlowType.Login: {
+          const submitData: UpdateLoginFlowBody = {
+            ...(data as unknown as UpdateLoginFlowBody),
+          }
+          await onSubmitLogin(flowContainer, config, {
+            onRedirect,
+            setFlowContainer: handleFlowUpdate,
+            body: submitData,
+          })
+          break
         }
-        await onSubmitLogin(flowContainer, config, {
-          onRedirect,
-          setFlowContainer: handleFlowUpdate,
-          body: submitData,
-        })
-        break
-      }
-      case OryFlowType.Registration: {
-        const submitData: UpdateRegistrationFlowBody = {
-          ...(data as unknown as UpdateRegistrationFlowBody),
+        case OryFlowType.Registration: {
+          const submitData: UpdateRegistrationFlowBody = {
+            ...(data as unknown as UpdateRegistrationFlowBody),
+          }
+
+          await onSubmitRegistration(flowContainer, config, {
+            onRedirect,
+            setFlowContainer: handleFlowUpdate,
+            body: submitData,
+          })
+          break
         }
+        case OryFlowType.Verification: {
+          const submitData = {
+            ...(data as unknown as UpdateVerificationFlowBody),
+          }
 
-        await onSubmitRegistration(flowContainer, config, {
-          onRedirect,
-          setFlowContainer: handleFlowUpdate,
-          body: submitData,
-        })
-        break
-      }
-      case OryFlowType.Verification: {
-        const submitData = {
-          ...(data as unknown as UpdateVerificationFlowBody),
+          await onSubmitVerification(flowContainer, config, {
+            onRedirect,
+            setFlowContainer: handleFlowUpdate,
+            body: submitData,
+          })
+          break
         }
+        case OryFlowType.Recovery: {
+          const submitData: UpdateRecoveryFlowBody = {
+            ...(data as unknown as UpdateRecoveryFlowBody),
+          }
 
-        await onSubmitVerification(flowContainer, config, {
-          onRedirect,
-          setFlowContainer: handleFlowUpdate,
-          body: submitData,
-        })
-        break
-      }
-      case OryFlowType.Recovery: {
-        const submitData: UpdateRecoveryFlowBody = {
-          ...(data as unknown as UpdateRecoveryFlowBody),
+          await onSubmitRecovery(flowContainer, config, {
+            onRedirect,
+            setFlowContainer: handleFlowUpdate,
+            body: submitData,
+          })
+          break
         }
+        case OryFlowType.Settings: {
+          const filtered = filterSettingsFields(data, data.method as string)
+          const submitData: UpdateSettingsFlowBody = {
+            ...(filtered as unknown as UpdateSettingsFlowBody),
+          }
 
-        await onSubmitRecovery(flowContainer, config, {
-          onRedirect,
-          setFlowContainer: handleFlowUpdate,
-          body: submitData,
-        })
-        break
-      }
-      case OryFlowType.Settings: {
-        const filtered = filterSettingsFields(data, data.method as string)
-        const submitData: UpdateSettingsFlowBody = {
-          ...(filtered as unknown as UpdateSettingsFlowBody),
+          console.log('filtered', filtered)
+
+          applySelectAccountPrompt(submitData)
+
+          await onSubmitSettings(flowContainer, config, {
+            onRedirect,
+            setFlowContainer: handleFlowUpdate,
+            body: submitData,
+          })
+          break
         }
-
-        console.log('filtered', filtered)
-
-        applySelectAccountPrompt(submitData)
-
-        await onSubmitSettings(flowContainer, config, {
-          onRedirect,
-          setFlowContainer: handleFlowUpdate,
-          body: submitData,
-        })
-        break
-      }
-      case OryFlowType.OAuth2Consent: {
-        const submitData: UpdateOAuth2ConsentFlowBody = {
-          ...(data as unknown as UpdateOAuth2ConsentFlowBody),
+        case OryFlowType.OAuth2Consent: {
+          const submitData: UpdateOAuth2ConsentFlowBody = {
+            ...(data as unknown as UpdateOAuth2ConsentFlowBody),
+          }
+          await onSubmitOAuth2Consent(flowContainer, {
+            onRedirect,
+            body: submitData,
+          })
+          break
         }
-        await onSubmitOAuth2Consent(flowContainer, {
-          onRedirect,
-          body: submitData,
-        })
-        break
       }
+    } catch (err) {
+      if (err instanceof CaptchaRequiredError) {
+        const node = BuildCaptcha()
+        setExtraNodes([node])
+        return
+      }
+      throw err
     }
 
     clearSensitiveData(data)

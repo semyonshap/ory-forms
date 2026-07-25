@@ -7,6 +7,7 @@ import { buildUpstreamResponse } from './response'
 import { rewriteSetCookieHeaders } from './cookie'
 import { handleConsentSubmit } from '../handlers/consent'
 import { handleLogoutSubmit } from '../handlers/logout'
+import { handleVerifySubmit } from '../handlers/verify'
 import { buildUpstreamUrl, buildUpstreamHeaders } from './request'
 
 export type OryMiddlewareOptions = {
@@ -31,6 +32,10 @@ async function proxyRequest(request: NextRequest, options: OryMiddlewareOptions)
 
   if (request.nextUrl.pathname === '/custom-service/consent' && request.method === 'POST') {
     return handleConsentSubmit(request)
+  }
+
+  if (request.nextUrl.pathname === '/custom-service/verify' && request.method === 'POST') {
+    return handleVerifySubmit(request)
   }
 
   if (request.nextUrl.pathname === '/self-service/logout' && request.method === 'POST') {

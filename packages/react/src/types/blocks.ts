@@ -94,10 +94,28 @@ export interface BlockOptionsInput {
   label: string
 }
 
-export type RenderInput = BaseBlockProps & {
+export type BlockInput = BaseBlockProps & {
   node: UiNodeInput
   props: BlockPropsInput
   options: BlockOptionsInput
+}
+
+// Captcha
+export interface BlockOptionsCaptcha {
+  isInteractive: boolean
+  errorMessage: string | undefined
+  resetWidget: () => void
+  callbacks: {
+    onSuccess: (token: string) => void
+    onError: () => void
+    onExpire: () => void
+    onBeforeInteractive: () => void
+  }
+}
+
+export type BlockCaptcha = BaseBlockProps & {
+  node: UiNodeInput
+  options: BlockOptionsCaptcha
 }
 
 // Div
@@ -184,3 +202,7 @@ export type BlockForm = PropsWithChildren & {
     messages?: MessageProps[]
   }
 }
+
+// Dialog
+
+export type BlockDialog = PropsWithChildren

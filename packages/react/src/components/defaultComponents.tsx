@@ -3,7 +3,7 @@ import { OryComponents } from '../types'
 import { defaultGroupSorter, defaultNodeSorter } from '../lib/nodes'
 
 export const DefaultComponents: OryComponents = {
-  Card: {
+  Layout: {
     Card: ({ props, options, attached }) => {
       const { title, description, messages } = options
       return (

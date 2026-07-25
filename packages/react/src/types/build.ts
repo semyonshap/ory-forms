@@ -4,6 +4,7 @@ import { TFunction } from 'i18next'
 import { ReactNode } from 'react'
 
 import {
+  FlowFormState,
   FormNode,
   FormState,
   FormValues,
@@ -29,9 +30,11 @@ export interface BuildContext {
   t: TFunction
 }
 
-export interface BuildRHFContext {
+export interface BuildFormContext {
   getValues: UseFormGetValues<FormValues>
   setValue: UseFormSetValue<FormValues>
+  selectMethod: (method?: UiNodeGroupEnum) => void
+  setOverrideState: (state?: FlowFormState) => void
 }
 
 export interface BuilderLogoutFlow {
@@ -40,8 +43,6 @@ export interface BuilderLogoutFlow {
 }
 
 export interface BuilderSorter {
-  selectMethod: (method: UiNodeGroupEnum) => void
-  clearMethod: () => void
   nodeSorter: NodeSorter
   groupSorter: GroupSorter
 }

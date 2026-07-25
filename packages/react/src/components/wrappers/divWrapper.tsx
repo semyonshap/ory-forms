@@ -5,7 +5,7 @@ import { WrapperDiv } from '../../types'
 import { useFlowStore } from '../../context'
 
 export function DivWrapper({ node, attached }: WrapperDiv) {
-  const Main = useFlowStore((state) => state.components.Card)
+  const Main = useFlowStore((state) => state.components.Layout)
 
   const { props, options } = useCard(node)
 

@@ -4,7 +4,7 @@ import {
   BuildContext,
   BuilderLogoutFlow,
   BuilderSorter,
-  BuildRHFContext,
+  BuildFormContext,
   FormNode,
   OryFlowType,
 } from '../../types'
@@ -38,14 +38,17 @@ import { NodeDataBuilder } from './nodeData'
 import { SettingsBuilder } from './settings'
 
 export function Builder(
-  { config, flowContainer, formState, t }: BuildContext,
-  formCtx: BuildRHFContext,
+  ctx: BuildContext,
+  formCtx: BuildFormContext,
   logoutCtx: BuilderLogoutFlow,
-  { selectMethod, clearMethod, nodeSorter, groupSorter }: BuilderSorter,
+  { nodeSorter, groupSorter }: BuilderSorter,
+  extraNodes: UiNode[] = [],
 ) {
-  const ctx: BuildContext = { config, flowContainer, formState, t }
   const sortNodes = (a: UiNode, b: UiNode) => nodeSorter(a, b, { flowType })
   const sortGroups = (a: UiNodeGroupEnum, b: UiNodeGroupEnum) => groupSorter(a, b)
+
+  const { config, flowContainer, formState, t } = ctx
+  const { setOverrideState, selectMethod } = formCtx
 
   const { flow, flowType } = flowContainer
 
@@ -134,7 +137,7 @@ export function Builder(
             const chooseMethod = BuildChooseMethod({
               ...ctx,
               onClick: () => {
-                clearMethod()
+                setOverrideState({ current: 'select_method' })
               },
             })
             result.push(chooseMethod)
@@ -150,7 +153,7 @@ export function Builder(
             const selectMethod = BuildSelectMethod({
               ...ctx,
               onClick: () => {
-                clearMethod()
+                setOverrideState({ current: 'select_method' })
               },
             })
             result.push(selectMethod)
@@ -208,6 +211,10 @@ export function Builder(
   }
 
   if (flowType !== OryFlowType.Settings) {
+    if (extraNodes.length > 0) {
+      result.push(...extraNodes)
+    }
+
     result = createDivGroup({
       id: 'form-card',
       data: {

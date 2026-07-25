@@ -3,7 +3,7 @@ import { ComponentPropsWithoutRef, ComponentType, FormEventHandler } from 'react
 
 import { OryFlowContainer } from './container'
 import {
-  RenderInput,
+  BlockInput,
   BlockImage,
   BlockText,
   BlockAnchor,
@@ -15,6 +15,8 @@ import {
   BlockCheckbox,
   BlockForm,
   BlockDiv,
+  BlockCaptcha,
+  BlockDialog,
 } from './blocks'
 import { OryClientConfiguration } from './config'
 
@@ -35,7 +37,7 @@ export type NodeSorter = (a: UiNode, b: UiNode, ctx: { flowType: string }) => nu
 export type GroupSorter = (a: UiNodeGroupEnum, b: UiNodeGroupEnum) => number
 
 export interface OryComponents {
-  Card: {
+  Layout: {
     Card: ComponentType<BlockCard>
     Divider?: ComponentType<BlockDivider>
     Form?: ComponentType<BlockForm>
@@ -43,17 +45,18 @@ export interface OryComponents {
   }
   Node: {
     Label: ComponentType<BlockLabel>
+    Button: ComponentType<BlockButton>
+    Anchor: ComponentType<BlockAnchor>
+    Text: ComponentType<BlockText>
+    Checkbox: ComponentType<BlockCheckbox>
+    Image: ComponentType<BlockImage>
+    Captcha?: ComponentType<BlockCaptcha>
     AuthMethod?: ComponentType<BlockButton>
     Resend?: ComponentType<BlockButton>
     Oidc?: ComponentType<BlockButton>
-    Button: ComponentType<BlockButton>
-    Checkbox: ComponentType<BlockCheckbox>
-    Input: ComponentType<RenderInput>
-    Code?: ComponentType<RenderInput>
-    Password?: ComponentType<RenderInput>
-    Image: ComponentType<BlockImage>
-    Text: ComponentType<BlockText>
-    Anchor: ComponentType<BlockAnchor>
+    Input: ComponentType<BlockInput>
+    Code?: ComponentType<BlockInput>
+    Password?: ComponentType<BlockInput>
   }
   Icons: {
     Providers: {
@@ -94,7 +97,7 @@ export interface OryComponents {
 }
 
 export type OryClientComponents = {
-  Card: OryComponents['Card']
+  Layout: OryComponents['Layout']
   Node: Omit<OryComponents['Node'], 'Image' | 'Password'> & {
     Image?: ComponentType<BlockImage>
   }

@@ -40,25 +40,27 @@ export function useButton(node: UiNodeInput): {
 
   const attr = node.attributes
 
-  const onClick = useCallback(() => {
-    setValue(attr.name, attr.value)
+  const onClick = useCallback(
+    (event: React.MouseEvent) => {
+      setValue(attr.name, attr.value)
 
-    node.data?.onClick?.()
-
-    if (flowType === OryFlowType.Settings) {
       setValue('method', node.group)
-    }
 
-    if (node.data?.variant === 'sso') {
-      setValue('provider', node.attributes.value)
-    }
+      setClicked(true)
 
-    setClicked(true)
+      node.data?.onClick?.()
 
-    if (attr.onclickTrigger) {
-      triggerToWindowCall(attr.onclickTrigger)
-    }
-  }, [node, attr, setValue, setClicked, flowType])
+      if (node.data?.variant === 'sso') {
+        setValue('provider', node.attributes.value)
+        event.currentTarget.closest('form')?.requestSubmit()
+      }
+
+      if (attr.onclickTrigger) {
+        triggerToWindowCall(attr.onclickTrigger)
+      }
+    },
+    [node, attr, setValue, setClicked, flowType],
+  )
 
   const {
     formState: { isSubmitting },
@@ -95,7 +97,8 @@ export function useButton(node: UiNodeInput): {
       htmlType = 'button'
       break
     }
-    case 'oidc': {
+    case 'oidc':
+    case 'sso': {
       htmlType = 'button'
       const iconKey = (node.attributes.value as string).split('-')[0]
       icon = IconsProviders?.[iconKey]
@@ -113,7 +116,7 @@ export function useButton(node: UiNodeInput): {
     },
     options: {
       variant: variant || type,
-      isSubmitting,
+      isSubmitting: clicked && isSubmitting,
       label: formattedLabel,
       description: node.data?.description,
       icon,

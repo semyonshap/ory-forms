@@ -2,7 +2,7 @@ import { UiNode, UiNodeGroupEnum, UiNodeInputAttributesTypeEnum } from '@ory/cli
 
 import {
   NodeDataAnchor,
-  BuildRHFContext,
+  BuildFormContext,
   FormNode,
   NodeDataInput,
   isUiNodeAnchor,
@@ -17,7 +17,7 @@ export function NodeDataBuilder({
   flowContainer,
 }: {
   nodes: UiNode[]
-  formCtx: BuildRHFContext
+  formCtx: BuildFormContext
   flowContainer: OryFlowContainer
 }): FormNode[] {
   const { flowType } = flowContainer

@@ -16,6 +16,8 @@ import {
 
 import { FlowErrorHandlerProps } from '../types'
 
+export class CaptchaRequiredError extends Error {}
+
 export const handleFlowError =
   <T>(opts: FlowErrorHandlerProps<T>) =>
   async (err: unknown): Promise<void | T> => {
@@ -34,6 +36,11 @@ export const handleFlowError =
     if (contentType.includes('application/json')) {
       if (await handleJsonError(body, opts)) return
       if (await handleStatusError(err, body, opts)) return
+
+      const msg = JSON.stringify(body)
+      if (msg.includes('cf_turnstile_response') || msg.includes('captcha')) {
+        throw new CaptchaRequiredError()
+      }
 
       throw new ResponseError(
         err.response,

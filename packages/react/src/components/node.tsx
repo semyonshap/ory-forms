@@ -1,4 +1,4 @@
-import { UiNodeInputAttributesTypeEnum } from '@ory/client-fetch'
+import { UiNodeInputAttributesTypeEnum, isUiNodeInputAttributes } from '@ory/client-fetch'
 
 import {
   WrapperBase,
@@ -12,10 +12,17 @@ import {
   isUiNodeDiv,
 } from '../types'
 
-import { ButtonWrapper, AnchorWrapper, TextWrapper, ImageWrapper, InputWrapper } from './wrappers'
+import {
+  CaptchaWrapper,
+  CheckboxWrapper,
+  DivWrapper,
+  ButtonWrapper,
+  AnchorWrapper,
+  TextWrapper,
+  ImageWrapper,
+  InputWrapper,
+} from './wrappers'
 import { NodeScript } from './nodeScript'
-import { DivWrapper } from './wrappers/divWrapper'
-import { CheckboxWrapper } from './wrappers/inputWrapper'
 
 export const Node = ({ node, attached }: WrapperBase) => {
   if (isUiNodeDiv(node)) return DivWrapper({ node, attached })
@@ -30,6 +37,11 @@ export const Node = ({ node, attached }: WrapperBase) => {
 
 function NodeInput({ node, attached }: WrapperInput) {
   const { attributes } = node
+
+  if (attributes.name === 'captcha_turnstile_options') {
+    return <CaptchaWrapper node={node} attached={attached} />
+  }
+
   switch (attributes.type) {
     case UiNodeInputAttributesTypeEnum.Checkbox:
       return CheckboxWrapper({ node, attached })

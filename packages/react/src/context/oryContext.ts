@@ -2,7 +2,7 @@ import { useMemo, useContext } from 'react'
 import { useStore } from 'zustand'
 import { useShallow } from 'zustand/shallow'
 
-import { FlowFormState, FormState } from '../types'
+import { FormState } from '../types'
 import { parseStateFromFlow } from '../lib'
 
 import { FlowStoreContext, FlowStoreState } from './oryStore'
@@ -22,17 +22,26 @@ export function useFlowStoreShallow<T>(selector: (state: FlowStoreState) => T): 
 }
 
 export function useFormState(): FormState {
-  const { flowContainer, selectedMethod, loadingInputs } = useFlowStore(
+  const { flowContainer, selectedMethod, loadingInputs, overrideState } = useFlowStore(
     useShallow((s) => ({
       flowContainer: s.flowContainer,
       selectedMethod: s.selectedMethod,
       loadingInputs: s.loadingInputs,
+      overrideState: s.overrideState,
     })),
   )
+
   return useMemo(() => {
-    const flowState: FlowFormState = selectedMethod
-      ? { current: 'method_active', method: selectedMethod }
-      : parseStateFromFlow(flowContainer)
-    return { ...flowState, isReady: loadingInputs.size === 0 } as FormState
-  }, [flowContainer, selectedMethod, loadingInputs])
+    const isReady = loadingInputs.size === 0
+
+    if (overrideState) {
+      return { ...overrideState, isReady }
+    }
+
+    if (selectedMethod) {
+      return { current: 'method_active', method: selectedMethod, isReady }
+    }
+
+    return { ...parseStateFromFlow(flowContainer), isReady }
+  }, [flowContainer, selectedMethod, loadingInputs, overrideState])
 }
