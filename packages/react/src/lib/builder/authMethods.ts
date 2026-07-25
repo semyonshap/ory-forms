@@ -1,17 +1,15 @@
 import { UiNodeGroupEnum } from '@ory/client-fetch'
-import { Dispatch } from 'react'
 
-import { BuildContext, FormStateAction } from '../../types'
-
-import { createInputNode, createUiText } from './factory'
+import { BuildContext } from '../../types'
+import { createInputNode, createUiText } from '../nodes/factory'
 
 export function BuildAuthMethodList({
   groups,
-  dispatchFormState,
+  selectMethod,
   ctx: { t },
 }: {
   groups: UiNodeGroupEnum[]
-  dispatchFormState: Dispatch<FormStateAction>
+  selectMethod: (method: UiNodeGroupEnum) => void
   ctx: BuildContext
 }) {
   return groups.map((group) => {
@@ -24,13 +22,9 @@ export function BuildAuthMethodList({
         disabled: false,
       },
       data: {
-        type: 'method',
+        variant: 'method',
         description: t(`two-step.${group}.description`),
-        onClick: () =>
-          dispatchFormState({
-            type: 'action_select_method',
-            method: group,
-          }),
+        onClick: () => selectMethod(group),
       },
       meta: {
         label: createUiText({

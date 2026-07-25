@@ -4,10 +4,11 @@ import { defaultGroupSorter, defaultNodeSorter } from '../lib/nodes'
 
 export const DefaultComponents: OryComponents = {
   Card: {
-    Default: ({ options, attached }) => {
+    Card: ({ props, options, attached }) => {
       const { title, description, messages } = options
       return (
-        <div
+        <form
+          {...props}
           style={{
             background: '#212121',
             width: '400px',
@@ -31,7 +32,7 @@ export const DefaultComponents: OryComponents = {
             </p>
           ))}
           {attached}
-        </div>
+        </form>
       )
     },
   },

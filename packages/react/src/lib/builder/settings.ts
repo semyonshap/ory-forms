@@ -2,24 +2,24 @@ import { TFunction } from 'i18next'
 import { UiNode, UiNodeGroupEnum } from '@ory/client-fetch'
 
 import {
-  InputNodeData,
+  NodeDataInput,
   isUiNodeImage,
   isUiNodeInput,
   isUiNodeText,
   UiNodeInput,
   UiNodeText,
 } from '../../types'
-import { createDivGroup, createInputNode, createTextNode, createUiText } from '../nodes/factory'
+import { createDivGroup, createInputNode, createUiText } from '../nodes/factory'
+import { settingsFooter } from './settingsFooter'
 
-export function SettingsBuilder(group: UiNodeGroupEnum, nodes: UiNode[], t: TFunction) {
-  let keyFooter
-
+export function SettingsBuilder(
+  group: UiNodeGroupEnum,
+  nodes: UiNode[],
+  t: TFunction,
+  allGroups: Partial<Record<UiNodeGroupEnum, UiNode[]>>,
+) {
   switch (group) {
     case UiNodeGroupEnum.Totp: {
-      const unlink = nodes.find((n) => isUiNodeInput(n) && n.attributes.name === 'totp_unlink')
-
-      keyFooter = unlink ? 'settings.totp.info.linked' : 'settings.totp.info.not-linked'
-
       const secretKeyText = nodes.find(
         (n): n is UiNodeText => isUiNodeText(n) && n.attributes.id === 'totp_secret_key',
       )
@@ -46,15 +46,17 @@ export function SettingsBuilder(group: UiNodeGroupEnum, nodes: UiNode[], t: TFun
 
         const secretRightGroup = createDivGroup({
           id: `${group}-secret-right-div`,
-          class: 'w-full flex flex-col gap-2',
-          div_type: 'Div',
+          data: {
+            variant: 'totp-secret',
+          },
           children: [secretKeyInput, secretCode],
         })
 
         const secretGroup = createDivGroup({
           id: `${group}-secret-div`,
-          class: 'flex flex-row gap-4',
-          div_type: 'Div',
+          data: {
+            variant: 'totp-qr',
+          },
           children: [secretQr, ...secretRightGroup],
         })
 
@@ -65,19 +67,34 @@ export function SettingsBuilder(group: UiNodeGroupEnum, nodes: UiNode[], t: TFun
       break
     }
     case UiNodeGroupEnum.Oidc:
-      keyFooter = `settings.${group}.info`
       nodes.forEach((n) => {
         if (isUiNodeInput(n) && n.attributes.type === 'submit') {
-          const data: InputNodeData = {
-            type: 'oidc',
+          const data: NodeDataInput = {
+            variant: 'oidc',
           }
           n.data = { ...n.data, ...data }
         }
       })
       break
-    case UiNodeGroupEnum.Passkey:
-    case UiNodeGroupEnum.Webauthn: {
-      keyFooter = `settings.${group}.info`
+    case UiNodeGroupEnum.Password: {
+      const profileNodes = allGroups?.[UiNodeGroupEnum.Profile]
+      const emailNode = profileNodes?.find(
+        (n): n is UiNodeInput => isUiNodeInput(n) && n.attributes.name === 'traits.email',
+      )
+      const emailValue = emailNode?.attributes.value
+
+      if (emailValue) {
+        const hiddenEmail = createInputNode({
+          group: UiNodeGroupEnum.Password,
+          attributes: {
+            name: 'email',
+            type: 'hidden',
+            disabled: false,
+            value: String(emailValue),
+          },
+        })
+        nodes.unshift(hiddenEmail)
+      }
       break
     }
     case UiNodeGroupEnum.LookupSecret: {
@@ -109,8 +126,9 @@ export function SettingsBuilder(group: UiNodeGroupEnum, nodes: UiNode[], t: TFun
 
         const codesDiv = createDivGroup({
           id: `${group}-codes`,
-          class: 'grid grid-cols-3 gap-2',
-          div_type: 'Div',
+          data: {
+            variant: 'lookup-secrets-codes',
+          },
           children: codeNodes,
         })
 
@@ -120,50 +138,13 @@ export function SettingsBuilder(group: UiNodeGroupEnum, nodes: UiNode[], t: TFun
     }
   }
 
-  const footerChildren: UiNode[] = []
-
-  if (keyFooter) {
-    const textNode = createTextNode({
-      id: `${group}-footer-description`,
-      text: createUiText({
-        keyOrId: keyFooter,
-        text: '',
-        t,
-      }),
-    })
-    footerChildren.push(textNode)
-  }
-
-  const submitIds = [1070003, 1050008, 1050011, 1050016, 1050007]
-
-  for (let i = nodes.length - 1; i >= 0; i--) {
-    const n = nodes[i]
-    const id = n.meta.label?.id
-    if (isUiNodeInput(n) && n.attributes.type === 'submit' && id && submitIds.includes(id)) {
-      if (n.meta.label?.id === 1050016) {
-        n.data = { ...n.data, variant: 'cancel' }
-      }
-      footerChildren.push(nodes.splice(i, 1)[0])
-    }
-  }
-
-  const footerJustify =
-    footerChildren.length === 1 && footerChildren[0].type === 'text'
-      ? 'justify-start'
-      : 'justify-end'
-
-  const submitGroup = createDivGroup({
-    id: `${group}-footer`,
-    div_type: 'Div',
-    class: `flex ${footerJustify} gap-4 mt-2`,
-    children: footerChildren,
-  })
-
-  nodes.push(...submitGroup)
+  settingsFooter(group, nodes, t)
 
   return createDivGroup({
     id: `${group}-card`,
-    div_type: 'SettingsCard',
+    data: {
+      type: 'Card',
+    },
     children: nodes,
     group,
   })

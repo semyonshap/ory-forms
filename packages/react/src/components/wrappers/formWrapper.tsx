@@ -1,49 +1,44 @@
 import { useTranslation } from 'react-i18next'
-import { useForm, useFormContext } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { useMemo } from 'react'
 import React from 'react'
 
 import { Builder } from '../../lib'
 import { renderNodes } from '../render'
-import { useFormSubmit, useLogout } from '../../hooks'
-import { useFlowStoreShallow } from '../../context'
+import { useFormMessages, useLogout } from '../../hooks'
+import { useFlowStoreShallow, useFormState } from '../../context'
 
 export function FormWrapper() {
-  const { config, flowContainer, formState, Card, dispatchFormState, nodeSorter, groupSorter } =
+  const { config, flowContainer, Card, selectMethod, clearMethod, nodeSorter, groupSorter } =
     useFlowStoreShallow((state) => ({
       config: state.config,
       flowContainer: state.flowContainer,
-      formState: state.formState,
       Card: state.components.Card,
-      dispatchFormState: state.dispatchFormState,
+      selectMethod: state.selectMethod,
+      clearMethod: state.clearMethod,
       nodeSorter: state.components.nodeSorter,
       groupSorter: state.components.groupSorter,
     }))
+  const formState = useFormState()
 
   const { setValue, getValues } = useForm()
 
   const { t } = useTranslation()
-  const { flow } = flowContainer
+  const { flowType } = flowContainer
   const { logoutFlow, isLoading: logoutLoading } = useLogout(config)
 
   const nodes = useMemo(() => {
-    return Builder({
-      config,
-      flowContainer,
-      formState,
-      t,
-      getValues,
-      setValue,
-      dispatchFormState,
-      nodeSorter,
-      groupSorter,
-      logoutFlow,
-      logoutLoading,
-    })
+    return Builder(
+      { config, flowContainer, formState, t },
+      { setValue, getValues },
+      { logoutFlow, logoutLoading },
+      { selectMethod, clearMethod, nodeSorter, groupSorter },
+    )
   }, [
     formState,
     flowContainer,
-    dispatchFormState,
+    selectMethod,
+    clearMethod,
     config,
     t,
     getValues,
@@ -54,25 +49,11 @@ export function FormWrapper() {
     logoutLoading,
   ])
 
-  const methods = useFormContext()
-  const onSubmit = useFormSubmit(methods)
-
   const result = renderNodes(nodes)
 
   const Component = Card.Form ?? React.Fragment
 
-  return (
-    <Component>
-      {result.map((card) => (
-        <form
-          key={card.node.group}
-          action={flow.ui.action}
-          method={flow.ui.method}
-          onSubmit={methods.handleSubmit(onSubmit, console.error)}
-        >
-          {card.element}
-        </form>
-      ))}
-    </Component>
-  )
+  const messages = useFormMessages()
+
+  return <Component options={{ flowType, messages }}>{result}</Component>
 }

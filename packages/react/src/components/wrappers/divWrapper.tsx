@@ -1,28 +1,23 @@
-import { NodeDiv } from '../nodes/div'
-import { useDiv } from '../../hooks/useDiv'
-import { NodeRenderDiv } from '../../types'
+import { useCard } from '../../hooks'
+import { WrapperDiv } from '../../types'
 import { useFlowStore } from '../../context'
+import React from 'react'
 
-export function DivWrapper({ node, attached }: NodeRenderDiv) {
+export function DivWrapper({ node, attached }: WrapperDiv) {
   const Main = useFlowStore((state) => state.components.Card)
-  const { options } = useDiv(node)
-  const type = node.attributes.data?.type
 
-  if (!type || type === 'Div') return <NodeDiv node={node} attached={attached} />
+  const { props, options } = useCard(node)
 
-  if (type === 'DividerCard') {
+  const type = node.data?.type
+
+  if (!type && Main.Div)
+    return <Main.Div node={node} attached={attached} options={{ variant: node.data?.variant }} />
+  else if (type === 'DividerCard') {
     if (Main.Divider) return <Main.Divider node={node} />
     else return null
+  } else if (type === 'Card') {
+    return <Main.Card node={node} attached={attached} props={props} options={options} />
+  } else {
+    return <React.Fragment children={attached} />
   }
-
-  if (type === 'FormCard') {
-    return <Main.Default node={node} attached={attached} options={options} />
-  }
-
-  if (type === 'SettingsCard') {
-    const Compnent = Main.Settings || Main.Default
-    return <Compnent node={node} attached={attached} options={options} />
-  }
-
-  return <NodeDiv node={node} attached={attached} />
 }

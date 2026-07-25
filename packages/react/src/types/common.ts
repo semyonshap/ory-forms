@@ -3,18 +3,19 @@ import { ComponentPropsWithoutRef, ComponentType, FormEventHandler } from 'react
 
 import { OryFlowContainer } from './container'
 import {
-  FormRenderSelect,
-  FormRenderInput,
-  FormRenderImageProps,
-  FormRenderTextProps,
-  FormRenderAnchorProps,
-  FormRenderLabelProps,
-  FormRenderButton,
+  RenderInput,
+  BlockImage,
+  BlockText,
+  BlockAnchor,
+  BlockLabel,
+  BlockButton,
   IconProps,
-  FormRenderCardProps,
-  FormRenderCardDivider,
-  FormRenderCheckbox,
-} from './render'
+  BlockCard,
+  BlockDivider,
+  BlockCheckbox,
+  BlockForm,
+  BlockDiv,
+} from './blocks'
 import { OryClientConfiguration } from './config'
 
 export type FormValues = Record<string, string | boolean | number | string[] | undefined>
@@ -35,24 +36,24 @@ export type GroupSorter = (a: UiNodeGroupEnum, b: UiNodeGroupEnum) => number
 
 export interface OryComponents {
   Card: {
-    Default: ComponentType<FormRenderCardProps>
-    Settings?: ComponentType<FormRenderCardProps>
-    Divider?: ComponentType<FormRenderCardDivider>
-    Form?: ComponentType<{ children?: React.ReactNode }>
+    Card: ComponentType<BlockCard>
+    Divider?: ComponentType<BlockDivider>
+    Form?: ComponentType<BlockForm>
+    Div?: ComponentType<BlockDiv>
   }
   Node: {
-    Label: ComponentType<FormRenderLabelProps>
-    AuthMethod?: ComponentType<FormRenderButton>
-    Resend?: ComponentType<FormRenderButton>
-    Oidc?: ComponentType<FormRenderButton>
-    Button: ComponentType<FormRenderButton>
-    Checkbox: ComponentType<FormRenderCheckbox>
-    Input: ComponentType<FormRenderInput>
-    Code?: ComponentType<FormRenderInput>
-    Password?: ComponentType<FormRenderInput>
-    Image: ComponentType<FormRenderImageProps>
-    Text: ComponentType<FormRenderTextProps>
-    Anchor: ComponentType<FormRenderAnchorProps>
+    Label: ComponentType<BlockLabel>
+    AuthMethod?: ComponentType<BlockButton>
+    Resend?: ComponentType<BlockButton>
+    Oidc?: ComponentType<BlockButton>
+    Button: ComponentType<BlockButton>
+    Checkbox: ComponentType<BlockCheckbox>
+    Input: ComponentType<RenderInput>
+    Code?: ComponentType<RenderInput>
+    Password?: ComponentType<RenderInput>
+    Image: ComponentType<BlockImage>
+    Text: ComponentType<BlockText>
+    Anchor: ComponentType<BlockAnchor>
   }
   Icons: {
     Providers: {
@@ -95,7 +96,7 @@ export interface OryComponents {
 export type OryClientComponents = {
   Card: OryComponents['Card']
   Node: Omit<OryComponents['Node'], 'Image' | 'Password'> & {
-    Image?: ComponentType<FormRenderImageProps>
+    Image?: ComponentType<BlockImage>
   }
   Icons?: {
     Providers?: Partial<OryComponents['Icons']['Providers']>

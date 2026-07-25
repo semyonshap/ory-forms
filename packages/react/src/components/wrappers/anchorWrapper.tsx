@@ -3,10 +3,10 @@ import { getNodeLabel, UiNodeAnchorAttributes } from '@ory/client-fetch'
 
 import { useFlowStore } from '../../context'
 import { omitInputAttributes } from '../../utils'
-import { NodeRenderAnchor } from '../../types'
+import { WrapperAnchor } from '../../types'
 import { uiTextToFormattedMessage } from '../../i18n'
 
-export function AnchorWrapper({ node, attached }: NodeRenderAnchor) {
+export function AnchorWrapper({ node, attached }: WrapperAnchor) {
   const Node = useFlowStore((state) => state.components.Node)
   const { t } = useTranslation()
 

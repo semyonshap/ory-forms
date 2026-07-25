@@ -4,13 +4,22 @@ import { ComponentType, useCallback, useEffect, useMemo } from 'react'
 import { UiNodeInputAttributesTypeEnum } from '@ory/client-fetch'
 
 import { normalizeKeys } from '../utils'
-import { useFlowStoreShallow } from '../context'
+import { useFlowStoreShallow, useFormState } from '../context'
 import { triggerToWindowCall } from '../lib/nodes'
-import { InputVariants, OryFlowType, UiNodeInput } from '../types'
+import {
+  VariantsInput,
+  OryFlowType,
+  UiNodeInput,
+  BlockPropsButton,
+  BlockOptionsButton,
+} from '../types'
 
 import { useOnload, useInputTranslation } from '.'
 
-export function useButton(node: UiNodeInput) {
+export function useButton(node: UiNodeInput): {
+  props: BlockPropsButton
+  options: BlockOptionsButton
+} {
   const {
     setValue,
     formState: { isReady },
@@ -18,12 +27,12 @@ export function useButton(node: UiNodeInput) {
 
   useOnload(node)
 
-  const { flowContainer, oryFormState, providers, system } = useFlowStoreShallow((state) => ({
+  const { flowContainer, providers, system } = useFlowStoreShallow((state) => ({
     flowContainer: state.flowContainer,
-    oryFormState: state.formState,
     providers: state.components.Icons.Providers,
     system: state.components.Icons.System,
   }))
+  const oryFormState = useFormState()
 
   const { flowType } = flowContainer
 
@@ -51,15 +60,17 @@ export function useButton(node: UiNodeInput) {
     }
   }, [node, attr, setValue, setClicked, flowType])
 
-  const disabled = attr.disabled || !isReady || !oryFormState.isReady || oryFormState.isSubmitting
+  const {
+    formState: { isSubmitting },
+  } = useFormContext()
 
-  const isSubmitting = clicked && oryFormState.isSubmitting
+  const disabled = attr.disabled || !isReady || !oryFormState.isReady || isSubmitting
 
   useEffect(() => {
-    if (!oryFormState.isSubmitting && clicked) {
+    if (!isSubmitting && clicked) {
       setClicked(false)
     }
-  }, [oryFormState.isSubmitting, setClicked, clicked])
+  }, [isSubmitting, setClicked, clicked])
 
   // Ui Button
   const IconsProviders = useMemo(() => normalizeKeys(providers ?? {}), [providers])
@@ -69,19 +80,27 @@ export function useButton(node: UiNodeInput) {
 
   let icon: ComponentType | undefined
 
-  const type: InputVariants =
+  const type: VariantsInput =
     attr.type === UiNodeInputAttributesTypeEnum.Submit ? 'submit' : 'button'
 
-  let htmlType = type
+  let htmlType: BlockPropsButton['type'] = type
+  const variant = node.data?.variant
 
-  if (node.data?.type === 'method') {
-    icon = system ? IconsSystem?.[node.group] : undefined
-  } else if (node.data?.type === 'resend') {
-    htmlType = 'button'
-  } else if (node.data?.variant === 'sso') {
-    htmlType = 'button'
-    const iconKey = (node.attributes.value as string).split('-')[0]
-    icon = IconsProviders?.[iconKey]
+  switch (variant) {
+    case 'method': {
+      icon = system ? IconsSystem?.[node.group] : undefined
+      break
+    }
+    case 'resend': {
+      htmlType = 'button'
+      break
+    }
+    case 'oidc': {
+      htmlType = 'button'
+      const iconKey = (node.attributes.value as string).split('-')[0]
+      icon = IconsProviders?.[iconKey]
+      break
+    }
   }
 
   return {
@@ -93,7 +112,7 @@ export function useButton(node: UiNodeInput) {
       disabled,
     },
     options: {
-      type: node.data?.type || node.data?.variant || type,
+      variant: variant || type,
       isSubmitting,
       label: formattedLabel,
       description: node.data?.description,

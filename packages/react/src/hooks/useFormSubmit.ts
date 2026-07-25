@@ -26,35 +26,20 @@ import {
 } from '../lib'
 
 export function useFormSubmit(methods: UseFormReturn<FormValues>) {
-  const { flowContainer, config, dispatchFormState, setFlowContainer } = useFlowStoreShallow(
-    (state) => ({
-      config: state.config,
-      flowContainer: state.flowContainer,
-      dispatchFormState: state.dispatchFormState,
-      setFlowContainer: state.setFlowContainer,
-    }),
-  )
+  const { flowContainer, config, setFlowContainer } = useFlowStoreShallow((state) => ({
+    config: state.config,
+    flowContainer: state.flowContainer,
+    setFlowContainer: state.setFlowContainer,
+  }))
 
   const { flowType } = flowContainer
 
   const onRedirect: OnRedirectHandler = (url) => {
-    dispatchFormState({ type: 'page_redirect' })
     window.location.assign(url)
   }
 
   const onSubmit: SubmitHandler<FormValues> = async (initialData: FormValues) => {
-    const isResend = initialData.method === 'code' && 'resend' in initialData
-
-    const startSubmit = () => {
-      if (!isResend) dispatchFormState({ type: 'form_submit_start' })
-    }
-
-    const endSubmit = () => {
-      if (!isResend) dispatchFormState({ type: 'form_submit_end' })
-    }
-
     const handleFlowUpdate = (container: OryFlowContainer) => {
-      endSubmit()
       setFlowContainer(container)
       const newValues = computeDefaultValues(container.flow)
       methods.reset(newValues, {
@@ -73,8 +58,6 @@ export function useFormSubmit(methods: UseFormReturn<FormValues>) {
         methods.setValue('totp_code', '')
       }
     }
-
-    startSubmit()
 
     try {
       console.log('Submit', initialData)
@@ -160,7 +143,6 @@ export function useFormSubmit(methods: UseFormReturn<FormValues>) {
 
       clearSensitiveData(data)
     } catch (error) {
-      endSubmit()
       throw error
     }
   }

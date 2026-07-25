@@ -1,6 +1,7 @@
 export { useInput } from './useInput'
 export { useButton } from './useButton'
 export { useOnload } from './useOnload'
+export { useCard } from './useCard'
 export { useOryForm } from './useOryForm'
 export { useCheckbox } from './useCheckbox'
 export { useMethodPasskey } from './useMethodPasskey'

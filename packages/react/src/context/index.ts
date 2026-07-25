@@ -1,2 +1,2 @@
 export { OryFlowProvider } from './oryFlowProvider'
-export { useFlowStore, useFlowStoreShallow } from './oryContext'
+export { useFlowStore, useFlowStoreShallow, useFormState } from './oryContext'

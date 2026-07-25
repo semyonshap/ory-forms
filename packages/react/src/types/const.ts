@@ -74,3 +74,11 @@ export const methodIconMap: Record<string, string> = {
   lookup_secret: 'LookupSecret',
   hardware_token: 'HardwareToken',
 }
+
+export type VariantsInput =
+  'button' | 'submit' | 'link' | 'cancel' | 'sso' | 'oidc' | 'code' | 'scope' | 'method' | 'resend'
+
+export type VariantsAnchor = 'button' | 'link' | 'cancel'
+export type VariantsDiv = 'totp-secret' | 'totp-qr' | 'lookup-secrets-codes' | 'footer' | 'footer-settings' | 'footer-settings-submits'
+
+export type TypeDiv = 'Card' | 'DividerCard'

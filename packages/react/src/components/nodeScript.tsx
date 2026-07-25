@@ -1,4 +1,4 @@
-import { UiNodeScript } from '../../types'
+import { UiNodeScript } from '../types'
 
 export const NodeScript = ({ node }: { node: UiNodeScript }) => {
   const { crossorigin, referrerpolicy, node_type: _, ...attributes } = node.attributes

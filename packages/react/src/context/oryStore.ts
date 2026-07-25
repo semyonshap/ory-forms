@@ -1,49 +1,61 @@
 import { createStore } from 'zustand'
-import { createContext, Dispatch } from 'react'
+import { createContext } from 'react'
+import { UiNodeGroupEnum } from '@ory/client-fetch'
 
-import {
-  OryConfiguration,
-  OryFlowContainer,
-  FormState,
-  FormStateAction,
-  OryComponents,
-} from '../types'
-import { updateFormState, initFormState } from '../lib/form'
+import { OryConfiguration, OryFlowContainer, OryComponents } from '../types'
 
 export interface FlowStoreState {
   config: OryConfiguration
   components: OryComponents
   flowContainer: OryFlowContainer
-  formState: FormState
+  selectedMethod?: UiNodeGroupEnum
+  loadingInputs: Set<UiNodeGroupEnum>
   setFlowContainer: (flow: OryFlowContainer) => void
-  dispatchFormState: Dispatch<FormStateAction>
+  selectMethod: (method: UiNodeGroupEnum) => void
+  clearMethod: () => void
+  inputLoading: (group: UiNodeGroupEnum) => void
+  inputReady: (input: UiNodeGroupEnum) => void
 }
 
 export type FlowStore = ReturnType<typeof createFlowStore>
 
-export const createFlowStore = (
-  initProps: Omit<FlowStoreState, 'formState' | 'setFlowContainer' | 'dispatchFormState'>,
-) => {
-  return createStore<FlowStoreState>((set) => ({
+export const createFlowStore = (initProps: {
+  config: OryConfiguration
+  components: OryComponents
+  flowContainer: OryFlowContainer
+}) => {
+  return createStore<FlowStoreState>((set, get) => ({
     ...initProps,
-    formState: initFormState(initProps.flowContainer),
+    selectedMethod: undefined,
+    loadingInputs: new Set(),
 
     setFlowContainer: (flow) => {
-      set((state) => ({
-        ...state,
-        flowContainer: flow,
-        formState: updateFormState(state.formState, {
-          type: 'action_flow_update',
-          flow,
-        }),
-      }))
+      const { selectedMethod } = get()
+      if (selectedMethod) {
+        set({ flowContainer: flow, loadingInputs: new Set() })
+      } else {
+        set({ flowContainer: flow })
+      }
     },
 
-    dispatchFormState: (action) => {
-      set((state) => ({
-        ...state,
-        formState: updateFormState(state.formState, action),
-      }))
+    selectMethod: (method) => set({ selectedMethod: method }),
+
+    clearMethod: () => set({ selectedMethod: undefined }),
+
+    inputLoading: (group) => {
+      set((state) => {
+        const next = new Set(state.loadingInputs)
+        next.add(group)
+        return { loadingInputs: next }
+      })
+    },
+
+    inputReady: (input) => {
+      set((state) => {
+        const next = new Set(state.loadingInputs)
+        next.delete(input)
+        return { loadingInputs: next }
+      })
     },
   }))
 }

@@ -1,24 +1,23 @@
 import { UiNodeInputAttributesTypeEnum } from '@ory/client-fetch'
 
 import {
-  NodeRender,
+  WrapperBase,
   ignoredScriptGroups,
   isUiNodeAnchor,
   isUiNodeImage,
   isUiNodeInput,
   isUiNodeScript,
   isUiNodeText,
-  NodeRenderInput,
+  WrapperInput,
   isUiNodeDiv,
 } from '../types'
-import { useFlowStoreShallow } from '../context'
 
 import { ButtonWrapper, AnchorWrapper, TextWrapper, ImageWrapper, InputWrapper } from './wrappers'
-import { NodeScript } from './nodes/script'
+import { NodeScript } from './nodeScript'
 import { DivWrapper } from './wrappers/divWrapper'
 import { CheckboxWrapper } from './wrappers/inputWrapper'
 
-export const Node = ({ node, attached }: NodeRender) => {
+export const Node = ({ node, attached }: WrapperBase) => {
   if (isUiNodeDiv(node)) return DivWrapper({ node, attached })
   else if (isUiNodeImage(node)) return ImageWrapper({ node, attached })
   else if (isUiNodeText(node)) return TextWrapper({ node, attached })
@@ -29,13 +28,7 @@ export const Node = ({ node, attached }: NodeRender) => {
   return null
 }
 
-function NodeInput({ node, attached }: NodeRenderInput) {
-  const {
-    components: { Node },
-  } = useFlowStoreShallow((state) => ({
-    components: state.components,
-  }))
-
+function NodeInput({ node, attached }: WrapperInput) {
   const { attributes } = node
   switch (attributes.type) {
     case UiNodeInputAttributesTypeEnum.Checkbox:

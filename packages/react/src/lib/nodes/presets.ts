@@ -1,7 +1,9 @@
-import { initFlowUrl } from '../../utils'
-import { BuildContext, isUiNodeInput } from '../../types'
+import { LoginFlow, LogoutFlow } from '@ory/client-fetch'
 
-import { BuildReturnTo } from './logout'
+import { initFlowUrl } from '../../utils'
+import { BuildContext, isUiNodeInput, FormState, BuilderLogoutFlow } from '../../types'
+import { restartFlowUrl } from '../../utils'
+
 import {
   createAnchorNode,
   createInputNode,
@@ -42,8 +44,7 @@ export function BuildSignUp({
 
   return createDivGroup({
     id: 'registration-div',
-    class: 'inline-flex gap-2',
-    div_type: 'Div',
+    data: { variant: 'footer' },
     children: [nodeTextSignUpLabel, nodeAnchorSignUp],
   })
 }
@@ -51,7 +52,9 @@ export function BuildSignUp({
 export function BuildDivider() {
   return createDivNode({
     id: `divider-${crypto.randomUUID()}`,
-    div_type: 'DividerCard',
+    data: {
+      type: 'DividerCard',
+    },
   })
 }
 
@@ -192,8 +195,80 @@ export function BuildSignIn({
 
   return createDivGroup({
     id: 'login-div',
-    class: 'inline-flex gap-2',
-    div_type: 'Div',
     children: [nodeTextSignInLabel, nodeAnchorSignIn],
   })
+}
+
+export function BuildReturnTo({
+  config: {
+    project: { default_redirect_url },
+    sdk: { url: sdkUrl },
+  },
+  flowContainer: { flow, flowType },
+}: BuildContext) {
+  let returnTo = default_redirect_url
+
+  if (flow.return_to) {
+    returnTo = flow.return_to
+  }
+
+  if (!returnTo) {
+    returnTo = restartFlowUrl(flow, `${sdkUrl}/self-service/${flowType}/browser`)
+  }
+
+  return returnTo
+}
+
+export function BuildLogout(ctx: BuildContext, logoutCtx: BuilderLogoutFlow) {
+  const returnTo = BuildReturnTo(ctx)
+
+  const { t } = ctx
+
+  const nodeLogoutLabel = createTextNode({
+    id: 'logout-label',
+    text: createUiText({
+      keyOrId: 'login.2fa.go-back',
+      text: "Something isn't working?",
+      t,
+    }),
+  })
+
+  const { logoutFlow, logoutLoading } = logoutCtx
+
+  const isLogoutReady = !logoutLoading || logoutFlow
+
+  const nodeAnchorLogout = createAnchorNode({
+    id: 'logout-anchor',
+    href: logoutFlow ? logoutFlow?.logout_url : returnTo,
+    title: createUiText({
+      keyOrId: isLogoutReady ? 'login.registration-button' : 'login.2fa.go-back.link',
+      text: isLogoutReady ? 'Sign up' : 'Go back',
+      t,
+    }),
+  })
+
+  return createDivGroup({
+    id: 'registration-div',
+    data: { variant: 'footer' },
+    children: [nodeLogoutLabel, nodeAnchorLogout],
+  })
+}
+
+export function showLogout(flow: LoginFlow, formState: FormState, authMethods: string[]) {
+  if (flow.refresh) {
+    return true
+  }
+
+  if (flow.requested_aal === 'aal2') {
+    if (formState.current === 'select_method') {
+      return true
+    }
+    if (formState.current === 'method_active' && flow.active === 'code') {
+      return true
+    }
+    if (formState.current === 'method_active' && authMethods.length === 1) {
+      return true
+    }
+  }
+  return false
 }

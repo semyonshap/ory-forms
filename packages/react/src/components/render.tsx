@@ -1,17 +1,12 @@
 import { ReactNode } from 'react'
 
 import { getNodeId } from '../lib'
-import { FormContext, FormNode, isUiNodeDiv } from '../types'
+import { BuildWrapperContext, FormNode, isUiNodeDiv } from '../types'
 
 import { Node } from './node'
 
-export interface OutputNode {
-  node: FormNode
-  element: ReactNode
-}
-
-function buildContextMap(nodes: FormNode[]): FormContext {
-  const contextMap: FormContext = {}
+function buildContextMap(nodes: FormNode[]): BuildWrapperContext {
+  const contextMap: BuildWrapperContext = {}
 
   for (const node of nodes) {
     const target = node.data?.target
@@ -26,11 +21,11 @@ function buildContextMap(nodes: FormNode[]): FormContext {
 
 function renderRange(
   nodes: FormNode[],
-  contextMap: FormContext,
+  contextMap: BuildWrapperContext,
   start: number,
   endId?: string,
-): { result: OutputNode[]; nextIndex: number } {
-  const result: OutputNode[] = []
+): { result: ReactNode[]; nextIndex: number } {
+  const result: ReactNode[] = []
   let i = start
 
   while (i < nodes.length) {
@@ -38,22 +33,16 @@ function renderRange(
 
     if (isUiNodeDiv(node)) {
       const id = node.attributes.id
-      const divType = node.attributes.data?.type
-      const divEnd = node.attributes.data?.end
+      const divEnd = node.data?.end
 
-      if (!!endId && id === endId && !divType) {
+      if (!!endId && id === endId) {
         return { result, nextIndex: i + 1 }
       }
 
-      if (!!divType && !!divEnd) {
+      if (!!divEnd) {
         const { result: children, nextIndex } = renderRange(nodes, contextMap, i + 1, divEnd)
 
-        result.push({
-          node,
-          element: (
-            <Node key={getNodeId(node)} node={node} attached={children.map((c) => c.element)} />
-          ),
-        })
+        result.push(<Node key={getNodeId(node)} node={node} attached={children} />)
         i = nextIndex
         continue
       }
@@ -67,17 +56,14 @@ function renderRange(
     const name = 'name' in node.attributes && node.attributes.name
     const attached = name ? contextMap[name] : undefined
 
-    result.push({
-      node,
-      element: <Node key={getNodeId(node)} node={node} attached={attached} />,
-    })
+    result.push(<Node key={getNodeId(node)} node={node} attached={attached} />)
     i++
   }
 
   return { result, nextIndex: i }
 }
 
-export function renderNodes(nodes: FormNode[]): OutputNode[] {
+export function renderNodes(nodes: FormNode[]): ReactNode[] {
   const contextMap = buildContextMap(nodes)
   const { result } = renderRange(nodes, contextMap, 0)
   return result

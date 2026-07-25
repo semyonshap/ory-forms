@@ -1,10 +1,10 @@
 import { UiNode, UiNodeGroupEnum, UiNodeInputAttributesTypeEnum } from '@ory/client-fetch'
 
 import {
-  AnchorNodeData,
-  BuildFormContext,
+  NodeDataAnchor,
+  BuildRHFContext,
   FormNode,
-  InputNodeData,
+  NodeDataInput,
   isUiNodeAnchor,
   isUiNodeInput,
   OryFlowContainer,
@@ -17,7 +17,7 @@ export function NodeDataBuilder({
   flowContainer,
 }: {
   nodes: UiNode[]
-  formCtx: BuildFormContext
+  formCtx: BuildRHFContext
   flowContainer: OryFlowContainer
 }): FormNode[] {
   const { flowType } = flowContainer
@@ -31,9 +31,8 @@ export function NodeDataBuilder({
             ['email', 'recovery_confirm_address'].includes(n.attributes.name)
           ) {
             // is Resend Button
-            const data: InputNodeData = {
+            const data: NodeDataInput = {
               target: 'code',
-              type: 'resend',
               variant: 'link',
               onClick: () => {
                 setValue('code', '')
@@ -49,7 +48,7 @@ export function NodeDataBuilder({
             n.group === UiNodeGroupEnum.Code &&
             n.attributes.name === 'method'
           ) {
-            const data: InputNodeData = {
+            const data: NodeDataInput = {
               onClick: () => {
                 const code = getValues('code')
                 switch (flowType) {
@@ -75,7 +74,7 @@ export function NodeDataBuilder({
             n.group === UiNodeGroupEnum.Oidc ||
             n.group === UiNodeGroupEnum.Saml
           ) {
-            const data: InputNodeData = {
+            const data: NodeDataInput = {
               variant: 'sso',
             }
 
@@ -85,7 +84,7 @@ export function NodeDataBuilder({
             }
           } else if (n.attributes.name === 'address') {
             // is Adress button in code send
-            const data: InputNodeData = {
+            const data: NodeDataInput = {
               variant: 'code',
             }
 
@@ -98,7 +97,7 @@ export function NodeDataBuilder({
             n.attributes.name === 'grant_scope'
           ) {
             // is Scope Checkbox
-            const data: InputNodeData = {
+            const data: NodeDataInput = {
               variant: 'scope',
             }
 
@@ -107,7 +106,7 @@ export function NodeDataBuilder({
               data,
             }
           } else if (n.attributes.value === 'reject') {
-            const data: InputNodeData = {
+            const data: NodeDataInput = {
               variant: 'cancel',
             }
 
@@ -120,7 +119,7 @@ export function NodeDataBuilder({
       }
     } else if (isUiNodeAnchor(n)) {
       if (n.attributes.id === 'logout') {
-        const data: AnchorNodeData = {
+        const data: NodeDataAnchor = {
           ...n.data,
           variant: 'cancel',
         }

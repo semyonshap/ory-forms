@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 
-import { OryClientComponents } from '@ory-forms/react'
+import { OryClientComponents, OryFlowType } from '@ory-forms/react'
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '../ui/input-otp'
 import { Button, buttonVariants } from '../ui/button'
 import { Spinner } from '../ui/spinner'
@@ -12,7 +12,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui
 import { Alert, AlertDescription } from '../ui/alert'
 import JikoIcon from '../icons/jiko-icon'
 import { useCooldown } from '@/hooks/useCooldown'
-import { useIsMobile } from '@/hooks/use-mobile'
+
 import { cn } from '@/lib/utils'
 import {
   KeyRound,
@@ -34,8 +34,7 @@ import {
 } from 'lucide-react'
 import { Separator } from '../ui/separator'
 import { toast } from 'sonner'
-import { VariantProps } from 'class-variance-authority'
-import { useEffect } from 'react'
+import { Children, useEffect } from 'react'
 import { Checkbox } from '../ui/checkbox'
 
 export const OryComponents: OryClientComponents = {
@@ -59,60 +58,91 @@ export const OryComponents: OryClientComponents = {
     },
   },
   Card: {
-    Form: ({ children }) => {
-      return <div className="flex flex-col gap-4">{children}</div>
-    },
-    Divider: () => <Separator />,
-    Settings: ({ options, attached }) => {
-      const { title, description, messages } = options
-      const isMobile = useIsMobile()
+    Form: ({ children, options }) => {
+      const { flowType, messages } = options
 
       useEffect(() => {
+        if (flowType !== OryFlowType.Settings) return
         if (!messages) return
+
         messages.forEach((message) => {
-          // console.log("msg", message)
           if (message.type === 'error') toast.error(message.text)
           else toast(message.text)
         })
-      }, [messages])
+      }, [flowType, messages])
+
+      const isSettings = flowType === OryFlowType.Settings
 
       return (
-        <Card className={isMobile ? 'w-full' : 'w-150 max-w-150'}>
-          {title && (
-            <CardHeader>
-              <CardTitle>{title}</CardTitle>
-              {description && <CardDescription>{description}</CardDescription>}
-            </CardHeader>
+        <div
+          className={cn(
+            'flex flex-col gap-4 w-full',
+            isSettings ? 'md:w-150 md:max-w-150' : 'md:w-90 md:max-w-90',
           )}
-          <CardContent className="flex flex-col gap-4">{attached}</CardContent>
-        </Card>
+        >
+          {isSettings
+            ? Children.toArray(children).flatMap((child, i) => [
+                child,
+                i < Children.count(children) - 1 && (
+                  <div key={`sep-${i}`} className="px-4 md:hidden">
+                    <Separator />
+                  </div>
+                ),
+              ])
+            : children}
+        </div>
       )
     },
-    Default: ({ options, attached }) => {
-      const { title, description, messages } = options
-      const isMobile = useIsMobile()
+    Divider: () => <Separator />,
+    Card: ({ props, options, attached }) => {
+      const { title, description, messages, flowType } = options
+      const { key, ...formProps } = props
+
+      const isSettings = flowType === OryFlowType.Settings
+
       return (
-        <Card className={isMobile ? 'w-full' : 'w-90 max-w-90'}>
-          {title && (
-            <CardHeader>
-              <JikoIcon className="pb-6 pt-2" />
-              <CardTitle>{title}</CardTitle>
-              {description && <CardDescription>{description}</CardDescription>}
-            </CardHeader>
+        <form key={key} {...formProps} className="w-full">
+          <Card className="w-full bg-transparent border-none md:bg-card md:border">
+            {title && (
+              <CardHeader className="flex flex-col w-full">
+                {!isSettings && <JikoIcon className="pb-6 pt-2" />}
+                <CardTitle>{title}</CardTitle>
+                {description && <CardDescription>{description}</CardDescription>}
+              </CardHeader>
+            )}
+            <CardContent className="flex flex-col gap-4">
+              {!isSettings &&
+                messages &&
+                messages.map((msg, index) => (
+                  <Alert
+                    key={`${msg.id}-${index}`}
+                    variant={msg.type === 'error' ? 'destructive' : 'default'}
+                  >
+                    <AlertDescription className="whitespace-pre-wrap">{msg.text}</AlertDescription>
+                  </Alert>
+                ))}
+              {attached}
+            </CardContent>
+          </Card>
+        </form>
+      )
+    },
+    Div: ({ options, attached }) => {
+      const { variant } = options
+
+      return (
+        <div
+          className={cn(
+            variant === 'footer' && 'inline-flex gap-2',
+            variant === 'footer-settings' && 'flex  gap-2 justify-end',
+            variant === 'footer-settings-submits' && 'flex flex-col sm:flex-row gap-2',
+            variant === 'totp-qr' && 'w-full flex flex-col sm:flex-row gap-4 ',
+            variant === 'totp-secret' && 'w-full flex flex-col gap-2',
+            variant === 'lookup-secrets-codes' && 'grid grid-cols-2 md:grid-cols-3 gap-2',
           )}
-          <CardContent className="flex flex-col gap-4">
-            {messages &&
-              messages.map((msg, index) => (
-                <Alert
-                  key={`${msg.id}-${index}`}
-                  variant={msg.type === 'error' ? 'destructive' : 'default'}
-                >
-                  <AlertDescription className="whitespace-pre-wrap">{msg.text}</AlertDescription>
-                </Alert>
-              ))}
-            {attached}
-          </CardContent>
-        </Card>
+        >
+          {attached}
+        </div>
       )
     },
   },
@@ -207,6 +237,7 @@ export const OryComponents: OryClientComponents = {
     },
     Oidc: ({ node, props, options }) => {
       const { icon: Icon, label } = options
+
       return (
         <div className="w-full flex flex-row justify-between items-center">
           <div className="flex flex-row gap-8">
@@ -220,25 +251,22 @@ export const OryComponents: OryClientComponents = {
       )
     },
     Button: ({ props, options }) => {
-      const { type, label, icon: Icon, isSubmitting } = options
-
-      type ButtonType = typeof type
-      type ButtonVariant = VariantProps<typeof buttonVariants>['variant']
-
-      const variants: Partial<Record<ButtonType, ButtonVariant>> = {
-        cancel: 'destructive',
-        link: 'link',
-        code: 'outline',
-      }
-
-      const classNames: Partial<Record<ButtonType, string>> = {
-        link: 'w-fit px-0',
-        sso: 'justify-start gap-16',
-        code: 'whitespace-normal text-start h-auto',
-      }
+      const { variant, label, icon: Icon, isSubmitting } = options
 
       return (
-        <Button {...props} className={cn(classNames[type])} variant={variants[type] || 'outline'}>
+        <Button
+          {...props}
+          className={cn(
+            variant === 'link' && 'w-fit px-0',
+            variant === 'sso' && 'justify-start gap-16',
+            variant === 'code' && 'whitespace-normal text-start h-auto',
+          )}
+          variant={((v) => {
+            if (v === 'cancel') return 'destructive'
+            if (v === 'link') return 'link'
+            return 'outline'
+          })(variant)}
+        >
           {isSubmitting && <Spinner />}
           {Icon && <Icon className={cn(label ? 'size-4' : 'size-6')} />}
           <span>{label}</span>
@@ -277,10 +305,15 @@ export const OryComponents: OryClientComponents = {
       )
     },
     Image: ({ node, props }) => {
-      return <Image {...props} alt={node.meta.label?.text || ''} className="rounded-md" />
+      return (
+        <div className="flex w-full px-8 py-4 sm:p-0">
+          <Image {...props} alt={node.meta.label?.text || ''} className="w-full rounded-md" />
+        </div>
+      )
     },
     Text: ({ options }) => {
       const { label, text } = options
+
       return (
         <Label className="text-muted-foreground">
           {label && label} {text && text}
@@ -290,6 +323,7 @@ export const OryComponents: OryClientComponents = {
     Checkbox: ({ options, props }) => {
       const { label, description, icon: Icon } = options
       const { onChange, ...rest } = props
+
       return (
         <div className="flex flex-row gap-4">
           <div>

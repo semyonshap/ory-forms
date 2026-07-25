@@ -1,11 +1,10 @@
 import { ComponentType } from 'react'
 
-import { useButton, useInput } from '../../hooks'
-import { useCheckbox } from '../../hooks'
-import { FormRenderButton, NodeRenderInput } from '../../types'
+import { useButton, useInput, useCheckbox } from '../../hooks'
+import { BlockButton, WrapperInput } from '../../types'
 import { useFlowStore, useFlowStoreShallow } from '../../context'
 
-export function InputWrapper({ node, attached }: NodeRenderInput) {
+export function InputWrapper({ node, attached }: WrapperInput) {
   const { Node } = useFlowStoreShallow((state) => ({
     Node: state.components.Node,
   }))
@@ -29,24 +28,24 @@ export function InputWrapper({ node, attached }: NodeRenderInput) {
   )
 }
 
-export function ButtonWrapper({ node, attached }: NodeRenderInput) {
+export function ButtonWrapper({ node, attached }: WrapperInput) {
   const Node = useFlowStore((state) => state.components.Node)
 
   const { props, options } = useButton(node)
 
-  let Component: ComponentType<FormRenderButton>
+  let Component: ComponentType<BlockButton>
 
-  const type = node.data?.type
+  const variant = node.data?.variant
 
-  if (type === 'method' && Node.AuthMethod) Component = Node.AuthMethod
-  else if (type === 'resend' && Node.Resend) Component = Node.Resend
-  else if (type === 'oidc' && Node.Oidc) Component = Node.Oidc
+  if (variant === 'method' && Node.AuthMethod) Component = Node.AuthMethod
+  else if (variant === 'resend' && Node.Resend) Component = Node.Resend
+  else if (variant === 'oidc' && Node.Oidc) Component = Node.Oidc
   else Component = Node.Button
 
   return <Component node={node} props={props} options={options} attached={attached} />
 }
 
-export function CheckboxWrapper({ node, attached }: NodeRenderInput) {
+export function CheckboxWrapper({ node, attached }: WrapperInput) {
   const Node = useFlowStore((state) => state.components.Node)
 
   const { options, props } = useCheckbox(node)

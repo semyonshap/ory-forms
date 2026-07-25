@@ -1,10 +1,10 @@
 import { UiNodeImageAttributes } from '@ory/client-fetch'
 
 import { useFlowStore } from '../../context'
-import { NodeRenderImage } from '../../types'
+import { WrapperImage } from '../../types'
 import { omitInputAttributes } from '../../utils/transform'
 
-export function ImageWrapper({ node, attached }: NodeRenderImage) {
+export function ImageWrapper({ node, attached }: WrapperImage) {
   const Node = useFlowStore((state) => state.components.Node)
 
   const props = omitInputAttributes<UiNodeImageAttributes>(node.attributes)

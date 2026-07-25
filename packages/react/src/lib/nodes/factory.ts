@@ -1,6 +1,5 @@
 import {
   UiNodeAttributes,
-  UiNodeDivisionAttributes,
   UiNodeGroupEnum,
   UiNodeInputAttributes,
   UiNodeMeta,
@@ -15,11 +14,11 @@ import {
   UiNodeAnchor,
   UiNodeDiv,
   UiNodeText,
-  NodeData,
-  InputNodeData,
+  NodeDataInput,
   UiNodeInput,
-  DivDataType,
-  AnchorNodeData,
+  NodeDataAnchor,
+  NodeDataDiv,
+  NodeData,
 } from '../../types'
 
 interface CreateUiNodeParams {
@@ -28,7 +27,7 @@ interface CreateUiNodeParams {
   messages?: UiText[]
   meta?: UiNodeMeta
   attributes: UiNodeAttributes
-  data?: NodeData | InputNodeData
+  data?: NodeData
 }
 
 function createUiNode({
@@ -53,7 +52,7 @@ interface CreateAnchorNodeParams extends Omit<CreateUiNodeParams, 'type' | 'attr
   id: string
   href: string
   title: UiText
-  data?: AnchorNodeData
+  data?: NodeDataAnchor
 }
 
 export function createAnchorNode({
@@ -97,7 +96,7 @@ export function createTextNode({ id, text, ...rest }: CreateTextNodeParams): UiN
 
 interface CreateInputNodeParams extends Omit<CreateUiNodeParams, 'type' | 'attributes'> {
   attributes: Omit<UiNodeInputAttributes, 'node_type'>
-  data?: InputNodeData
+  data?: NodeDataInput
 }
 
 export function createInputNode({
@@ -148,32 +147,25 @@ export function createUiText({
 interface CreateDivisionNodeParams extends Omit<CreateUiNodeParams, 'type' | 'attributes'> {
   id: string
   class?: string
-  div_type?: DivDataType
-  div_end?: string
+  data?: NodeDataDiv
 }
 
 export function createDivNode({
   id,
   class: className,
-  div_type,
-  div_end: end,
+  data,
   ...rest
 }: CreateDivisionNodeParams): UiNodeDiv {
-  const data: UiNodeDivisionAttributes['data'] = {}
-
-  if (div_type) data['type'] = div_type
-  if (end) data['end'] = end
-
   const attributes = {
     node_type: 'div' as const,
     id,
     _class: className,
-    data,
   }
 
   return createUiNode({
     type: UiNodeTypeEnum.Div,
     attributes,
+    data,
     ...rest,
   }) as UiNodeDiv
 }
@@ -182,7 +174,7 @@ export function createDivGroup({
   id,
   class: className,
   children,
-  div_type,
+  data,
   ...rest
 }: CreateDivisionNodeParams & { children: FormNode[] }): FormNode[] {
   const endId = `${id}-end`
@@ -190,8 +182,10 @@ export function createDivGroup({
   const startDiv = createDivNode({
     id: `${id}-start`,
     class: className,
-    div_type,
-    div_end: endId,
+    data: {
+      ...data,
+      end: endId,
+    },
     ...rest,
   })
 

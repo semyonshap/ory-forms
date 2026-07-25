@@ -1,27 +1,21 @@
 import { useEffect } from 'react'
 import { useController, useFormContext } from 'react-hook-form'
 
-import { InputOptions, InputProps, UiNodeInput } from '../types'
+import { BlockOptionsInput, BlockPropsInput, UiNodeInput } from '../types'
 import { resolvePlaceholder } from '../i18n'
-import { useFlowStoreShallow } from '../context'
 
 import { useInputTranslation } from './useInputTranslation'
 import { useOnload } from './useOnload'
 
 export function useInput(node: UiNodeInput): {
-  props: InputProps
-  options: InputOptions
+  props: BlockPropsInput
+  options: BlockOptionsInput
 } {
   const {
     setValue,
     control,
-    formState: { isReady },
+    formState: { isReady, isSubmitting },
   } = useFormContext()
-  const {
-    oryFormState: { isSubmitting },
-  } = useFlowStoreShallow((state) => ({
-    oryFormState: state.formState,
-  }))
 
   useOnload(node)
 

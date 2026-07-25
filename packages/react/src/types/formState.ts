@@ -16,15 +16,9 @@ export type FlowFormState =
   | { current: 'navigation' }
   | { current: 'error' }
 
-interface CommonFormStateProperties {
-  isSubmitting: boolean
+export type FormState = FlowFormState & {
   isReady: boolean
-  selectedMethod?: UiNodeGroupEnum
-  loadingInputs: Set<UiNodeGroupEnum>
-  isRedirecting: boolean
 }
-
-export type FormState = FlowFormState & CommonFormStateProperties
 
 export type FormStateAction =
   | {

@@ -1,17 +1,16 @@
-import { isUiNodeScriptAttributes, LogoutFlow, UiNode, UiNodeGroupEnum } from '@ory/client-fetch'
-import { Dispatch } from 'react'
+import { isUiNodeScriptAttributes, UiNode, UiNodeGroupEnum } from '@ory/client-fetch'
 
 import {
   BuildContext,
-  BuildFormContext,
+  BuilderLogoutFlow,
+  BuilderSorter,
+  BuildRHFContext,
   FormNode,
-  FormStateAction,
-  GroupSorter,
-  NodeSorter,
   OryFlowType,
 } from '../../types'
-import { BuildLogout, showLogout } from '../nodes/logout'
 import {
+  BuildLogout,
+  showLogout,
   BuildChooseMethod,
   BuildForgotPassword,
   BuildSelectAnother as BuildSelectMethod,
@@ -21,7 +20,6 @@ import {
   BuildSignUp,
   BuildDivider,
 } from '../nodes/presets'
-import { BuildAuthMethodList } from '../nodes/authMethods'
 import {
   getFinalNodes,
   getNodeGroupsWithVisibleNodes,
@@ -35,41 +33,17 @@ import {
 import { createDivGroup } from '../nodes/factory'
 import { getFunctionalNodes, toAuthMethodPickerOptions } from '../nodes/filters'
 
+import { BuildAuthMethodList } from './authMethods'
 import { NodeDataBuilder } from './nodeData'
 import { SettingsBuilder } from './settings'
 
-export function Builder({
-  config,
-  flowContainer,
-  formState,
-  t,
-  setValue,
-  getValues,
-  dispatchFormState,
-  nodeSorter,
-  groupSorter,
-  logoutFlow,
-  logoutLoading,
-}: BuildContext &
-  BuildFormContext & {
-    dispatchFormState: Dispatch<FormStateAction>
-    nodeSorter: NodeSorter
-    groupSorter: GroupSorter
-    logoutFlow: LogoutFlow | undefined
-    logoutLoading: boolean
-  }) {
-  const ctx: BuildContext = {
-    config,
-    flowContainer,
-    formState,
-    t,
-  }
-
-  const formCtx: BuildFormContext = {
-    setValue,
-    getValues,
-  }
-
+export function Builder(
+  { config, flowContainer, formState, t }: BuildContext,
+  formCtx: BuildRHFContext,
+  logoutCtx: BuilderLogoutFlow,
+  { selectMethod, clearMethod, nodeSorter, groupSorter }: BuilderSorter,
+) {
+  const ctx: BuildContext = { config, flowContainer, formState, t }
   const sortNodes = (a: UiNode, b: UiNode) => nodeSorter(a, b, { flowType })
   const sortGroups = (a: UiNodeGroupEnum, b: UiNodeGroupEnum) => groupSorter(a, b)
 
@@ -79,7 +53,7 @@ export function Builder({
 
   if (!flowNodes) return []
 
-  console.log(flowNodes)
+  // console.log(flowNodes)
 
   const nodes = NodeDataBuilder({
     nodes: flowNodes,
@@ -114,7 +88,7 @@ export function Builder({
       switch (flowType) {
         case OryFlowType.Login: {
           if (showLogout(flow, formState, authMethods)) {
-            const logout = BuildLogout(ctx, logoutFlow, logoutLoading)
+            const logout = BuildLogout(ctx, logoutCtx)
             result.push(...logout)
           } else {
             if (config.project.registration_enabled) {
@@ -160,7 +134,7 @@ export function Builder({
             const chooseMethod = BuildChooseMethod({
               ...ctx,
               onClick: () => {
-                dispatchFormState({ type: 'action_clear_active_method' })
+                clearMethod()
               },
             })
             result.push(chooseMethod)
@@ -176,7 +150,7 @@ export function Builder({
             const selectMethod = BuildSelectMethod({
               ...ctx,
               onClick: () => {
-                dispatchFormState({ type: 'action_clear_active_method' })
+                clearMethod()
               },
             })
             result.push(selectMethod)
@@ -206,7 +180,7 @@ export function Builder({
 
       const methodButtons = BuildAuthMethodList({
         groups: authMethodBlocks,
-        dispatchFormState,
+        selectMethod,
         ctx,
       })
 
@@ -222,7 +196,7 @@ export function Builder({
       for (const key of sortedGroupKeys) {
         const nodes = visibleGroups[key]
         if (nodes) {
-          settingsNodes.push(...SettingsBuilder(key, nodes, t))
+          settingsNodes.push(...SettingsBuilder(key, nodes, t, visibleGroups))
         }
       }
 
@@ -236,7 +210,9 @@ export function Builder({
   if (flowType !== OryFlowType.Settings) {
     result = createDivGroup({
       id: 'form-card',
-      div_type: 'FormCard',
+      data: {
+        type: 'Card',
+      },
       children: result,
     })
   }

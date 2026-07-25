@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useMemo } from 'react'
 
 import { FlowInputProps } from '../types'
 import { computeSdkConfig, computeComponents } from '../utils'
@@ -15,17 +15,24 @@ export function OryFlowProvider({
   components,
   children,
 }: OryFlowProviderProps) {
-  const configResolved = {
-    sdk: computeSdkConfig(config.sdk),
-    project: config.project,
-  }
-
-  const [store] = useState(() =>
-    createFlowStore({
-      config: configResolved,
-      components: computeComponents(components),
-      flowContainer: initialFlowContainer,
+  const configResolved = useMemo(
+    () => ({
+      sdk: computeSdkConfig(config.sdk),
+      project: config.project,
     }),
+    [config],
+  )
+
+  const componentsResolved = useMemo(() => computeComponents(components), [components])
+
+  const store = useMemo(
+    () =>
+      createFlowStore({
+        config: configResolved,
+        components: componentsResolved,
+        flowContainer: initialFlowContainer,
+      }),
+    [configResolved, componentsResolved, initialFlowContainer],
   )
 
   return <FlowStoreContext.Provider value={store}>{children}</FlowStoreContext.Provider>

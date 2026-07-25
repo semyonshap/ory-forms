@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { useFlowStoreShallow } from '../context'
@@ -13,11 +14,13 @@ export function useFormMessages(hiddenMessageIds: number[] = defaultHiddenMessag
 
   const { t } = useTranslation()
 
-  const filtered = flow.ui.messages?.filter((m) => !hiddenMessageIds.includes(m.id)) ?? []
+  return useMemo(() => {
+    const filtered = flow.ui.messages?.filter((m) => !hiddenMessageIds.includes(m.id)) ?? []
 
-  return filtered.map((message) => ({
-    id: message.id,
-    text: uiTextToFormattedMessage(message, t),
-    type: message.type,
-  }))
+    return filtered.map((message) => ({
+      id: message.id,
+      text: uiTextToFormattedMessage(message, t),
+      type: message.type,
+    }))
+  }, [flow.ui.messages, hiddenMessageIds, t])
 }

@@ -2,23 +2,20 @@ import { useTranslation } from 'react-i18next'
 import { useController, useFormContext } from 'react-hook-form'
 import { ComponentType, useCallback, useMemo } from 'react'
 
-import { CheckboxOptions, CheckboxProps, UiNodeInput } from '../types'
+import { BlockOptionsCheckbox, BlockPropsCheckbox, UiNodeInput } from '../types'
 import { normalizeKeys } from '../utils'
 import { useFlowStoreShallow } from '../context'
 
 import { useInputTranslation } from './useInputTranslation'
 
 export function useCheckbox(node: UiNodeInput): {
-  props: CheckboxProps
-  options: CheckboxOptions
+  props: BlockPropsCheckbox
+  options: BlockOptionsCheckbox
 } {
-  const { formState } = useFormContext()
-  const { isReady } = formState
   const {
-    oryFormState: { isSubmitting },
-    system,
-  } = useFlowStoreShallow((state) => ({
-    oryFormState: state.formState,
+    formState: { isReady, isSubmitting },
+  } = useFormContext()
+  const { system } = useFlowStoreShallow((state) => ({
     system: state.components.Icons.System,
   }))
 
