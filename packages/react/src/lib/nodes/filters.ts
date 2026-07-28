@@ -7,7 +7,6 @@ import {
 
 import {
   authMethodPickerExcludedGroups,
-  excludedAuthGroups,
   GroupedNodes,
   isUiNodeInput,
   LoginFlowContainer,
@@ -48,12 +47,6 @@ export function isCodeSent(
   return !!codeNode && formState?.current === 'method_active' && formState?.method === 'code'
 }
 
-export function withoutSingleSignOnNodes(nodes: UiNode[]): UiNode[] {
-  return nodes.filter(
-    (node) => node.group !== UiNodeGroupEnum.Oidc && node.group !== UiNodeGroupEnum.Saml,
-  )
-}
-
 export function isNodeVisible(node: UiNode): node is UiNodeInput {
   if (isUiNodeScriptAttributes(node.attributes)) return false
   if (isUiNodeInputAttributes(node.attributes)) {
@@ -92,16 +85,6 @@ export function isChoosingMethod(flow: LoginFlowContainer | RegistrationFlowCont
     }
   }
   return flow.flow.ui.nodes.some(isScreenSelectionNode)
-}
-
-export function getFunctionalNodes(nodes: UiNode[]): UiNode[] {
-  return nodes.filter((node) => {
-    if (!isNodeVisible(node)) {
-      return false
-    }
-
-    return excludedAuthGroups.includes(node.group)
-  })
 }
 
 export function getNodeId({ attributes }: UiNode) {

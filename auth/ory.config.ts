@@ -1,4 +1,4 @@
-import { OryClientConfiguration } from '@ory-forms/react'
+import { OryClientConfiguration, OryFlowType } from '@ory-forms/react'
 
 export const oryConfig: OryClientConfiguration = {
   sdk: {
@@ -27,8 +27,10 @@ export const oryConfig: OryClientConfiguration = {
     recovery_ui_url: '/auth/recovery',
     oauth2_login_ui_url: '/auth2/login',
     oauth2_logout_ui_url: '/auth2/logout',
+    oauth2_consent_ui_url: '/auth2/consent',
     registration_ui_url: '/auth/registration',
     verification_ui_url: '/auth/verification',
-    oauth2_consent_ui_url: '/auth2/consent',
+
+    captcha: [OryFlowType.Login, OryFlowType.Registration],
   },
 }

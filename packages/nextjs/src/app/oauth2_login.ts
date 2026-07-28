@@ -15,7 +15,7 @@ export async function getOAuth2LoginFlow(
     project: {
       login_ui_url: string
       oauth2_login_ui_url: string
-      error_ui_url: string
+      error_ui_url?: string
     }
   },
   params: QueryParams | Promise<QueryParams>,
@@ -58,8 +58,23 @@ export async function getOAuth2LoginFlow(
     redirect(accept.redirect_to)
   }
 
-  const session = await getServerSession()
-  if (session?.identity) {
+  const { session, status } = await getServerSession()
+  if (!session || !session.identity) {
+    const { login_ui_url, oauth2_login_ui_url } = config.project
+
+    const returnTo = new URL(oauth2_login_ui_url, baseUrl)
+    returnTo.searchParams.set('login_challenge', loginChallenge)
+
+    const loginUrl = new URL(login_ui_url, await getPublicUrl())
+
+    if (status === '2fa_required') {
+      loginUrl.searchParams.set('aal', 'aal2')
+    }
+    
+    loginUrl.searchParams.set('return_to', returnTo.toString())
+
+    redirect(loginUrl.toString())
+  } else {
     const accept = await api.acceptOAuth2LoginRequest({
       loginChallenge,
       acceptOAuth2LoginRequest: {
@@ -70,14 +85,4 @@ export async function getOAuth2LoginFlow(
     })
     redirect(accept.redirect_to)
   }
-
-  const { login_ui_url, oauth2_login_ui_url } = config.project
-
-  const returnTo = new URL(oauth2_login_ui_url, baseUrl)
-  returnTo.searchParams.set('login_challenge', loginChallenge)
-
-  const loginUrl = new URL(login_ui_url, await getPublicUrl())
-  loginUrl.searchParams.set('return_to', returnTo.toString())
-
-  redirect(loginUrl.toString())
 }

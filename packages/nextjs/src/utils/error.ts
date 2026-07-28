@@ -32,9 +32,12 @@ export async function redirectToErrorPage({
 }: {
   baseUrl: string
   error: unknown
-  config: { project: { error_ui_url: string } }
+  config: { project: { error_ui_url?: string } }
 }) {
-  const errorUrl = new URL(config.project.error_ui_url, baseUrl)
+  const configUrl = config.project.error_ui_url
+  if (!configUrl) return
+
+  const errorUrl = new URL(configUrl, baseUrl)
   errorUrl.searchParams.set('error', 'nextjs_error')
 
   if (error instanceof ResponseError) {

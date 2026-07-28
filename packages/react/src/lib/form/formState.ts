@@ -1,4 +1,4 @@
-import { UiNode, UiNodeGroupEnum } from '@ory/client-fetch'
+import { UiNode } from '@ory/client-fetch'
 
 import { isChoosingMethod, nodesToAuthMethodGroups } from '../nodes'
 import { FlowFormState, OryFlowContainer, OryFlowType } from '../../types'

@@ -5,8 +5,7 @@ const TURNSTILE_SECRET = process.env.TURNSTILE_SECRET_KEY || ''
 export async function handleVerifySubmit(request: NextRequest) {
   const body = await request.json()
 
-  console.log(body)
-  const turnstileToken = body?.captcha?.token
+  const turnstileToken = body?.captcha_token
 
   if (!turnstileToken) {
     return NextResponse.json(

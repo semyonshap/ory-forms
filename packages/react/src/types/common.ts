@@ -16,7 +16,6 @@ import {
   BlockForm,
   BlockDiv,
   BlockCaptcha,
-  BlockDialog,
 } from './blocks'
 import { OryClientConfiguration } from './config'
 
@@ -50,11 +49,11 @@ export interface OryComponents {
     Text: ComponentType<BlockText>
     Checkbox: ComponentType<BlockCheckbox>
     Image: ComponentType<BlockImage>
+    Input: ComponentType<BlockInput>
     Captcha?: ComponentType<BlockCaptcha>
     AuthMethod?: ComponentType<BlockButton>
     Resend?: ComponentType<BlockButton>
     Oidc?: ComponentType<BlockButton>
-    Input: ComponentType<BlockInput>
     Code?: ComponentType<BlockInput>
     Password?: ComponentType<BlockInput>
   }
@@ -98,9 +97,7 @@ export interface OryComponents {
 
 export type OryClientComponents = {
   Layout: OryComponents['Layout']
-  Node: Omit<OryComponents['Node'], 'Image' | 'Password'> & {
-    Image?: ComponentType<BlockImage>
-  }
+  Node: Partial<OryComponents['Node']>
   Icons?: {
     Providers?: Partial<OryComponents['Icons']['Providers']>
     System?: Partial<OryComponents['Icons']['System']>

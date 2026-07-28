@@ -1,37 +1,31 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect } from 'react'
 
-import { BlockOptionsCaptcha, UiNodeInput } from '../types'
 import { useFlowStoreShallow } from '../context'
-import { useTransientPayload } from './useTransientPayload'
+import { BlockOptionsCaptcha, UiNodeInput } from '../types'
 
-export function useCaptcha(node: UiNodeInput): {
+import { useTransientPayload } from '.'
+
+export function useCaptcha(_node: UiNodeInput): {
   options: BlockOptionsCaptcha
 } {
   const { setCaptchaToken } = useTransientPayload()
-  const { inputLoading, inputReady } = useFlowStoreShallow((s) => ({
+  const { inputLoading, inputReady, setMessages } = useFlowStoreShallow((s) => ({
     inputLoading: s.inputLoading,
     inputReady: s.inputReady,
+    setMessages: s.setMessages,
   }))
-
-  const [isInteractive, setInteractive] = useState(false)
-  const [errorMessage, setErrorMessage] = useState<string | undefined>()
 
   useEffect(() => {
     inputLoading('captcha')
   }, [inputLoading])
 
-  const resetWidget = useCallback(() => {
-    inputLoading('captcha')
-  }, [inputLoading])
-
   const onBeforeInteractive = useCallback(() => {
-    setInteractive(true)
     inputReady('captcha')
   }, [inputReady])
 
   const onExpire = useCallback(() => {
-    resetWidget()
-  }, [resetWidget])
+    inputLoading('captcha')
+  }, [inputLoading])
 
   const onSuccess = useCallback(
     (token: string) => {
@@ -42,16 +36,21 @@ export function useCaptcha(node: UiNodeInput): {
   )
 
   const onError = useCallback(() => {
-    console.error('Captcha Error')
-    setErrorMessage('Security verification failed. Please try again later.')
-  }, [])
+    setMessages([
+      {
+        id: 10,
+        text: 'Security verification failed. Please try again later.',
+        type: 'error' as const,
+      },
+    ])
+  }, [setMessages])
 
   return {
     options: {
-      isInteractive,
-      errorMessage,
-      resetWidget,
-      callbacks: { onSuccess, onError, onExpire, onBeforeInteractive },
+      onSuccess,
+      onError,
+      onExpire,
+      onBeforeInteractive,
     },
   }
 }

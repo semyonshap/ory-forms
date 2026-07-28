@@ -5,16 +5,15 @@ import { UiNodeInputAttributesTypeEnum } from '@ory/client-fetch'
 
 import { normalizeKeys } from '../utils'
 import { useFlowStoreShallow, useFormState } from '../context'
-import { triggerToWindowCall } from '../lib/nodes'
+import { triggerToFunction, triggerToWindowCall } from '../lib/nodes'
 import {
   VariantsInput,
-  OryFlowType,
   UiNodeInput,
   BlockPropsButton,
   BlockOptionsButton,
 } from '../types'
 
-import { useOnload, useInputTranslation } from '.'
+import { useOnload, useInputTranslation, useWebAuthn } from '.'
 
 export function useButton(node: UiNodeInput): {
   props: BlockPropsButton
@@ -27,46 +26,67 @@ export function useButton(node: UiNodeInput): {
 
   useOnload(node)
 
-  const { flowContainer, providers, system } = useFlowStoreShallow((state) => ({
-    flowContainer: state.flowContainer,
+  const scriptReady = useWebAuthn(node)
+
+  const { providers, system } = useFlowStoreShallow((state) => ({
     providers: state.components.Icons.Providers,
     system: state.components.Icons.System,
   }))
   const oryFormState = useFormState()
 
-  const { flowType } = flowContainer
-
   const [clicked, setClicked] = useDebounceValue(false, 100)
-
-  const attr = node.attributes
 
   const onClick = useCallback(
     (event: React.MouseEvent) => {
-      setValue(attr.name, attr.value)
+      const { group, attributes: attr, data } = node
 
-      setValue('method', node.group)
+      setValue(attr.name, attr.value)
+      setValue('method', group)
 
       setClicked(true)
 
-      node.data?.onClick?.()
+      data?.onClick?.()
 
-      if (node.data?.variant === 'sso') {
-        setValue('provider', node.attributes.value)
+      const variant = data?.variant
+
+      if (
+        variant === 'sso' ||
+        variant === 'resend' ||
+        variant === 'oidc'
+      ) {
         event.currentTarget.closest('form')?.requestSubmit()
       }
 
       if (attr.onclickTrigger) {
-        triggerToWindowCall(attr.onclickTrigger)
+        const fn = triggerToFunction(attr.onclickTrigger)
+        if (fn) {
+          const result = fn() as unknown
+          if (result instanceof Promise) {
+            result.then(() =>
+              event.currentTarget.closest('form')?.requestSubmit(),
+            )
+          }
+        } else {
+          triggerToWindowCall(attr.onclickTrigger)
+        }
       }
     },
-    [node, attr, setValue, setClicked, flowType],
+    [node, setValue, setClicked],
   )
 
   const {
     formState: { isSubmitting },
   } = useFormContext()
 
-  const disabled = attr.disabled || !isReady || !oryFormState.isReady || isSubmitting
+  const { group, attributes: attr } = node
+  const variant = node.data?.variant
+
+  const disabled =
+    attr.disabled ||
+    !isReady ||
+    !oryFormState.isReady ||
+    isSubmitting ||
+    scriptReady.isDisabled
 
   useEffect(() => {
     if (!isSubmitting && clicked) {
@@ -74,8 +94,10 @@ export function useButton(node: UiNodeInput): {
     }
   }, [isSubmitting, setClicked, clicked])
 
-  // Ui Button
-  const IconsProviders = useMemo(() => normalizeKeys(providers ?? {}), [providers])
+  const IconsProviders = useMemo(
+    () => normalizeKeys(providers ?? {}),
+    [providers],
+  )
   const IconsSystem = useMemo(() => normalizeKeys(system ?? {}), [system])
 
   const { formattedLabel } = useInputTranslation(node)
@@ -83,14 +105,16 @@ export function useButton(node: UiNodeInput): {
   let icon: ComponentType | undefined
 
   const type: VariantsInput =
-    attr.type === UiNodeInputAttributesTypeEnum.Submit ? 'submit' : 'button'
+    attr.type === UiNodeInputAttributesTypeEnum.Submit
+      ? 'submit'
+      : 'button'
 
   let htmlType: BlockPropsButton['type'] = type
-  const variant = node.data?.variant
 
   switch (variant) {
     case 'method': {
-      icon = system ? IconsSystem?.[node.group] : undefined
+      htmlType = 'button'
+      icon = system ? IconsSystem?.[group] : undefined
       break
     }
     case 'resend': {

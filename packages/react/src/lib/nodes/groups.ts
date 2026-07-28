@@ -46,18 +46,3 @@ export function nodesToAuthMethodGroups(
   const excludeSet = new Set([...excludedAuthGroups, ...excludeAuthMethods])
   return allGroupEnums.filter((group) => groups[group]?.length && !excludeSet.has(group))
 }
-
-export function getFinalNodes(
-  uniqueGroups: GroupedNodes,
-  selectedGroup: UiNodeGroupEnum | undefined,
-): UiNode[] {
-  const hiddenGroupNodes = [
-    ...(uniqueGroups.identifier_first ?? []),
-    ...(uniqueGroups.default ?? []),
-    ...(uniqueGroups.captcha ?? []),
-  ].filter((node) => 'type' in node.attributes && node.attributes.type === 'hidden')
-
-  const selectedNodes = selectedGroup ? (uniqueGroups[selectedGroup] ?? []) : []
-
-  return [...hiddenGroupNodes, ...selectedNodes]
-}

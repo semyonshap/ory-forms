@@ -1,4 +1,4 @@
-import { UiNodeInputAttributesTypeEnum, isUiNodeInputAttributes } from '@ory/client-fetch'
+import { UiNodeInputAttributesTypeEnum } from '@ory/client-fetch'
 
 import {
   WrapperBase,

@@ -1,5 +1,10 @@
 import set from 'lodash-es/set'
-import { isUiNodeInputAttributes, UiContainer, UiNode } from '@ory/client-fetch'
+import {
+  isUiNodeInputAttributes,
+  isUiNodeTextAttributes,
+  UiContainer,
+  UiNode,
+} from '@ory/client-fetch'
 
 import { FormValues, OryFlowContainer, OryFlowType } from '../../types'
 
@@ -46,6 +51,14 @@ export function computeDefaultValues(
 
   for (const node of flow.ui.nodes) {
     const attrs = node.attributes
+
+    if (isUiNodeTextAttributes(attrs)) {
+      if (attrs.id === 'totp_secret_key' && attrs.text?.text) {
+        set(defaults, attrs.id, attrs.text.text)
+        continue
+      }
+    }
+
     if (!isUiNodeInputAttributes(attrs)) {
       continue
     }

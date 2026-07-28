@@ -19,11 +19,17 @@ export function InputWrapper({ node, attached }: WrapperInput) {
 
   let Component = Node.Input
   if (isPinCodeInput && Node.Code) Component = Node.Code
-  else if (props.type === 'password' && Node.Password) Component = Node.Password
+  else if (props.type === 'password' && Node.Password)
+    Component = Node.Password
 
   return (
     <Node.Label node={node} options={options} attached={attached}>
-      <Component node={node} props={props} options={options} attached={attached} />
+      <Component
+        node={node}
+        props={props}
+        options={options}
+        attached={attached}
+      />
     </Node.Label>
   )
 }
@@ -42,7 +48,14 @@ export function ButtonWrapper({ node, attached }: WrapperInput) {
   else if (variant === 'oidc' && Node.Oidc) Component = Node.Oidc
   else Component = Node.Button
 
-  return <Component node={node} props={props} options={options} attached={attached} />
+  return (
+    <Component
+      node={node}
+      props={props}
+      options={options}
+      attached={attached}
+    />
+  )
 }
 
 export function CheckboxWrapper({ node, attached }: WrapperInput) {
@@ -50,15 +63,24 @@ export function CheckboxWrapper({ node, attached }: WrapperInput) {
 
   const { options, props } = useCheckbox(node)
 
-  return <Node.Checkbox node={node} attached={attached} props={props} options={options} />
+  return (
+    <Node.Checkbox
+      node={node}
+      attached={attached}
+      props={props}
+      options={options}
+    />
+  )
 }
 
 export function CaptchaWrapper({ node, attached }: WrapperInput) {
-  const Captcha = useFlowStore((state) => state.components.Node.Captcha)
-
-  if (!Captcha) return null
+  const { Node } = useFlowStoreShallow((state) => ({
+    Node: state.components.Node,
+  }))
 
   const { options } = useCaptcha(node)
 
-  return <Captcha node={node} options={options} attached={attached} />
+  if (!Node.Captcha) return null
+
+  return <Node.Captcha node={node} options={options} attached={attached} />
 }

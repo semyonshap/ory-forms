@@ -20,6 +20,7 @@ export interface NodeDataInput {
   onClick?: () => void
   description?: string
   readOnly?: boolean
+  style?: React.CSSProperties
   target?: string
 }
 

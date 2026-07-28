@@ -88,10 +88,12 @@ export type BlockPropsInput = ControllerRenderProps & {
   maxLength?: number
   autoComplete?: string
   readOnly?: boolean
+  style?: React.CSSProperties
 }
 
 export interface BlockOptionsInput {
   label: string
+  messages?: MessageProps[]
 }
 
 export type BlockInput = BaseBlockProps & {
@@ -102,15 +104,10 @@ export type BlockInput = BaseBlockProps & {
 
 // Captcha
 export interface BlockOptionsCaptcha {
-  isInteractive: boolean
-  errorMessage: string | undefined
-  resetWidget: () => void
-  callbacks: {
-    onSuccess: (token: string) => void
-    onError: () => void
-    onExpire: () => void
-    onBeforeInteractive: () => void
-  }
+  onSuccess: (token: string) => void
+  onError: () => void
+  onExpire: () => void
+  onBeforeInteractive: () => void
 }
 
 export type BlockCaptcha = BaseBlockProps & {
@@ -177,6 +174,7 @@ export type BlockText = BaseBlockProps & {
 
 export interface BlockPropsCard {
   key: string
+  id: string
   action: string
   method: string
   onSubmit: (e?: React.BaseSyntheticEvent) => Promise<void>
@@ -202,7 +200,3 @@ export type BlockForm = PropsWithChildren & {
     messages?: MessageProps[]
   }
 }
-
-// Dialog
-
-export type BlockDialog = PropsWithChildren

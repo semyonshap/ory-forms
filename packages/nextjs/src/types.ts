@@ -10,6 +10,11 @@ export const initOverrides: RequestInit = {
   cache: 'no-cache',
 }
 
+export type SessionWithStatus = {
+  status: 'authenticated' | '2fa_required' | 'unauthenticated'
+  session: Session | null
+}
+
 export type OryError = {
   code: number
   message?: string

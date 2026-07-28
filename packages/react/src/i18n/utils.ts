@@ -20,6 +20,7 @@ function minutesDiff(from: number, to: number): number {
 
 function processContext(context: Record<string, unknown>, t: TFunction): Record<string, unknown> {
   const result: Record<string, unknown> = {}
+  const now = Date.now() / 1000
 
   for (const [key, value] of Object.entries(context)) {
     if (Array.isArray(value)) {
@@ -29,18 +30,11 @@ function processContext(context: Record<string, unknown>, t: TFunction): Record<
     }
 
     if (key.endsWith('_unix') && typeof value === 'number') {
-      const now = Math.floor(Date.now() / 1000)
       result[key] = formatDate(value)
-
-      if (key === 'sent_at_unix' || key === 'expires_at_unix') {
-        result[`${key}_since`] = formatDate(value)
-      }
-      if (key === 'expires_at_unix') {
-        result[`${key}_until_minutes`] = minutesDiff(now, value)
-      }
-      if (key === 'created_at_unix') {
-        result[`${key}_since_minutes`] = minutesDiff(value, now)
-      }
+      result[`${key}_since`] = formatDate(value)
+      result[`${key}_since_minutes`] = minutesDiff(value, now)
+      result[`${key}_until`] = formatDate(value)
+      result[`${key}_until_minutes`] = minutesDiff(now, value)
       continue
     }
 

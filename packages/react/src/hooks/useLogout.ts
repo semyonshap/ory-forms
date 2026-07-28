@@ -7,9 +7,11 @@ export function useLogout(config: OryConfiguration) {
   const [logoutFlow, setLogoutFlow] = useState<LogoutFlow | undefined>()
   const [isLoading, setIsLoading] = useState<boolean>(true)
 
+  const { frontend } = config.sdk
+
   const fetchLogoutFlow = useCallback(async () => {
     try {
-      const flow = await config.sdk.frontend.createBrowserLogoutFlow().catch((err) => {
+      const flow = await frontend.createBrowserLogoutFlow().catch((err) => {
         if (err.response?.status !== 401) {
           throw err
         }
@@ -19,7 +21,7 @@ export function useLogout(config: OryConfiguration) {
     } finally {
       setIsLoading(false)
     }
-  }, [config.sdk.url])
+  }, [frontend])
 
   useEffect(() => {
     void fetchLogoutFlow()

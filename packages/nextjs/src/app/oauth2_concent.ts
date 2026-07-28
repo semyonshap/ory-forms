@@ -11,7 +11,13 @@ import { guessPotentiallyProxiedOrySdkUrl } from '../utils/sdk'
 import { redirectToErrorPage } from '../utils/error'
 
 export async function getOAuth2ConsentFlow(
-  config: { project: { login_ui_url: string; error_ui_url: string } },
+  config: {
+    project: {
+      login_ui_url: string
+      error_ui_url?: string
+      oauth2_consent_ui_url?: string
+    }
+  },
   params: QueryParams | Promise<QueryParams>,
 ): Promise<OAuth2ConsentFlow | null> {
   const resolved = await params
@@ -56,11 +62,21 @@ export async function getOAuth2ConsentFlow(
     redirect(accept.redirect_to)
   }
 
-  const session = await getServerSession()
+  const { session, status } = await getServerSession()
   if (!session) {
     const loginUrl = new URL(config.project.login_ui_url, baseUrl)
-    const lc = resolved['login_challenge']?.toString()
-    if (lc) loginUrl.searchParams.set('login_challenge', lc)
+
+    if (status === '2fa_required') {
+      loginUrl.searchParams.set('aal', 'aal2')
+    }
+
+    const consentUiUrl = config.project.oauth2_consent_ui_url
+    if (consentUiUrl) {
+      const returnTo = new URL(consentUiUrl, baseUrl)
+      returnTo.searchParams.set('consent_challenge', consentChallenge)
+      loginUrl.searchParams.set('return_to', returnTo.toString())
+    }
+
     redirect(loginUrl.toString())
   }
 

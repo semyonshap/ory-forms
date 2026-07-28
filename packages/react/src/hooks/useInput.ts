@@ -1,7 +1,13 @@
+import { UiTextTypeEnum } from '@ory/client-fetch'
 import { useEffect } from 'react'
 import { useController, useFormContext } from 'react-hook-form'
 
-import { BlockOptionsInput, BlockPropsInput, UiNodeInput } from '../types'
+import {
+  BlockOptionsInput,
+  BlockPropsInput,
+  MessageProps,
+  UiNodeInput,
+} from '../types'
 import { resolvePlaceholder } from '../i18n'
 
 import { useInputTranslation } from './useInputTranslation'
@@ -14,7 +20,7 @@ export function useInput(node: UiNodeInput): {
   const {
     setValue,
     control,
-    formState: { isReady, isSubmitting },
+    formState: { isReady, isSubmitting, errors },
   } = useFormContext()
 
   useOnload(node)
@@ -41,6 +47,16 @@ export function useInput(node: UiNodeInput): {
   const { t, label, formattedLabel } = useInputTranslation(node)
   const placeholder = label ? resolvePlaceholder(label, t) : ''
 
+  const fieldError = errors[name]
+  const validationMessages: MessageProps[] =
+    fieldError && typeof fieldError.message === 'string'
+      ? [{ id: 0, type: UiTextTypeEnum.Error, text: fieldError.message }]
+      : []
+
+  const nodeMessages = node.messages
+  const allMessages: MessageProps[] =
+    nodeMessages.length > 0 ? nodeMessages : validationMessages
+
   return {
     props: {
       ...controller.field,
@@ -52,9 +68,11 @@ export function useInput(node: UiNodeInput): {
       autoComplete: autocomplete,
       disabled,
       readOnly: node.data?.readOnly,
+      style: node.data?.style,
     },
     options: {
       label: formattedLabel,
+      messages: allMessages.length > 0 ? allMessages : undefined,
     },
   }
 }

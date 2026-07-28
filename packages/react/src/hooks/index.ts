@@ -4,7 +4,7 @@ export { useOnload } from './useOnload'
 export { useCard } from './useCard'
 export { useOryForm } from './useOryForm'
 export { useCheckbox } from './useCheckbox'
-export { useMethodPasskey } from './useMethodPasskey'
+export { useWebAuthn } from './useWebAuthn'
 export { useCaptcha } from './useCaptcha'
 
 export { useInputTranslation } from './useInputTranslation'

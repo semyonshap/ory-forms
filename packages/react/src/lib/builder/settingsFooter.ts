@@ -30,11 +30,17 @@ export function settingsFooter(group: UiNodeGroupEnum, nodes: UiNode[], t: TFunc
 
   const childrenSubmits: UiNode[] = []
   const submitIds = [1070003, 1050008, 1050011, 1050016, 1050007]
+  const triggerIds = [1050019, 1050012]
 
   for (let i = nodes.length - 1; i >= 0; i--) {
     const n = nodes[i]
     const id = n.meta.label?.id
-    if (isUiNodeInput(n) && n.attributes.type === 'submit' && id && submitIds.includes(id)) {
+    if (
+      isUiNodeInput(n) &&
+      id &&
+      ((n.attributes.type === 'submit' && submitIds.includes(id)) ||
+        (n.attributes.type === 'button' && triggerIds.includes(id)))
+    ) {
       if (n.meta.label?.id === 1050016) {
         n.data = { ...n.data, variant: 'cancel' }
       }

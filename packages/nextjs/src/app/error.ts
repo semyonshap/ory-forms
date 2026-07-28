@@ -17,11 +17,11 @@ export async function getErrorFlow(
 
   const error = await getError(params)
 
-  const session = await getServerSession()
+  const { session, status } = await getServerSession()
 
   const result: UiNode[] = []
 
-  if (session) {
+  if (status !== 'unauthenticated') {
     const logoutFlow = await getLogoutFlow()
     result.push(createNavigationNode('logout', logoutFlow.logout_url))
   }

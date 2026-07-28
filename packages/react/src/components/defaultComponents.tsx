@@ -43,7 +43,7 @@ export const DefaultComponents: OryComponents = {
       </figure>
     ),
     Label: ({ options, children }) => {
-      const { label } = options
+      const { label, messages } = options
       return (
         <div
           style={{
@@ -55,6 +55,14 @@ export const DefaultComponents: OryComponents = {
         >
           {label && <label>{label}</label>}
           {children}
+          {messages?.map((msg, i) => (
+            <p
+              key={i}
+              style={{ color: msg.type === 'error' ? 'red' : '#666', fontSize: '14px', margin: 0 }}
+            >
+              {msg.text}
+            </p>
+          ))}
         </div>
       )
     },

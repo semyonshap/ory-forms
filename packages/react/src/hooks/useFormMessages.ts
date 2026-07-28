@@ -8,8 +8,10 @@ import { uiTextToFormattedMessage } from '../i18n'
 export function useFormMessages(hiddenMessageIds: number[] = defaultHiddenMessageIds) {
   const {
     flow: { flow },
+    storeMessages,
   } = useFlowStoreShallow((state) => ({
     flow: state.flowContainer,
+    storeMessages: state.messages,
   }))
 
   const { t } = useTranslation()
@@ -17,10 +19,12 @@ export function useFormMessages(hiddenMessageIds: number[] = defaultHiddenMessag
   return useMemo(() => {
     const filtered = flow.ui.messages?.filter((m) => !hiddenMessageIds.includes(m.id)) ?? []
 
-    return filtered.map((message) => ({
+    const flowMessages = filtered.map((message) => ({
       id: message.id,
       text: uiTextToFormattedMessage(message, t),
       type: message.type,
     }))
-  }, [flow.ui.messages, hiddenMessageIds, t])
+
+    return [...flowMessages, ...storeMessages]
+  }, [flow.ui.messages, storeMessages, hiddenMessageIds, t])
 }

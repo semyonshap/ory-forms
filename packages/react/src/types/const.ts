@@ -76,9 +76,25 @@ export const methodIconMap: Record<string, string> = {
 }
 
 export type VariantsInput =
-  'button' | 'submit' | 'link' | 'cancel' | 'sso' | 'oidc' | 'code' | 'scope' | 'method' | 'resend'
+  | 'button'
+  | 'submit'
+  | 'link'
+  | 'cancel'
+  | 'sso'
+  | 'oidc'
+  | 'expand'
+  | 'scope'
+  | 'method'
+  | 'resend'
 
 export type VariantsAnchor = 'button' | 'link' | 'cancel'
-export type VariantsDiv = 'totp-secret' | 'totp-qr' | 'lookup-secrets-codes' | 'footer' | 'footer-settings' | 'footer-settings-submits'
+export type VariantsDiv =
+  | 'totp-secret'
+  | 'totp-qr'
+  | 'lookup-secrets-codes'
+  | 'footer'
+  | 'footer-settings'
+  | 'footer-settings-submits'
+  | 'settings-divider'
 
 export type TypeDiv = 'Card' | 'DividerCard'

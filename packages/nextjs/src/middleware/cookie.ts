@@ -1,6 +1,5 @@
 import { parse } from 'tldts'
-import parseSetCookie from 'set-cookie-parser'
-import { serialize, type SerializeOptions } from 'cookie'
+import { parseSetCookie, serialize, splitSetCookieString } from 'cookie-es'
 
 import { OryMiddlewareOptions } from './middleware'
 
@@ -12,13 +11,15 @@ export function rewriteSetCookieHeaders(
   const setCookieHeader = upstreamResponse.headers.get('set-cookie')
   if (!setCookieHeader) return
 
-  const cookies = parseSetCookie(setCookieHeader)
   const cookieOptions = resolveCookieOptions(request, options)
 
   upstreamResponse.headers.delete('set-cookie')
-  for (const { name, value, ...opts } of cookies) {
+  for (const str of splitSetCookieString(setCookieHeader)) {
+    const parsed = parseSetCookie(str)
+    if (!parsed) continue
+    const { name, value, ...opts } = parsed
     const serialized = serialize(name, value, {
-      ...(opts as SerializeOptions),
+      ...opts,
       ...cookieOptions,
       encode: (v) => v,
     })

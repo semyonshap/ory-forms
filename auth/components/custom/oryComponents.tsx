@@ -31,13 +31,16 @@ import {
   MapPin,
   Phone,
   AtSign,
+  Eye,
+  EyeOff,
 } from 'lucide-react'
 import { Separator } from '../ui/separator'
 import { toast } from 'sonner'
-import { Children, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Checkbox } from '../ui/checkbox'
 import { Turnstile } from '@marsidev/react-turnstile'
-import { Dialog, DialogContent, DialogTrigger } from '../ui/dialog'
+import { useIsMobile } from '@/hooks/use-mobile'
+import { oryConfig } from '@/ory.config'
 
 export const OryComponents: OryClientComponents = {
   Icons: {
@@ -63,17 +66,16 @@ export const OryComponents: OryClientComponents = {
     Form: ({ children, options }) => {
       const { flowType, messages } = options
 
+      const isSettings = flowType === OryFlowType.Settings
+
       useEffect(() => {
-        if (flowType !== OryFlowType.Settings) return
-        if (!messages) return
+        if (!isSettings || !messages) return
 
         messages.forEach((message) => {
           if (message.type === 'error') toast.error(message.text)
           else toast(message.text)
         })
       }, [flowType, messages])
-
-      const isSettings = flowType === OryFlowType.Settings
 
       return (
         <div
@@ -82,28 +84,20 @@ export const OryComponents: OryClientComponents = {
             isSettings ? 'md:w-150 md:max-w-150' : 'md:w-90 md:max-w-90',
           )}
         >
-          {isSettings
-            ? Children.toArray(children).flatMap((child, i) => [
-                child,
-                i < Children.count(children) - 1 && (
-                  <div key={`sep-${i}`} className="px-4 md:hidden">
-                    <Separator />
-                  </div>
-                ),
-              ])
-            : children}
+          {children}
         </div>
       )
     },
     Divider: () => <Separator />,
     Card: ({ props, options, attached }) => {
       const { title, description, messages, flowType } = options
-      const { key, ...formProps } = props
 
       const isSettings = flowType === OryFlowType.Settings
 
+      const { id, key, ...formProps } = props
+
       return (
-        <form key={key} {...formProps} className="w-full">
+        <form key={key} id={id} {...formProps} className="w-full">
           <Card className="w-full bg-transparent border-none md:bg-card md:border">
             {title && (
               <CardHeader className="flex flex-col w-full">
@@ -138,11 +132,12 @@ export const OryComponents: OryClientComponents = {
         <div
           className={cn(
             variant === 'footer' && 'inline-flex gap-2',
-            variant === 'footer-settings' && 'flex  gap-2 justify-end',
-            variant === 'footer-settings-submits' && 'flex flex-col sm:flex-row gap-2',
+            variant === 'footer-settings' && 'flex flex-col justify-between gap-4 sm:flex-row ',
+            variant === 'footer-settings-submits' && 'flex flex-col gap-2 sm:flex-row sm:ml-auto',
             variant === 'totp-qr' && 'w-full flex flex-col sm:flex-row gap-4 ',
             variant === 'totp-secret' && 'w-full flex flex-col gap-2',
             variant === 'lookup-secrets-codes' && 'grid grid-cols-2 md:grid-cols-3 gap-2',
+            variant === 'settings-divider' && 'flex px-4 md:hidden',
           )}
         >
           {attached}
@@ -151,20 +146,21 @@ export const OryComponents: OryClientComponents = {
     },
   },
   Node: {
-    Label: ({ node, options, children, attached }) => {
-      const { label } = options
-      const { messages } = node
+    Label: ({ options, children, attached }) => {
+      const { label, messages } = options
 
       return (
         <div className="flex flex-col gap-1">
-          <Label className="inline-flex justify-between">
-            <span className="text-sm font-medium text-muted-foreground">{label}</span>
-            {attached}
-          </Label>
+          {label && (
+            <Label className="inline-flex justify-between">
+              <span className="text-sm font-medium text-muted-foreground">{label}</span>
+              {attached}
+            </Label>
+          )}
           {children}
-          {messages?.map((msg) => (
+          {messages?.map((msg, i) => (
             <span
-              key={msg.id}
+              key={i}
               className={cn(
                 'text-sm',
                 msg.type === 'error' && 'text-destructive',
@@ -227,10 +223,10 @@ export const OryComponents: OryClientComponents = {
         <Button
           {...props}
           variant="outline"
-          className="inline-flex gap-4 h-auto w-full whitespace-normal items-start"
+          className="inline-flex gap-4 h-auto w-full whitespace-normal items-start justify-start overflow-hidden"
         >
           {Icon && <Icon className="size-5 shrink-0 mt-3" />}
-          <div className="flex flex-col gap-1 justify-start items-start min-w-0">
+          <div className="flex flex-col gap-1 justify-start items-start">
             <span className="text-left">{label}</span>
             {description && (
               <span className="text-muted-foreground text-left text-sm">{description}</span>
@@ -248,7 +244,7 @@ export const OryComponents: OryClientComponents = {
             {Icon && <Icon className={'size-6'} />}
             <span className="text-bold capitalize">{node.attributes.value || label}</span>
           </div>
-          <Button {...props} variant="link">
+          <Button {...props} variant="outline" className="cursor-pointer">
             {node.attributes.name === 'link' ? <Link /> : <Unlink />}
           </Button>
         </div>
@@ -261,9 +257,10 @@ export const OryComponents: OryClientComponents = {
         <Button
           {...props}
           className={cn(
+            'overflow-hidden',
             variant === 'link' && 'w-fit px-0',
-            variant === 'sso' && 'justify-start gap-16',
-            variant === 'code' && 'whitespace-normal text-start h-auto',
+            variant === 'sso' && 'justify-start gap-4 md:gap-16',
+            variant === 'expand' && 'whitespace-normal text-start h-auto',
           )}
           variant={((v) => {
             if (v === 'cancel') return 'destructive'
@@ -271,29 +268,58 @@ export const OryComponents: OryClientComponents = {
             return 'outline'
           })(variant)}
         >
-          {isSubmitting && <Spinner />}
-          {Icon && <Icon className={cn(label ? 'size-4' : 'size-6')} />}
-          <span>{label}</span>
+          {isSubmitting ? (
+            <Spinner />
+          ) : (
+            Icon && <Icon className={cn(label ? 'size-4' : 'size-6')} />
+          )}
+          <span className="truncate">{label}</span>
         </Button>
       )
     },
     Input: ({ props }) => {
       return <Input {...props} />
     },
+    Password: ({ props }) => {
+      const [show, setShow] = useState(false)
+      return (
+        <div className="relative">
+          <Input {...props} type={show ? 'text' : 'password'} className="pr-10" />
+          <button
+            type="button"
+            onClick={() => setShow(!show)}
+            className={cn(
+              buttonVariants({ variant: 'ghost', size: 'icon' }),
+              'absolute right-1 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground size-7',
+            )}
+            tabIndex={-1}
+          >
+            {show ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+          </button>
+        </div>
+      )
+    },
     Captcha: ({ options }) => {
-      const { callbacks } = options
+      const { onBeforeInteractive, onSuccess, onExpire, onError } = options
+      const isMobile = useIsMobile(384)
+
       return (
         <Turnstile
           siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
           options={{
-            size: 'flexible',
+            size: isMobile ? 'compact' : 'flexible',
             theme: 'dark',
-            appearance: 'interaction-only',
+            appearance: 'always',
+            language: oryConfig.project.default_locale,
           }}
-          onSuccess={callbacks.onSuccess}
-          onError={callbacks.onError}
-          onExpire={callbacks.onExpire}
-          onBeforeInteractive={callbacks.onBeforeInteractive}
+          className={cn(
+            '[clip-path:inset(1.5px_round_var(--radius))]',
+            !isMobile && 'w-full! block! overflow-clip! h-15!',
+          )}
+          onSuccess={onSuccess}
+          onError={onError}
+          onExpire={onExpire}
+          onBeforeInteractive={onBeforeInteractive}
         />
       )
     },
@@ -306,7 +332,6 @@ export const OryComponents: OryClientComponents = {
           {...restInputProps}
           value={value as string}
           maxLength={elements}
-          className="w-full"
           onKeyDown={(e) => {
             if ((value as string)?.length >= elements && e.key.length === 1) {
               e.preventDefault()

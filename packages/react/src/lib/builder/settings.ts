@@ -43,6 +43,9 @@ export function SettingsBuilder(
               t,
             }),
           },
+          data: {
+            readOnly: true,
+          },
         })
 
         const secretRightGroup = createDivGroup({
@@ -85,16 +88,22 @@ export function SettingsBuilder(
       const emailValue = emailNode?.attributes.value
 
       if (emailValue) {
-        const hiddenEmail = createInputNode({
+        const hiddenUsername = createInputNode({
           group: UiNodeGroupEnum.Password,
           attributes: {
-            name: 'email',
-            type: 'hidden',
-            disabled: false,
+            name: 'username',
+            type: 'text',
+            disabled: true,
             value: String(emailValue),
+            autocomplete: 'username',
+          },
+          data: {
+            style: {
+              display: 'none',
+            },
           },
         })
-        nodes.unshift(hiddenEmail)
+        nodes.unshift(hiddenUsername)
       }
       break
     }

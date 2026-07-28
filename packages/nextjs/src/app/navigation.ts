@@ -24,10 +24,25 @@ export async function getNavigationFlow(config: {
     verification_ui_url,
   } = config.project
 
-  const session = await getServerSession()
+  const { session, status } = await getServerSession()
   const result: UiNode[] = []
 
-  if (session) {
+  if (!session) {
+    if (status === 'unauthenticated') {
+      result.push(
+        createNavigationNode('login', login_ui_url),
+        createNavigationNode('registration', registration_ui_url),
+        createNavigationNode('recovery', recovery_ui_url),
+      )
+    } else if (status === '2fa_required') {
+      const logoutFlow = await getLogoutFlow()
+
+      result.push(
+        createNavigationNode('settings', settings_ui_url),
+        createNavigationNode('logout', logoutFlow.logout_url),
+      )
+    }
+  } else {
     const { identity } = session
 
     if (identity && !identity.verifiable_addresses) {
@@ -39,12 +54,6 @@ export async function getNavigationFlow(config: {
     result.push(
       createNavigationNode('settings', settings_ui_url),
       createNavigationNode('logout', logoutFlow.logout_url),
-    )
-  } else {
-    result.push(
-      createNavigationNode('login', login_ui_url),
-      createNavigationNode('registration', registration_ui_url),
-      createNavigationNode('recovery', recovery_ui_url),
     )
   }
 

@@ -1,10 +1,12 @@
-import { isUiNodeScriptAttributes, UiNode, UiNodeGroupEnum } from '@ory/client-fetch'
+import { UiNode, UiNodeGroupEnum } from '@ory/client-fetch'
+import { groupBy } from 'lodash-es'
 
 import {
   BuildContext,
   BuilderLogoutFlow,
   BuilderSorter,
   BuildFormContext,
+  excludedAuthGroups,
   FormNode,
   OryFlowType,
 } from '../../types'
@@ -19,22 +21,15 @@ import {
   BuildSignIn,
   BuildSignUp,
   BuildDivider,
+  BuildCaptcha,
 } from '../nodes/presets'
-import {
-  getFinalNodes,
-  getNodeGroupsWithVisibleNodes,
-  nodesToAuthMethodGroups,
-} from '../nodes/groups'
-import {
-  findScreenSelectionButton,
-  isNodeVisible,
-  withoutSingleSignOnNodes,
-} from '../nodes/filters'
+import { getNodeGroupsWithVisibleNodes, nodesToAuthMethodGroups } from '../nodes/groups'
+import { findScreenSelectionButton, isNodeVisible } from '../nodes/filters'
 import { createDivGroup } from '../nodes/factory'
-import { getFunctionalNodes, toAuthMethodPickerOptions } from '../nodes/filters'
+import { toAuthMethodPickerOptions } from '../nodes/filters'
 
 import { BuildAuthMethodList } from './authMethods'
-import { NodeDataBuilder } from './nodeData'
+import { NodeDataBuilder } from './data'
 import { SettingsBuilder } from './settings'
 
 export function Builder(
@@ -42,21 +37,17 @@ export function Builder(
   formCtx: BuildFormContext,
   logoutCtx: BuilderLogoutFlow,
   { nodeSorter, groupSorter }: BuilderSorter,
-  extraNodes: UiNode[] = [],
 ) {
   const sortNodes = (a: UiNode, b: UiNode) => nodeSorter(a, b, { flowType })
   const sortGroups = (a: UiNodeGroupEnum, b: UiNodeGroupEnum) => groupSorter(a, b)
 
   const { config, flowContainer, formState, t } = ctx
   const { setOverrideState, selectMethod } = formCtx
+  const { captcha, registration_enabled } = config.project
 
   const { flow, flowType } = flowContainer
-
   const flowNodes = flow.ui.nodes
-
   if (!flowNodes) return []
-
-  // console.log(flowNodes)
 
   const nodes = NodeDataBuilder({
     nodes: flowNodes,
@@ -64,29 +55,45 @@ export function Builder(
     flowContainer,
   })
 
+  if (captcha && captcha.includes(flowType)) {
+    nodes.push(BuildCaptcha())
+  }
+
+  nodes.sort(sortNodes)
+
   let result: FormNode[] = []
 
   const authMethods = nodesToAuthMethodGroups(nodes)
   const visibleGroups = getNodeGroupsWithVisibleNodes(nodes)
   const authMethodBlocks = toAuthMethodPickerOptions(visibleGroups)
 
+  const grouped = groupBy(nodes, (node) => {
+    const group = node.group
+    if (group === UiNodeGroupEnum.Captcha) return 'captcha'
+
+    const visible = isNodeVisible(node)
+    const isSso = (group === UiNodeGroupEnum.Oidc || group === UiNodeGroupEnum.Saml) && visible
+
+    if (isSso) return 'sso'
+    if (!visible) return 'hidden'
+    return 'visible'
+  })
+
+  const ssoNodes = grouped.sso ?? []
+  const hiddenNodes = grouped.hidden ?? []
+  const visibleNodes = grouped.visible ?? []
+  const captchaNodes = grouped.captcha ?? []
+
   switch (formState.current) {
     case 'provide_identifier': {
-      const nonSsoNodes = withoutSingleSignOnNodes(nodes).sort(sortNodes)
-      const ssoNodes = nodes
-        .filter(isNodeVisible)
-        .filter(
-          (node) => node.group === UiNodeGroupEnum.Oidc || node.group === UiNodeGroupEnum.Saml,
-        )
-
       if (ssoNodes.length > 0) {
         result.push(...ssoNodes)
-        if (nonSsoNodes.some(isNodeVisible)) {
+        if (visibleNodes) {
           result.push(BuildDivider())
         }
       }
 
-      result.push(...nonSsoNodes)
+      result.push(...hiddenNodes, ...[...visibleNodes, ...captchaNodes].sort(sortNodes))
 
       switch (flowType) {
         case OryFlowType.Login: {
@@ -94,7 +101,7 @@ export function Builder(
             const logout = BuildLogout(ctx, logoutCtx)
             result.push(...logout)
           } else {
-            if (config.project.registration_enabled) {
+            if (registration_enabled) {
               const signUp = BuildSignUp(ctx)
               result.push(...signUp)
             }
@@ -102,7 +109,7 @@ export function Builder(
           break
         }
         case OryFlowType.Registration: {
-          if (config.project.registration_enabled) {
+          if (registration_enabled) {
             const signIn = BuildSignIn(ctx)
             result.push(...signIn)
           }
@@ -112,24 +119,13 @@ export function Builder(
       break
     }
     case 'method_active': {
-      const finalNodes = getFinalNodes(visibleGroups, formState.method)
+      const selectedNodes = visibleNodes.filter((node) => node.group === formState.method)
 
-      const hiddenNodes = nodes.filter(
-        (n) =>
-          n.group !== UiNodeGroupEnum.Captcha &&
-          ((n.attributes.node_type === 'input' && n.attributes.type === 'hidden') ||
-            isUiNodeScriptAttributes(n.attributes)),
+      const profileNodes = visibleNodes.filter(
+        (node) => node.group === UiNodeGroupEnum.Default || node.group === UiNodeGroupEnum.Profile,
       )
 
-      const profileNodes = nodes
-        .filter(isNodeVisible)
-        .filter(
-          (node) =>
-            node.group === UiNodeGroupEnum.Default || node.group === UiNodeGroupEnum.Profile,
-        )
-
-      const combined = [...profileNodes, ...finalNodes, ...hiddenNodes]
-      result = Array.from(new Set(combined)).sort(sortNodes)
+      result = [...profileNodes, ...captchaNodes, ...selectedNodes, ...hiddenNodes].sort(sortNodes)
 
       switch (flowType) {
         case OryFlowType.Login: {
@@ -164,19 +160,8 @@ export function Builder(
       break
     }
     case 'select_method': {
-      const authMethodAdditionalNodes = getFunctionalNodes(nodes).sort(sortNodes)
-
-      const ssoNodes = nodes
-        .filter(isNodeVisible)
-        .filter(
-          (node) => node.group === UiNodeGroupEnum.Oidc || node.group === UiNodeGroupEnum.Saml,
-        )
-
-      const hiddenNodes = nodes.filter(
-        (n) =>
-          n.group !== UiNodeGroupEnum.Captcha &&
-          ((n.attributes.node_type === 'input' && n.attributes.type === 'hidden') ||
-            isUiNodeScriptAttributes(n.attributes)),
+      const authMethodAdditionalNodes = nodes.filter(
+        (node) => isNodeVisible(node) && excludedAuthGroups.includes(node.group),
       )
 
       result = [...authMethodAdditionalNodes, ...ssoNodes, ...hiddenNodes]
@@ -194,11 +179,22 @@ export function Builder(
     case 'settings': {
       const groupKeys = Object.keys(visibleGroups) as UiNodeGroupEnum[]
       const sortedGroupKeys = groupKeys.sort(sortGroups)
-      const settingsNodes: FormNode[] = []
 
-      for (const key of sortedGroupKeys) {
+      const settingsNodes: FormNode[] = [...hiddenNodes]
+
+      for (let i = 0; i < sortedGroupKeys.length; i++) {
+        const key = sortedGroupKeys[i]
         const nodes = visibleGroups[key]
         if (nodes) {
+          if (i > 0) {
+            settingsNodes.push(
+              ...createDivGroup({
+                id: `settings-divider-${key}`,
+                data: { variant: 'settings-divider' },
+                children: [BuildDivider()],
+              }),
+            )
+          }
           settingsNodes.push(...SettingsBuilder(key, nodes, t, visibleGroups))
         }
       }
@@ -211,10 +207,6 @@ export function Builder(
   }
 
   if (flowType !== OryFlowType.Settings) {
-    if (extraNodes.length > 0) {
-      result.push(...extraNodes)
-    }
-
     result = createDivGroup({
       id: 'form-card',
       data: {

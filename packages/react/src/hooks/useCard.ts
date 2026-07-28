@@ -44,6 +44,7 @@ export function useCard(node: UiNodeDiv): {
   return {
     props: {
       key: node.group,
+      id: `form-${node.group}`,
       action: flow.ui.action,
       method: flow.ui.method,
       onSubmit: methods.handleSubmit(onSubmit, console.error),

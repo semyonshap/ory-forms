@@ -5,7 +5,7 @@ import { FormValues, supportsSelectAccountPrompt } from '../../types'
 const settingsMethodFields: Record<string, string[]> = {
   [UiNodeGroupEnum.Profile]: ['traits'],
   [UiNodeGroupEnum.Password]: ['password'],
-  [UiNodeGroupEnum.Totp]: ['totp_code', 'totp_unlink', 'totp_secret_key'],
+  [UiNodeGroupEnum.Totp]: ['totp_code', 'totp_unlink'],
   [UiNodeGroupEnum.Oidc]: ['link', 'unlink', 'traits'],
   [UiNodeGroupEnum.LookupSecret]: [
     'lookup_secret_confirm',
@@ -27,10 +27,11 @@ export function filterSettingsFields(data: FormValues, method: string): FormValu
   if (!allowed) return data
 
   const result: FormValues = {
-    csrf_token: data.csrf_token,
-    transient_payload: data.transient_payload,
     method,
   }
+
+  if (data.csrf_token) result.csrf_token = data.csrf_token
+  if (data.transient_payload) result.transient_payload = data.transient_payload
 
   for (const field of allowed) {
     if (field in data) {

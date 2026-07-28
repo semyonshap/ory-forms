@@ -9,25 +9,16 @@ import { useFormMessages, useLogout } from '../../hooks'
 import { useFlowStoreShallow, useFormState } from '../../context'
 
 export function FormWrapper() {
-  const {
-    config,
-    flowContainer,
-    Card,
-    selectMethod,
-    setOverrideState,
-    nodeSorter,
-    groupSorter,
-    extraNodes,
-  } = useFlowStoreShallow((state) => ({
-    config: state.config,
-    flowContainer: state.flowContainer,
-    Card: state.components.Layout,
-    selectMethod: state.selectMethod,
-    setOverrideState: state.setOverrideState,
-    nodeSorter: state.components.nodeSorter,
-    groupSorter: state.components.groupSorter,
-    extraNodes: state.extraNodes,
-  }))
+  const { config, flowContainer, Card, selectMethod, setOverrideState, nodeSorter, groupSorter } =
+    useFlowStoreShallow((state) => ({
+      config: state.config,
+      flowContainer: state.flowContainer,
+      Card: state.components.Layout,
+      selectMethod: state.selectMethod,
+      setOverrideState: state.setOverrideState,
+      nodeSorter: state.components.nodeSorter,
+      groupSorter: state.components.groupSorter,
+    }))
   const formState = useFormState()
 
   const { setValue, getValues } = useForm()
@@ -42,7 +33,6 @@ export function FormWrapper() {
       { setValue, getValues, selectMethod, setOverrideState },
       { logoutFlow, logoutLoading },
       { nodeSorter, groupSorter },
-      extraNodes,
     )
   }, [
     formState,
@@ -57,7 +47,6 @@ export function FormWrapper() {
     groupSorter,
     logoutFlow,
     logoutLoading,
-    extraNodes,
   ])
 
   const result = renderNodes(nodes)

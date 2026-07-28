@@ -1,8 +1,14 @@
 import { createStore } from 'zustand'
 import { createContext } from 'react'
-import { UiNode, UiNodeGroupEnum } from '@ory/client-fetch'
+import { UiNodeGroupEnum } from '@ory/client-fetch'
 
-import { OryConfiguration, OryFlowContainer, OryComponents, FlowFormState } from '../types'
+import {
+  OryConfiguration,
+  OryFlowContainer,
+  OryComponents,
+  FlowFormState,
+  MessageProps,
+} from '../types'
 
 export interface FlowStoreState {
   config: OryConfiguration
@@ -11,14 +17,14 @@ export interface FlowStoreState {
   overrideState?: FlowFormState
   selectedMethod?: UiNodeGroupEnum
   loadingInputs: Set<UiNodeGroupEnum>
-  extraNodes: UiNode[]
+  messages: MessageProps[]
 
   setFlowContainer: (flow: OryFlowContainer) => void
   setOverrideState: (state?: FlowFormState) => void
   selectMethod: (method?: UiNodeGroupEnum) => void
-  setExtraNodes: (nodes: UiNode[]) => void
   inputLoading: (group: UiNodeGroupEnum) => void
   inputReady: (input: UiNodeGroupEnum) => void
+  setMessages: (messages: MessageProps[]) => void
 }
 
 export type FlowStore = ReturnType<typeof createFlowStore>
@@ -33,11 +39,11 @@ export const createFlowStore = (initProps: {
     selectedMethod: undefined,
     overrideState: undefined,
     loadingInputs: new Set(),
-    extraNodes: [],
+    messages: [],
 
     setFlowContainer: (flow) => {
       const { selectedMethod } = get()
-      set({ overrideState: undefined, extraNodes: [] })
+      set({ overrideState: undefined, messages: [] })
 
       if (selectedMethod) {
         set({ flowContainer: flow, loadingInputs: new Set() })
@@ -47,8 +53,6 @@ export const createFlowStore = (initProps: {
     },
 
     selectMethod: (method) => set({ selectedMethod: method, overrideState: undefined }),
-
-    setExtraNodes: (nodes) => set({ extraNodes: nodes }),
 
     setOverrideState: (state) => {
       set({ overrideState: state })
@@ -69,6 +73,8 @@ export const createFlowStore = (initProps: {
         return { loadingInputs: next }
       })
     },
+
+    setMessages: (messages) => set({ messages }),
   }))
 }
 
