@@ -1,5 +1,10 @@
 import { UiNode, UiNodeGroupEnum } from '@ory/client-fetch'
 
+import {} from '../nodes/presets'
+import { buildFooter } from './footer'
+import { NodeDataBuilder } from './data'
+import { SettingsBuilder } from './settings'
+import { BuildAuthMethodList } from './authMethods'
 import {
   excludedAuthMethods,
   BuildContext,
@@ -8,7 +13,6 @@ import {
   OryFlowType,
   TransientPayload,
 } from '../../types'
-import {} from '../nodes/presets'
 import {
   groupNodes,
   isNodeVisible,
@@ -18,11 +22,6 @@ import {
   BuildTransientPayload,
   getNodesByGroups,
 } from '../nodes'
-
-import { BuildAuthMethodList } from './authMethods'
-import { NodeDataBuilder } from './data'
-import { buildFooter } from './footer'
-import { SettingsBuilder } from './settings'
 
 export function Builder(
   ctx: BuildContext,

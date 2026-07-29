@@ -1,6 +1,8 @@
 import { TFunction } from 'i18next'
 import { UiContainer } from '@ory/client-fetch'
 
+import { hasCodeField, isCodeSent } from '../nodes'
+import { collectParts, joinWithCommaOr, normalizeContext } from './headerHelpers'
 import {
   HeaderOptions,
   HeaderLoginOptions,
@@ -9,9 +11,6 @@ import {
   OryFlowType,
   HeaderNavigationOptions,
 } from '../../types'
-import { hasCodeField, isCodeSent } from '../nodes'
-
-import { collectParts, joinWithCommaOr, normalizeContext } from './headerHelpers'
 
 export function getCardHeaderText(
   container: UiContainer,

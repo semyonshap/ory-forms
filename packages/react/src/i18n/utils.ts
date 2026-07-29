@@ -1,5 +1,5 @@
-import { UiText } from '@ory/client-fetch'
 import { TFunction } from 'i18next'
+import { UiText } from '@ory/client-fetch'
 
 function formatDate(unixSeconds: number): string {
   return new Intl.DateTimeFormat(undefined, {

@@ -1,13 +1,13 @@
 import { handleContinueWith, LoginFlow, loginUrl, UpdateLoginFlowBody } from '@ory/client-fetch'
 
+import { flowHasErrors } from '../lib'
+import { replaceWindowFlowId, handleFlowError } from '../utils'
 import {
   OryFlowType,
   OryConfiguration,
   LoginFlowContainer,
   OnSubmitHandlerPropsWithFlow,
 } from '../types'
-import { replaceWindowFlowId, handleFlowError } from '../utils'
-import { flowHasErrors } from '../lib'
 
 export async function onSubmitLogin(
   { flow }: LoginFlowContainer,

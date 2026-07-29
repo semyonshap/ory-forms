@@ -1,3 +1,4 @@
+import { SubmitHandler, UseFormReturn } from 'react-hook-form'
 import {
   OnRedirectHandler,
   UpdateLoginFlowBody,
@@ -6,8 +7,15 @@ import {
   UpdateSettingsFlowBody,
   UpdateVerificationFlowBody,
 } from '@ory/client-fetch'
-import { SubmitHandler, UseFormReturn } from 'react-hook-form'
 
+import { useFlowStoreShallow } from '../context'
+import { FormValues, OryFlowContainer, OryFlowType, UpdateOAuth2ConsentFlowBody } from '../types'
+import {
+  applySelectAccountPrompt,
+  computeDefaultValues,
+  filterSettingsFields,
+  removeEmptyStrings,
+} from '../lib'
 import {
   onSubmitLogin,
   onSubmitOAuth2Consent,
@@ -16,14 +24,6 @@ import {
   onSubmitSettings,
   onSubmitVerification,
 } from '../services'
-import { FormValues, OryFlowContainer, OryFlowType, UpdateOAuth2ConsentFlowBody } from '../types'
-import { useFlowStoreShallow } from '../context'
-import {
-  applySelectAccountPrompt,
-  computeDefaultValues,
-  filterSettingsFields,
-  removeEmptyStrings,
-} from '../lib'
 
 export function useFormSubmit(methods: UseFormReturn<FormValues>) {
   const { flowContainer, config, setFlowContainer } = useFlowStoreShallow((state) => ({

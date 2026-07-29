@@ -2,9 +2,9 @@ import { useMemo } from 'react'
 import { useShallow } from 'zustand/shallow'
 import { useFormContext } from 'react-hook-form'
 
-import { parseStateFromFlow } from '../lib'
-import { useFlowStore } from '../context'
 import { FormState } from '../types'
+import { useFlowStore } from '../context'
+import { parseStateFromFlow } from '../lib'
 
 export function useFormState(): FormState {
   const {

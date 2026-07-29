@@ -1,13 +1,12 @@
+import { frontendClient } from './sdk'
 import { DefaultComponents } from '../components/defaultComponents'
+import { defaultGroupSorter, defaultNodeSorter } from '../lib/nodes/sorter'
 import {
   OryComponents,
   OryConfiguration,
   OryClientComponents,
   OryClientConfiguration,
 } from '../types'
-import { defaultGroupSorter, defaultNodeSorter } from '../lib/nodes/sorter'
-
-import { frontendClient } from './sdk'
 
 function normalizeUrl(url: string): string {
   return url.replace(/\/$/, '')

@@ -3,6 +3,7 @@ import type {
   OnSubmitHandlerProps,
   UpdateOAuth2ConsentFlowBody,
 } from '../types'
+
 import { OryFlowType } from '../types'
 
 export async function onSubmitOAuth2Consent(

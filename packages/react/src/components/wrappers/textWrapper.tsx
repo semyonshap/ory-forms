@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 
-import { useFlowStore } from '../../context'
 import { WrapperText } from '../../types'
+import { useFlowStore } from '../../context'
 import { uiTextToFormattedMessage } from '../../i18n'
 
 export function TextWrapper({ node, attached }: WrapperText) {

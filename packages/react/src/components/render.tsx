@@ -1,9 +1,8 @@
 import { ReactNode } from 'react'
 
+import { Node } from './node'
 import { getNodeId } from '../lib'
 import { BuildWrapperContext, FormNode, isUiNodeDiv } from '../types'
-
-import { Node } from './node'
 
 function buildContextMap(nodes: FormNode[]): BuildWrapperContext {
   const contextMap: BuildWrapperContext = {}

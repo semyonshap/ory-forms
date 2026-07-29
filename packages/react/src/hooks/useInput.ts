@@ -1,18 +1,16 @@
-import { UiTextTypeEnum } from '@ory/client-fetch'
 import { useEffect } from 'react'
+import { UiTextTypeEnum } from '@ory/client-fetch'
 import { useController, useFormContext } from 'react-hook-form'
 
+import { useFormState } from '.'
+import { resolvePlaceholder } from '../i18n'
+import { useInputTranslation } from './useInputTranslation'
 import {
   BlockOptionsInput,
   BlockPropsInput,
   MessageProps,
   UiNodeInput,
 } from '../types'
-import { resolvePlaceholder } from '../i18n'
-
-import { useInputTranslation } from './useInputTranslation'
-
-import { useFormState } from '.'
 
 export function useInput(node: UiNodeInput): {
   props: BlockPropsInput

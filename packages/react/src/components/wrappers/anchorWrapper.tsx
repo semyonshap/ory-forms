@@ -1,6 +1,6 @@
-import { useFlowStore } from '../../context'
-import { WrapperAnchor } from '../../types'
 import { useAnchor } from '../../hooks'
+import { WrapperAnchor } from '../../types'
+import { useFlowStore } from '../../context'
 
 export function AnchorWrapper({ node, attached }: WrapperAnchor) {
   const Node = useFlowStore((state) => state.components.Node)

@@ -2,6 +2,17 @@ import {
   UiNodeInputAttributesTypeEnum,
 } from '@ory/client-fetch'
 
+import { NodeScript } from './nodeScript'
+import {
+  CaptchaWrapper,
+  CheckboxWrapper,
+  DivWrapper,
+  ButtonWrapper,
+  AnchorWrapper,
+  TextWrapper,
+  ImageWrapper,
+  InputWrapper,
+} from './wrappers'
 import {
   WrapperBase,
   ignoredScriptGroups,
@@ -13,18 +24,6 @@ import {
   WrapperInput,
   isUiNodeDiv,
 } from '../types'
-
-import {
-  CaptchaWrapper,
-  CheckboxWrapper,
-  DivWrapper,
-  ButtonWrapper,
-  AnchorWrapper,
-  TextWrapper,
-  ImageWrapper,
-  InputWrapper,
-} from './wrappers'
-import { NodeScript } from './nodeScript'
 
 export const Node = ({ node, attached }: WrapperBase) => {
   if (isUiNodeDiv(node)) return DivWrapper({ node, attached })

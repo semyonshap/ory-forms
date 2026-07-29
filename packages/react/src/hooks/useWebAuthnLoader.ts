@@ -2,8 +2,8 @@ import { useEffect } from 'react'
 import { useTimeout } from 'usehooks-ts'
 import { UiNodeInputAttributesOnloadTriggerEnum } from '@ory/client-fetch'
 
-import { useFlowStoreShallow } from '../context'
 import { webauthnGroups } from '../types'
+import { useFlowStoreShallow } from '../context'
 
 function hasPasskeyScript(): boolean {
   return Object.values(UiNodeInputAttributesOnloadTriggerEnum).some(

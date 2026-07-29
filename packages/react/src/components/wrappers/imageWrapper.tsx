@@ -1,7 +1,7 @@
 import { UiNodeImageAttributes } from '@ory/client-fetch'
 
-import { useFlowStore } from '../../context'
 import { WrapperImage } from '../../types'
+import { useFlowStore } from '../../context'
 import { omitInputAttributes } from '../../utils/transform'
 
 export function ImageWrapper({ node, attached }: WrapperImage) {

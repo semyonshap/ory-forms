@@ -2,7 +2,6 @@ import { useMemo } from 'react'
 
 import { FlowInputProps } from '../types'
 import { computeSdkConfig, computeComponents } from '../utils'
-
 import { createFlowStore, FlowStoreContext } from './oryStore'
 
 interface OryFlowProviderProps extends FlowInputProps {

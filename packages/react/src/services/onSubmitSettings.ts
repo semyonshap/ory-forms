@@ -7,14 +7,14 @@ import {
   UpdateSettingsFlowBody,
 } from '@ory/client-fetch'
 
+import { flowHasErrors } from '../lib'
+import { handleFlowError, replaceWindowFlowId } from '../utils'
 import {
   OryFlowType,
   OryFlowContainer,
   OryConfiguration,
   OnSubmitHandlerPropsWithFlow,
 } from '../types'
-import { handleFlowError, replaceWindowFlowId } from '../utils'
-import { flowHasErrors } from '../lib'
 
 export async function onSubmitSettings(
   { flow }: OryFlowContainer,

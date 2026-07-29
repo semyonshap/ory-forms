@@ -1,15 +1,15 @@
 import { z } from 'zod'
+import { Resolver } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 import {
   UiNode,
   UiNodeGroupEnum,
   UiNodeInputAttributes,
   UiNodeInputAttributesTypeEnum,
 } from '@ory/client-fetch'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { Resolver } from 'react-hook-form'
 
-import { isUiNodeInput, FormValues, UiNodeInput } from '../../types'
 import { getNodesByGroups, groupNodes } from '../nodes/groups'
+import { isUiNodeInput, FormValues, UiNodeInput } from '../../types'
 
 const ALLOWED_INPUTS = new Set<UiNodeInputAttributesTypeEnum>([
   UiNodeInputAttributesTypeEnum.Checkbox,

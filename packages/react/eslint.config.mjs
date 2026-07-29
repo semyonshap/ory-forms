@@ -2,7 +2,7 @@ import js from '@eslint/js'
 import tseslint from 'typescript-eslint'
 import pluginReact from 'eslint-plugin-react'
 import pluginReactHooks from 'eslint-plugin-react-hooks'
-import pluginImport from 'eslint-plugin-import'
+import perfectionist from 'eslint-plugin-perfectionist'
 import eslintConfigPrettier from 'eslint-config-prettier/flat'
 
 export default tseslint.config(
@@ -15,7 +15,7 @@ export default tseslint.config(
   {
     plugins: {
       'react-hooks': pluginReactHooks,
-      import: pluginImport,
+      perfectionist,
     },
     rules: {
       ...pluginReactHooks.configs.recommended.rules,
@@ -27,11 +27,21 @@ export default tseslint.config(
           argsIgnorePattern: '^_',
         },
       ],
-      'import/order': [
+      'perfectionist/sort-imports': [
         'warn',
         {
-          groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
-          'newlines-between': 'always',
+          type: 'line-length',
+          order: 'asc',
+          groups: [
+            'type',
+            ['builtin', 'external'],
+            'internal',
+            ['parent', 'sibling', 'index'],
+            'side-effect',
+            'style',
+          ],
+          newlinesBetween: 1,
+          internalPattern: ['^@ory-forms/', '^@/'],
         },
       ],
     },

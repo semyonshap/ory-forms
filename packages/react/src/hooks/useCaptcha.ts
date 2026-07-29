@@ -1,9 +1,8 @@
 import { useCallback, useEffect } from 'react'
 
+import { useTransientPayload } from '.'
 import { useFlowStoreShallow } from '../context'
 import { BlockOptionsCaptcha, UiNodeInput } from '../types'
-
-import { useTransientPayload } from '.'
 
 export function useCaptcha(_node: UiNodeInput): {
   options: BlockOptionsCaptcha

@@ -2,17 +2,15 @@ import { useTranslation } from 'react-i18next'
 import { useController } from 'react-hook-form'
 import { ComponentType, useCallback, useMemo } from 'react'
 
+import { useFormState } from '.'
+import { normalizeKeys } from '../utils'
+import { useFlowStoreShallow } from '../context'
+import { useInputTranslation } from './useInputTranslation'
 import {
   BlockOptionsCheckbox,
   BlockPropsCheckbox,
   UiNodeInput,
 } from '../types'
-import { normalizeKeys } from '../utils'
-import { useFlowStoreShallow } from '../context'
-
-import { useInputTranslation } from './useInputTranslation'
-
-import { useFormState } from '.'
 
 export function useCheckbox(node: UiNodeInput): {
   props: BlockPropsCheckbox

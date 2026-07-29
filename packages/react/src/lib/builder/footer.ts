@@ -3,6 +3,13 @@ import { UiNodeGroupEnum } from '@ory/client-fetch'
 import { groupNodes } from '../nodes/groups'
 import { findScreenSelectionButton } from '../nodes/filters'
 import {
+  BuildContext,
+  FormNode,
+  isUiNodeInput,
+  OryFlowType,
+  excludedAuthGroups,
+} from '../../types'
+import {
   BuildSelectMethod,
   BuildGoBackCode,
   BuildSignUp,
@@ -10,13 +17,6 @@ import {
   BuildRecover,
   BuildForgotPassword,
 } from '../nodes/presets'
-import {
-  BuildContext,
-  FormNode,
-  isUiNodeInput,
-  OryFlowType,
-  excludedAuthGroups,
-} from '../../types'
 
 export function buildFooter(
   ctx: BuildContext,

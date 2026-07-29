@@ -1,8 +1,8 @@
 import { ComponentType, useMemo } from 'react'
 
+import { UiNodeInput } from '../types'
 import { normalizeKeys } from '../utils'
 import { useFlowStoreShallow } from '../context'
-import { UiNodeInput } from '../types'
 
 export function useButtonIcon(
   node: UiNodeInput,

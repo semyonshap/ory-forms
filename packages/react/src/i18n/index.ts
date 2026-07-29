@@ -1,5 +1,5 @@
-import i18n, { type i18n as I18n } from 'i18next'
 import { initReactI18next } from 'react-i18next'
+import i18n, { type i18n as I18n } from 'i18next'
 
 import enCommon from './resources/en.json'
 

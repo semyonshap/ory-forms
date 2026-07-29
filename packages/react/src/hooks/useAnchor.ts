@@ -2,12 +2,12 @@ import { useTranslation } from 'react-i18next'
 import { getNodeLabel, UiNodeAnchorAttributes } from '@ory/client-fetch'
 
 import { omitInputAttributes } from '../utils'
+import { uiTextToFormattedMessage } from '../i18n'
 import {
   BlockOptionsAnchor,
   BlockPropsAnchor,
   UiNodeAnchor,
 } from '../types'
-import { uiTextToFormattedMessage } from '../i18n'
 
 export function useAnchor(node: UiNodeAnchor): {
   props: BlockPropsAnchor

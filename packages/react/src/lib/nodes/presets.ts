@@ -1,9 +1,8 @@
 import { UiNodeGroupEnum } from '@ory/client-fetch'
 
 import { initFlowUrl } from '../../utils'
-import { BuildContext, NodeDataInput } from '../../types'
 import { restartFlowUrl } from '../../utils'
-
+import { BuildContext, NodeDataInput } from '../../types'
 import {
   createAnchorNode,
   createInputNode,

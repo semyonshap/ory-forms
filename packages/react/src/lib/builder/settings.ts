@@ -1,6 +1,12 @@
 import { TFunction } from 'i18next'
 import { UiNode, UiNodeGroupEnum } from '@ory/client-fetch'
 
+import { settingsFooter } from './settingsFooter'
+import {
+  createDivGroup,
+  createInputNode,
+  createUiText,
+} from '../nodes/factory'
 import {
   NodeDataInput,
   isUiNodeImage,
@@ -9,13 +15,6 @@ import {
   UiNodeInput,
   UiNodeText,
 } from '../../types'
-import {
-  createDivGroup,
-  createInputNode,
-  createUiText,
-} from '../nodes/factory'
-
-import { settingsFooter } from './settingsFooter'
 
 export function SettingsBuilder(
   group: UiNodeGroupEnum,

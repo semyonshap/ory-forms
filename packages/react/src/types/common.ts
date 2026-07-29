@@ -1,3 +1,4 @@
+import { ComponentType } from 'react'
 import {
   AccountExperienceConfiguration,
   ConfigurationParameters,
@@ -5,8 +6,8 @@ import {
   UiNode,
   UiNodeGroupEnum,
 } from '@ory/client-fetch'
-import { ComponentType } from 'react'
 
+import { OryFlowContainer, OryFlowType } from '.'
 import {
   BlockInput,
   BlockImage,
@@ -22,8 +23,6 @@ import {
   BlockDiv,
   BlockCaptcha,
 } from './blocks'
-
-import { OryFlowContainer, OryFlowType } from '.'
 
 export interface FormValues {
   [key: string]:

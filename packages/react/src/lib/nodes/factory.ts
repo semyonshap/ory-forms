@@ -1,3 +1,4 @@
+import { TFunction } from 'i18next'
 import {
   UiNodeAttributes,
   UiNodeGroupEnum,
@@ -7,7 +8,6 @@ import {
   UiText,
   UiTextTypeEnum,
 } from '@ory/client-fetch'
-import { TFunction } from 'i18next'
 
 import {
   FormNode,
