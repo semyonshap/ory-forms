@@ -12,6 +12,8 @@ import { resolvePlaceholder } from '../i18n'
 
 import { useInputTranslation } from './useInputTranslation'
 
+import { useFormState } from '.'
+
 export function useInput(node: UiNodeInput): {
   props: BlockPropsInput
   options: BlockOptionsInput
@@ -19,8 +21,9 @@ export function useInput(node: UiNodeInput): {
   const {
     setValue,
     control,
-    formState: { isReady, isSubmitting, errors },
+    formState: { errors },
   } = useFormContext()
+  const { isReady, isSubmitting } = useFormState()
 
   const attr = node.attributes
 

@@ -11,4 +11,5 @@ export type FlowFormState =
 
 export type FormState = FlowFormState & {
   isReady: boolean
+  isSubmitting: boolean
 }

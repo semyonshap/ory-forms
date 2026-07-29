@@ -29,7 +29,7 @@ export function buildFooter(
   const { groups: authMethods } = groupNodes({
     nodes: flow.ui.nodes,
     excludeGroups: excludedAuthGroups,
-    excludeHidden: false,
+    excludeScripts: true,
   })
 
   const stateActive = formState.current

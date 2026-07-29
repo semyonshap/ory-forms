@@ -1,23 +1,27 @@
 import { useTranslation } from 'react-i18next'
-import { useController, useFormContext } from 'react-hook-form'
+import { useController } from 'react-hook-form'
 import { ComponentType, useCallback, useMemo } from 'react'
 
-import { BlockOptionsCheckbox, BlockPropsCheckbox, UiNodeInput } from '../types'
+import {
+  BlockOptionsCheckbox,
+  BlockPropsCheckbox,
+  UiNodeInput,
+} from '../types'
 import { normalizeKeys } from '../utils'
 import { useFlowStoreShallow } from '../context'
 
 import { useInputTranslation } from './useInputTranslation'
 
+import { useFormState } from '.'
+
 export function useCheckbox(node: UiNodeInput): {
   props: BlockPropsCheckbox
   options: BlockOptionsCheckbox
 } {
-  const {
-    formState: { isReady, isSubmitting },
-  } = useFormContext()
   const { system } = useFlowStoreShallow((state) => ({
     system: state.components.Icons.System,
   }))
+  const { isReady, isSubmitting } = useFormState()
 
   const { t } = useTranslation()
   const IconsSystem = useMemo(() => normalizeKeys(system ?? {}), [system])
@@ -38,8 +42,14 @@ export function useCheckbox(node: UiNodeInput): {
   const onChange = useCallback(
     (next: boolean) => {
       if (isGrantScope && scope) {
-        const current: string[] = Array.isArray(field.value) ? field.value : []
-        field.onChange(next === true ? [...current, scope] : current.filter((s) => s !== scope))
+        const current: string[] = Array.isArray(field.value)
+          ? field.value
+          : []
+        field.onChange(
+          next === true
+            ? [...current, scope]
+            : current.filter((s) => s !== scope),
+        )
       } else {
         field.onChange(next === true)
       }
@@ -54,7 +64,9 @@ export function useCheckbox(node: UiNodeInput): {
 
   if (isGrantScope && scope) {
     label = t(`consent.scope.${scope}.title`, { defaultValue: scope })
-    description = t(`consent.scope.${scope}.description`, { defaultValue: '' })
+    description = t(`consent.scope.${scope}.description`, {
+      defaultValue: '',
+    })
     icon = IconsSystem?.[scope] as ComponentType | undefined
     checked = Array.isArray(field.value) && field.value.includes(scope)
   } else {

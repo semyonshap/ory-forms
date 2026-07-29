@@ -9,7 +9,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Resolver } from 'react-hook-form'
 
 import { isUiNodeInput, FormValues, UiNodeInput } from '../../types'
-import { groupNodes } from '../nodes/groups'
+import { getNodesByGroups, groupNodes } from '../nodes/groups'
 
 const ALLOWED_INPUTS = new Set<UiNodeInputAttributesTypeEnum>([
   UiNodeInputAttributesTypeEnum.Checkbox,
@@ -23,17 +23,13 @@ const ALLOWED_INPUTS = new Set<UiNodeInputAttributesTypeEnum>([
   UiNodeInputAttributesTypeEnum.DatetimeLocal,
 ])
 
-const SKIP_FIELDS = new Set([
-  'webauthn_register_displayname',
-  'webauthn_remove',
-  'webauthn_register',
-  'webauthn_login_trigger',
-  'passkey_settings_register',
-  'passkey_create_data',
-  'passkey_challenge',
-  'passkey_remove',
-  'transient_payload',
-])
+const EXPAND_GROUPS: Partial<Record<UiNodeGroupEnum, UiNodeGroupEnum[]>> =
+  {
+    [UiNodeGroupEnum.Password]: [
+      UiNodeGroupEnum.Default,
+      UiNodeGroupEnum.Profile,
+    ],
+  }
 
 type LeafValue = Exclude<FormValues[string], FormValues>
 
@@ -136,7 +132,6 @@ function buildSchema(nodes: UiNode[]): z.ZodType<FormValues, FormValues> {
     const { type, name } = node.attributes
 
     if (!ALLOWED_INPUTS.has(type)) continue
-    if (SKIP_FIELDS.has(name)) continue
     if (name.startsWith('grant_scope')) continue
 
     setNestedSchema(tree, name.split('.'), buildLeafSchema(node))
@@ -145,28 +140,25 @@ function buildSchema(nodes: UiNode[]): z.ZodType<FormValues, FormValues> {
   return buildZodObject(tree)
 }
 
-export function buildBaseResolver(nodes: UiNode[]): Resolver<FormValues> {
-  const schema = buildSchema(nodes)
-  return zodResolver(schema)
-}
-
-export function buildSettingsResolver(
+export function buildResolverByMethod(
   nodes: UiNode[],
 ): Resolver<FormValues> {
-  const { groupsNodes } = groupNodes({ nodes, excludeHidden: false })
-
-  const schemas: Partial<
-    Record<UiNodeGroupEnum, z.ZodType<FormValues, FormValues>>
-  > = {}
-
-  for (const group of Object.keys(groupsNodes)) {
-    const gn = groupsNodes[group as keyof typeof groupsNodes]
-    if (gn) schemas[group as UiNodeGroupEnum] = buildSchema(gn)
-  }
+  const { groupsNodes } = groupNodes({
+    nodes,
+    excludeScripts: true,
+    excludeHidden: true,
+  })
 
   return (values, context, options) => {
-    const method = values.method as UiNodeGroupEnum | undefined
-    const schema = (method && schemas[method]) || buildSchema([])
+    const method = values.method as UiNodeGroupEnum
+
+    const selectedNodes = getNodesByGroups({
+      groupsNodes,
+      groups: [method, ...(EXPAND_GROUPS[method] ?? [])],
+    })
+
+    const schema = buildSchema(selectedNodes)
+
     return zodResolver(schema)(values, context, options)
   }
 }

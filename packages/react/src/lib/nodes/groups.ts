@@ -10,8 +10,8 @@ import { GroupedNodes } from '../../types'
 export function groupNodes({
   nodes,
   excludeGroups = [],
-  excludeScripts = true,
-  excludeHidden = true,
+  excludeScripts = false,
+  excludeHidden = false,
 }: {
   nodes: UiNode[]
   excludeGroups?: UiNodeGroupEnum[]
@@ -48,5 +48,21 @@ export function groupNodes({
 
   const groups = Array.from(groupSet)
 
-  return { groups, groupsNodes }
+  return { groups, groupsNodes, filtered }
+}
+
+export function getNodesByGroups({
+  groupsNodes,
+  groups,
+  exclude = false,
+}: {
+  groupsNodes: GroupedNodes
+  groups: UiNodeGroupEnum[]
+  exclude?: boolean
+}): UiNode[] {
+  const allGroups = Object.keys(groupsNodes) as UiNodeGroupEnum[]
+  const targetGroups = exclude
+    ? allGroups.filter((g) => !groups.includes(g))
+    : groups
+  return targetGroups.flatMap((group) => [...(groupsNodes[group] ?? [])])
 }

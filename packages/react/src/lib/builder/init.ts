@@ -1,11 +1,9 @@
 import { UiNode, UiNodeGroupEnum } from '@ory/client-fetch'
-import { groupBy } from 'lodash-es'
 
 import {
   excludedAuthMethods,
   BuildContext,
   BuilderSorter,
-  excludedAuthGroups,
   FormNode,
   OryFlowType,
   TransientPayload,
@@ -18,6 +16,7 @@ import {
   BuildDivider,
   BuildCaptcha,
   BuildTransientPayload,
+  getNodesByGroups,
 } from '../nodes'
 
 import { BuildAuthMethodList } from './authMethods'
@@ -60,80 +59,86 @@ export function Builder(
 
   let result: FormNode[] = []
 
-  const grouped = groupBy(nodes, (node) => {
-    const group = node.group
-    if (group === UiNodeGroupEnum.Captcha) return 'captcha'
+  const hiddenNodes = nodes.filter((n) => !isNodeVisible(n))
 
-    const visible = isNodeVisible(node)
-    const isSso =
-      (group === UiNodeGroupEnum.Oidc || group === UiNodeGroupEnum.Saml) &&
-      visible
+  // Visible Groups
+  const { groups: visibleGroups, groupsNodes: visibleGroupsNodes } =
+    groupNodes({ nodes, excludeHidden: true, excludeScripts: true })
 
-    if (isSso) return 'sso'
-    if (!visible) return 'hidden'
-    return 'visible'
+  const ssoNodes = getNodesByGroups({
+    groupsNodes: visibleGroupsNodes,
+    groups: [UiNodeGroupEnum.Oidc, UiNodeGroupEnum.Saml],
   })
 
-  const ssoNodes = grouped.sso ?? []
-  const hiddenNodes = grouped.hidden ?? []
-  const visibleNodes = grouped.visible ?? []
-  const captchaNodes = grouped.captcha ?? []
+  // Hidden Groups
 
-  const { groups: visibleGroups, groupsNodes: visibleGroupsNodes } =
-    groupNodes({ nodes })
+  const { groupsNodes: hiddenGroupsNodes } = groupNodes({
+    nodes: hiddenNodes,
+  })
+
+  const selectedHidden = getNodesByGroups({
+    groupsNodes: hiddenGroupsNodes,
+    groups: [UiNodeGroupEnum.Captcha],
+    exclude: true,
+  })
+
+  const captchaNodes = getNodesByGroups({
+    groupsNodes: hiddenGroupsNodes,
+    groups: [UiNodeGroupEnum.Captcha],
+  })
 
   const { groups: authMethods } = groupNodes({
     nodes,
     excludeGroups: excludedAuthMethods,
-    excludeHidden: false,
+    excludeScripts: true,
   })
 
   switch (formState.current) {
     case 'provide_identifier': {
-      const withoutPasskey = visibleNodes.filter(
-        (node) => node.group !== UiNodeGroupEnum.Passkey,
-      )
+      const selectedNodes = getNodesByGroups({
+        groupsNodes: visibleGroupsNodes,
+        groups: [
+          UiNodeGroupEnum.Passkey,
+          UiNodeGroupEnum.Oidc,
+          UiNodeGroupEnum.Saml,
+        ],
+        exclude: true,
+      })
 
       if (ssoNodes.length > 0) {
         result.push(...ssoNodes)
-        if (withoutPasskey.length > 0) {
+        if (selectedNodes.length > 0) {
           result.push(BuildDivider())
         }
       }
 
       result.push(
-        ...[...hiddenNodes, ...withoutPasskey, ...captchaNodes].sort(
-          sortNodes,
-        ),
+        ...selectedHidden,
+        ...[...captchaNodes, ...selectedNodes].sort(sortNodes),
       )
 
       break
     }
     case 'method_active': {
-      const selectedNodes = visibleNodes.filter(
-        (node) => node.group === formState.method,
-      )
+      if (formState.method === UiNodeGroupEnum.Password) {
+        const profileNodes = getNodesByGroups({
+          groupsNodes: visibleGroupsNodes,
+          groups: [UiNodeGroupEnum.Default, UiNodeGroupEnum.Profile],
+        })
 
-      const profileNodes = visibleNodes.filter(
-        (node) =>
-          node.group === UiNodeGroupEnum.Default ||
-          node.group === UiNodeGroupEnum.Profile,
-      )
+        result.push(...profileNodes)
+      }
 
-      result = [
-        ...profileNodes,
-        ...captchaNodes,
-        ...selectedNodes,
-        ...hiddenNodes,
-      ].sort(sortNodes)
+      const selectedNodes = getNodesByGroups({
+        groupsNodes: visibleGroupsNodes,
+        groups: [formState.method],
+      })
+
+      result.push(...selectedNodes, ...captchaNodes, ...selectedHidden)
       break
     }
     case 'select_method': {
-      const authMethodAdditionalNodes = visibleNodes.filter((node) =>
-        excludedAuthGroups.includes(node.group),
-      )
-
-      result = [...authMethodAdditionalNodes, ...ssoNodes, ...hiddenNodes]
+      result = [...ssoNodes, ...selectedHidden]
 
       const methodButtons = BuildAuthMethodList({
         groups: authMethods,
@@ -146,12 +151,6 @@ export function Builder(
     }
     case 'settings': {
       const sortedGroupKeys = visibleGroups.sort(sortGroups)
-      const { groupsNodes: hiddenGroupsNodes } = groupNodes({
-        nodes: hiddenNodes,
-        excludeHidden: false,
-        excludeScripts: false,
-      })
-
       const settingsNodes: FormNode[] = []
 
       for (let i = 0; i < sortedGroupKeys.length; i++) {

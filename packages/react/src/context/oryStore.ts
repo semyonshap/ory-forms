@@ -21,12 +21,14 @@ export interface FlowStoreState {
   messages: MessageProps[]
   transientPayload: TransientPayload
   webauthnScriptStatus?: 'loading' | 'loaded' | 'failed'
+  overrideSubmitting: boolean
 
   setFlowContainer: (flow: OryFlowContainer) => void
   setWebauthnScriptStatus: (
     status: 'loading' | 'loaded' | 'failed',
   ) => void
   setOverrideState: (state?: FlowFormState) => void
+  setOverrideSubmitting: (submitting: boolean) => void
   selectMethod: (method?: UiNodeGroupEnum) => void
   inputLoading: (group: UiNodeGroupEnum) => void
   inputReady: (input: UiNodeGroupEnum) => void
@@ -50,6 +52,7 @@ export const createFlowStore = (initProps: {
     messages: [],
     transientPayload: initProps.transientPayload ?? {},
     webauthnScriptStatus: undefined,
+    overrideSubmitting: false,
 
     setFlowContainer: (flow) => {
       set({
@@ -89,24 +92,10 @@ export const createFlowStore = (initProps: {
     setTransientPayload: (payload) => set({ transientPayload: payload }),
 
     setWebauthnScriptStatus: (status) =>
-      set((state) => {
-        if (
-          status === 'failed' &&
-          state.webauthnScriptStatus !== 'failed'
-        ) {
-          return {
-            webauthnScriptStatus: status,
-            messages: [
-              {
-                id: 11,
-                text: 'Could not load Passkey libraries. Please try again later.',
-                type: 'error',
-              },
-            ],
-          }
-        }
-        return { webauthnScriptStatus: status }
-      }),
+      set({ webauthnScriptStatus: status }),
+
+    setOverrideSubmitting: (submitting) =>
+      set({ overrideSubmitting: submitting }),
   }))
 }
 

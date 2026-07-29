@@ -65,7 +65,7 @@ export function parseStateFromFlow(
         const { groups: authMethods } = groupNodes({
           nodes: flow.flow.ui.nodes,
           excludeGroups: excludedAuthGroups,
-          excludeHidden: false,
+          excludeScripts: true,
         })
         if (
           authMethods.length === 1 &&

@@ -12,12 +12,17 @@ function hasPasskeyScript(): boolean {
 }
 
 export function useWebAuthnLoader(): void {
-  const { flowContainer, webauthnScriptStatus, setWebauthnScriptStatus } =
-    useFlowStoreShallow((state) => ({
-      flowContainer: state.flowContainer,
-      webauthnScriptStatus: state.webauthnScriptStatus,
-      setWebauthnScriptStatus: state.setWebauthnScriptStatus,
-    }))
+  const {
+    flowContainer,
+    webauthnScriptStatus,
+    setWebauthnScriptStatus,
+    setMessages,
+  } = useFlowStoreShallow((state) => ({
+    flowContainer: state.flowContainer,
+    webauthnScriptStatus: state.webauthnScriptStatus,
+    setWebauthnScriptStatus: state.setWebauthnScriptStatus,
+    setMessages: state.setMessages,
+  }))
 
   const hasWebAuthn = flowContainer.flow.ui.nodes.some((n) =>
     webauthnGroups.includes(n.group),
@@ -40,6 +45,13 @@ export function useWebAuthnLoader(): void {
       if (!hasWebAuthn) return
       if (webauthnScriptStatus != null) return
       setWebauthnScriptStatus('failed')
+      setMessages([
+        {
+          id: 11,
+          text: 'Could not load Passkey libraries. Please try again later.',
+          type: 'error',
+        },
+      ])
     },
     hasWebAuthn && webauthnScriptStatus == null ? 5000 : null,
   )

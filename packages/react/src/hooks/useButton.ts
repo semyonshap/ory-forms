@@ -6,16 +6,16 @@ import {
   UiNodeInputAttributesTypeEnum,
 } from '@ory/client-fetch'
 
-import { useFlowStoreShallow, useFormState } from '../context'
+import { useFlowStoreShallow } from '../context'
 import {
   UiNodeInput,
   BlockPropsButton,
   BlockOptionsButton,
 } from '../types'
-import { isProduction } from '../utils/sdk'
 import { webauthnGroups } from '../types/const'
 import { triggerToFunction, triggerToWindowCall } from '../lib/nodes'
 
+import { useFormState } from '.'
 import { useInputTranslation, useButtonIcon, useFormSubmit } from '.'
 
 export function useButton(node: UiNodeInput): {
@@ -24,23 +24,24 @@ export function useButton(node: UiNodeInput): {
 } {
   const formMethods = useFormContext()
   const { setValue, getValues } = formMethods
-  const { isReady } = formMethods.formState
 
   const onSubmit = useFormSubmit(formMethods)
 
-  const { selectMethod, setOverrideState, webauthnScriptStatus } =
-    useFlowStoreShallow((state) => ({
-      providers: state.components.Icons.Providers,
-      system: state.components.Icons.System,
-      setOverrideState: state.setOverrideState,
-      selectMethod: state.selectMethod,
-      webauthnScriptStatus: state.webauthnScriptStatus,
-    }))
-
   const {
-    formState: { isSubmitting },
-  } = useFormContext()
-  const oryFormState = useFormState()
+    selectMethod,
+    setOverrideState,
+    setOverrideSubmitting,
+    webauthnScriptStatus,
+  } = useFlowStoreShallow((state) => ({
+    providers: state.components.Icons.Providers,
+    system: state.components.Icons.System,
+    setOverrideState: state.setOverrideState,
+    selectMethod: state.selectMethod,
+    setOverrideSubmitting: state.setOverrideSubmitting,
+    webauthnScriptStatus: state.webauthnScriptStatus,
+  }))
+
+  const { isReady, isSubmitting } = useFormState()
 
   const [clicked, setClicked] = useDebounceValue(false, 100)
 
@@ -55,9 +56,6 @@ export function useButton(node: UiNodeInput): {
       : 'button'
 
   const onClick = useCallback(() => {
-    if (!isProduction())
-      console.log('FormState: %s, Group: %s', oryFormState.current, group)
-
     setClicked(true)
 
     setValue(name, value)
@@ -68,18 +66,23 @@ export function useButton(node: UiNodeInput): {
         setOverrideState({ current: 'select_method' })
       if (variant === 'method') selectMethod(group)
 
-      if (onclickTrigger) {
-        const fn = triggerToFunction(onclickTrigger)
-        if (fn) fn()
-        else triggerToWindowCall(onclickTrigger)
-      } else if (variant === 'sso') {
-        onSubmit(getValues())
+      if (variant === 'sso') {
+        setOverrideSubmitting(true)
+        Promise.resolve(onSubmit(getValues())).finally(() =>
+          setOverrideSubmitting(false),
+        )
       } else if (variant === 'resend') {
         setValue('code', '')
         if (group === UiNodeGroupEnum.Code && name === 'method') {
           setValue('email', '')
         }
         onSubmit(getValues())
+      }
+
+      if (onclickTrigger) {
+        const fn = triggerToFunction(onclickTrigger)
+        if (fn) fn()
+        else triggerToWindowCall(onclickTrigger)
       }
     }
   }, [
@@ -88,26 +91,23 @@ export function useButton(node: UiNodeInput): {
     group,
     value,
     variant,
+    setClicked,
     onclickTrigger,
-    oryFormState,
+    onSubmit,
     setValue,
     getValues,
-    setClicked,
     selectMethod,
     setOverrideState,
-    onSubmit,
+    setOverrideSubmitting,
   ])
 
   const isWebAuthnDisabled =
     webauthnGroups.includes(group) &&
     webauthnScriptStatus != null &&
     webauthnScriptStatus !== 'loaded'
+
   const disabled =
-    attr.disabled ||
-    !isReady ||
-    !oryFormState.isReady ||
-    isSubmitting ||
-    isWebAuthnDisabled
+    attr.disabled || !isReady || isSubmitting || isWebAuthnDisabled
 
   useEffect(() => {
     if (!isSubmitting && clicked) {

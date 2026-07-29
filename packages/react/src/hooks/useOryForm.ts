@@ -4,8 +4,8 @@ import {
   computeDefaultValues,
   resolveLoginHint,
 } from '../lib/form/helpers'
-import { buildBaseResolver, buildSettingsResolver } from '../lib'
-import { OryFlowContainer, OryFlowType } from '../types'
+import { buildResolverByMethod } from '../lib'
+import { OryFlowContainer } from '../types'
 
 import { useFormAutofocus } from '.'
 
@@ -22,13 +22,13 @@ export function useOryForm(flowContainer: OryFlowContainer) {
     loginHint,
   )
 
-  const isSettings = flowContainer.flowType === OryFlowType.Settings
+  const resolver = buildResolverByMethod(nodes)
 
-  const resolver = isSettings
-    ? buildSettingsResolver(nodes)
-    : buildBaseResolver(nodes)
-
-  const methods = useForm({ defaultValues, resolver })
+  const methods = useForm({
+    defaultValues,
+    resolver,
+    reValidateMode: 'onSubmit',
+  })
 
   useFormAutofocus(nodes, flowContainer.flowType, methods.setFocus)
 
