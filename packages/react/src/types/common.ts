@@ -1,7 +1,12 @@
-import { UiNode, UiNodeGroupEnum } from '@ory/client-fetch'
-import { ComponentPropsWithoutRef, ComponentType, FormEventHandler } from 'react'
+import {
+  AccountExperienceConfiguration,
+  ConfigurationParameters,
+  FrontendApi,
+  UiNode,
+  UiNodeGroupEnum,
+} from '@ory/client-fetch'
+import { ComponentType } from 'react'
 
-import { OryFlowContainer } from './container'
 import {
   BlockInput,
   BlockImage,
@@ -17,23 +22,33 @@ import {
   BlockDiv,
   BlockCaptcha,
 } from './blocks'
-import { OryClientConfiguration } from './config'
 
-export type FormValues = Record<string, string | boolean | number | string[] | undefined>
+import { OryFlowContainer, OryFlowType } from '.'
 
-export type FormRootProps = ComponentPropsWithoutRef<'form'> & {
-  onSubmit: FormEventHandler<HTMLFormElement>
+export interface FormValues {
+  [key: string]:
+    string | boolean | number | string[] | undefined | FormValues
 }
+
+export type TransientPayload = Record<string, unknown>
 
 export interface FlowInputProps {
   flow: OryFlowContainer
   config: OryClientConfiguration
   components?: Partial<OryClientComponents>
+  transientPayload?: TransientPayload
 }
 
-export type NodeSorter = (a: UiNode, b: UiNode, ctx: { flowType: string }) => number
+export type NodeSorter = (
+  a: UiNode,
+  b: UiNode,
+  ctx: { flowType: string },
+) => number
 
-export type GroupSorter = (a: UiNodeGroupEnum, b: UiNodeGroupEnum) => number
+export type GroupSorter = (
+  a: UiNodeGroupEnum,
+  b: UiNodeGroupEnum,
+) => number
 
 export interface OryComponents {
   Layout: {
@@ -95,6 +110,8 @@ export interface OryComponents {
   groupSorter: GroupSorter
 }
 
+// Config
+
 export type OryClientComponents = {
   Layout: OryComponents['Layout']
   Node: Partial<OryComponents['Node']>
@@ -103,3 +120,27 @@ export type OryClientComponents = {
     System?: Partial<OryComponents['Icons']['System']>
   }
 } & Partial<Pick<OryComponents, 'nodeSorter' | 'groupSorter'>>
+
+export type OryProject = AccountExperienceConfiguration & {
+  oauth2_login_ui_url?: string
+  oauth2_consent_ui_url?: string
+  oauth2_logout_ui_url?: string
+  captcha?: OryFlowType[]
+}
+
+export interface OryClientConfiguration {
+  sdk?: {
+    url?: string
+    options?: Partial<ConfigurationParameters>
+  }
+  project: OryProject
+}
+
+export interface OryConfiguration {
+  sdk: {
+    url: string
+    options?: Partial<ConfigurationParameters>
+    frontend: FrontendApi
+  }
+  project: OryProject
+}

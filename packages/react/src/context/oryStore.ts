@@ -8,6 +8,7 @@ import {
   OryComponents,
   FlowFormState,
   MessageProps,
+  TransientPayload,
 } from '../types'
 
 export interface FlowStoreState {
@@ -18,13 +19,19 @@ export interface FlowStoreState {
   selectedMethod?: UiNodeGroupEnum
   loadingInputs: Set<UiNodeGroupEnum>
   messages: MessageProps[]
+  transientPayload: TransientPayload
+  webauthnScriptStatus?: 'loading' | 'loaded' | 'failed'
 
   setFlowContainer: (flow: OryFlowContainer) => void
+  setWebauthnScriptStatus: (
+    status: 'loading' | 'loaded' | 'failed',
+  ) => void
   setOverrideState: (state?: FlowFormState) => void
   selectMethod: (method?: UiNodeGroupEnum) => void
   inputLoading: (group: UiNodeGroupEnum) => void
   inputReady: (input: UiNodeGroupEnum) => void
   setMessages: (messages: MessageProps[]) => void
+  setTransientPayload: (payload: TransientPayload) => void
 }
 
 export type FlowStore = ReturnType<typeof createFlowStore>
@@ -33,26 +40,29 @@ export const createFlowStore = (initProps: {
   config: OryConfiguration
   components: OryComponents
   flowContainer: OryFlowContainer
+  transientPayload?: TransientPayload
 }) => {
-  return createStore<FlowStoreState>((set, get) => ({
+  return createStore<FlowStoreState>((set) => ({
     ...initProps,
     selectedMethod: undefined,
     overrideState: undefined,
     loadingInputs: new Set(),
     messages: [],
+    transientPayload: initProps.transientPayload ?? {},
+    webauthnScriptStatus: undefined,
 
     setFlowContainer: (flow) => {
-      const { selectedMethod } = get()
-      set({ overrideState: undefined, messages: [] })
-
-      if (selectedMethod) {
-        set({ flowContainer: flow, loadingInputs: new Set() })
-      } else {
-        set({ flowContainer: flow })
-      }
+      set({
+        overrideState: undefined,
+        messages: [],
+        flowContainer: flow,
+        loadingInputs: new Set(),
+        webauthnScriptStatus: undefined,
+      })
     },
 
-    selectMethod: (method) => set({ selectedMethod: method, overrideState: undefined }),
+    selectMethod: (method) =>
+      set({ selectedMethod: method, overrideState: undefined }),
 
     setOverrideState: (state) => {
       set({ overrideState: state })
@@ -75,6 +85,28 @@ export const createFlowStore = (initProps: {
     },
 
     setMessages: (messages) => set({ messages }),
+
+    setTransientPayload: (payload) => set({ transientPayload: payload }),
+
+    setWebauthnScriptStatus: (status) =>
+      set((state) => {
+        if (
+          status === 'failed' &&
+          state.webauthnScriptStatus !== 'failed'
+        ) {
+          return {
+            webauthnScriptStatus: status,
+            messages: [
+              {
+                id: 11,
+                text: 'Could not load Passkey libraries. Please try again later.',
+                type: 'error',
+              },
+            ],
+          }
+        }
+        return { webauthnScriptStatus: status }
+      }),
   }))
 }
 

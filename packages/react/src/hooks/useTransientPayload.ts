@@ -1,29 +1,30 @@
 import { useCallback } from 'react'
-import { useFormContext } from 'react-hook-form'
+
+import { useFlowStoreShallow } from '../context'
 
 export function useTransientPayload() {
-  const { setValue, watch } = useFormContext()
-
-  const transientPayload = watch('transient_payload') as Record<string, unknown> | undefined
+  const { transientPayload, setTransientPayload } = useFlowStoreShallow(
+    (s) => ({
+      transientPayload: s.transientPayload,
+      setTransientPayload: s.setTransientPayload,
+    }),
+  )
 
   const setCaptchaToken = useCallback(
     (token: string) => {
-      setValue('transient_payload.captcha_turnstile_response', token, {
-        shouldDirty: false,
-        shouldValidate: false,
+      setTransientPayload({
+        ...transientPayload,
+        captcha_turnstile_response: token,
       })
     },
-    [setValue],
+    [transientPayload, setTransientPayload],
   )
 
   const setTransientField = useCallback(
     (key: string, value: unknown) => {
-      setValue(`transient_payload.${key}`, value, {
-        shouldDirty: false,
-        shouldValidate: false,
-      })
+      setTransientPayload({ ...transientPayload, [key]: value })
     },
-    [setValue],
+    [transientPayload, setTransientPayload],
   )
 
   const getTransientPayload = useCallback(() => {

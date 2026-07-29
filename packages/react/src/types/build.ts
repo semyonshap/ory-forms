@@ -1,13 +1,10 @@
-import { LogoutFlow, UiNode, UiNodeGroupEnum } from '@ory/client-fetch'
-import { UseFormGetValues, UseFormSetValue } from 'react-hook-form'
 import { TFunction } from 'i18next'
 import { ReactNode } from 'react'
+import { UiNode, UiNodeGroupEnum } from '@ory/client-fetch'
 
 import {
-  FlowFormState,
   FormNode,
   FormState,
-  FormValues,
   GroupSorter,
   NodeSorter,
   OryConfiguration,
@@ -22,24 +19,11 @@ import {
 // Builder
 
 export type GroupedNodes = Partial<Record<UiNodeGroupEnum, UiNode[]>>
-
 export interface BuildContext {
   config: OryConfiguration
   flowContainer: OryFlowContainer
   formState: FormState
   t: TFunction
-}
-
-export interface BuildFormContext {
-  getValues: UseFormGetValues<FormValues>
-  setValue: UseFormSetValue<FormValues>
-  selectMethod: (method?: UiNodeGroupEnum) => void
-  setOverrideState: (state?: FlowFormState) => void
-}
-
-export interface BuilderLogoutFlow {
-  logoutFlow: LogoutFlow | undefined
-  logoutLoading: boolean
 }
 
 export interface BuilderSorter {
@@ -49,7 +33,9 @@ export interface BuilderSorter {
 
 // Wrapper
 
-export type BuildWrapperContext = Partial<Record<string, React.ReactNode[]>>
+export type BuildWrapperContext = Partial<
+  Record<string, React.ReactNode[]>
+>
 
 interface Attached {
   attached?: ReactNode

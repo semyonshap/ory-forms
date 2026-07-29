@@ -11,7 +11,6 @@ import {
 import { resolvePlaceholder } from '../i18n'
 
 import { useInputTranslation } from './useInputTranslation'
-import { useOnload } from './useOnload'
 
 export function useInput(node: UiNodeInput): {
   props: BlockPropsInput
@@ -22,8 +21,6 @@ export function useInput(node: UiNodeInput): {
     control,
     formState: { isReady, isSubmitting, errors },
   } = useFormContext()
-
-  useOnload(node)
 
   const attr = node.attributes
 

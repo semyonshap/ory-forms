@@ -9,7 +9,11 @@ import {
   UiNodeInput,
   UiNodeText,
 } from '../../types'
-import { createDivGroup, createInputNode, createUiText } from '../nodes/factory'
+import {
+  createDivGroup,
+  createInputNode,
+  createUiText,
+} from '../nodes/factory'
 
 import { settingsFooter } from './settingsFooter'
 
@@ -17,16 +21,20 @@ export function SettingsBuilder(
   group: UiNodeGroupEnum,
   nodes: UiNode[],
   t: TFunction,
-  allGroups: Partial<Record<UiNodeGroupEnum, UiNode[]>>,
+  allNodes: UiNode[],
 ) {
   switch (group) {
     case UiNodeGroupEnum.Totp: {
       const secretKeyText = nodes.find(
-        (n): n is UiNodeText => isUiNodeText(n) && n.attributes.id === 'totp_secret_key',
+        (n): n is UiNodeText =>
+          isUiNodeText(n) && n.attributes.id === 'totp_secret_key',
       )
-      const secretQr = nodes.find((n) => isUiNodeImage(n) && n.attributes.id === 'totp_qr')
+      const secretQr = nodes.find(
+        (n) => isUiNodeImage(n) && n.attributes.id === 'totp_qr',
+      )
       const secretCode = nodes.find(
-        (n): n is UiNodeInput => isUiNodeInput(n) && n.attributes.name === 'totp_code',
+        (n): n is UiNodeInput =>
+          isUiNodeInput(n) && n.attributes.name === 'totp_code',
       )
 
       if (secretKeyText && secretQr && secretCode) {
@@ -81,9 +89,11 @@ export function SettingsBuilder(
       })
       break
     case UiNodeGroupEnum.Password: {
-      const profileNodes = allGroups?.[UiNodeGroupEnum.Profile]
-      const emailNode = profileNodes?.find(
-        (n): n is UiNodeInput => isUiNodeInput(n) && n.attributes.name === 'traits.email',
+      const emailNode = allNodes.find(
+        (n): n is UiNodeInput =>
+          isUiNodeInput(n) &&
+          n.group === UiNodeGroupEnum.Profile &&
+          n.attributes.name === 'traits.email',
       )
       const emailValue = emailNode?.attributes.value
 
@@ -109,14 +119,20 @@ export function SettingsBuilder(
     }
     case UiNodeGroupEnum.LookupSecret: {
       const codesNode = nodes.find(
-        (n): n is UiNodeText => isUiNodeText(n) && n.attributes.id === 'lookup_secret_codes',
+        (n): n is UiNodeText =>
+          isUiNodeText(n) && n.attributes.id === 'lookup_secret_codes',
       )
 
       if (codesNode) {
-        const ctx = codesNode.attributes.text.context as Record<string, unknown>
+        const ctx = codesNode.attributes.text.context as Record<
+          string,
+          unknown
+        >
 
         const secrets: string[] = Array.isArray(ctx?.secrets)
-          ? ctx.secrets.map((i: Record<string, unknown>) => String(i.text ?? ''))
+          ? ctx.secrets.map((i: Record<string, unknown>) =>
+              String(i.text ?? ''),
+            )
           : []
 
         const codeNodes = secrets.map((code) =>

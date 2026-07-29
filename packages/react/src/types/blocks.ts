@@ -132,13 +132,19 @@ export interface BlockDivider {
 
 type OmittedAnchorKeys = (typeof omittedInputKeys)[number]
 
+export type BlockPropsAnchor = Omit<
+  UiNodeAnchorAttributes,
+  OmittedAnchorKeys
+>
+export interface BlockOptionsAnchor {
+  variant: VariantsAnchor
+  label?: string
+}
+
 export type BlockAnchor = BaseBlockProps & {
   node: UiNode
-  props: Omit<UiNodeAnchorAttributes, OmittedAnchorKeys>
-  options: {
-    variant: VariantsAnchor
-    label?: string
-  }
+  props: BlockPropsAnchor
+  options: BlockOptionsAnchor
 }
 
 // Image

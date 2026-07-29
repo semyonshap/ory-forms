@@ -8,7 +8,13 @@ import { Button, buttonVariants } from '../ui/button'
 import { Spinner } from '../ui/spinner'
 import { Input } from '../ui/input'
 import { Label } from '../ui/label'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '../ui/card'
 import { Alert, AlertDescription } from '../ui/alert'
 import JikoIcon from '../icons/jiko-icon'
 import { useCooldown } from '@/hooks/useCooldown'
@@ -103,7 +109,9 @@ export const OryComponents: OryClientComponents = {
               <CardHeader className="flex flex-col w-full">
                 {!isSettings && <JikoIcon className="pb-6 pt-2" />}
                 <CardTitle>{title}</CardTitle>
-                {description && <CardDescription>{description}</CardDescription>}
+                {description && (
+                  <CardDescription>{description}</CardDescription>
+                )}
               </CardHeader>
             )}
             <CardContent className="flex flex-col gap-4">
@@ -112,7 +120,9 @@ export const OryComponents: OryClientComponents = {
                 messages.map((msg, index) => (
                   <Alert
                     key={`${msg.id}-${index}`}
-                    variant={msg.type === 'error' ? 'destructive' : 'default'}
+                    variant={
+                      msg.type === 'error' ? 'destructive' : 'default'
+                    }
                   >
                     <AlertDescription className="whitespace-pre-wrap break-all">
                       {msg.text}
@@ -132,11 +142,15 @@ export const OryComponents: OryClientComponents = {
         <div
           className={cn(
             variant === 'footer' && 'inline-flex gap-2',
-            variant === 'footer-settings' && 'flex flex-col justify-between gap-4 sm:flex-row ',
-            variant === 'footer-settings-submits' && 'flex flex-col gap-2 sm:flex-row sm:ml-auto',
-            variant === 'totp-qr' && 'w-full flex flex-col sm:flex-row gap-4 ',
+            variant === 'footer-settings' &&
+              'flex flex-col justify-between gap-4 sm:flex-row ',
+            variant === 'footer-settings-submits' &&
+              'flex flex-col gap-2 sm:flex-row sm:ml-auto',
+            variant === 'totp-qr' &&
+              'w-full flex flex-col sm:flex-row gap-4 ',
             variant === 'totp-secret' && 'w-full flex flex-col gap-2',
-            variant === 'lookup-secrets-codes' && 'grid grid-cols-2 md:grid-cols-3 gap-2',
+            variant === 'lookup-secrets-codes' &&
+              'grid grid-cols-2 md:grid-cols-3 gap-2',
             variant === 'settings-divider' && 'flex px-4 md:hidden',
           )}
         >
@@ -153,7 +167,9 @@ export const OryComponents: OryClientComponents = {
         <div className="flex flex-col gap-1">
           {label && (
             <Label className="inline-flex justify-between">
-              <span className="text-sm font-medium text-muted-foreground">{label}</span>
+              <span className="text-sm font-medium text-muted-foreground">
+                {label}
+              </span>
               {attached}
             </Label>
           )}
@@ -181,7 +197,8 @@ export const OryComponents: OryClientComponents = {
             variant === 'link' &&
               'text-sm text-brand-primary underline-offset-2 hover:underline cursor-pointer',
             variant === 'button' && buttonVariants({ variant: 'outline' }),
-            variant === 'cancel' && buttonVariants({ variant: 'destructive' }),
+            variant === 'cancel' &&
+              buttonVariants({ variant: 'destructive' }),
           )}
           {...props}
           title={label}
@@ -200,7 +217,8 @@ export const OryComponents: OryClientComponents = {
           variant="link"
           className={cn(
             'p-0 text-brand-primary',
-            cooldown.isActive && 'hover:no-underline text-muted-foreground',
+            cooldown.isActive &&
+              'hover:no-underline text-muted-foreground',
           )}
           onClick={(e) => {
             if (cooldown.isActive) {
@@ -211,7 +229,9 @@ export const OryComponents: OryClientComponents = {
             props.onClick?.(e)
           }}
         >
-          {cooldown.isActive && <span className="tabular-nums">{cooldown.remaining}s</span>}
+          {cooldown.isActive && (
+            <span className="tabular-nums">{cooldown.remaining}s</span>
+          )}
           <span>{label}</span>
         </Button>
       )
@@ -229,7 +249,9 @@ export const OryComponents: OryClientComponents = {
           <div className="flex flex-col gap-1 justify-start items-start">
             <span className="text-left">{label}</span>
             {description && (
-              <span className="text-muted-foreground text-left text-sm">{description}</span>
+              <span className="text-muted-foreground text-left text-sm">
+                {description}
+              </span>
             )}
           </div>
         </Button>
@@ -242,7 +264,9 @@ export const OryComponents: OryClientComponents = {
         <div className="w-full flex flex-row justify-between items-center">
           <div className="flex flex-row gap-8">
             {Icon && <Icon className={'size-6'} />}
-            <span className="text-bold capitalize">{node.attributes.value || label}</span>
+            <span className="text-bold capitalize">
+              {node.attributes.value || label}
+            </span>
           </div>
           <Button {...props} variant="outline" className="cursor-pointer">
             {node.attributes.name === 'link' ? <Link /> : <Unlink />}
@@ -284,7 +308,11 @@ export const OryComponents: OryClientComponents = {
       const [show, setShow] = useState(false)
       return (
         <div className="relative">
-          <Input {...props} type={show ? 'text' : 'password'} className="pr-10" />
+          <Input
+            {...props}
+            type={show ? 'text' : 'password'}
+            className="pr-10"
+          />
           <button
             type="button"
             onClick={() => setShow(!show)}
@@ -294,7 +322,11 @@ export const OryComponents: OryClientComponents = {
             )}
             tabIndex={-1}
           >
-            {show ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+            {show ? (
+              <EyeOff className="size-4" />
+            ) : (
+              <Eye className="size-4" />
+            )}
           </button>
         </div>
       )
@@ -333,7 +365,10 @@ export const OryComponents: OryClientComponents = {
           value={value as string}
           maxLength={elements}
           onKeyDown={(e) => {
-            if ((value as string)?.length >= elements && e.key.length === 1) {
+            if (
+              (value as string)?.length >= elements &&
+              e.key.length === 1
+            ) {
               e.preventDefault()
             }
           }}
@@ -353,7 +388,11 @@ export const OryComponents: OryClientComponents = {
     Image: ({ node, props }) => {
       return (
         <div className="flex w-full px-8 py-4 sm:p-0">
-          <Image {...props} alt={node.meta.label?.text || ''} className="w-full rounded-md" />
+          <Image
+            {...props}
+            alt={node.meta.label?.text || ''}
+            className="w-full rounded-md"
+          />
         </div>
       )
     },
@@ -386,7 +425,9 @@ export const OryComponents: OryClientComponents = {
                 <span>{label}</span>
               </div>
             </div>
-            <span className="text-sm text-muted-foreground">{description}</span>
+            <span className="text-sm text-muted-foreground">
+              {description}
+            </span>
           </div>
         </div>
       )

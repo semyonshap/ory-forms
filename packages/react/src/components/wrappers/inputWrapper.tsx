@@ -1,6 +1,11 @@
 import { ComponentType } from 'react'
 
-import { useButton, useInput, useCheckbox, useCaptcha } from '../../hooks'
+import {
+  useButton,
+  useInput,
+  useCheckbox,
+  useCaptcha,
+} from '../../hooks'
 import { BlockButton, WrapperInput } from '../../types'
 import { useFlowStore, useFlowStoreShallow } from '../../context'
 
@@ -34,19 +39,19 @@ export function InputWrapper({ node, attached }: WrapperInput) {
   )
 }
 
+
 export function ButtonWrapper({ node, attached }: WrapperInput) {
   const Node = useFlowStore((state) => state.components.Node)
 
   const { props, options } = useButton(node)
 
-  let Component: ComponentType<BlockButton>
+  let Component: ComponentType<BlockButton> = Node.Button
 
   const variant = node.data?.variant
 
   if (variant === 'method' && Node.AuthMethod) Component = Node.AuthMethod
   else if (variant === 'resend' && Node.Resend) Component = Node.Resend
   else if (variant === 'oidc' && Node.Oidc) Component = Node.Oidc
-  else Component = Node.Button
 
   return (
     <Component

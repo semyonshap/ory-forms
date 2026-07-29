@@ -1,9 +1,11 @@
 import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
 
-import { computeDefaultValues, resolveLoginHint } from '../lib/form/helpers'
-import { buildZodSchema } from '../lib'
-import { OryFlowContainer } from '../types'
+import {
+  computeDefaultValues,
+  resolveLoginHint,
+} from '../lib/form/helpers'
+import { buildBaseResolver, buildSettingsResolver } from '../lib'
+import { OryFlowContainer, OryFlowType } from '../types'
 
 import { useFormAutofocus } from '.'
 
@@ -20,8 +22,11 @@ export function useOryForm(flowContainer: OryFlowContainer) {
     loginHint,
   )
 
-  const schema = buildZodSchema(nodes)
-  const resolver = zodResolver(schema)
+  const isSettings = flowContainer.flowType === OryFlowType.Settings
+
+  const resolver = isSettings
+    ? buildSettingsResolver(nodes)
+    : buildBaseResolver(nodes)
 
   const methods = useForm({ defaultValues, resolver })
 

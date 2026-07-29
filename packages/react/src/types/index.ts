@@ -1,5 +1,4 @@
 export * from './common'
-export * from './config'
 export * from './container'
 export * from './nodes'
 export * from './formState'

@@ -13,6 +13,7 @@ export function OryFlowProvider({
   config,
   flow: initialFlowContainer,
   components,
+  transientPayload,
   children,
 }: OryFlowProviderProps) {
   const configResolved = useMemo(
@@ -23,7 +24,10 @@ export function OryFlowProvider({
     [config],
   )
 
-  const componentsResolved = useMemo(() => computeComponents(components), [components])
+  const componentsResolved = useMemo(
+    () => computeComponents(components),
+    [components],
+  )
 
   const store = useMemo(
     () =>
@@ -31,9 +35,19 @@ export function OryFlowProvider({
         config: configResolved,
         components: componentsResolved,
         flowContainer: initialFlowContainer,
+        transientPayload,
       }),
-    [configResolved, componentsResolved, initialFlowContainer],
+    [
+      configResolved,
+      componentsResolved,
+      initialFlowContainer,
+      transientPayload,
+    ],
   )
 
-  return <FlowStoreContext.Provider value={store}>{children}</FlowStoreContext.Provider>
+  return (
+    <FlowStoreContext.Provider value={store}>
+      {children}
+    </FlowStoreContext.Provider>
+  )
 }

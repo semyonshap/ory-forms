@@ -1,48 +1,52 @@
-import { UiNode, UiNodeGroupEnum } from '@ory/client-fetch'
+import {
+  isUiNodeInputAttributes,
+  isUiNodeScriptAttributes,
+  UiNode,
+  UiNodeGroupEnum,
+} from '@ory/client-fetch'
 
-import { allGroupEnums, excludedAuthGroups, GroupedNodes } from '../../types'
+import { GroupedNodes } from '../../types'
 
-import { isNodeVisible } from './filters'
+export function groupNodes({
+  nodes,
+  excludeGroups = [],
+  excludeScripts = true,
+  excludeHidden = true,
+}: {
+  nodes: UiNode[]
+  excludeGroups?: UiNodeGroupEnum[]
+  excludeScripts?: boolean
+  excludeHidden?: boolean
+}) {
+  const groupsNodes: GroupedNodes = {}
+  const groupSet = new Set<UiNodeGroupEnum>()
 
-export function getNodeGroupsWithVisibleNodes(nodes: UiNode[]): GroupedNodes {
-  const groups: Partial<Record<UiNodeGroupEnum, UiNode[]>> = {}
-  const groupRetained: Partial<Record<UiNodeGroupEnum, number>> = {}
+  const filtered = nodes.filter((node) => {
+    if (excludeScripts && isUiNodeScriptAttributes(node.attributes))
+      return false
 
-  for (const node of nodes) {
-    const groupNodes = groups[node.group] ?? []
-    const groupCount = groupRetained[node.group] ?? 0
+    if (
+      excludeHidden &&
+      isUiNodeInputAttributes(node.attributes) &&
+      node.attributes.type === 'hidden'
+    )
+      return false
 
+    if (excludeGroups.includes(node.group)) return false
+
+    return true
+  })
+
+  for (const node of filtered) {
+    const group = node.group
+    groupSet.add(group)
+
+    const groupNodes = groupsNodes[group] ?? []
     groupNodes.push(node)
-    groups[node.group] = groupNodes
-
-    if (isNodeVisible(node)) {
-      groupRetained[node.group] = groupCount + 1
-    }
+    groupsNodes[group] = groupNodes
   }
 
-  const finalGroups: Partial<Record<UiNodeGroupEnum, UiNode[]>> = {}
-  for (const [group, count] of Object.entries(groupRetained)) {
-    if (count > 0) {
-      finalGroups[group as UiNodeGroupEnum] = groups[group as UiNodeGroupEnum]
-    }
-  }
+  const groups = Array.from(groupSet)
 
-  return finalGroups
-}
-
-export function nodesToAuthMethodGroups(
-  nodes: UiNode[],
-  excludeAuthMethods: UiNodeGroupEnum[] = [],
-): UiNodeGroupEnum[] {
-  const groups: Partial<Record<UiNodeGroupEnum, UiNode[]>> = {}
-
-  for (const node of nodes) {
-    if (node.type === 'script') continue
-    const groupNodes = groups[node.group] ?? []
-    groupNodes.push(node)
-    groups[node.group] = groupNodes
-  }
-
-  const excludeSet = new Set([...excludedAuthGroups, ...excludeAuthMethods])
-  return allGroupEnums.filter((group) => groups[group]?.length && !excludeSet.has(group))
+  return { groups, groupsNodes }
 }

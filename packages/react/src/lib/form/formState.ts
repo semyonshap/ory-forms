@@ -1,7 +1,13 @@
 import { UiNode } from '@ory/client-fetch'
+import { FieldErrors } from 'react-hook-form'
 
-import { isChoosingMethod, nodesToAuthMethodGroups } from '../nodes'
-import { FlowFormState, OryFlowContainer, OryFlowType } from '../../types'
+import { isChoosingMethod, groupNodes } from '../nodes'
+import {
+  FlowFormState,
+  OryFlowContainer,
+  OryFlowType,
+  excludedAuthGroups,
+} from '../../types'
 
 function findMethodWithMessage(nodes?: UiNode[]) {
   return nodes
@@ -9,24 +15,62 @@ function findMethodWithMessage(nodes?: UiNode[]) {
     ?.find((node) => node.messages?.length > 0)
 }
 
-export function parseStateFromFlow(flow: OryFlowContainer): FlowFormState {
+function findFieldWithZodError(nodes: UiNode[], errors?: FieldErrors) {
+  if (!errors) return undefined
+  const errorNames = Object.keys(errors)
+  return nodes
+    ?.filter((n) => !['default', 'identifier_first'].includes(n.group))
+    ?.find(
+      (n) =>
+        'name' in n.attributes &&
+        errorNames.includes(n.attributes.name as string),
+    )
+}
+
+export function parseStateFromFlow(
+  flow: OryFlowContainer,
+  fieldErrors?: FieldErrors,
+): FlowFormState {
   switch (flow.flowType) {
     case OryFlowType.Registration:
     case OryFlowType.Login: {
       const methodWithMessage = findMethodWithMessage(flow.flow.ui.nodes)
+      const methodWithFieldErrors = findFieldWithZodError(
+        flow.flow.ui.nodes,
+        fieldErrors,
+      )
+
       if (flow.flow.active == 'link_recovery') {
         return { current: 'method_active', method: 'link' }
       } else if (flow.flow.active == 'code_recovery') {
         return { current: 'method_active', method: 'code' }
       } else if (methodWithMessage) {
-        return { current: 'method_active', method: methodWithMessage.group }
+        return {
+          current: 'method_active',
+          method: methodWithMessage.group,
+        }
+      } else if (methodWithFieldErrors) {
+        return {
+          current: 'method_active',
+          method: methodWithFieldErrors.group,
+        }
       } else if (flow.flow.ui.messages?.some((m) => m.id === 1010016)) {
         return { current: 'select_method' }
-      } else if (flow.flow.active && !['default', 'identifier_first'].includes(flow.flow.active)) {
+      } else if (
+        flow.flow.active &&
+        !['default', 'identifier_first'].includes(flow.flow.active)
+      ) {
         return { current: 'method_active', method: flow.flow.active }
       } else if (isChoosingMethod(flow)) {
-        const authMethods = nodesToAuthMethodGroups(flow.flow.ui.nodes)
-        if (authMethods.length === 1 && !['code', 'passkey'].includes(authMethods[0])) {
+        const { groups: authMethods } = groupNodes({
+          nodes: flow.flow.ui.nodes,
+          excludeGroups: excludedAuthGroups,
+          excludeHidden: false,
+        })
+        if (
+          authMethods.length === 1 &&
+          !['code', 'passkey'].includes(authMethods[0])
+        ) {
           return { current: 'method_active', method: authMethods[0] }
         }
         return { current: 'select_method' }

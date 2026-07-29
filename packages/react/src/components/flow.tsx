@@ -10,12 +10,22 @@ import { OryFlowProvider } from '../context'
 
 import { FormWrapper } from './wrappers'
 
-export function Flow({ flow, config, components }: FlowInputProps) {
+export function Flow({
+  flow,
+  config,
+  components,
+  transientPayload,
+}: FlowInputProps) {
   const { methods } = useOryForm(flow)
 
   return (
     <I18nextProvider i18n={libraryI18n}>
-      <OryFlowProvider config={config} flow={flow} components={components}>
+      <OryFlowProvider
+        config={config}
+        flow={flow}
+        components={components}
+        transientPayload={transientPayload}
+      >
         <FormProvider {...methods}>
           <FormWrapper />
         </FormProvider>

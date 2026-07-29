@@ -5,26 +5,23 @@ import { createInputNode, createUiText } from '../nodes/factory'
 
 export function BuildAuthMethodList({
   groups,
-  selectMethod,
   ctx: { t },
 }: {
   groups: UiNodeGroupEnum[]
-  selectMethod: (method: UiNodeGroupEnum) => void
   ctx: BuildContext
 }) {
   return groups.map((group) => {
     return createInputNode({
       group,
       attributes: {
-        name: `method`,
-        type: 'submit',
+        name: `method-${group}`,
+        type: 'button',
         value: group,
         disabled: false,
       },
       data: {
         variant: 'method',
         description: t(`two-step.${group}.description`),
-        onClick: () => selectMethod(group),
       },
       meta: {
         label: createUiText({

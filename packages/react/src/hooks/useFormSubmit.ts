@@ -58,8 +58,6 @@ export function useFormSubmit(methods: UseFormReturn<FormValues>) {
       }
     }
 
-    console.log('Submit', initialData)
-
     const data = removeEmptyStrings<FormValues>(initialData)
 
     switch (flowType) {

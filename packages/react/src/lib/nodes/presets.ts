@@ -1,7 +1,7 @@
-import { LoginFlow, UiNodeGroupEnum } from '@ory/client-fetch'
+import { UiNodeGroupEnum } from '@ory/client-fetch'
 
 import { initFlowUrl } from '../../utils'
-import { BuildContext, isUiNodeInput, FormState, BuilderLogoutFlow } from '../../types'
+import { BuildContext, NodeDataInput } from '../../types'
 import { restartFlowUrl } from '../../utils'
 
 import {
@@ -58,13 +58,12 @@ export function BuildDivider() {
   })
 }
 
-export function BuildRecover({ config, flowContainer: { flow }, t }: BuildContext) {
-  const identifierNode = flow.ui.nodes
-    .filter(isUiNodeInput)
-    .find((n) => n.attributes.name === 'identifier')
-
-  if (!identifierNode) return null
-
+export function BuildRecover({
+  config,
+  flowContainer: { flow },
+  t,
+  target,
+}: BuildContext & { target?: string }) {
   return createAnchorNode({
     id: 'recover-anchor',
     href: initFlowUrl(config.sdk.url, 'recovery', flow),
@@ -73,17 +72,16 @@ export function BuildRecover({ config, flowContainer: { flow }, t }: BuildContex
       text: 'Recover Account',
       t,
     }),
-    data: { target: identifierNode.attributes.name, variant: 'link' },
+    data: { target, variant: 'link' },
   })
 }
 
-export function BuildForgotPassword({ config, flowContainer: { flow }, t }: BuildContext) {
-  const passwordNode = flow.ui.nodes
-    .filter(isUiNodeInput)
-    .find((n) => n.attributes.type === 'password')
-
-  if (!passwordNode) return null
-
+export function BuildForgotPassword({
+  config,
+  flowContainer: { flow },
+  t,
+  target,
+}: BuildContext & { target?: string }) {
   return createAnchorNode({
     id: 'recover-anchor',
     href: initFlowUrl(config.sdk.url, 'recovery', flow),
@@ -92,50 +90,22 @@ export function BuildForgotPassword({ config, flowContainer: { flow }, t }: Buil
       text: 'Forgot Password?',
       t,
     }),
-    data: { target: passwordNode.attributes.name, variant: 'link' },
+    data: { target, variant: 'link' },
   })
 }
 
-export function BuildChooseMethod({
-  onClick,
+export function BuildSelectMethod({
   t,
-}: BuildContext & {
-  onClick: () => void
-}) {
+  extraData = {},
+}: BuildContext & { extraData?: NodeDataInput }) {
   return createInputNode({
     attributes: {
-      name: 'choose-method-button',
-      type: 'button',
-      disabled: false,
-    },
-    data: {
-      onClick,
-      variant: 'link',
-    },
-    meta: {
-      label: createUiText({
-        keyOrId: 'login.2fa.method.go-back',
-        text: 'Choose another method',
-        t,
-      }),
-    },
-  })
-}
-
-export function BuildSelectAnother({
-  onClick,
-  t,
-}: BuildContext & {
-  onClick: () => void
-}) {
-  return createInputNode({
-    attributes: {
-      name: 'select-another-button',
+      name: 'select-another-method',
       disabled: false,
       type: 'button',
     },
     data: {
-      onClick,
+      ...extraData,
       variant: 'link',
     },
     meta: {
@@ -161,6 +131,9 @@ export function BuildGoBackCode(ctx: BuildContext) {
       text: 'Go back',
       t,
     }),
+    data: {
+      variant: 'cancel',
+    },
   })
 }
 
@@ -216,6 +189,19 @@ export function BuildCaptcha() {
   })
 }
 
+export function BuildTransientPayload(payload: Record<string, unknown>) {
+  return createInputNode({
+    attributes: {
+      name: 'transient_payload',
+      type: 'hidden',
+      value: JSON.stringify(payload),
+      disabled: false,
+    },
+    group: UiNodeGroupEnum.Default,
+    meta: {},
+  })
+}
+
 function BuildReturnTo({
   config: {
     project: { default_redirect_url },
@@ -230,62 +216,11 @@ function BuildReturnTo({
   }
 
   if (!returnTo) {
-    returnTo = restartFlowUrl(flow, `${sdkUrl}/self-service/${flowType}/browser`)
+    returnTo = restartFlowUrl(
+      flow,
+      `${sdkUrl}/self-service/${flowType}/browser`,
+    )
   }
 
   return returnTo
-}
-
-export function BuildLogout(ctx: BuildContext, logoutCtx: BuilderLogoutFlow) {
-  const returnTo = BuildReturnTo(ctx)
-
-  const { t } = ctx
-
-  const nodeLogoutLabel = createTextNode({
-    id: 'logout-label',
-    text: createUiText({
-      keyOrId: 'login.2fa.go-back',
-      text: "Something isn't working?",
-      t,
-    }),
-  })
-
-  const { logoutFlow, logoutLoading } = logoutCtx
-
-  const isLogoutReady = !logoutLoading || logoutFlow
-
-  const nodeAnchorLogout = createAnchorNode({
-    id: 'logout-anchor',
-    href: logoutFlow ? logoutFlow?.logout_url : returnTo,
-    title: createUiText({
-      keyOrId: isLogoutReady ? 'login.registration-button' : 'login.2fa.go-back.link',
-      text: isLogoutReady ? 'Sign up' : 'Go back',
-      t,
-    }),
-  })
-
-  return createDivGroup({
-    id: 'registration-div',
-    data: { variant: 'footer' },
-    children: [nodeLogoutLabel, nodeAnchorLogout],
-  })
-}
-
-export function showLogout(flow: LoginFlow, formState: FormState, authMethods: string[]) {
-  if (flow.refresh) {
-    return true
-  }
-
-  if (flow.requested_aal === 'aal2') {
-    if (formState.current === 'select_method') {
-      return true
-    }
-    if (formState.current === 'method_active' && flow.active === 'code') {
-      return true
-    }
-    if (formState.current === 'method_active' && authMethods.length === 1) {
-      return true
-    }
-  }
-  return false
 }

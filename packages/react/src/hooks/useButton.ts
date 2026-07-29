@@ -1,92 +1,113 @@
 import { useDebounceValue } from 'usehooks-ts'
 import { useFormContext } from 'react-hook-form'
-import { ComponentType, useCallback, useEffect, useMemo } from 'react'
-import { UiNodeInputAttributesTypeEnum } from '@ory/client-fetch'
-
-import { normalizeKeys } from '../utils'
-import { useFlowStoreShallow, useFormState } from '../context'
-import { triggerToFunction, triggerToWindowCall } from '../lib/nodes'
+import { useCallback, useEffect } from 'react'
 import {
-  VariantsInput,
+  UiNodeGroupEnum,
+  UiNodeInputAttributesTypeEnum,
+} from '@ory/client-fetch'
+
+import { useFlowStoreShallow, useFormState } from '../context'
+import {
   UiNodeInput,
   BlockPropsButton,
   BlockOptionsButton,
 } from '../types'
+import { isProduction } from '../utils/sdk'
+import { webauthnGroups } from '../types/const'
+import { triggerToFunction, triggerToWindowCall } from '../lib/nodes'
 
-import { useOnload, useInputTranslation, useWebAuthn } from '.'
+import { useInputTranslation, useButtonIcon, useFormSubmit } from '.'
 
 export function useButton(node: UiNodeInput): {
   props: BlockPropsButton
   options: BlockOptionsButton
 } {
-  const {
-    setValue,
-    formState: { isReady },
-  } = useFormContext()
+  const formMethods = useFormContext()
+  const { setValue, getValues } = formMethods
+  const { isReady } = formMethods.formState
 
-  useOnload(node)
+  const onSubmit = useFormSubmit(formMethods)
 
-  const scriptReady = useWebAuthn(node)
-
-  const { providers, system } = useFlowStoreShallow((state) => ({
-    providers: state.components.Icons.Providers,
-    system: state.components.Icons.System,
-  }))
-  const oryFormState = useFormState()
-
-  const [clicked, setClicked] = useDebounceValue(false, 100)
-
-  const onClick = useCallback(
-    (event: React.MouseEvent) => {
-      const { group, attributes: attr, data } = node
-
-      setValue(attr.name, attr.value)
-      setValue('method', group)
-
-      setClicked(true)
-
-      data?.onClick?.()
-
-      const variant = data?.variant
-
-      if (
-        variant === 'sso' ||
-        variant === 'resend' ||
-        variant === 'oidc'
-      ) {
-        event.currentTarget.closest('form')?.requestSubmit()
-      }
-
-      if (attr.onclickTrigger) {
-        const fn = triggerToFunction(attr.onclickTrigger)
-        if (fn) {
-          const result = fn() as unknown
-          if (result instanceof Promise) {
-            result.then(() =>
-              event.currentTarget.closest('form')?.requestSubmit(),
-            )
-          }
-        } else {
-          triggerToWindowCall(attr.onclickTrigger)
-        }
-      }
-    },
-    [node, setValue, setClicked],
-  )
+  const { selectMethod, setOverrideState, webauthnScriptStatus } =
+    useFlowStoreShallow((state) => ({
+      providers: state.components.Icons.Providers,
+      system: state.components.Icons.System,
+      setOverrideState: state.setOverrideState,
+      selectMethod: state.selectMethod,
+      webauthnScriptStatus: state.webauthnScriptStatus,
+    }))
 
   const {
     formState: { isSubmitting },
   } = useFormContext()
+  const oryFormState = useFormState()
 
-  const { group, attributes: attr } = node
-  const variant = node.data?.variant
+  const [clicked, setClicked] = useDebounceValue(false, 100)
 
+  const { group, attributes: attr, data } = node
+  const { name, value, onclickTrigger } = attr
+  const variant = data?.variant
+
+  const type = ['method', 'resend', 'sso'].includes(variant || '')
+    ? 'button'
+    : attr.type === UiNodeInputAttributesTypeEnum.Submit
+      ? 'submit'
+      : 'button'
+
+  const onClick = useCallback(() => {
+    if (!isProduction())
+      console.log('FormState: %s, Group: %s', oryFormState.current, group)
+
+    setClicked(true)
+
+    setValue(name, value)
+    setValue('method', group)
+
+    if (type === 'button') {
+      if (name === 'select-another-method')
+        setOverrideState({ current: 'select_method' })
+      if (variant === 'method') selectMethod(group)
+
+      if (onclickTrigger) {
+        const fn = triggerToFunction(onclickTrigger)
+        if (fn) fn()
+        else triggerToWindowCall(onclickTrigger)
+      } else if (variant === 'sso') {
+        onSubmit(getValues())
+      } else if (variant === 'resend') {
+        setValue('code', '')
+        if (group === UiNodeGroupEnum.Code && name === 'method') {
+          setValue('email', '')
+        }
+        onSubmit(getValues())
+      }
+    }
+  }, [
+    name,
+    type,
+    group,
+    value,
+    variant,
+    onclickTrigger,
+    oryFormState,
+    setValue,
+    getValues,
+    setClicked,
+    selectMethod,
+    setOverrideState,
+    onSubmit,
+  ])
+
+  const isWebAuthnDisabled =
+    webauthnGroups.includes(group) &&
+    webauthnScriptStatus != null &&
+    webauthnScriptStatus !== 'loaded'
   const disabled =
     attr.disabled ||
     !isReady ||
     !oryFormState.isReady ||
     isSubmitting ||
-    scriptReady.isDisabled
+    isWebAuthnDisabled
 
   useEffect(() => {
     if (!isSubmitting && clicked) {
@@ -94,45 +115,13 @@ export function useButton(node: UiNodeInput): {
     }
   }, [isSubmitting, setClicked, clicked])
 
-  const IconsProviders = useMemo(
-    () => normalizeKeys(providers ?? {}),
-    [providers],
-  )
-  const IconsSystem = useMemo(() => normalizeKeys(system ?? {}), [system])
-
   const { formattedLabel } = useInputTranslation(node)
 
-  let icon: ComponentType | undefined
-
-  const type: VariantsInput =
-    attr.type === UiNodeInputAttributesTypeEnum.Submit
-      ? 'submit'
-      : 'button'
-
-  let htmlType: BlockPropsButton['type'] = type
-
-  switch (variant) {
-    case 'method': {
-      htmlType = 'button'
-      icon = system ? IconsSystem?.[group] : undefined
-      break
-    }
-    case 'resend': {
-      htmlType = 'button'
-      break
-    }
-    case 'oidc':
-    case 'sso': {
-      htmlType = 'button'
-      const iconKey = (node.attributes.value as string).split('-')[0]
-      icon = IconsProviders?.[iconKey]
-      break
-    }
-  }
+  const icon = useButtonIcon(node)
 
   return {
     props: {
-      type: htmlType,
+      type,
       name: node.attributes.name,
       value: node.attributes.value,
       onClick,

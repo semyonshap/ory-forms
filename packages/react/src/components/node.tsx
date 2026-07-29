@@ -1,4 +1,6 @@
-import { UiNodeInputAttributesTypeEnum } from '@ory/client-fetch'
+import {
+  UiNodeInputAttributesTypeEnum,
+} from '@ory/client-fetch'
 
 import {
   WrapperBase,
@@ -29,9 +31,14 @@ export const Node = ({ node, attached }: WrapperBase) => {
   else if (isUiNodeImage(node)) return ImageWrapper({ node, attached })
   else if (isUiNodeText(node)) return TextWrapper({ node, attached })
   else if (isUiNodeAnchor(node)) return AnchorWrapper({ node, attached })
-  else if (isUiNodeInput(node)) return <NodeInput node={node} attached={attached} />
-  else if (isUiNodeScript(node) && !ignoredScriptGroups.includes(node.group))
+  else if (isUiNodeInput(node))
+    return <NodeInput node={node} attached={attached} />
+  else if (
+    isUiNodeScript(node) &&
+    !ignoredScriptGroups.includes(node.group)
+  ) {
     return <NodeScript node={node} />
+  }
   return null
 }
 

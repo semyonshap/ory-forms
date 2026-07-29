@@ -6,8 +6,6 @@ import {
 } from '@ory/client-fetch'
 
 import {
-  authMethodPickerExcludedGroups,
-  GroupedNodes,
   isUiNodeInput,
   LoginFlowContainer,
   OryFlowType,
@@ -15,21 +13,19 @@ import {
   UiNodeInput,
 } from '../../types'
 
-export function toAuthMethodPickerOptions(visibleGroups: GroupedNodes): UiNodeGroupEnum[] {
-  return Object.values(UiNodeGroupEnum)
-    .filter((group) => visibleGroups[group]?.length)
-    .filter((group) => !authMethodPickerExcludedGroups.includes(group))
-}
-
 export function findScreenSelectionButton(nodes: UiNode[]) {
   return nodes.find(
     (n): n is UiNodeInput =>
-      isUiNodeInput(n) && n.attributes.type === 'submit' && n.attributes.name === 'screen',
+      isUiNodeInput(n) &&
+      n.attributes.type === 'submit' &&
+      n.attributes.name === 'screen',
   )
 }
 
 export function hasCodeField(nodes: UiNode[]): boolean {
-  return nodes.some((node) => 'name' in node.attributes && node.attributes.name === 'code')
+  return nodes.some(
+    (node) => 'name' in node.attributes && node.attributes.name === 'code',
+  )
 }
 
 export function isCodeSent(
@@ -44,7 +40,11 @@ export function isCodeSent(
       n.attributes.type === 'text',
   )
 
-  return !!codeNode && formState?.current === 'method_active' && formState?.method === 'code'
+  return (
+    !!codeNode &&
+    formState?.current === 'method_active' &&
+    formState?.method === 'code'
+  )
 }
 
 export function isNodeVisible(node: UiNode): node is UiNodeInput {
@@ -75,12 +75,17 @@ function isScreenSelectionNode(node: UiNode): boolean {
   return false
 }
 
-export function isChoosingMethod(flow: LoginFlowContainer | RegistrationFlowContainer): boolean {
+export function isChoosingMethod(
+  flow: LoginFlowContainer | RegistrationFlowContainer,
+): boolean {
   if (flow.flowType === OryFlowType.Login) {
     if (flow.flow.requested_aal === 'aal2') {
       return true
     }
-    if (flow.flow.refresh && !flow.flow.ui.nodes.some((n) => n.group === 'code')) {
+    if (
+      flow.flow.refresh &&
+      !flow.flow.ui.nodes.some((n) => n.group === 'code')
+    ) {
       return true
     }
   }

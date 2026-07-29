@@ -9,11 +9,13 @@ export function useCaptcha(_node: UiNodeInput): {
   options: BlockOptionsCaptcha
 } {
   const { setCaptchaToken } = useTransientPayload()
-  const { inputLoading, inputReady, setMessages } = useFlowStoreShallow((s) => ({
-    inputLoading: s.inputLoading,
-    inputReady: s.inputReady,
-    setMessages: s.setMessages,
-  }))
+  const { inputLoading, inputReady, setMessages } = useFlowStoreShallow(
+    (s) => ({
+      inputLoading: s.inputLoading,
+      inputReady: s.inputReady,
+      setMessages: s.setMessages,
+    }),
+  )
 
   useEffect(() => {
     inputLoading('captcha')
@@ -24,8 +26,9 @@ export function useCaptcha(_node: UiNodeInput): {
   }, [inputReady])
 
   const onExpire = useCallback(() => {
+    setCaptchaToken('')
     inputLoading('captcha')
-  }, [inputLoading])
+  }, [setCaptchaToken, inputLoading])
 
   const onSuccess = useCallback(
     (token: string) => {

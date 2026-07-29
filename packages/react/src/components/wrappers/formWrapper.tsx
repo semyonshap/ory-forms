@@ -1,52 +1,49 @@
 import { useTranslation } from 'react-i18next'
-import { useForm } from 'react-hook-form'
 import { useMemo } from 'react'
 import React from 'react'
 
 import { Builder } from '../../lib'
 import { renderNodes } from '../render'
-import { useFormMessages, useLogout } from '../../hooks'
+import { useFormMessages, useWebAuthnLoader } from '../../hooks'
 import { useFlowStoreShallow, useFormState } from '../../context'
 
 export function FormWrapper() {
-  const { config, flowContainer, Card, selectMethod, setOverrideState, nodeSorter, groupSorter } =
-    useFlowStoreShallow((state) => ({
-      config: state.config,
-      flowContainer: state.flowContainer,
-      Card: state.components.Layout,
-      selectMethod: state.selectMethod,
-      setOverrideState: state.setOverrideState,
-      nodeSorter: state.components.nodeSorter,
-      groupSorter: state.components.groupSorter,
-    }))
+  const {
+    config,
+    flowContainer,
+    Card,
+    nodeSorter,
+    groupSorter,
+    transientPayload,
+  } = useFlowStoreShallow((state) => ({
+    config: state.config,
+    flowContainer: state.flowContainer,
+    Card: state.components.Layout,
+    nodeSorter: state.components.nodeSorter,
+    groupSorter: state.components.groupSorter,
+    transientPayload: state.transientPayload,
+  }))
   const formState = useFormState()
 
-  const { setValue, getValues } = useForm()
+  useWebAuthnLoader()
 
   const { t } = useTranslation()
   const { flowType } = flowContainer
-  const { logoutFlow, isLoading: logoutLoading } = useLogout(config)
 
   const nodes = useMemo(() => {
     return Builder(
       { config, flowContainer, formState, t },
-      { setValue, getValues, selectMethod, setOverrideState },
-      { logoutFlow, logoutLoading },
       { nodeSorter, groupSorter },
+      transientPayload,
     )
   }, [
     formState,
     flowContainer,
-    selectMethod,
-    setOverrideState,
     config,
     t,
-    getValues,
-    setValue,
     nodeSorter,
     groupSorter,
-    logoutFlow,
-    logoutLoading,
+    transientPayload,
   ])
 
   const result = renderNodes(nodes)

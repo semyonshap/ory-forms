@@ -17,7 +17,6 @@ export interface NodeDataAnchor {
 
 export interface NodeDataInput {
   variant?: VariantsInput
-  onClick?: () => void
   description?: string
   readOnly?: boolean
   style?: React.CSSProperties
