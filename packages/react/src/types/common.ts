@@ -3,11 +3,17 @@ import {
   AccountExperienceConfiguration,
   ConfigurationParameters,
   FrontendApi,
+  OnRedirectHandler,
   UiNode,
   UiNodeGroupEnum,
 } from '@ory/client-fetch'
 
-import { OryFlowContainer, OryFlowType } from '.'
+import { OryFlowContainer, OryFlowType, UiNodeFixed } from '.'
+import {
+  OrySuccessHandler,
+  OryValidationErrorHandler,
+  OryErrorHandler,
+} from './event'
 import {
   BlockInput,
   BlockImage,
@@ -36,6 +42,11 @@ export interface FlowInputProps {
   config: OryClientConfiguration
   components?: Partial<OryClientComponents>
   transientPayload?: TransientPayload
+  extraNodes?: UiNodeFixed[]
+  onSuccess?: OrySuccessHandler
+  onValidationError?: OryValidationErrorHandler
+  onError?: OryErrorHandler
+  onRedirect?: OnRedirectHandler
 }
 
 export type NodeSorter = (
@@ -121,9 +132,9 @@ export type OryClientComponents = {
 } & Partial<Pick<OryComponents, 'nodeSorter' | 'groupSorter'>>
 
 export type OryProject = AccountExperienceConfiguration & {
-  oauth2_login_ui_url?: string
-  oauth2_consent_ui_url?: string
-  oauth2_logout_ui_url?: string
+  oauth2_login_ui_url: string
+  oauth2_consent_ui_url: string
+  oauth2_logout_ui_url: string
   captcha?: OryFlowType[]
 }
 

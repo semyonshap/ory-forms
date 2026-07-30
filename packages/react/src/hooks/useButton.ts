@@ -1,10 +1,7 @@
 import { useDebounceValue } from 'usehooks-ts'
 import { useCallback, useEffect } from 'react'
 import { useFormContext } from 'react-hook-form'
-import {
-  UiNodeGroupEnum,
-  UiNodeInputAttributesTypeEnum,
-} from '@ory/client-fetch'
+import { UiNodeInputAttributesTypeEnum } from '@ory/client-fetch'
 
 import { useFormState } from '.'
 import { webauthnGroups } from '../types/const'
@@ -30,6 +27,7 @@ export function useButton(node: UiNodeInput): {
     selectMethod,
     setOverrideState,
     setOverrideSubmitting,
+    setTransientField,
     webauthnScriptStatus,
   } = useFlowStoreShallow((state) => ({
     providers: state.components.Icons.Providers,
@@ -38,6 +36,7 @@ export function useButton(node: UiNodeInput): {
     selectMethod: state.selectMethod,
     setOverrideSubmitting: state.setOverrideSubmitting,
     webauthnScriptStatus: state.webauthnScriptStatus,
+    setTransientField: state.setTransientField,
   }))
 
   const { isReady, isSubmitting } = useFormState()
@@ -48,7 +47,7 @@ export function useButton(node: UiNodeInput): {
   const { name, value, onclickTrigger } = attr
   const variant = data?.variant
 
-  const type = ['method', 'resend', 'sso'].includes(variant || '')
+  const type = ['resend', 'sso'].includes(variant || '')
     ? 'button'
     : attr.type === UiNodeInputAttributesTypeEnum.Submit
       ? 'submit'
@@ -59,6 +58,8 @@ export function useButton(node: UiNodeInput): {
 
     setValue(name, value)
     setValue('method', group)
+
+    if (node.data?.transient) setTransientField(name, value)
 
     if (type === 'button') {
       if (name === 'select-another-method')
@@ -71,11 +72,9 @@ export function useButton(node: UiNodeInput): {
           setOverrideSubmitting(false),
         )
       } else if (variant === 'resend') {
-        setValue('code', '')
-        if (group === UiNodeGroupEnum.Code && name === 'method') {
-          setValue('email', '')
-        }
-        onSubmit(getValues())
+        const values = getValues()
+        values.code = ''
+        onSubmit(values)
       }
 
       if (onclickTrigger) {

@@ -10,25 +10,11 @@ export const webauthnGroups: UiNodeGroupEnum[] = [
   UiNodeGroupEnum.Deviceauthn,
 ]
 
-export const ignoredScriptGroups: UiNodeGroupEnum[] = [
-  UiNodeGroupEnum.Captcha,
-]
-
-export const excludedAuthGroups: UiNodeGroupEnum[] = [
-  UiNodeGroupEnum.Default,
-  UiNodeGroupEnum.IdentifierFirst,
-  UiNodeGroupEnum.Profile,
-  UiNodeGroupEnum.Captcha,
-]
-
-export const excludedAuthMethods: UiNodeGroupEnum[] = [
-  UiNodeGroupEnum.Oidc,
-  UiNodeGroupEnum.Saml,
-  UiNodeGroupEnum.Default,
-  UiNodeGroupEnum.IdentifierFirst,
-  UiNodeGroupEnum.Profile,
-  UiNodeGroupEnum.Captcha,
-]
+export const relationGroups: Partial<
+  Record<UiNodeGroupEnum, UiNodeGroupEnum[]>
+> = {
+  [UiNodeGroupEnum.Password]: [UiNodeGroupEnum.Profile],
+}
 
 export const defaultGroupOrder: UiNodeGroupEnum[] = [
   UiNodeGroupEnum.Default,

@@ -6,6 +6,9 @@ help: ## Show this help message
 install: ## Install dependencies
 	pnpm install
 
+build: ## Build packages
+	pnpm build
+
 dev: ## Run Dev mode
 	pnpm dev
 
@@ -29,3 +32,12 @@ format-check: ## Check formatting (CI)
 
 clean: ## Delete dist folder
 	pnpm clean
+
+changeset: ## Create a new changeset
+	pnpm changeset
+
+version: ## Apply changesets and bump versions
+	pnpm version
+
+publish: ## Build, version, and publish packages
+	pnpm build && pnpm version && pnpm publish

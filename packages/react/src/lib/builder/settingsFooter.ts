@@ -2,14 +2,26 @@ import { TFunction } from 'i18next'
 import { UiNode, UiNodeGroupEnum } from '@ory/client-fetch'
 
 import { isUiNodeInput } from '../../types'
-import { createDivGroup, createTextNode, createUiText } from '../nodes/factory'
+import {
+  createDivGroup,
+  createTextNode,
+  createUiText,
+} from '../nodes/factory'
 
-export function settingsFooter(group: UiNodeGroupEnum, nodes: UiNode[], t: TFunction) {
+export function settingsFooter(
+  group: UiNodeGroupEnum,
+  nodes: UiNode[],
+  t: TFunction,
+) {
   let keyFooter
 
   if (group === UiNodeGroupEnum.Totp) {
-    const unlink = nodes.find((n) => isUiNodeInput(n) && n.attributes.name === 'totp_unlink')
-    keyFooter = unlink ? 'settings.totp.info.linked' : 'settings.totp.info.not-linked'
+    const unlink = nodes.find(
+      (n) => isUiNodeInput(n) && n.attributes.name === 'totp_unlink',
+    )
+    keyFooter = unlink
+      ? 'settings.totp.info.linked'
+      : 'settings.totp.info.not-linked'
   } else {
     keyFooter = `settings.${group}.info`
   }

@@ -13,15 +13,6 @@ import {
   UiNodeInput,
 } from '../../types'
 
-export function findScreenSelectionButton(nodes: UiNode[]) {
-  return nodes.find(
-    (n): n is UiNodeInput =>
-      isUiNodeInput(n) &&
-      n.attributes.type === 'submit' &&
-      n.attributes.name === 'screen',
-  )
-}
-
 export function hasCodeField(nodes: UiNode[]): boolean {
   return nodes.some(
     (node) => 'name' in node.attributes && node.attributes.name === 'code',
@@ -53,6 +44,15 @@ export function isNodeVisible(node: UiNode): node is UiNodeInput {
     if (node.attributes.type === 'hidden') return false
   }
   return true
+}
+
+export function findScreenSelectionButton(nodes: UiNode[]) {
+  return nodes.find(
+    (n): n is UiNodeInput =>
+      isUiNodeInput(n) &&
+      n.attributes.type === 'submit' &&
+      n.attributes.name === 'screen',
+  )
 }
 
 function isScreenSelectionNode(node: UiNode): boolean {
@@ -90,18 +90,4 @@ export function isChoosingMethod(
     }
   }
   return flow.flow.ui.nodes.some(isScreenSelectionNode)
-}
-
-export function getNodeId({ attributes }: UiNode) {
-  if (isUiNodeInputAttributes(attributes)) {
-    if (attributes.type === 'submit' && attributes.value) {
-      return `${attributes.name}:${attributes.value}`
-    }
-    if (attributes.type === 'checkbox' && attributes.value) {
-      return `${attributes.name}:${attributes.value}`
-    }
-    return attributes.name
-  } else {
-    return attributes.id
-  }
 }

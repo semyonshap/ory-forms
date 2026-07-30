@@ -45,6 +45,11 @@ export type WrapperBase = {
   node: FormNode
 } & Attached
 
+export type WrapperCaptcha = {
+  node: UiNode
+} & Attached
+
+
 export type WrapperInput = {
   node: UiNodeInput
 } & Attached

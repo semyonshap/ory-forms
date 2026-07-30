@@ -1,39 +1,30 @@
 import { createStore } from 'zustand'
 import { createContext } from 'react'
-import { UiNodeGroupEnum } from '@ory/client-fetch'
 
+import { parseStateFromFlow } from '../lib/form/formState'
+import { createFlowStateSlice, FlowStateSlice } from './flowStateSlice'
+import { createFlowInputSlice, FlowInputSlice } from './flowInputSlice'
 import {
   OryConfiguration,
   OryFlowContainer,
   OryComponents,
-  FlowFormState,
+  UiNodeFixed,
   MessageProps,
   TransientPayload,
 } from '../types'
 
-export interface FlowStoreState {
+export interface FlowStoreState extends FlowStateSlice, FlowInputSlice {
   config: OryConfiguration
   components: OryComponents
   flowContainer: OryFlowContainer
-  overrideState?: FlowFormState
-  selectedMethod?: UiNodeGroupEnum
-  loadingInputs: Set<UiNodeGroupEnum>
   messages: MessageProps[]
-  transientPayload: TransientPayload
   webauthnScriptStatus?: 'loading' | 'loaded' | 'failed'
-  overrideSubmitting: boolean
 
   setFlowContainer: (flow: OryFlowContainer) => void
   setWebauthnScriptStatus: (
     status: 'loading' | 'loaded' | 'failed',
   ) => void
-  setOverrideState: (state?: FlowFormState) => void
-  setOverrideSubmitting: (submitting: boolean) => void
-  selectMethod: (method?: UiNodeGroupEnum) => void
-  inputLoading: (group: UiNodeGroupEnum) => void
-  inputReady: (input: UiNodeGroupEnum) => void
   setMessages: (messages: MessageProps[]) => void
-  setTransientPayload: (payload: TransientPayload) => void
 }
 
 export type FlowStore = ReturnType<typeof createFlowStore>
@@ -43,60 +34,38 @@ export const createFlowStore = (initProps: {
   components: OryComponents
   flowContainer: OryFlowContainer
   transientPayload?: TransientPayload
+  extraNodes?: UiNodeFixed[]
+  onSuccess?: FlowInputSlice['onSuccess']
+  onValidationError?: FlowInputSlice['onValidationError']
+  onError?: FlowInputSlice['onError']
+  onRedirect?: FlowInputSlice['onRedirect']
 }) => {
-  return createStore<FlowStoreState>((set) => ({
-    ...initProps,
-    selectedMethod: undefined,
-    overrideState: undefined,
-    loadingInputs: new Set(),
+  const store = createStore<FlowStoreState>()((set, get, api) => ({
+    config: initProps.config,
+    components: initProps.components,
+    flowContainer: initProps.flowContainer,
+    ...createFlowInputSlice(initProps)(set, get, api),
+    ...createFlowStateSlice(parseStateFromFlow(initProps.flowContainer))(
+      set,
+      get,
+      api,
+    ),
     messages: [],
-    transientPayload: initProps.transientPayload ?? {},
     webauthnScriptStatus: undefined,
-    overrideSubmitting: false,
-
     setFlowContainer: (flow) => {
       set({
-        overrideState: undefined,
         messages: [],
         flowContainer: flow,
         loadingInputs: new Set(),
+        overrideState: undefined,
         webauthnScriptStatus: undefined,
       })
     },
-
-    selectMethod: (method) =>
-      set({ selectedMethod: method, overrideState: undefined }),
-
-    setOverrideState: (state) => {
-      set({ overrideState: state })
-    },
-
-    inputLoading: (group) => {
-      set((state) => {
-        const next = new Set(state.loadingInputs)
-        next.add(group)
-        return { loadingInputs: next }
-      })
-    },
-
-    inputReady: (input) => {
-      set((state) => {
-        const next = new Set(state.loadingInputs)
-        next.delete(input)
-        return { loadingInputs: next }
-      })
-    },
-
     setMessages: (messages) => set({ messages }),
-
-    setTransientPayload: (payload) => set({ transientPayload: payload }),
-
     setWebauthnScriptStatus: (status) =>
       set({ webauthnScriptStatus: status }),
-
-    setOverrideSubmitting: (submitting) =>
-      set({ overrideSubmitting: submitting }),
   }))
+  return store
 }
 
 export const FlowStoreContext = createContext<FlowStore | null>(null)

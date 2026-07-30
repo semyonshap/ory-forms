@@ -28,6 +28,7 @@ export const handleFlowError =
       }
       throw err
     }
+
     const body = await toBody(err.response)
 
     const contentType = err.response.headers.get('content-type') || ''
@@ -62,7 +63,10 @@ export const handleFlowError =
     )
   }
 
-async function handleJsonError<T>(body: unknown, opts: FlowErrorHandlerProps<T>) {
+async function handleJsonError<T>(
+  body: unknown,
+  opts: FlowErrorHandlerProps<T>,
+) {
   if (isSelfServiceFlowExpiredError(body)) {
     await opts.onError?.({
       type: 'flow_expired',
@@ -76,8 +80,12 @@ async function handleJsonError<T>(body: unknown, opts: FlowErrorHandlerProps<T>)
       error: { details?: { continue_with?: [ContinueWith] } }
     }
 
-    for (const continueWith of errBody.error.details?.continue_with || []) {
-      if (continueWith.action === 'show_verification_ui' && continueWith.flow.url) {
+    for (const continueWith of errBody.error.details?.continue_with ||
+      []) {
+      if (
+        continueWith.action === 'show_verification_ui' &&
+        continueWith.flow.url
+      ) {
         opts.onRedirect(continueWith.flow.url, true)
         return true
       }
@@ -85,10 +93,16 @@ async function handleJsonError<T>(body: unknown, opts: FlowErrorHandlerProps<T>)
 
     opts.onRedirect(verificationUrl(opts.config), true)
     return true
-  } else if (isBrowserLocationChangeRequired(body) && body.redirect_browser_to) {
+  } else if (
+    isBrowserLocationChangeRequired(body) &&
+    body.redirect_browser_to
+  ) {
     opts.onRedirect(body.redirect_browser_to, true)
     return true
-  } else if (isNeedsPrivilegedSessionError(body) && body.redirect_browser_to) {
+  } else if (
+    isNeedsPrivilegedSessionError(body) &&
+    body.redirect_browser_to
+  ) {
     opts.onRedirect(body.redirect_browser_to, true)
     return true
   } else if (isSelfServiceFlowReplaced(body)) {
@@ -134,7 +148,9 @@ async function handleStatusError<T>(
       opts.onRestartFlow()
       return true
     case 400:
-      await opts.onValidationError((await err.response.json()) as unknown as T)
+      await opts.onValidationError(
+        (await err.response.json()) as unknown as T,
+      )
       return true
     case 403: // This typically happens with CSRF violations.
       await opts.onError?.({
@@ -160,7 +176,11 @@ const isFetchError = (err: unknown): err is FetchError => {
   return err instanceof FetchError
 }
 
-async function logResponseError(response: Response, printBody: boolean, wrap?: unknown[]) {
+async function logResponseError(
+  response: Response,
+  printBody: boolean,
+  wrap?: unknown[],
+) {
   console.error('Unable to decode API response', {
     response: {
       status: response.status,

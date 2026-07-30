@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import setWith from 'lodash-es/setWith'
 import { Resolver } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
@@ -9,27 +10,12 @@ import {
 } from '@ory/client-fetch'
 
 import { getNodesByGroups, groupNodes } from '../nodes/groups'
-import { isUiNodeInput, FormValues, UiNodeInput } from '../../types'
-
-const ALLOWED_INPUTS = new Set<UiNodeInputAttributesTypeEnum>([
-  UiNodeInputAttributesTypeEnum.Checkbox,
-  UiNodeInputAttributesTypeEnum.Email,
-  UiNodeInputAttributesTypeEnum.Number,
-  UiNodeInputAttributesTypeEnum.Password,
-  UiNodeInputAttributesTypeEnum.Tel,
-  UiNodeInputAttributesTypeEnum.Text,
-  UiNodeInputAttributesTypeEnum.Url,
-  UiNodeInputAttributesTypeEnum.Date,
-  UiNodeInputAttributesTypeEnum.DatetimeLocal,
-])
-
-const EXPAND_GROUPS: Partial<Record<UiNodeGroupEnum, UiNodeGroupEnum[]>> =
-  {
-    [UiNodeGroupEnum.Password]: [
-      UiNodeGroupEnum.Default,
-      UiNodeGroupEnum.Profile,
-    ],
-  }
+import {
+  isUiNodeInput,
+  FormValues,
+  UiNodeInput,
+  relationGroups,
+} from '../../types'
 
 type LeafValue = Exclude<FormValues[string], FormValues>
 
@@ -91,26 +77,6 @@ function buildLeafSchema(
   }
 }
 
-function setNestedSchema(
-  tree: ShapeTree,
-  path: string[],
-  schema: z.ZodType<LeafValue, LeafValue>,
-) {
-  let current = tree
-
-  for (let i = 0; i < path.length - 1; i++) {
-    const key = path[i]
-    const existing = current[key]
-
-    if (!existing || isZodLeaf(existing)) {
-      current[key] = {}
-    }
-    current = current[key] as ShapeTree
-  }
-
-  current[path[path.length - 1]] = schema
-}
-
 function buildZodObject(
   tree: ShapeTree,
 ): z.ZodType<FormValues, FormValues> {
@@ -129,12 +95,12 @@ function buildSchema(nodes: UiNode[]): z.ZodType<FormValues, FormValues> {
 
   for (const node of nodes) {
     if (!isUiNodeInput(node)) continue
-    const { type, name } = node.attributes
-
-    if (!ALLOWED_INPUTS.has(type)) continue
+    const { name } = node.attributes
     if (name.startsWith('grant_scope')) continue
 
-    setNestedSchema(tree, name.split('.'), buildLeafSchema(node))
+    setWith(tree, name, buildLeafSchema(node), (val) =>
+      isZodLeaf(val) ? {} : val,
+    )
   }
 
   return buildZodObject(tree)
@@ -143,19 +109,21 @@ function buildSchema(nodes: UiNode[]): z.ZodType<FormValues, FormValues> {
 export function buildResolverByMethod(
   nodes: UiNode[],
 ): Resolver<FormValues> {
-  const { groupsNodes } = groupNodes({
-    nodes,
-    excludeScripts: true,
-    excludeHidden: true,
-  })
+  const { groupsNodes } = groupNodes({ nodes })
 
   return (values, context, options) => {
     const method = values.method as UiNodeGroupEnum
 
     const selectedNodes = getNodesByGroups({
       groupsNodes,
-      groups: [method, ...(EXPAND_GROUPS[method] ?? [])],
+      groups: [
+        method,
+        UiNodeGroupEnum.Captcha,
+        ...(relationGroups[method] ?? []),
+      ],
     })
+
+    console.log(nodes, selectedNodes)
 
     const schema = buildSchema(selectedNodes)
 

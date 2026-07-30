@@ -1,4 +1,3 @@
-export * from './presets'
 export * from './trigger'
 export * from './groups'
 export * from './sorter'

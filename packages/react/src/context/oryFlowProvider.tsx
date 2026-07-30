@@ -13,6 +13,11 @@ export function OryFlowProvider({
   flow: initialFlowContainer,
   components,
   transientPayload,
+  extraNodes,
+  onSuccess,
+  onValidationError,
+  onError,
+  onRedirect,
   children,
 }: OryFlowProviderProps) {
   const configResolved = useMemo(
@@ -35,12 +40,22 @@ export function OryFlowProvider({
         components: componentsResolved,
         flowContainer: initialFlowContainer,
         transientPayload,
+        extraNodes,
+        onSuccess,
+        onValidationError,
+        onError,
+        onRedirect,
       }),
     [
       configResolved,
       componentsResolved,
       initialFlowContainer,
       transientPayload,
+      extraNodes,
+      onSuccess,
+      onValidationError,
+      onError,
+      onRedirect,
     ],
   )
 

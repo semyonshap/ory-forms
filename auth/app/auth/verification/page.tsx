@@ -1,5 +1,6 @@
 import { oryConfig } from '@/ory.config'
-import { Flow, OryFlowType } from '@ory-forms/react'
+import { OryFlowType } from '@ory-forms/react'
+import { OryForm } from '@/components/custom/oryForm'
 import { OryComponents } from '@/components/custom/oryComponents'
 import { getVerificationFlow, OryPageParams } from '@ory-forms/nextjs'
 
@@ -11,7 +12,7 @@ export default async function VerificationPage(props: OryPageParams) {
   }
 
   return (
-    <Flow
+    <OryForm
       flow={{ flow, flowType: OryFlowType.Verification }}
       components={OryComponents}
       config={oryConfig}

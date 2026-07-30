@@ -104,6 +104,7 @@ export type BlockInput = BaseBlockProps & {
 
 // Captcha
 export interface BlockOptionsCaptcha {
+  messages?: MessageProps[]
   onSuccess: (token: string) => void
   onError: () => void
   onExpire: () => void
@@ -111,7 +112,7 @@ export interface BlockOptionsCaptcha {
 }
 
 export type BlockCaptcha = BaseBlockProps & {
-  node: UiNodeInput
+  node: UiNode
   options: BlockOptionsCaptcha
 }
 
@@ -159,7 +160,7 @@ export type BlockImage = BaseBlockProps & {
 // Label
 
 export type BlockLabel = BaseBlockProps & {
-  node: UiNodeInput
+  node: UiNode
   options: {
     label?: string
     messages?: MessageProps[]

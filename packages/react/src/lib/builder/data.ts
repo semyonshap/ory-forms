@@ -7,11 +7,7 @@ import {
 import { withNodeData } from '../nodes'
 import { FormNode, isUiNodeAnchor, isUiNodeInput } from '../../types'
 
-export function NodeDataBuilder({
-  nodes,
-}: {
-  nodes: UiNode[]
-}): FormNode[] {
+export function BuildNodeData(nodes: UiNode[]): FormNode[] {
   return nodes.map((n) => {
     if (isUiNodeInput(n)) {
       switch (n.attributes.type) {

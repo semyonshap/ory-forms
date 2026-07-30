@@ -1,13 +1,11 @@
 import { UiNodeGroupEnum } from '@ory/client-fetch'
 
-import { groupNodes } from '../nodes/groups'
 import { findScreenSelectionButton } from '../nodes/filters'
 import {
   BuildContext,
   FormNode,
   isUiNodeInput,
   OryFlowType,
-  excludedAuthGroups,
 } from '../../types'
 import {
   BuildSelectMethod,
@@ -16,21 +14,15 @@ import {
   BuildSignIn,
   BuildRecover,
   BuildForgotPassword,
-} from '../nodes/presets'
+} from './presets'
 
-export function buildFooter(
+export function BuildFooter(
   ctx: BuildContext,
-  authMethodBlocks: UiNodeGroupEnum[],
+  authMethods: UiNodeGroupEnum[],
 ): FormNode[] {
   const { flowContainer, formState, config } = ctx
   const { flow, flowType } = flowContainer
   const { registration_enabled, hide_registration_link } = config.project
-
-  const { groups: authMethods } = groupNodes({
-    nodes: flow.ui.nodes,
-    excludeGroups: excludedAuthGroups,
-    excludeScripts: true,
-  })
 
   const stateActive = formState.current
 
@@ -79,7 +71,6 @@ export function buildFooter(
       ) {
         result.push(...BuildSignUp(ctx))
       }
-
       break
     }
     case OryFlowType.Registration: {
@@ -87,7 +78,7 @@ export function buildFooter(
         const screenSelectionNode = findScreenSelectionButton(
           flow.ui.nodes,
         )
-        if (screenSelectionNode && authMethodBlocks.length >= 2) {
+        if (screenSelectionNode && authMethods.length > 1) {
           result.push(BuildSelectMethod(ctx))
         }
       } else if (registration_enabled) {

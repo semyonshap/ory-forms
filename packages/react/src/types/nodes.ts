@@ -21,6 +21,7 @@ export interface NodeDataInput {
   readOnly?: boolean
   style?: React.CSSProperties
   target?: string
+  transient?: boolean
 }
 
 export interface NodeDataDiv {
@@ -68,6 +69,14 @@ export type UiNodeScript = FormNode & {
   type: 'script'
   attributes: UiNodeScriptAttributes
 }
+
+export type UiNodeFixed =
+  | UiNodeInput
+  | UiNodeImage
+  | UiNodeAnchor
+  | UiNodeText
+  | UiNodeDiv
+  | UiNodeScript
 
 export function isUiNodeInput(node: FormNode): node is UiNodeInput {
   return node.type === 'input'

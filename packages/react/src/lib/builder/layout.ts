@@ -1,32 +1,34 @@
 import { UiNode, UiNodeGroupEnum } from '@ory/client-fetch'
 
-import {} from '../nodes/presets'
-import { buildFooter } from './footer'
-import { NodeDataBuilder } from './data'
+import { BuildFooter } from './footer'
+import { BuildNodeData } from './data'
 import { SettingsBuilder } from './settings'
 import { BuildAuthMethodList } from './authMethods'
 import {
-  excludedAuthMethods,
+  BuildDivider,
+  BuildCaptcha,
+  BuildTransientPayload,
+} from './presets'
+import {
+  groupNodes,
+  isNodeVisible,
+  createDivGroup,
+  getNodesByGroups,
+} from '../nodes'
+import {
   BuildContext,
   BuilderSorter,
   FormNode,
   OryFlowType,
   TransientPayload,
+  UiNodeFixed,
 } from '../../types'
-import {
-  groupNodes,
-  isNodeVisible,
-  createDivGroup,
-  BuildDivider,
-  BuildCaptcha,
-  BuildTransientPayload,
-  getNodesByGroups,
-} from '../nodes'
 
-export function Builder(
+export function BuildLayout(
   ctx: BuildContext,
   { nodeSorter, groupSorter }: BuilderSorter,
   transientPayload: TransientPayload,
+  extraNodes: UiNodeFixed[],
 ) {
   const sortNodes = (a: UiNode, b: UiNode) =>
     nodeSorter(a, b, { flowType })
@@ -37,15 +39,25 @@ export function Builder(
   const { captcha } = config.project
 
   const { flow, flowType } = flowContainer
+  
   const flowNodes = flow.ui.nodes
+  flowNodes.push(...extraNodes)
+
   if (!flowNodes) return []
 
-  const nodes = NodeDataBuilder({ nodes: flowNodes })
+  const nodes = BuildNodeData(flowNodes)
+
+  const hasCaptchaNode = flowNodes.some(
+    (n) => n.group === UiNodeGroupEnum.Captcha,
+  )
+
+  const captchaToken = transientPayload.captcha_turnstile_response
 
   if (
     captcha &&
     captcha.includes(flowType) &&
-    !transientPayload.captcha_turnstile_response
+    !hasCaptchaNode &&
+    !captchaToken
   ) {
     nodes.push(BuildCaptcha())
   }
@@ -53,8 +65,6 @@ export function Builder(
   if (Object.keys(transientPayload).length > 0) {
     nodes.push(BuildTransientPayload(transientPayload))
   }
-
-  nodes.sort(sortNodes)
 
   let result: FormNode[] = []
 
@@ -75,20 +85,16 @@ export function Builder(
     nodes: hiddenNodes,
   })
 
-  const selectedHidden = getNodesByGroups({
-    groupsNodes: hiddenGroupsNodes,
-    groups: [UiNodeGroupEnum.Captcha],
-    exclude: true,
-  })
-
-  const captchaNodes = getNodesByGroups({
-    groupsNodes: hiddenGroupsNodes,
-    groups: [UiNodeGroupEnum.Captcha],
-  })
-
   const { groups: authMethods } = groupNodes({
     nodes,
-    excludeGroups: excludedAuthMethods,
+    excludeGroups: [
+      UiNodeGroupEnum.Oidc,
+      UiNodeGroupEnum.Saml,
+      UiNodeGroupEnum.Default,
+      UiNodeGroupEnum.IdentifierFirst,
+      UiNodeGroupEnum.Profile,
+      UiNodeGroupEnum.Captcha,
+    ],
     excludeScripts: true,
   })
 
@@ -111,10 +117,7 @@ export function Builder(
         }
       }
 
-      result.push(
-        ...selectedHidden,
-        ...[...captchaNodes, ...selectedNodes].sort(sortNodes),
-      )
+      result.push(...[...hiddenNodes, ...selectedNodes].sort(sortNodes))
 
       break
     }
@@ -133,14 +136,20 @@ export function Builder(
         groups: [formState.method],
       })
 
-      result.push(...selectedNodes, ...captchaNodes, ...selectedHidden)
+      result.push(...selectedNodes, ...hiddenNodes)
+      result.sort(sortNodes)
       break
     }
     case 'select_method': {
+      const selectedHidden = getNodesByGroups({
+        groupsNodes: hiddenGroupsNodes,
+        groups: [UiNodeGroupEnum.Captcha],
+        exclude: true,
+      })
       result = [...ssoNodes, ...selectedHidden]
 
       const methodButtons = BuildAuthMethodList({
-        groups: authMethods,
+        authMethods,
         ctx,
       })
 
@@ -188,11 +197,11 @@ export function Builder(
       break
     }
     default:
-      result = nodes
+      result = nodes.sort(sortNodes)
   }
 
   if (flowType !== OryFlowType.Settings) {
-    result.push(...buildFooter(ctx, authMethods))
+    result.push(...BuildFooter(ctx, authMethods))
 
     result = createDivGroup({
       id: 'form-card',

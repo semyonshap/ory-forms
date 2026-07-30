@@ -1,12 +1,11 @@
-import { UiNode } from '@ory/client-fetch'
 import { FieldErrors } from 'react-hook-form'
+import { UiNode, UiNodeGroupEnum } from '@ory/client-fetch'
 
 import { isChoosingMethod, groupNodes } from '../nodes'
 import {
   FlowFormState,
   OryFlowContainer,
   OryFlowType,
-  excludedAuthGroups,
 } from '../../types'
 
 function findMethodWithMessage(nodes?: UiNode[]) {
@@ -64,7 +63,12 @@ export function parseStateFromFlow(
       } else if (isChoosingMethod(flow)) {
         const { groups: authMethods } = groupNodes({
           nodes: flow.flow.ui.nodes,
-          excludeGroups: excludedAuthGroups,
+          excludeGroups: [
+            UiNodeGroupEnum.Default,
+            UiNodeGroupEnum.IdentifierFirst,
+            UiNodeGroupEnum.Profile,
+            UiNodeGroupEnum.Captcha,
+          ],
           excludeScripts: true,
         })
         if (

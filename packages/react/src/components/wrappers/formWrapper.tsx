@@ -6,16 +6,19 @@ import {
   useFormMessages,
   useFormNodes,
   useWebAuthnLoader,
+  useFlowFormState,
 } from '../../hooks'
 
 export function FormWrapper() {
   const {
-    Form,
     flowContainer: { flowType },
+    Form,
   } = useFlowStoreShallow((state) => ({
     flowContainer: state.flowContainer,
     Form: state.components.Layout.Form,
   }))
+
+  useFlowFormState()
 
   useWebAuthnLoader()
 

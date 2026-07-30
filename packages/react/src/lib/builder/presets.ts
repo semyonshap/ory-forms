@@ -10,7 +10,7 @@ import {
   createDivNode,
   createTextNode,
   createUiText,
-} from './factory'
+} from '../nodes/factory'
 
 export function BuildSignUp({
   config: {
@@ -174,9 +174,11 @@ export function BuildSignIn({
 export function BuildCaptcha() {
   return createInputNode({
     attributes: {
-      name: 'captcha_turnstile_options',
+      name: 'captcha_turnstile',
       type: 'hidden',
+      value: '',
       disabled: false,
+      required: true,
     },
     group: UiNodeGroupEnum.Captcha,
     meta: {

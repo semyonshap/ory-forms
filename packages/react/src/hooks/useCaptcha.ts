@@ -1,40 +1,55 @@
+import { UiNode } from '@ory/client-fetch'
 import { useCallback, useEffect } from 'react'
+import { useFormContext } from 'react-hook-form'
 
-import { useTransientPayload } from '.'
+import { fieldErrorToUiMessage } from '../lib'
 import { useFlowStoreShallow } from '../context'
-import { BlockOptionsCaptcha, UiNodeInput } from '../types'
+import { BlockOptionsCaptcha, isUiNodeInput } from '../types'
 
-export function useCaptcha(_node: UiNodeInput): {
+export function useCaptcha(node: UiNode): {
   options: BlockOptionsCaptcha
 } {
-  const { setCaptchaToken } = useTransientPayload()
-  const { inputLoading, inputReady, setMessages } = useFlowStoreShallow(
-    (s) => ({
+  const {
+    setValue,
+    formState: { errors },
+  } = useFormContext()
+  const { inputLoading, inputReady, setMessages, setTransientField } =
+    useFlowStoreShallow((s) => ({
       inputLoading: s.inputLoading,
       inputReady: s.inputReady,
       setMessages: s.setMessages,
-    }),
-  )
+      setTransientField: s.setTransientField,
+    }))
+
+  const name = isUiNodeInput(node) ? node.attributes.name : undefined
+
+  const id = 'captcha_turnstile_response'
+
+  const validationMessages = fieldErrorToUiMessage(errors[id]) ?? []
 
   useEffect(() => {
     inputLoading('captcha')
   }, [inputLoading])
 
   const onBeforeInteractive = useCallback(() => {
+    if (name) setValue(name, '')
+    setTransientField(id, '')
     inputReady('captcha')
-  }, [inputReady])
+  }, [setValue, inputReady, setTransientField])
 
   const onExpire = useCallback(() => {
-    setCaptchaToken('')
+    if (name) setValue(name, '')
+    setTransientField(id, '')
     inputLoading('captcha')
-  }, [setCaptchaToken, inputLoading])
+  }, [setValue, inputLoading, setTransientField])
 
   const onSuccess = useCallback(
     (token: string) => {
-      setCaptchaToken(token)
+      if (name) setValue(name, token)
+      setTransientField(id, token)
       inputReady('captcha')
     },
-    [setCaptchaToken, inputReady],
+    [setValue, inputReady, setTransientField],
   )
 
   const onError = useCallback(() => {
@@ -49,6 +64,7 @@ export function useCaptcha(_node: UiNodeInput): {
 
   return {
     options: {
+      messages: validationMessages,
       onSuccess,
       onError,
       onExpire,

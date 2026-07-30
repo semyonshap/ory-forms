@@ -4,9 +4,16 @@ import {
   isUiNodeTextAttributes,
   UiContainer,
   UiNode,
+  UiNodeGroupEnum,
+  UpdateSettingsFlowBody,
 } from '@ory/client-fetch'
 
-import { FormValues, OryFlowContainer, OryFlowType } from '../../types'
+import {
+  FormValues,
+  OryFlowContainer,
+  OryFlowType,
+  supportsSelectAccountPrompt,
+} from '../../types'
 
 const prefillIdentifierFields = ['identifier', 'traits.email']
 
@@ -23,7 +30,9 @@ function searchOf(url: string | undefined): string {
   return index === -1 ? '' : url.slice(index)
 }
 
-export function resolveLoginHint(flowContainer: OryFlowContainer): string | undefined {
+export function resolveLoginHint(
+  flowContainer: OryFlowContainer,
+): string | undefined {
   if (
     flowContainer.flowType !== OryFlowType.Login &&
     flowContainer.flowType !== OryFlowType.Registration
@@ -31,12 +40,15 @@ export function resolveLoginHint(flowContainer: OryFlowContainer): string | unde
     return undefined
   }
 
-  const fromRequestUrl = getLoginHint(searchOf(flowContainer.flow.request_url))
+  const fromRequestUrl = getLoginHint(
+    searchOf(flowContainer.flow.request_url),
+  )
   if (fromRequestUrl) {
     return fromRequestUrl
   }
 
-  const fromOidc = flowContainer.flow.oauth2_login_request?.oidc_context?.login_hint?.trim()
+  const fromOidc =
+    flowContainer.flow.oauth2_login_request?.oidc_context?.login_hint?.trim()
   return fromOidc ? fromOidc : undefined
 }
 
@@ -106,7 +118,9 @@ function prefillIdentifierFromHint(
 
   for (const name of prefillIdentifierFields) {
     const node = nodes.find(
-      (n) => isUiNodeInputAttributes(n.attributes) && n.attributes.name === name,
+      (n) =>
+        isUiNodeInputAttributes(n.attributes) &&
+        n.attributes.name === name,
     )
     if (!node || !isUiNodeInputAttributes(node.attributes)) {
       continue
@@ -123,5 +137,19 @@ export function flowHasErrors(ui: UiContainer): boolean {
   if (ui.messages?.some((m) => m.type === 'error')) {
     return true
   }
-  return ui.nodes.some((node) => node.messages.some((m) => m.type === 'error'))
+  return ui.nodes.some((node) =>
+    node.messages.some((m) => m.type === 'error'),
+  )
+}
+
+export function applySelectAccountPrompt(
+  data: UpdateSettingsFlowBody,
+): void {
+  if (
+    data.method === UiNodeGroupEnum.Oidc &&
+    data.link &&
+    supportsSelectAccountPrompt.includes(data.link)
+  ) {
+    data.upstream_parameters = { prompt: 'select_account' }
+  }
 }

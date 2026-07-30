@@ -1,9 +1,10 @@
 import { useEffect } from 'react'
-import { UiTextTypeEnum } from '@ory/client-fetch'
 import { useController, useFormContext } from 'react-hook-form'
 
 import { useFormState } from '.'
 import { resolvePlaceholder } from '../i18n'
+import { fieldErrorToUiMessage } from '../lib'
+import { useFlowStoreShallow } from '../context'
 import { useInputTranslation } from './useInputTranslation'
 import {
   BlockOptionsInput,
@@ -16,6 +17,10 @@ export function useInput(node: UiNodeInput): {
   props: BlockPropsInput
   options: BlockOptionsInput
 } {
+  const { setTransientField } = useFlowStoreShallow((state) => ({
+    setTransientField: state.setTransientField,
+  }))
+
   const {
     setValue,
     control,
@@ -35,10 +40,9 @@ export function useInput(node: UiNodeInput): {
   })
 
   useEffect(() => {
-    if (attr.value) {
-      setValue(attr.name, attr.value)
-    }
-  }, [attr.value, attr.name, setValue])
+    if (attr.value) setValue(attr.name, attr.value)
+    if (node.data?.transient) setTransientField(attr.name, attr.value)
+  }, [attr.value, attr.name, setValue, setTransientField])
 
   const disabled = attr.disabled || !isReady || isSubmitting
 
@@ -46,10 +50,7 @@ export function useInput(node: UiNodeInput): {
   const placeholder = label ? resolvePlaceholder(label, t) : ''
 
   const fieldError = errors[name]
-  const validationMessages: MessageProps[] =
-    fieldError && typeof fieldError.message === 'string'
-      ? [{ id: 0, type: UiTextTypeEnum.Error, text: fieldError.message }]
-      : []
+  const validationMessages = fieldErrorToUiMessage(fieldError) ?? []
 
   const nodeMessages = node.messages
   const allMessages: MessageProps[] =

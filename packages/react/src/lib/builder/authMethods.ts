@@ -4,13 +4,13 @@ import { BuildContext } from '../../types'
 import { createInputNode, createUiText } from '../nodes/factory'
 
 export function BuildAuthMethodList({
-  groups,
+  authMethods,
   ctx: { t },
 }: {
-  groups: UiNodeGroupEnum[]
+  authMethods: UiNodeGroupEnum[]
   ctx: BuildContext
 }) {
-  return groups.map((group) => {
+  return authMethods.map((group) => {
     return createInputNode({
       group,
       attributes: {

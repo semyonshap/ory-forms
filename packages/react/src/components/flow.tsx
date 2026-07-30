@@ -14,6 +14,11 @@ export function Flow({
   config,
   components,
   transientPayload,
+  extraNodes,
+  onSuccess,
+  onValidationError,
+  onError,
+  onRedirect,
 }: FlowInputProps) {
   const { methods } = useOryForm(flow)
 
@@ -24,6 +29,11 @@ export function Flow({
         flow={flow}
         components={components}
         transientPayload={transientPayload}
+        extraNodes={extraNodes}
+        onSuccess={onSuccess}
+        onValidationError={onValidationError}
+        onError={onError}
+        onRedirect={onRedirect}
       >
         <FormProvider {...methods}>
           <FormWrapper />
