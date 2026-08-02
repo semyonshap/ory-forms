@@ -4,7 +4,7 @@ import { StateCreator } from 'zustand'
 import { OnRedirectHandler } from '@ory/client-fetch'
 
 import {
-  TransientPayload,
+  FormValues,
   UiNodeFixed,
   OrySuccessHandler,
   OryValidationErrorHandler,
@@ -16,14 +16,14 @@ export interface FlowInputSlice {
   onValidationError?: OryValidationErrorHandler
   onError?: OryErrorHandler
   onRedirect: OnRedirectHandler
-  transientPayload: TransientPayload
-  extraNodes: UiNodeFixed[]
-  setTransientField: (key: string, value: unknown) => void
+  transientPayload?: FormValues
+  extraNodes?: UiNodeFixed[]
+  setTransientField: (key: string, value: FormValues[string]) => void
 }
 
 export const createFlowInputSlice =
   (initProps: {
-    transientPayload?: TransientPayload
+    transientPayload?: FormValues
     extraNodes?: UiNodeFixed[]
     onSuccess?: OrySuccessHandler
     onValidationError?: OryValidationErrorHandler
@@ -36,8 +36,8 @@ export const createFlowInputSlice =
     onError: initProps.onError,
     onRedirect:
       initProps.onRedirect ?? ((url) => window.location.assign(url)),
-    transientPayload: initProps.transientPayload ?? {},
-    extraNodes: initProps.extraNodes ?? [],
+    transientPayload: initProps.transientPayload,
+    extraNodes: initProps.extraNodes,
     setTransientField: (key, value) =>
       set({
         transientPayload: { ...get().transientPayload, [key]: value },

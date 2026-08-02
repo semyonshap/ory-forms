@@ -95,7 +95,14 @@ function buildSchema(nodes: UiNode[]): z.ZodType<FormValues, FormValues> {
 
   for (const node of nodes) {
     if (!isUiNodeInput(node)) continue
-    const { name } = node.attributes
+    const { name, type } = node.attributes
+
+    if (
+      type === UiNodeInputAttributesTypeEnum.Hidden ||
+      type === UiNodeInputAttributesTypeEnum.Button ||
+      type === UiNodeInputAttributesTypeEnum.Submit
+    )
+      continue
     if (name.startsWith('grant_scope')) continue
 
     setWith(tree, name, buildLeafSchema(node), (val) =>
@@ -108,6 +115,7 @@ function buildSchema(nodes: UiNode[]): z.ZodType<FormValues, FormValues> {
 
 export function buildResolverByMethod(
   nodes: UiNode[],
+  transientPayload?: FormValues,
 ): Resolver<FormValues> {
   const { groupsNodes } = groupNodes({ nodes })
 
@@ -123,10 +131,19 @@ export function buildResolverByMethod(
       ],
     })
 
-    console.log(nodes, selectedNodes)
-
     const schema = buildSchema(selectedNodes)
 
-    return zodResolver(schema)(values, context, options)
+    const resolvedValues: FormValues = { ...values }
+
+    if (transientPayload) {
+      for (const node of selectedNodes) {
+        if (!isUiNodeInput(node)) continue
+        if (!node.data?.transient) continue
+        const { name } = node.attributes
+        resolvedValues[name] = transientPayload[name]
+      }
+    }
+
+    return zodResolver(schema)(resolvedValues, context, options)
   }
 }

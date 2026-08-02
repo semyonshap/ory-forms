@@ -2,7 +2,7 @@ import { UiNodeGroupEnum } from '@ory/client-fetch'
 
 import { initFlowUrl } from '../../utils'
 import { restartFlowUrl } from '../../utils'
-import { BuildContext, NodeDataInput } from '../../types'
+import { BuildContext, FormValues, NodeDataInput } from '../../types'
 import {
   createAnchorNode,
   createInputNode,
@@ -11,6 +11,42 @@ import {
   createTextNode,
   createUiText,
 } from '../nodes/factory'
+
+export function BuildSignIn({
+  config: {
+    sdk: { url: sdkUrl },
+  },
+  flowContainer: { flow },
+  t,
+}: BuildContext) {
+  const nodeTextSignInLabel = createTextNode({
+    id: 'login-label',
+    text: createUiText({
+      keyOrId: 'registration.login-label',
+      text: 'Already have an account?',
+      t,
+    }),
+  })
+
+  const nodeAnchorSignIn = createAnchorNode({
+    id: 'login-button',
+    href: initFlowUrl(sdkUrl, 'login', flow),
+    title: createUiText({
+      keyOrId: 'registration.login-button',
+      text: 'Sign in',
+      t,
+    }),
+    data: {
+      variant: 'link',
+    },
+  })
+
+  return createDivGroup({
+    id: 'login-div',
+    data: { variant: 'footer' },
+    children: [nodeTextSignInLabel, nodeAnchorSignIn],
+  })
+}
 
 export function BuildSignUp({
   config: {
@@ -136,61 +172,7 @@ export function BuildGoBackCode(ctx: BuildContext) {
   })
 }
 
-export function BuildSignIn({
-  config: {
-    sdk: { url: sdkUrl },
-  },
-  flowContainer: { flow },
-  t,
-}: BuildContext) {
-  const nodeTextSignInLabel = createTextNode({
-    id: 'login-label',
-    text: createUiText({
-      keyOrId: 'registration.login-label',
-      text: 'Already have an account?',
-      t,
-    }),
-  })
-
-  const nodeAnchorSignIn = createAnchorNode({
-    id: 'login-button',
-    href: initFlowUrl(sdkUrl, 'login', flow),
-    title: createUiText({
-      keyOrId: 'registration.login-button',
-      text: 'Sign in',
-      t,
-    }),
-    data: {
-      variant: 'link',
-    },
-  })
-
-  return createDivGroup({
-    id: 'login-div',
-    children: [nodeTextSignInLabel, nodeAnchorSignIn],
-  })
-}
-
-export function BuildCaptcha() {
-  return createInputNode({
-    attributes: {
-      name: 'captcha_turnstile',
-      type: 'hidden',
-      value: '',
-      disabled: false,
-      required: true,
-    },
-    group: UiNodeGroupEnum.Captcha,
-    meta: {
-      label: createUiText({
-        keyOrId: 0,
-        text: 'Security verification',
-      }),
-    },
-  })
-}
-
-export function BuildTransientPayload(payload: Record<string, unknown>) {
+export function BuildTransientPayload(payload: FormValues) {
   return createInputNode({
     attributes: {
       name: 'transient_payload',
@@ -199,7 +181,6 @@ export function BuildTransientPayload(payload: Record<string, unknown>) {
       disabled: false,
     },
     group: UiNodeGroupEnum.Default,
-    meta: {},
   })
 }
 

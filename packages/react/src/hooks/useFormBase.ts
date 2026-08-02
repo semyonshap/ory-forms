@@ -1,27 +1,47 @@
 import { useForm } from 'react-hook-form'
+import { useEffect, useMemo } from 'react'
 
 import { useFormAutofocus } from '.'
-import { OryFlowContainer } from '../types'
 import { buildResolverByMethod } from '../lib'
+import { useFlowStoreShallow } from '../context'
 import {
   computeDefaultValues,
   resolveLoginHint,
 } from '../lib/form/helpers'
 
-export function useOryForm(flowContainer: OryFlowContainer) {
-  const nodes = flowContainer.flow.ui.nodes
+export function useOryForm() {
+  const { extraNodes, flowContainer, transientPayload, setFlowNodes } =
+    useFlowStoreShallow((s) => ({
+      extraNodes: s.extraNodes,
+      flowContainer: s.flowContainer,
+      transientPayload: s.transientPayload,
+      setFlowNodes: s.setFlowNodes,
+    }))
+
+  const { flow } = flowContainer
+
+  const flowNodes = useMemo(() => {
+    if (!flow.ui.nodes.length) return []
+    return extraNodes?.length
+      ? flow.ui.nodes.concat(extraNodes)
+      : flow.ui.nodes
+  }, [flow, extraNodes])
+
+  useEffect(() => {
+    setFlowNodes(flowNodes)
+  }, [flowNodes, setFlowNodes])
 
   const loginHint = resolveLoginHint(flowContainer)
-
   const defaultValues = computeDefaultValues(
     {
       active: flowContainer.flow.active,
-      ui: { nodes },
+      ui: { nodes: flowNodes },
     },
+    transientPayload,
     loginHint,
   )
 
-  const resolver = buildResolverByMethod(nodes)
+  const resolver = buildResolverByMethod(flowNodes, transientPayload)
 
   const methods = useForm({
     defaultValues,
@@ -29,7 +49,7 @@ export function useOryForm(flowContainer: OryFlowContainer) {
     reValidateMode: 'onSubmit',
   })
 
-  useFormAutofocus(nodes, flowContainer.flowType, methods.setFocus)
+  useFormAutofocus(flowNodes, flowContainer.flowType, methods.setFocus)
 
   return {
     methods,

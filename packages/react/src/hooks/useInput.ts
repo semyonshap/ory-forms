@@ -39,10 +39,13 @@ export function useInput(node: UiNodeInput): {
     shouldUnregister: true,
   })
 
+  const transient = node.data?.transient
   useEffect(() => {
-    if (attr.value) setValue(attr.name, attr.value)
-    if (node.data?.transient) setTransientField(attr.name, attr.value)
-  }, [attr.value, attr.name, setValue, setTransientField])
+    if (attr.value) {
+      if (transient) setTransientField(attr.name, attr.value)
+      else setValue(attr.name, attr.value)
+    }
+  }, [attr.value, attr.name, transient, setValue, setTransientField])
 
   const disabled = attr.disabled || !isReady || isSubmitting
 

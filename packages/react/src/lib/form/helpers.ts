@@ -57,6 +57,7 @@ export function computeDefaultValues(
     active?: string
     ui: { nodes: UiNode[] }
   },
+  transientPayload?: FormValues,
   loginHint?: string,
 ): FormValues {
   const defaults: FormValues = {}
@@ -99,6 +100,10 @@ export function computeDefaultValues(
 
   if (flow.active) {
     defaults.method = flow.active
+  }
+
+  if (transientPayload) {
+    defaults.transient_payload = JSON.stringify(transientPayload)
   }
 
   prefillIdentifierFromHint(flow.ui.nodes, defaults, loginHint)

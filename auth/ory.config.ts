@@ -30,7 +30,5 @@ export const oryConfig: OryClientConfiguration = {
     oauth2_consent_ui_url: '/auth2/consent',
     registration_ui_url: '/auth/registration',
     verification_ui_url: '/auth/verification',
-
-    captcha: [OryFlowType.Login, OryFlowType.Registration],
   },
 }

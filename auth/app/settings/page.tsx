@@ -2,16 +2,14 @@ import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
 import { oryConfig } from '@/ory.config'
 import { OryFlowType } from '@ory-forms/react'
-import { OryForm } from '@/components/custom/oryForm'
 import { OryComponents } from '@/components/custom/oryComponents'
 import { getSettingsFlow, OryPageParams } from '@ory-forms/nextjs'
+import { FormWithRouter } from '@/components/custom/oryForm'
 
 export default async function SettingsPage(props: OryPageParams) {
   const flow = await getSettingsFlow(oryConfig, props.searchParams)
 
-  if (!flow) {
-    return null
-  }
+  if (!flow) return null
 
   return (
     <div className="flex flex-col items-center w-full mb-8 mt-8">
@@ -23,7 +21,7 @@ export default async function SettingsPage(props: OryPageParams) {
           <ArrowLeft className="size-4" />
           <span className="text-sm">Home</span>
         </Link>
-        <OryForm
+        <FormWithRouter
           flow={{ flow, flowType: OryFlowType.Settings }}
           components={OryComponents}
           config={oryConfig}

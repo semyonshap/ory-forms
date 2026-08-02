@@ -8,34 +8,35 @@ import { useFlowStoreShallow } from '../context'
 export function useFormNodes() {
   const {
     config,
+    flowNodes,
     flowContainer,
+    transientPayload,
     nodeSorter,
     groupSorter,
-    transientPayload,
-    extraNodes,
   } = useFlowStoreShallow((state) => ({
     config: state.config,
+    flowNodes: state.flowNodes,
     flowContainer: state.flowContainer,
+    transientPayload: state.transientPayload,
     nodeSorter: state.components.nodeSorter,
     groupSorter: state.components.groupSorter,
-    transientPayload: state.transientPayload,
-    extraNodes: state.extraNodes,
   }))
   const formState = useFormState()
   const { t } = useTranslation()
 
   return useMemo(() => {
+    if (!flowNodes?.length) return []
     return BuildLayout(
+      flowNodes,
       { config, flowContainer, formState, t },
       { nodeSorter, groupSorter },
       transientPayload,
-      extraNodes,
     )
   }, [
+    flowNodes,
     formState,
     flowContainer,
     config,
-    extraNodes,
     t,
     nodeSorter,
     groupSorter,

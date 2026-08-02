@@ -1,5 +1,6 @@
 import { createStore } from 'zustand'
 import { createContext } from 'react'
+import { UiNode } from '@ory/client-fetch'
 
 import { parseStateFromFlow } from '../lib/form/formState'
 import { createFlowStateSlice, FlowStateSlice } from './flowStateSlice'
@@ -10,7 +11,7 @@ import {
   OryComponents,
   UiNodeFixed,
   MessageProps,
-  TransientPayload,
+  FormValues,
 } from '../types'
 
 export interface FlowStoreState extends FlowStateSlice, FlowInputSlice {
@@ -18,9 +19,11 @@ export interface FlowStoreState extends FlowStateSlice, FlowInputSlice {
   components: OryComponents
   flowContainer: OryFlowContainer
   messages: MessageProps[]
+  flowNodes: UiNode[]
   webauthnScriptStatus?: 'loading' | 'loaded' | 'failed'
 
   setFlowContainer: (flow: OryFlowContainer) => void
+  setFlowNodes: (nodes: UiNode[]) => void
   setWebauthnScriptStatus: (
     status: 'loading' | 'loaded' | 'failed',
   ) => void
@@ -33,7 +36,7 @@ export const createFlowStore = (initProps: {
   config: OryConfiguration
   components: OryComponents
   flowContainer: OryFlowContainer
-  transientPayload?: TransientPayload
+  transientPayload?: FormValues
   extraNodes?: UiNodeFixed[]
   onSuccess?: FlowInputSlice['onSuccess']
   onValidationError?: FlowInputSlice['onValidationError']
@@ -51,16 +54,19 @@ export const createFlowStore = (initProps: {
       api,
     ),
     messages: [],
+    flowNodes: [],
     webauthnScriptStatus: undefined,
     setFlowContainer: (flow) => {
       set({
         messages: [],
         flowContainer: flow,
+        flowNodes: [],
         loadingInputs: new Set(),
         overrideState: undefined,
         webauthnScriptStatus: undefined,
       })
     },
+    setFlowNodes: (nodes) => set({ flowNodes: nodes }),
     setMessages: (messages) => set({ messages }),
     setWebauthnScriptStatus: (status) =>
       set({ webauthnScriptStatus: status }),

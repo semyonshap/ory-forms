@@ -1,55 +1,78 @@
 import { UiNode } from '@ory/client-fetch'
-import { useCallback, useEffect } from 'react'
 import { useFormContext } from 'react-hook-form'
+import { useCallback, useEffect, useMemo } from 'react'
 
 import { fieldErrorToUiMessage } from '../lib'
 import { useFlowStoreShallow } from '../context'
 import { BlockOptionsCaptcha, isUiNodeInput } from '../types'
 
+const DEFAULT_TRANSIENT_ID = 'captcha_turnstile_response'
+
 export function useCaptcha(node: UiNode): {
   options: BlockOptionsCaptcha
 } {
   const {
-    setValue,
+    clearErrors,
     formState: { errors },
   } = useFormContext()
-  const { inputLoading, inputReady, setMessages, setTransientField } =
-    useFlowStoreShallow((s) => ({
-      inputLoading: s.inputLoading,
-      inputReady: s.inputReady,
-      setMessages: s.setMessages,
-      setTransientField: s.setTransientField,
-    }))
 
-  const name = isUiNodeInput(node) ? node.attributes.name : undefined
+  const {
+    transientPayload,
+    inputLoading,
+    inputReady,
+    setMessages,
+    setTransientField,
+  } = useFlowStoreShallow((s) => ({
+    transientPayload: s.transientPayload,
+    inputLoading: s.inputLoading,
+    inputReady: s.inputReady,
+    setMessages: s.setMessages,
+    setTransientField: s.setTransientField,
+  }))
 
-  const id = 'captcha_turnstile_response'
+  const { name, id } = useMemo(() => {
+    if (!isUiNodeInput(node))
+      return { name: undefined, id: DEFAULT_TRANSIENT_ID }
 
-  const validationMessages = fieldErrorToUiMessage(errors[id]) ?? []
+    const name = node.attributes.name
+    const id = node.data?.transient ? name : DEFAULT_TRANSIENT_ID
+
+    return { name, id }
+  }, [node])
+
+  const validationMessages = name
+    ? fieldErrorToUiMessage(errors[name])
+    : []
+
+  const hasValidationError = Boolean(validationMessages?.length)
+
+  const token = (transientPayload?.[id] as string) ?? ''
 
   useEffect(() => {
-    inputLoading('captcha')
-  }, [inputLoading])
+    if (hasValidationError && token) setTransientField(id, '')
+  }, [hasValidationError, id, token, setTransientField])
+
+  useEffect(() => {
+    if (!token) inputLoading('captcha')
+  }, [token, inputLoading])
 
   const onBeforeInteractive = useCallback(() => {
-    if (name) setValue(name, '')
     setTransientField(id, '')
     inputReady('captcha')
-  }, [setValue, inputReady, setTransientField])
+  }, [id, setTransientField, inputReady])
 
   const onExpire = useCallback(() => {
-    if (name) setValue(name, '')
     setTransientField(id, '')
     inputLoading('captcha')
-  }, [setValue, inputLoading, setTransientField])
+  }, [id, setTransientField, inputLoading])
 
   const onSuccess = useCallback(
-    (token: string) => {
-      if (name) setValue(name, token)
-      setTransientField(id, token)
+    (newToken: string) => {
+      setTransientField(id, newToken)
+      if (name) clearErrors(name)
       inputReady('captcha')
     },
-    [setValue, inputReady, setTransientField],
+    [id, name, setTransientField, clearErrors, inputReady],
   )
 
   const onError = useCallback(() => {
@@ -64,6 +87,7 @@ export function useCaptcha(node: UiNode): {
 
   return {
     options: {
+      token,
       messages: validationMessages,
       onSuccess,
       onError,

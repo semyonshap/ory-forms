@@ -46,6 +46,7 @@ export function useButton(node: UiNodeInput): {
   const { group, attributes: attr, data } = node
   const { name, value, onclickTrigger } = attr
   const variant = data?.variant
+  const transient = node.data?.transient
 
   const type = ['resend', 'sso'].includes(variant || '')
     ? 'button'
@@ -56,10 +57,10 @@ export function useButton(node: UiNodeInput): {
   const onClick = useCallback(() => {
     setClicked(true)
 
-    setValue(name, value)
     setValue('method', group)
 
-    if (node.data?.transient) setTransientField(name, value)
+    if (transient) setTransientField(name, value)
+    else setValue(name, value)
 
     if (type === 'button') {
       if (name === 'select-another-method')
@@ -72,9 +73,8 @@ export function useButton(node: UiNodeInput): {
           setOverrideSubmitting(false),
         )
       } else if (variant === 'resend') {
-        const values = getValues()
-        values.code = ''
-        onSubmit(values)
+        setValue('code', undefined)
+        onSubmit(getValues())
       }
 
       if (onclickTrigger) {
@@ -89,6 +89,7 @@ export function useButton(node: UiNodeInput): {
     group,
     value,
     variant,
+    transient,
     setClicked,
     onclickTrigger,
     onSubmit,
@@ -96,6 +97,7 @@ export function useButton(node: UiNodeInput): {
     getValues,
     selectMethod,
     setOverrideState,
+    setTransientField,
     setOverrideSubmitting,
   ])
 

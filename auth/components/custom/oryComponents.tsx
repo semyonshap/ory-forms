@@ -332,27 +332,41 @@ export const OryComponents: OryClientComponents = {
       )
     },
     Captcha: ({ options }) => {
-      const { onBeforeInteractive, onSuccess, onExpire, onError } = options
+      const {
+        token,
+        messages,
+        onBeforeInteractive,
+        onSuccess,
+        onExpire,
+        onError,
+      } = options
       const isMobile = useIsMobile(384)
 
       return (
-        <Turnstile
-          siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
-          options={{
-            size: isMobile ? 'compact' : 'flexible',
-            theme: 'dark',
-            appearance: 'always',
-            language: oryConfig.project.default_locale,
-          }}
-          className={cn(
-            '[clip-path:inset(1.5px_round_var(--radius))]',
-            !isMobile && 'w-full! block! overflow-clip! h-15!',
-          )}
-          onSuccess={onSuccess}
-          onError={onError}
-          onExpire={onExpire}
-          onBeforeInteractive={onBeforeInteractive}
-        />
+        <div className={cn(token ? 'hidden' : 'flex flex-col gap-1')}>
+          <Turnstile
+            siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
+            options={{
+              size: isMobile ? 'compact' : 'flexible',
+              theme: 'dark',
+              appearance: 'always',
+              language: oryConfig.project.default_locale,
+            }}
+            className={cn(
+              '[clip-path:inset(1.5px_round_var(--radius))]',
+              !isMobile && 'w-full! block! overflow-clip! h-15!',
+            )}
+            onSuccess={onSuccess}
+            onError={onError}
+            onExpire={onExpire}
+            onBeforeInteractive={onBeforeInteractive}
+          />
+          {messages?.map((msg, i) => (
+            <span key={i} className="text-sm text-destructive">
+              {msg.text}
+            </span>
+          ))}
+        </div>
       )
     },
     Code: ({ props }) => {

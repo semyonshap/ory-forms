@@ -8,7 +8,7 @@ import {
   UiNodeGroupEnum,
 } from '@ory/client-fetch'
 
-import { OryFlowContainer, OryFlowType, UiNodeFixed } from '.'
+import { OryFlowContainer, UiNodeFixed } from '.'
 import {
   OrySuccessHandler,
   OryValidationErrorHandler,
@@ -35,13 +35,11 @@ export interface FormValues {
     string | boolean | number | string[] | undefined | FormValues
 }
 
-export type TransientPayload = Record<string, unknown>
-
 export interface FlowInputProps {
   flow: OryFlowContainer
   config: OryClientConfiguration
   components?: Partial<OryClientComponents>
-  transientPayload?: TransientPayload
+  transientPayload?: FormValues
   extraNodes?: UiNodeFixed[]
   onSuccess?: OrySuccessHandler
   onValidationError?: OryValidationErrorHandler
@@ -135,7 +133,6 @@ export type OryProject = AccountExperienceConfiguration & {
   oauth2_login_ui_url: string
   oauth2_consent_ui_url: string
   oauth2_logout_ui_url: string
-  captcha?: OryFlowType[]
 }
 
 export interface OryClientConfiguration {

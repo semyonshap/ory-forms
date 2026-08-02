@@ -7,7 +7,6 @@ import {
   UpdateVerificationFlowBody,
 } from '@ory/client-fetch'
 
-import { isProduction } from '../utils/sdk'
 import { useFlowStoreShallow } from '../context'
 import {
   applySelectAccountPrompt,
@@ -31,21 +30,25 @@ import {
 
 export function useFormSubmit(methods: UseFormReturn<FormValues>) {
   const {
-    flowContainer,
+    flowNodes,
     config,
+    flowContainer,
+    transientPayload,
     setFlowContainer,
     onSuccess,
     onValidationError,
     onError,
     onRedirect,
-  } = useFlowStoreShallow((state) => ({
-    config: state.config,
-    flowContainer: state.flowContainer,
-    setFlowContainer: state.setFlowContainer,
-    onSuccess: state.onSuccess,
-    onValidationError: state.onValidationError,
-    onError: state.onError,
-    onRedirect: state.onRedirect,
+  } = useFlowStoreShallow((s) => ({
+    flowNodes: s.flowNodes,
+    config: s.config,
+    flowContainer: s.flowContainer,
+    transientPayload: s.transientPayload,
+    setFlowContainer: s.setFlowContainer,
+    onSuccess: s.onSuccess,
+    onValidationError: s.onValidationError,
+    onError: s.onError,
+    onRedirect: s.onRedirect,
   }))
 
   const { flowType } = flowContainer
@@ -53,9 +56,12 @@ export function useFormSubmit(methods: UseFormReturn<FormValues>) {
   const onSubmit: SubmitHandler<FormValues> = async (
     initialData: FormValues,
   ) => {
-    const handleFlowUpdate = (container: OryFlowContainer) => {
+    const handleSuccess = (container: OryFlowContainer) => {
       setFlowContainer(container)
-      const newValues = computeDefaultValues(container.flow)
+      const newValues = computeDefaultValues(
+        container.flow,
+        transientPayload,
+      )
       methods.reset(newValues, {
         keepSubmitCount: true,
       })
@@ -67,8 +73,11 @@ export function useFormSubmit(methods: UseFormReturn<FormValues>) {
       if ('totp_code' in data) methods.setValue('totp_code', '')
     }
 
-    const filtered = filterData(initialData, flowContainer)
-    if (!isProduction()) console.log('Filtered:', filtered)
+    const filtered = filterData({
+      data: initialData,
+      nodes: flowNodes,
+      transientPayload,
+    })
 
     switch (flowType) {
       case OryFlowType.Login: {
@@ -77,7 +86,7 @@ export function useFormSubmit(methods: UseFormReturn<FormValues>) {
         }
         await onSubmitLogin(flowContainer, config, {
           onRedirect,
-          setFlowContainer: handleFlowUpdate,
+          setFlowContainer: handleSuccess,
           body: submitData,
           onSuccess,
           onValidationError,
@@ -92,7 +101,7 @@ export function useFormSubmit(methods: UseFormReturn<FormValues>) {
 
         await onSubmitRegistration(flowContainer, config, {
           onRedirect,
-          setFlowContainer: handleFlowUpdate,
+          setFlowContainer: handleSuccess,
           body: submitData,
           onSuccess,
           onValidationError,
@@ -107,7 +116,7 @@ export function useFormSubmit(methods: UseFormReturn<FormValues>) {
 
         await onSubmitVerification(flowContainer, config, {
           onRedirect,
-          setFlowContainer: handleFlowUpdate,
+          setFlowContainer: handleSuccess,
           body: submitData,
           onSuccess,
           onValidationError,
@@ -122,7 +131,7 @@ export function useFormSubmit(methods: UseFormReturn<FormValues>) {
 
         await onSubmitRecovery(flowContainer, config, {
           onRedirect,
-          setFlowContainer: handleFlowUpdate,
+          setFlowContainer: handleSuccess,
           body: submitData,
           onSuccess,
           onValidationError,
@@ -139,7 +148,7 @@ export function useFormSubmit(methods: UseFormReturn<FormValues>) {
 
         await onSubmitSettings(flowContainer, config, {
           onRedirect,
-          setFlowContainer: handleFlowUpdate,
+          setFlowContainer: handleSuccess,
           body: submitData,
           onSuccess,
           onValidationError,

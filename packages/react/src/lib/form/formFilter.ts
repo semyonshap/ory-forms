@@ -2,34 +2,44 @@ import get from 'lodash-es/get'
 import set from 'lodash-es/set'
 import {
   isUiNodeInputAttributes,
+  UiNode,
   UiNodeGroupEnum,
 } from '@ory/client-fetch'
 
 import { getNodesByGroups, groupNodes } from '../nodes'
 import { removeEmptyStrings } from './removeFalsyValues'
-import { FormValues, OryFlowContainer, relationGroups } from '../../types'
+import { FormValues, relationGroups } from '../../types'
 
-export function filterData(
-  data: FormValues,
-  flowContainer: OryFlowContainer,
-): FormValues {
+export function filterData({
+  data,
+  nodes,
+  transientPayload,
+}: {
+  nodes: UiNode[]
+  data: FormValues
+  transientPayload?: FormValues
+}): FormValues {
   const method = data.method as UiNodeGroupEnum
+
+  console.log('Initial data', data)
+
+  if (method === UiNodeGroupEnum.Code && data.code) {
+    data.resend = ''
+  }
+
   const cleanData = removeEmptyStrings<FormValues>(data)
 
-  const nodes = flowContainer.flow.ui.nodes
-
-  const { groupsNodes } = groupNodes({ nodes })
   const result: FormValues = { method }
 
-  if (data.csrf_token) result.csrf_token = data.csrf_token
-  if (data.transient_payload)
-    result.transient_payload = data.transient_payload
+  console.log('nodes', nodes)
+
+  const { groupsNodes } = groupNodes({ nodes })
 
   const fields = getNodesByGroups({
     groupsNodes,
     groups: [
-      UiNodeGroupEnum.Default,
       method,
+      UiNodeGroupEnum.Default,
       ...(relationGroups[method] ?? []),
     ],
   })
@@ -43,6 +53,12 @@ export function filterData(
       set(result, name, value)
     }
   }
+
+  if (transientPayload) {
+    result.transient_payload = transientPayload
+  }
+
+  console.log('Filtered data', result)
 
   return result
 }

@@ -4,11 +4,7 @@ import { BuildFooter } from './footer'
 import { BuildNodeData } from './data'
 import { SettingsBuilder } from './settings'
 import { BuildAuthMethodList } from './authMethods'
-import {
-  BuildDivider,
-  BuildCaptcha,
-  BuildTransientPayload,
-} from './presets'
+import { BuildDivider, BuildTransientPayload } from './presets'
 import {
   groupNodes,
   isNodeVisible,
@@ -20,49 +16,27 @@ import {
   BuilderSorter,
   FormNode,
   OryFlowType,
-  TransientPayload,
-  UiNodeFixed,
+  FormValues,
 } from '../../types'
 
 export function BuildLayout(
+  flowNodes: UiNode[],
   ctx: BuildContext,
   { nodeSorter, groupSorter }: BuilderSorter,
-  transientPayload: TransientPayload,
-  extraNodes: UiNodeFixed[],
+  transientPayload?: FormValues,
 ) {
   const sortNodes = (a: UiNode, b: UiNode) =>
     nodeSorter(a, b, { flowType })
   const sortGroups = (a: UiNodeGroupEnum, b: UiNodeGroupEnum) =>
     groupSorter(a, b)
 
-  const { config, flowContainer, formState, t } = ctx
-  const { captcha } = config.project
+  const { flowContainer, formState, t } = ctx
 
-  const { flow, flowType } = flowContainer
-  
-  const flowNodes = flow.ui.nodes
-  flowNodes.push(...extraNodes)
-
-  if (!flowNodes) return []
+  const { flowType } = flowContainer
 
   const nodes = BuildNodeData(flowNodes)
 
-  const hasCaptchaNode = flowNodes.some(
-    (n) => n.group === UiNodeGroupEnum.Captcha,
-  )
-
-  const captchaToken = transientPayload.captcha_turnstile_response
-
-  if (
-    captcha &&
-    captcha.includes(flowType) &&
-    !hasCaptchaNode &&
-    !captchaToken
-  ) {
-    nodes.push(BuildCaptcha())
-  }
-
-  if (Object.keys(transientPayload).length > 0) {
+  if (transientPayload) {
     nodes.push(BuildTransientPayload(transientPayload))
   }
 
@@ -133,7 +107,7 @@ export function BuildLayout(
 
       const selectedNodes = getNodesByGroups({
         groupsNodes: visibleGroupsNodes,
-        groups: [formState.method],
+        groups: [formState.method, UiNodeGroupEnum.Captcha],
       })
 
       result.push(...selectedNodes, ...hiddenNodes)
@@ -141,12 +115,7 @@ export function BuildLayout(
       break
     }
     case 'select_method': {
-      const selectedHidden = getNodesByGroups({
-        groupsNodes: hiddenGroupsNodes,
-        groups: [UiNodeGroupEnum.Captcha],
-        exclude: true,
-      })
-      result = [...ssoNodes, ...selectedHidden]
+      result = [...ssoNodes, ...hiddenNodes]
 
       const methodButtons = BuildAuthMethodList({
         authMethods,

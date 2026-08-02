@@ -12,12 +12,25 @@ export function DivWrapper({ node, attached }: WrapperDiv) {
   const type = node.data?.type
 
   if (!type && Main.Div)
-    return <Main.Div node={node} attached={attached} options={{ variant: node.data?.variant }} />
+    return (
+      <Main.Div
+        node={node}
+        attached={attached}
+        options={{ variant: node.data?.variant }}
+      />
+    )
   else if (type === 'DividerCard') {
     if (Main.Divider) return <Main.Divider node={node} />
     else return null
   } else if (type === 'Card') {
-    return <Main.Card node={node} attached={attached} props={props} options={options} />
+    return (
+      <Main.Card
+        node={node}
+        attached={attached}
+        props={props}
+        options={options}
+      />
+    )
   } else {
     return <React.Fragment>{attached}</React.Fragment>
   }

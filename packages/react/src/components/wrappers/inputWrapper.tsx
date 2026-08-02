@@ -2,7 +2,12 @@ import { ComponentType } from 'react'
 
 import { useFlowStore, useFlowStoreShallow } from '../../context'
 import { BlockButton, WrapperCaptcha, WrapperInput } from '../../types'
-import { useButton, useInput, useCheckbox, useCaptcha } from '../../hooks'
+import {
+  useButton,
+  useInput,
+  useCheckbox,
+  useCaptcha,
+} from '../../hooks'
 
 export function InputWrapper({ node, attached }: WrapperInput) {
   const { Node } = useFlowStoreShallow((state) => ({
@@ -81,13 +86,5 @@ export function CaptchaWrapper({ node, attached }: WrapperCaptcha) {
 
   if (!Node.Captcha) return null
 
-  return (
-    <Node.Label
-      node={node}
-      options={{ messages: options.messages }}
-      attached={attached}
-    >
-      <Node.Captcha node={node} options={options} attached={attached} />
-    </Node.Label>
-  )
+  return <Node.Captcha node={node} options={options} attached={attached} />
 }

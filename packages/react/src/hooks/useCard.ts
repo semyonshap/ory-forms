@@ -2,7 +2,6 @@ import { useTranslation } from 'react-i18next'
 import { FieldErrors, useFormContext } from 'react-hook-form'
 
 import { useFormState } from '.'
-import { isProduction } from '../utils/sdk'
 import { useFlowStoreShallow } from '../context'
 import { useFormMessages, useFormSubmit } from '.'
 import { getCardHeaderText, getGroupHeader } from '../lib'
@@ -25,11 +24,6 @@ export function useCard(node: UiNodeDiv): {
 
   const methods = useFormContext()
   const onSubmit = useFormSubmit(methods)
-
-  const onSubmitHandler = (data: FormValues) => {
-    if (!isProduction()) console.debug('Submit data:', data)
-    return onSubmit(data)
-  }
 
   const onErrorHandler = (errors: FieldErrors<FormValues>) => {
     console.error('Validation errors:', errors)
@@ -63,7 +57,7 @@ export function useCard(node: UiNodeDiv): {
       id: `form-${node.group}`,
       action: flow.ui.action,
       method: flow.ui.method,
-      onSubmit: methods.handleSubmit(onSubmitHandler, onErrorHandler),
+      onSubmit: methods.handleSubmit(onSubmit, onErrorHandler),
     },
     options: {
       flowType,

@@ -17,6 +17,8 @@ import {
   VariantsAnchor,
   OryFlowType,
   VariantsDiv,
+  FormState,
+  FormValues,
 } from '.'
 
 // Common
@@ -104,6 +106,7 @@ export type BlockInput = BaseBlockProps & {
 
 // Captcha
 export interface BlockOptionsCaptcha {
+  token: string
   messages?: MessageProps[]
   onSuccess: (token: string) => void
   onError: () => void

@@ -13,7 +13,9 @@ export const webauthnGroups: UiNodeGroupEnum[] = [
 export const relationGroups: Partial<
   Record<UiNodeGroupEnum, UiNodeGroupEnum[]>
 > = {
-  [UiNodeGroupEnum.Password]: [UiNodeGroupEnum.Profile],
+  [UiNodeGroupEnum.Password]: [
+    UiNodeGroupEnum.Profile,
+  ],
 }
 
 export const defaultGroupOrder: UiNodeGroupEnum[] = [

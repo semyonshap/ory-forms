@@ -14,4 +14,7 @@ export { getOAuth2LogoutFlow } from './app/oauth2_logout'
 
 export type { OryPageParams } from './types'
 
-export { createOryMiddleware, type OryMiddlewareOptions } from './middleware'
+export {
+  createOryMiddleware,
+  type OryMiddlewareOptions,
+} from './middleware'
