@@ -15,6 +15,8 @@ export function FormWithRouter(props: FlowInputProps) {
   )
 }
 
+const captchaEnabled = process.env.NEXT_PUBLIC_CAPTCHA_ENABLED === 'true'
+
 export function FormWithCaptcha(props: FlowInputProps) {
   const router = useRouter()
 
@@ -24,19 +26,23 @@ export function FormWithCaptcha(props: FlowInputProps) {
       onRedirect={(url) => {
         router.push(url)
       }}
-      extraNodes={[
-        createInputNode({
-          attributes: {
-            name: 'captcha_turnstile_response',
-            type: 'text',
-            value: '',
-            disabled: false,
-            required: true,
-          },
-          group: 'captcha',
-          data: { transient: true },
-        }),
-      ]}
+      extraNodes={
+        captchaEnabled
+          ? [
+              createInputNode({
+                attributes: {
+                  name: 'captcha_turnstile_response',
+                  type: 'text',
+                  value: '',
+                  disabled: false,
+                  required: true,
+                },
+                group: 'captcha',
+                data: { transient: true },
+              }),
+            ]
+          : undefined
+      }
     />
   )
 }
