@@ -37,7 +37,7 @@ changeset: ## Create a new changeset
 	pnpm changeset
 
 version: ## Apply changesets and bump versions
-	pnpm version
+	pnpm changeset:version
 
-publish: ## Build, version, and publish packages
-	pnpm build && pnpm version && pnpm publish
+publish: ## Build and publish packages
+	pnpm build && pnpm changeset:publish

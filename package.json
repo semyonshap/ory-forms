@@ -15,8 +15,8 @@
     "format:write": "nx format:write --all",
     "release": "nx release",
     "changeset": "changeset",
-    "version": "changeset version",
-    "publish": "changeset publish"
+    "changeset:version": "changeset version",
+    "changeset:publish": "changeset publish"
   },
   "repository": {
     "type": "git",
