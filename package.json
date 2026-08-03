@@ -18,6 +18,7 @@
     "changeset:version": "changeset version",
     "changeset:publish": "changeset publish"
   },
+  "packageManager": "pnpm@11.17.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/semyonshap/ory-forms.git"
