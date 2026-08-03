@@ -1,11 +1,10 @@
 FROM node:22-alpine AS base
-RUN corepack enable && corepack prepare pnpm@9 --activate
+RUN corepack enable && corepack prepare pnpm@11.17.0 --activate
 WORKDIR /app
 
-COPY auth/package.json ./
-RUN pnpm install
+COPY . .
 
-COPY auth ./
+RUN pnpm install --frozen-lockfile
 RUN pnpm build
 
 FROM node:22-alpine
@@ -18,10 +17,10 @@ ENV NEXT_TELEMETRY_DISABLED=1
 
 USER node
 
-COPY --from=base --chown=node:node /app/.next/standalone ./
-COPY --from=base --chown=node:node /app/.next/static ./.next/static
-COPY --from=base --chown=node:node /app/public ./public
+COPY --from=base --chown=node:node /app/auth/.next/standalone ./
+COPY --from=base --chown=node:node /app/auth/.next/static ./auth/.next/static
+COPY --from=base --chown=node:node /app/auth/public ./auth/public
 
 EXPOSE 3000
 
-CMD ["node", "server.js"]
+CMD ["node", "auth/server.js"]

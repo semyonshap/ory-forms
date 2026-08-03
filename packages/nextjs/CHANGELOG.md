@@ -8,5 +8,4 @@
 
 ### Patch Changes
 
-- Updated dependencies
-  - @ory-forms/react@1.0.0
+- first patch changes

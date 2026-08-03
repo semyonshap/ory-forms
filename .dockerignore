@@ -1,5 +1,9 @@
 node_modules
 .pnpm-store
+.nx
+.next
+.vscode
+docs
 dist
 .next
 .turbo
