@@ -20,9 +20,6 @@ importers:
       '@nx/js':
         specifier: 21.3.11
         version: 21.3.11(@babel/traverse@7.29.7(supports-color@7.2.0))(debug@4.4.3(supports-color@7.2.0))(nx@21.3.11(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0))(supports-color@7.2.0)
-      '@rollup/plugin-strip':
-        specifier: ^3.0.4
-        version: 3.0.4
       eslint:
         specifier: ^9.0.0
         version: 9.39.5(jiti@2.7.0)(supports-color@7.2.0)
@@ -2392,24 +2389,6 @@ packages:
   '@rolldown/pluginutils@1.0.1':
     resolution: {integrity: sha512-2j9bGt5Jh8hj+vPtgzPtl72j0yRxHAyumoo6TNfAjsLB04UtpSvPbPcDcBMxz7n+9CYB0c1GxQFxYRg2jimqGw==}
 
-  '@rollup/plugin-strip@3.0.4':
-    resolution: {integrity: sha512-LDRV49ZaavxUo2YoKKMQjCxzCxugu1rCPQa0lDYBOWLj6vtzBMr8DcoJjsmg+s450RbKbe3qI9ZLaSO+O1oNbg==}
-    engines: {node: '>=14.0.0'}
-    peerDependencies:
-      rollup: ^1.20.0||^2.0.0||^3.0.0||^4.0.0
-    peerDependenciesMeta:
-      rollup:
-        optional: true
-
-  '@rollup/pluginutils@5.4.0':
-    resolution: {integrity: sha512-MfPp06CjRLfXQ3wY0R8vJDYBy/MvVcc9OulEfR0B8Iv9ko+GCNaRZ+EpJYFl27LhKsZK0o420sYCRHCjfCgeUg==}
-    engines: {node: '>=14.0.0'}
-    peerDependencies:
-      rollup: ^1.20.0||^2.0.0||^3.0.0||^4.0.0
-    peerDependenciesMeta:
-      rollup:
-        optional: true
-
   '@rtsao/scc@1.1.0':
     resolution: {integrity: sha512-zt6OdqaDoOnJ1ZYsCYGt9YmWzDXl4vQdKTyJev62gFhRGKdx7mcT54V9KIjg+d2wi9EXsPvAPKe7i7WjfVWB8g==}
 
@@ -3496,9 +3475,6 @@ packages:
   estraverse@5.3.0:
     resolution: {integrity: sha512-MMdARuVEQziNTeJD8DgMqmhwR11BRQ/cBP+pLtYdSTnf3MIO8fFeiINEbX36ZdNlfU/7A9f3gUw49B3oQsvwBA==}
     engines: {node: '>=4.0'}
-
-  estree-walker@2.0.2:
-    resolution: {integrity: sha512-Rfkk/Mp/DL7JVje3u18FxFujQlTNR2q6QfMSMB7AvCBx91NGj/ba3kCfza0f6dVDbw7YlRf/nDrn7pQrCCyQ/w==}
 
   esutils@2.0.3:
     resolution: {integrity: sha512-kVscqXk4OCp68SZ0dkgEKVi6/8ij300KBWTJq32P/dYeWTSwK41WyTxalN1eRmA5Z9UU/LX9D7FWSmV9SAYx6g==}
@@ -7386,18 +7362,6 @@ snapshots:
 
   '@rolldown/pluginutils@1.0.1': {}
 
-  '@rollup/plugin-strip@3.0.4':
-    dependencies:
-      '@rollup/pluginutils': 5.4.0
-      estree-walker: 2.0.2
-      magic-string: 0.30.21
-
-  '@rollup/pluginutils@5.4.0':
-    dependencies:
-      '@types/estree': 1.0.9
-      estree-walker: 2.0.2
-      picomatch: 4.0.5
-
   '@rtsao/scc@1.1.0': {}
 
   '@rushstack/eslint-patch@1.16.1': {}
@@ -8560,8 +8524,6 @@ snapshots:
       estraverse: 5.3.0
 
   estraverse@5.3.0: {}
-
-  estree-walker@2.0.2: {}
 
   esutils@2.0.3: {}
 

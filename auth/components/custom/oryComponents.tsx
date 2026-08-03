@@ -80,7 +80,7 @@ export const OryComponents: OryClientComponents = {
           if (message.type === 'error') toast.error(message.text)
           else toast(message.text)
         })
-      }, [flowType, messages])
+      }, [flowType, messages, isSettings])
 
       return (
         <div

@@ -21,8 +21,6 @@ export function filterData({
 }): FormValues {
   const method = data.method as UiNodeGroupEnum
 
-  console.log('Initial data', data)
-
   if (method === UiNodeGroupEnum.Code && data.code) {
     data.resend = ''
   }
@@ -30,8 +28,6 @@ export function filterData({
   const cleanData = removeEmptyStrings<FormValues>(data)
 
   const result: FormValues = { method }
-
-  console.log('nodes', nodes)
 
   const { groupsNodes } = groupNodes({ nodes })
 
@@ -57,8 +53,6 @@ export function filterData({
   if (transientPayload) {
     result.transient_payload = transientPayload
   }
-
-  console.log('Filtered data', result)
 
   return result
 }

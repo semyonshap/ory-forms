@@ -1,7 +1,4 @@
 import { defineConfig } from 'tsdown'
-import strip from '@rollup/plugin-strip'
-
-const isDev = process.argv.includes('--watch')
 
 export default defineConfig({
   entry: ['src/index.ts'],
@@ -23,12 +20,4 @@ export default defineConfig({
       'usehooks-ts',
     ],
   },
-  plugins: isDev
-    ? []
-    : [
-        strip({
-          include: ['**/*.{ts,tsx}'],
-          exclude: ['node_modules/**'],
-        }),
-      ],
 })
