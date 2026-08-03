@@ -138,9 +138,6 @@ importers:
 
   packages/nextjs:
     dependencies:
-      '@ory-forms/react':
-        specifier: workspace:^
-        version: link:../react
       '@ory/client-fetch':
         specifier: ^1.22.0
         version: 1.22.63
