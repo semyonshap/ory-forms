@@ -17,8 +17,6 @@ import {
   VariantsAnchor,
   OryFlowType,
   VariantsDiv,
-  FormState,
-  FormValues,
 } from '.'
 
 // Common

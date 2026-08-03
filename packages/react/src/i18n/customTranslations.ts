@@ -1,9 +1,9 @@
 import type { AccountExperienceConfiguration } from '@ory/client-fetch'
 
-export type CustomTranslation =
+type CustomTranslation =
   AccountExperienceConfiguration['translations'][number]
 
-export function parseCustomTranslations(
+function parseCustomTranslations(
   entries: CustomTranslation[],
 ): Record<string, Record<string, string>> {
   const result: Record<string, Record<string, string>> = {}

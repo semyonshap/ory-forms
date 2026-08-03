@@ -36,7 +36,7 @@ export function oryOAuth2Url() {
   return baseUrl
 }
 
-export function isProduction() {
+function isProduction() {
   const env = getEnv('VERCEL_ENV') || getEnv('NODE_ENV') || ''
   return ['production', 'prod'].indexOf(env) > -1
 }
