@@ -165,6 +165,16 @@ export function BuildLayout(
       result = settingsNodes
       break
     }
+    case 'success_screen': {
+      const successNodes = getNodesByGroups({
+        groupsNodes: visibleGroupsNodes,
+        groups: [UiNodeGroupEnum.Captcha],
+        exclude: true,
+      })
+
+      result = [...successNodes, ...hiddenNodes].sort(sortNodes)
+      break
+    }
     default:
       result = nodes.sort(sortNodes)
   }

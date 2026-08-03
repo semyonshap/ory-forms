@@ -2,11 +2,7 @@ import { FieldErrors } from 'react-hook-form'
 import { UiNode, UiNodeGroupEnum } from '@ory/client-fetch'
 
 import { isChoosingMethod, groupNodes } from '../nodes'
-import {
-  FlowFormState,
-  OryFlowContainer,
-  OryFlowType,
-} from '../../types'
+import { FlowFormState, OryFlowContainer, OryFlowType } from '../../types'
 
 function findMethodWithMessage(nodes?: UiNode[]) {
   return nodes
@@ -83,6 +79,13 @@ export function parseStateFromFlow(
     }
     case OryFlowType.Recovery:
     case OryFlowType.Verification:
+      if (
+        flow.flowType === OryFlowType.Verification &&
+        flow.flow.state === 'passed_challenge'
+      ) {
+        return { current: 'success_screen' }
+      }
+
       if (flow.flow.active === 'code' || flow.flow.active === 'link') {
         if (flow.flow.state === 'choose_method') {
           return { current: 'provide_identifier' }
