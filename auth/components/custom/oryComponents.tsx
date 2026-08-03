@@ -16,7 +16,6 @@ import {
   CardTitle,
 } from '../ui/card'
 import { Alert, AlertDescription } from '../ui/alert'
-import JikoIcon from '../icons/jiko-icon'
 import { useCooldown } from '@/hooks/useCooldown'
 
 import { cn } from '@/lib/utils'
@@ -107,7 +106,15 @@ export const OryComponents: OryClientComponents = {
           <Card className="w-full bg-transparent border-none md:bg-card md:border">
             {title && (
               <CardHeader className="flex flex-col w-full">
-                {!isSettings && <JikoIcon className="pb-6 pt-2" />}
+                {!isSettings && oryConfig.project.logo_light_url && (
+                  <Image
+                    src={oryConfig.project.logo_light_url}
+                    alt={oryConfig.project.name}
+                    width={72}
+                    height={72}
+                    className="pb-4 pt-2 w-auto h-14"
+                  />
+                )}
                 <CardTitle>{title}</CardTitle>
                 {description && (
                   <CardDescription>{description}</CardDescription>

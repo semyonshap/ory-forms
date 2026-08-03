@@ -10,6 +10,7 @@
 @theme {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-brand-primary: var(--color-primary);
   --font-sans: Inter, Helvetica, sans-serif;
 }
 
@@ -50,8 +51,6 @@
   --radius-xl: calc(var(--radius) + 4px);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-brand-primary: rgb(18, 242, 219);
-  --color-brand-secondary: rgb(235, 180, 52);
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
   --color-popover: var(--popover);

@@ -1,24 +1,43 @@
-import { OryClientConfiguration, OryFlowType } from '@ory-forms/react'
+import { OryClientConfiguration } from '@ory-forms/react'
 
 export const oryConfig: OryClientConfiguration = {
   sdk: {
     url: process.env.NEXT_PUBLIC_ORY_SDK_URL,
   },
   project: {
-    translations: [],
-    default_locale: 'en',
-    enabled_locales: ['en'],
-    locale_behavior: 'force_default',
+    translations: process.env.NEXT_PUBLIC_PROJECT_TRANSLATIONS
+      ? JSON.parse(process.env.NEXT_PUBLIC_PROJECT_TRANSLATIONS)
+      : {},
+    default_locale: process.env.NEXT_PUBLIC_PROJECT_DEFAULT_LOCALE || 'en',
+    enabled_locales: process.env.NEXT_PUBLIC_PROJECT_ENABLED_LOCALES
+      ? process.env.NEXT_PUBLIC_PROJECT_ENABLED_LOCALES.split(',')
+      : [process.env.NEXT_PUBLIC_PROJECT_DEFAULT_LOCALE || 'en'],
+    locale_behavior:
+      process.env.NEXT_PUBLIC_PROJECT_LOCALE_BEHAVIOR ===
+        'force_default' ||
+      process.env.NEXT_PUBLIC_PROJECT_LOCALE_BEHAVIOR ===
+        'respect_accept_language'
+        ? process.env.NEXT_PUBLIC_PROJECT_LOCALE_BEHAVIOR
+        : 'force_default',
 
-    name: 'Jiko Authorization',
-    logo_dark_url: '/jiko.svg',
-    logo_light_url: '/jiko.svg',
+    name: process.env.NEXT_PUBLIC_PROJECT_NAME || 'Authorization',
+    logo_dark_url: process.env.NEXT_PUBLIC_PROJECT_LOGO_DARK_URL,
+    logo_light_url: process.env.NEXT_PUBLIC_PROJECT_LOGO_LIGHT_URL,
 
-    hide_ory_branding: true,
-    hide_registration_link: false,
     recovery_enabled: true,
-    registration_enabled: true,
-    verification_enabled: true,
+    hide_registration_link:
+      process.env.NEXT_PUBLIC_HIDE_REGISTRATION_LINK === undefined
+        ? false
+        : process.env.NEXT_PUBLIC_HIDE_REGISTRATION_LINK === 'true',
+    registration_enabled:
+      process.env.NEXT_PUBLIC_REGISTRATION_ENABLED === undefined
+        ? true
+        : process.env.NEXT_PUBLIC_REGISTRATION_ENABLED === 'true',
+    verification_enabled:
+      process.env.NEXT_PUBLIC_VERIFICATION_ENABLED === undefined
+        ? true
+        : process.env.NEXT_PUBLIC_VERIFICATION_ENABLED === 'true',
+    hide_ory_branding: true,
 
     default_redirect_url: '/',
     error_ui_url: '/auth/error',
