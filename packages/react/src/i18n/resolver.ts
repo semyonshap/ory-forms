@@ -3,7 +3,9 @@ import { UiText } from '@ory/client-fetch'
 
 import { uiTextToFormattedMessage } from '.'
 
-function isDynamicText(text: UiText): text is UiText & { context: { name: string } } {
+function isDynamicText(
+  text: UiText,
+): text is UiText & { context: { name: string } } {
   return (
     text.id === 1070002 &&
     !!text.context &&
@@ -27,9 +29,15 @@ export function resolvePlaceholder(uiText: UiText, t: TFunction): string {
     defaultValue: 'Enter your {placeholder}',
   })
 
-  if (uiText.id === 1070002 && uiText.context && 'name' in uiText.context) {
+  if (
+    uiText.id === 1070002 &&
+    uiText.context &&
+    'name' in uiText.context
+  ) {
     const field = String(uiText.context.name)
-    return t(`forms.input.placeholder.${field}`, { defaultValue: fallback })
+    return t(`forms.input.placeholder.${field}`, {
+      defaultValue: fallback,
+    })
   }
 
   return fallback

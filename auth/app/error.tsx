@@ -2,7 +2,12 @@
 
 import { AlertTriangle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 
 export default function Error({ reset }: { reset: () => void }) {
   const handleGoHome = () => {
@@ -23,9 +28,14 @@ export default function Error({ reset }: { reset: () => void }) {
         </CardHeader>
         <CardContent className="text-center">
           <p className="mb-6 text-muted-foreground">
-            An unexpected error occurred. Please try returning to the home page.
+            An unexpected error occurred. Please try returning to the home
+            page.
           </p>
-          <Button onClick={handleGoHome} variant="outline" className="w-full">
+          <Button
+            onClick={handleGoHome}
+            variant="outline"
+            className="w-full"
+          >
             Go back to home
           </Button>
         </CardContent>

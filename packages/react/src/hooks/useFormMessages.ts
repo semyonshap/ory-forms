@@ -5,7 +5,9 @@ import { useFlowStoreShallow } from '../context'
 import { defaultHiddenMessageIds } from '../types'
 import { uiTextToFormattedMessage } from '../i18n'
 
-export function useFormMessages(hiddenMessageIds: number[] = defaultHiddenMessageIds) {
+export function useFormMessages(
+  hiddenMessageIds: number[] = defaultHiddenMessageIds,
+) {
   const {
     flow: { flow },
     storeMessages,
@@ -17,7 +19,9 @@ export function useFormMessages(hiddenMessageIds: number[] = defaultHiddenMessag
   const { t } = useTranslation()
 
   return useMemo(() => {
-    const filtered = flow.ui.messages?.filter((m) => !hiddenMessageIds.includes(m.id)) ?? []
+    const filtered =
+      flow.ui.messages?.filter((m) => !hiddenMessageIds.includes(m.id)) ??
+      []
 
     const flowMessages = filtered.map((message) => ({
       id: message.id,

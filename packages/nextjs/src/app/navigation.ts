@@ -46,7 +46,9 @@ export async function getNavigationFlow(config: {
     const { identity } = session
 
     if (identity && !identity.verifiable_addresses) {
-      result.push(createNavigationNode('verification', verification_ui_url))
+      result.push(
+        createNavigationNode('verification', verification_ui_url),
+      )
     }
 
     const logoutFlow = await getLogoutFlow()

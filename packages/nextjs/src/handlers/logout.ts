@@ -7,7 +7,10 @@ export async function handleLogoutSubmit(request: NextRequest) {
   const action = formData.get('action')?.toString()
 
   if (!logoutChallenge || !action) {
-    return NextResponse.json({ error: 'Missing logout_challenge or action' }, { status: 400 })
+    return NextResponse.json(
+      { error: 'Missing logout_challenge or action' },
+      { status: 400 },
+    )
   }
 
   const api = serverSideOAuth2Client()
@@ -25,6 +28,9 @@ export async function handleLogoutSubmit(request: NextRequest) {
     })
     return NextResponse.redirect(redirect_to)
   } catch {
-    return NextResponse.json({ error: 'Logout processing failed' }, { status: 500 })
+    return NextResponse.json(
+      { error: 'Logout processing failed' },
+      { status: 500 },
+    )
   }
 }

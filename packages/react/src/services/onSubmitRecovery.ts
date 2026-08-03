@@ -68,9 +68,15 @@ export async function onSubmitRecovery(
             onRedirect(recoveryUrl(config), true)
           }
         },
-        onValidationError: async (body: RecoveryFlow | { error: GenericError }) => {
+        onValidationError: async (
+          body: RecoveryFlow | { error: GenericError },
+        ) => {
           if ('error' in body) {
-            handleContinueWithRecoveryUIError(body.error, config, onRedirect)
+            handleContinueWithRecoveryUIError(
+              body.error,
+              config,
+              onRedirect,
+            )
             return
           } else {
             if (flowHasErrors(body.ui)) {
@@ -98,12 +104,20 @@ function handleContinueWithRecoveryUIError(
   config: OryConfiguration,
   onRedirect: OnRedirectHandler,
 ) {
-  if ('continue_with' in error.details && Array.isArray(error.details.continue_with)) {
-    const continueWithRecovery = (error.details.continue_with as ContinueWith[]).find(
-      instanceOfContinueWithRecoveryUi,
-    )
+  if (
+    'continue_with' in error.details &&
+    Array.isArray(error.details.continue_with)
+  ) {
+    const continueWithRecovery = (
+      error.details.continue_with as ContinueWith[]
+    ).find(instanceOfContinueWithRecoveryUi)
     if (continueWithRecovery?.action === 'show_recovery_ui') {
-      onRedirect(config.project.recovery_ui_url + '?flow=' + continueWithRecovery?.flow.id, false)
+      onRedirect(
+        config.project.recovery_ui_url +
+          '?flow=' +
+          continueWithRecovery?.flow.id,
+        false,
+      )
       return
     }
   }

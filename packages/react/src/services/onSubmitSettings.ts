@@ -87,7 +87,10 @@ export async function onSubmitSettings(
     .catch((err) => {
       if (isResponseError(err)) {
         if (err.response.status === 401) {
-          return onRedirect(loginUrl(config) + '?return_to=' + settingsUrl(config), true)
+          return onRedirect(
+            loginUrl(config) + '?return_to=' + settingsUrl(config),
+            true,
+          )
         }
         throw err
       }

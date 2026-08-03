@@ -8,7 +8,9 @@ import { guessPotentiallyProxiedOrySdkUrl } from '../utils/sdk'
 import { serverSideFrontendClient } from './client'
 import { getPublicUrl } from './utils'
 
-export async function getLogoutFlow({ returnTo }: { returnTo?: string } = {}): Promise<LogoutFlow> {
+export async function getLogoutFlow({
+  returnTo,
+}: { returnTo?: string } = {}): Promise<LogoutFlow> {
   const h = await headers()
 
   const knownProxiedUrl = await getPublicUrl()

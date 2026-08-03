@@ -1,4 +1,9 @@
-import { handleContinueWith, LoginFlow, loginUrl, UpdateLoginFlowBody } from '@ory/client-fetch'
+import {
+  handleContinueWith,
+  LoginFlow,
+  loginUrl,
+  UpdateLoginFlowBody,
+} from '@ory/client-fetch'
 
 import { flowHasErrors } from '../lib'
 import { replaceWindowFlowId, handleFlowError } from '../utils'
@@ -22,7 +27,9 @@ export async function onSubmitLogin(
   }: OnSubmitHandlerPropsWithFlow<UpdateLoginFlowBody>,
 ) {
   if (!config.sdk.url) {
-    throw new Error(`Please supply your Ory Network SDK url to the Ory Elements configuration.`)
+    throw new Error(
+      `Please supply your Ory Network SDK url to the Ory Elements configuration.`,
+    )
   }
 
   const method = String(body.method)

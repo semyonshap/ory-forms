@@ -2,7 +2,11 @@ import { TFunction } from 'i18next'
 import { UiContainer } from '@ory/client-fetch'
 
 import { hasCodeField, isCodeSent } from '../nodes'
-import { collectParts, joinWithCommaOr, normalizeContext } from './headerHelpers'
+import {
+  collectParts,
+  joinWithCommaOr,
+  normalizeContext,
+} from './headerHelpers'
 import {
   HeaderOptions,
   HeaderLoginOptions,
@@ -89,8 +93,14 @@ function getVerificationHeader(container: UiContainer, t: TFunction) {
   }
 }
 
-function getLoginHeader(container: UiContainer, opts: HeaderLoginOptions, t: TFunction) {
-  const accountLinkingMessage = container.messages?.find((m) => m.id === 1010016)
+function getLoginHeader(
+  container: UiContainer,
+  opts: HeaderLoginOptions,
+  t: TFunction,
+) {
+  const accountLinkingMessage = container.messages?.find(
+    (m) => m.id === 1010016,
+  )
   if (accountLinkingMessage) {
     return {
       title: t('account-linking.title'),
@@ -119,7 +129,10 @@ function getLoginHeader(container: UiContainer, opts: HeaderLoginOptions, t: TFu
     let description = t('login.subtitle-aal2')
     if (codeSent) {
       description = t('identities.messages.1010025')
-    } else if (opts.formState?.current === 'method_active' && opts.formState.method) {
+    } else if (
+      opts.formState?.current === 'method_active' &&
+      opts.formState.method
+    ) {
       description = t(`login.${opts.formState.method}.subtitle`)
     }
     return {
@@ -153,7 +166,9 @@ function getRegistrationHeader(
     description: codeSent
       ? t('identities.messages.1040005')
       : parts.length > 0
-        ? t('registration.subtitle', { parts: joinWithCommaOr(parts, orText) })
+        ? t('registration.subtitle', {
+            parts: joinWithCommaOr(parts, orText),
+          })
         : '',
   }
 }
@@ -171,13 +186,20 @@ function getConsentHeader(opts: HeaderOAuth2ConsentOptions, t: TFunction) {
 
 function getNavigationHeader(opts: HeaderNavigationOptions, t: TFunction) {
   const session = opts.flow.session
-  const rawUser = session?.identity?.traits?.name?.first ?? session?.identity?.traits?.username
+  const rawUser =
+    session?.identity?.traits?.name?.first ??
+    session?.identity?.traits?.username
 
-  const user = typeof rawUser === 'string' && rawUser.trim() !== '' ? rawUser : 'User'
+  const user =
+    typeof rawUser === 'string' && rawUser.trim() !== '' ? rawUser : 'User'
 
   if (opts.flow.session) {
     return {
-      title: t('navigation.header.authenticated.title', 'Welcome back, {user}', { user }),
+      title: t(
+        'navigation.header.authenticated.title',
+        'Welcome back, {user}',
+        { user },
+      ),
       description: t(
         'navigation.header.authenticated.description',
         'Manage your account settings or sign out',

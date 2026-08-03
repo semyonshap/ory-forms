@@ -1,4 +1,8 @@
-import { isUiNodeInputAttributes, UiNode, UiNodeGroupEnum } from '@ory/client-fetch'
+import {
+  isUiNodeInputAttributes,
+  UiNode,
+  UiNodeGroupEnum,
+} from '@ory/client-fetch'
 
 import { defaultGroupOrder, defaultNodeOrder } from '../../types'
 
@@ -12,7 +16,8 @@ const Slot = {
 function isUiNodeButton(node: UiNode) {
   return (
     isUiNodeInputAttributes(node.attributes) &&
-    (node.attributes.type === 'submit' || node.attributes.type === 'button')
+    (node.attributes.type === 'submit' ||
+      node.attributes.type === 'button')
   )
 }
 
@@ -26,7 +31,11 @@ function makeUiNodeComparator({ groupOrder = defaultNodeOrder } = {}) {
     }
     const { type } = node.attributes
 
-    if (node.group === 'webauthn' && type !== 'submit' && type !== 'button') {
+    if (
+      node.group === 'webauthn' &&
+      type !== 'submit' &&
+      type !== 'button'
+    ) {
       return Slot.Buttons
     }
 
@@ -74,7 +83,10 @@ export const defaultNodeSorter = makeUiNodeComparator({
   groupOrder: defaultNodeOrder,
 })
 
-export function defaultGroupSorter(a: UiNodeGroupEnum, b: UiNodeGroupEnum): number {
+export function defaultGroupSorter(
+  a: UiNodeGroupEnum,
+  b: UiNodeGroupEnum,
+): number {
   const aGroupWeight = defaultGroupOrder.indexOf(a) ?? 999
   const bGroupWeight = defaultGroupOrder.indexOf(b) ?? 999
 

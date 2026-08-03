@@ -1,6 +1,10 @@
 'use server'
 
-import { isResponseError, isSessionAal2Required, toBody } from '@ory/client-fetch'
+import {
+  isResponseError,
+  isSessionAal2Required,
+  toBody,
+} from '@ory/client-fetch'
 import { serverSideFrontendClient } from './client'
 import { getCookieHeader } from './utils'
 import { SessionWithStatus } from '../types'

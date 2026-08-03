@@ -1,4 +1,7 @@
-function buildUrl(base: string, params: Record<string, string | undefined | null>): string {
+function buildUrl(
+  base: string,
+  params: Record<string, string | undefined | null>,
+): string {
   const url = new URL(base)
   for (const [key, value] of Object.entries(params)) {
     if (value !== undefined && value !== null && value !== '') {

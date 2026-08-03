@@ -36,8 +36,16 @@ export async function buildUpstreamResponse(
   const body = Buffer.from(await upstreamResponse.arrayBuffer())
   const contentType = upstreamResponse.headers.get('content-type')
   const modifiedBody =
-    contentType?.includes('text/') || contentType?.includes('application/json')
-      ? Buffer.from(rewriteUrls(body.toString('utf-8'), matchBaseUrl, selfUrl, options))
+    contentType?.includes('text/') ||
+    contentType?.includes('application/json')
+      ? Buffer.from(
+          rewriteUrls(
+            body.toString('utf-8'),
+            matchBaseUrl,
+            selfUrl,
+            options,
+          ),
+        )
       : body
 
   return new NextResponse(modifiedBody, {

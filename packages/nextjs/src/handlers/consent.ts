@@ -43,10 +43,15 @@ export async function handleConsentSubmit(request: NextRequest) {
     return NextResponse.json({ redirect_to: accept.redirect_to })
   } catch (err) {
     if (err instanceof ResponseError) {
-      const body = await err.response.json().catch(() => ({ error: { message: err.message } }))
+      const body = await err.response
+        .json()
+        .catch(() => ({ error: { message: err.message } }))
       return NextResponse.json(body, { status: err.response.status })
     }
 
-    return NextResponse.json({ error: { message: 'Consent processing failed' } }, { status: 500 })
+    return NextResponse.json(
+      { error: { message: 'Consent processing failed' } },
+      { status: 500 },
+    )
   }
 }

@@ -12,11 +12,19 @@ export function joinWithCommaOr(list: string[], orText = 'or'): string {
   return `${copy.join(', ')} ${orText} ${last}`
 }
 
-export function normalizeContext(context: unknown): Record<string, unknown> {
-  return context && typeof context === 'object' ? (context as Record<string, unknown>) : {}
+export function normalizeContext(
+  context: unknown,
+): Record<string, unknown> {
+  return context && typeof context === 'object'
+    ? (context as Record<string, unknown>)
+    : {}
 }
 
-export function collectParts(nodes: UiNode[], flowType: string, t: TFunction): string[] {
+export function collectParts(
+  nodes: UiNode[],
+  flowType: string,
+  t: TFunction,
+): string[] {
   const parts: string[] = []
 
   if (nodes.find((node) => node.group === 'password')) {
@@ -27,7 +35,9 @@ export function collectParts(nodes: UiNode[], flowType: string, t: TFunction): s
     parts.push(t(key, { identifierLabel: 'email' })) // TODO: dynamic
   }
 
-  if (nodes.find((node) => node.group === 'oidc' || node.group === 'saml')) {
+  if (
+    nodes.find((node) => node.group === 'oidc' || node.group === 'saml')
+  ) {
     parts.push(t('card.header.parts.oidc'))
   }
   if (nodes.find((node) => node.group === 'code')) {
@@ -57,7 +67,8 @@ export function collectParts(nodes: UiNode[], flowType: string, t: TFunction): s
     parts.push(
       t('card.header.parts.identifier-first', {
         identifierLabel:
-          identifierFirstNode.meta.label && resolveLabel(identifierFirstNode.meta.label, t),
+          identifierFirstNode.meta.label &&
+          resolveLabel(identifierFirstNode.meta.label, t),
       }),
     )
   }
@@ -72,7 +83,9 @@ export function collectParts(nodes: UiNode[], flowType: string, t: TFunction): s
   if (profileNode) {
     parts.push(
       t('card.header.parts.identifier-first', {
-        identifierLabel: profileNode.meta.label && resolveLabel(profileNode.meta.label, t),
+        identifierLabel:
+          profileNode.meta.label &&
+          resolveLabel(profileNode.meta.label, t),
       }),
     )
   }

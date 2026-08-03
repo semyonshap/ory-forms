@@ -33,10 +33,14 @@ function resolveCookieOptions(
 ) {
   const { headers, nextUrl } = request
 
-  const secure = nextUrl.protocol === 'https:' || headers.get('x-forwarded-proto') === 'https'
+  const secure =
+    nextUrl.protocol === 'https:' ||
+    headers.get('x-forwarded-proto') === 'https'
 
   const host = headers.get('x-forwarded-host') ?? headers.get('host')
-  const domain = options.forceCookieDomain ?? (host ? guessCookieDomain(host) : undefined)
+  const domain =
+    options.forceCookieDomain ??
+    (host ? guessCookieDomain(host) : undefined)
 
   return { secure, domain }
 }

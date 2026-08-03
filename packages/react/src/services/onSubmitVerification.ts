@@ -1,4 +1,8 @@
-import { UpdateVerificationFlowBody, VerificationFlow, verificationUrl } from '@ory/client-fetch'
+import {
+  UpdateVerificationFlowBody,
+  VerificationFlow,
+  verificationUrl,
+} from '@ory/client-fetch'
 
 import { flowHasErrors } from '../lib'
 import { handleFlowError, replaceWindowFlowId } from '../utils'

@@ -70,7 +70,7 @@ export async function getOAuth2LoginFlow(
     if (status === '2fa_required') {
       loginUrl.searchParams.set('aal', 'aal2')
     }
-    
+
     loginUrl.searchParams.set('return_to', returnTo.toString())
 
     redirect(loginUrl.toString())

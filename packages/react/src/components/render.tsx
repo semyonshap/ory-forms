@@ -39,9 +39,16 @@ function renderRange(
       }
 
       if (divEnd) {
-        const { result: children, nextIndex } = renderRange(nodes, contextMap, i + 1, divEnd)
+        const { result: children, nextIndex } = renderRange(
+          nodes,
+          contextMap,
+          i + 1,
+          divEnd,
+        )
 
-        result.push(<Node key={getNodeId(node)} node={node} attached={children} />)
+        result.push(
+          <Node key={getNodeId(node)} node={node} attached={children} />,
+        )
         i = nextIndex
         continue
       }
@@ -55,7 +62,9 @@ function renderRange(
     const name = 'name' in node.attributes && node.attributes.name
     const attached = name ? contextMap[name] : undefined
 
-    result.push(<Node key={getNodeId(node)} node={node} attached={attached} />)
+    result.push(
+      <Node key={getNodeId(node)} node={node} attached={attached} />,
+    )
     i++
   }
 

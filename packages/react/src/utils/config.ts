@@ -12,7 +12,9 @@ function normalizeUrl(url: string): string {
   return url.replace(/\/$/, '')
 }
 
-export function computeComponents(components?: Partial<OryClientComponents>): OryComponents {
+export function computeComponents(
+  components?: Partial<OryClientComponents>,
+): OryComponents {
   const defaultComponents = DefaultComponents
   const overrides = components ?? {}
 
@@ -37,15 +39,23 @@ export function computeComponents(components?: Partial<OryClientComponents>): Or
   }
 }
 
-export function computeSdkConfig(config?: OryClientConfiguration['sdk']): OryConfiguration['sdk'] {
-  const url = config?.url && typeof config.url === 'string' ? normalizeUrl(config.url) : getSdkUrl()
+export function computeSdkConfig(
+  config?: OryClientConfiguration['sdk'],
+): OryConfiguration['sdk'] {
+  const url =
+    config?.url && typeof config.url === 'string'
+      ? normalizeUrl(config.url)
+      : getSdkUrl()
   const options = config?.options || {}
 
   return { url, options, frontend: frontendClient(url, options) }
 }
 
 function getSdkUrl(): string {
-  if (typeof process !== 'undefined' && process.env?.NEXT_PUBLIC_ORY_SDK_URL) {
+  if (
+    typeof process !== 'undefined' &&
+    process.env?.NEXT_PUBLIC_ORY_SDK_URL
+  ) {
     return process.env.NEXT_PUBLIC_ORY_SDK_URL
   }
 

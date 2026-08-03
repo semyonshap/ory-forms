@@ -26,7 +26,9 @@ export async function getErrorFlow(
     result.push(createNavigationNode('logout', logoutFlow.logout_url))
   }
 
-  result.push(createNavigationNode('go_back', config.project.default_redirect_url))
+  result.push(
+    createNavigationNode('go_back', config.project.default_redirect_url),
+  )
 
   const messageDescription = createUiText({
     id: 9999111,

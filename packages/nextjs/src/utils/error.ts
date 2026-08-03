@@ -1,5 +1,9 @@
 import { redirect } from 'next/navigation'
-import { instanceOfFlowError, instanceOfGenericError, ResponseError } from '@ory/client-fetch'
+import {
+  instanceOfFlowError,
+  instanceOfGenericError,
+  ResponseError,
+} from '@ory/client-fetch'
 import { serverSideFrontendClient } from '../app/client'
 import { OryError, QueryParams } from '../types'
 
@@ -12,7 +16,9 @@ function isErrorBody(value: unknown): value is ErrorBody {
   return typeof value === 'object' && value !== null
 }
 
-async function extractOryErrorMessage(error: ResponseError): Promise<string | undefined> {
+async function extractOryErrorMessage(
+  error: ResponseError,
+): Promise<string | undefined> {
   const body: unknown = await error.response
     .clone()
     .json()
@@ -53,13 +59,17 @@ export async function redirectToErrorPage({
   redirect(errorUrl.toString())
 }
 
-export async function getError(searchParams: QueryParams): Promise<OryError> {
+export async function getError(
+  searchParams: QueryParams,
+): Promise<OryError> {
   const params = searchParams
 
   if ('error' in params) {
     return {
       code: 400,
-      message: (params['error_description'] as string | undefined) ?? 'An unknown error occurred.',
+      message:
+        (params['error_description'] as string | undefined) ??
+        'An unknown error occurred.',
       status: params['error'] as string,
       timestamp: new Date(),
     }
@@ -110,7 +120,10 @@ export async function getError(searchParams: QueryParams): Promise<OryError> {
     .catch((error) => {
       return {
         code: 500,
-        message: error instanceof Error ? error.message : 'An unknown error occurred.',
+        message:
+          error instanceof Error
+            ? error.message
+            : 'An unknown error occurred.',
         status: 'unknown_error',
         timestamp: new Date(),
       }

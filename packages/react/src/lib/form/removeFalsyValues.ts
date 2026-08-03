@@ -3,7 +3,9 @@ import { isArray, isObject, isString, isNil, isEmpty } from 'lodash-es'
 export function removeEmptyStrings<T>(input: T): T {
   if (isArray(input)) {
     const cleaned = input.map((item) => removeEmptyStrings(item))
-    return cleaned.filter((item) => !(isString(item) && item === '') && !isNil(item)) as T
+    return cleaned.filter(
+      (item) => !(isString(item) && item === '') && !isNil(item),
+    ) as T
   }
 
   if (!isObject(input)) {

@@ -15,7 +15,10 @@ export async function getLoginFlow(
   return getFlowFactory(
     await params,
     async () =>
-      serverSideFrontendClient().getLoginFlowRaw(await toGetFlowParameter(params), initOverrides),
+      serverSideFrontendClient().getLoginFlowRaw(
+        await toGetFlowParameter(params),
+        initOverrides,
+      ),
     FlowType.Login,
     guessPotentiallyProxiedOrySdkUrl({
       knownProxiedUrl: await getPublicUrl(),

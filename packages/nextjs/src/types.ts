@@ -1,4 +1,9 @@
-import { OAuth2ConsentRequest, OAuth2LogoutRequest, Session, UiContainer } from '@ory/client-fetch'
+import {
+  OAuth2ConsentRequest,
+  OAuth2LogoutRequest,
+  Session,
+  UiContainer,
+} from '@ory/client-fetch'
 
 export type QueryParams = { [key: string]: string | string[] | undefined }
 

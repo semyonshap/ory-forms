@@ -75,15 +75,25 @@ export type OryErrorEvent =
     }
   | { type: 'csrf_error'; flowType: OryFlowType; body: GenericError }
   | { type: 'flow_not_found'; flowType: OryFlowType }
-  | { type: 'flow_replaced'; flowType: OryFlowType; body: ErrorFlowReplaced }
+  | {
+      type: 'flow_replaced'
+      flowType: OryFlowType
+      body: ErrorFlowReplaced
+    }
   | {
       type: 'consent_error'
       flowType: OryFlowType.OAuth2Consent
       consentRequest: OAuth2ConsentRequest
     }
 
-export type OrySuccessHandler = (event: OrySuccessEvent) => void | Promise<void>
+export type OrySuccessHandler = (
+  event: OrySuccessEvent,
+) => void | Promise<void>
 
-export type OryValidationErrorHandler = (event: OryValidationErrorEvent) => void | Promise<void>
+export type OryValidationErrorHandler = (
+  event: OryValidationErrorEvent,
+) => void | Promise<void>
 
-export type OryErrorHandler = (event: OryErrorEvent) => void | Promise<void>
+export type OryErrorHandler = (
+  event: OryErrorEvent,
+) => void | Promise<void>

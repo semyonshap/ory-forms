@@ -15,7 +15,9 @@
 
 import { Children, ReactNode, isValidElement } from 'react'
 
-export function countRenderableChildren(children: ReactNode | ReactNode[]) {
+export function countRenderableChildren(
+  children: ReactNode | ReactNode[],
+) {
   return Children.toArray(children).filter((c) => {
     if (isValidElement(c)) {
       return true
@@ -31,9 +33,16 @@ export function countRenderableChildren(children: ReactNode | ReactNode[]) {
 // Copyright © 2024 Ory Corp
 // SPDX-License-Identifier: Apache-2.0
 
-import { Configuration, ConfigurationParameters, FrontendApi } from '@ory/client-fetch'
+import {
+  Configuration,
+  ConfigurationParameters,
+  FrontendApi,
+} from '@ory/client-fetch'
 
-export function frontendClient(sdkUrl: string, opts: Partial<ConfigurationParameters> = {}) {
+export function frontendClient(
+  sdkUrl: string,
+  opts: Partial<ConfigurationParameters> = {},
+) {
   const config = new Configuration({
     ...opts,
     basePath: sdkUrl,
@@ -379,7 +388,9 @@ export type OryErrorEvent =
  *
  * @group Events
  */
-export type OrySuccessHandler = (event: OrySuccessEvent) => void | Promise<void>
+export type OrySuccessHandler = (
+  event: OrySuccessEvent,
+) => void | Promise<void>
 
 /**
  * Callback invoked when the server returns validation errors for a form
@@ -387,7 +398,9 @@ export type OrySuccessHandler = (event: OrySuccessEvent) => void | Promise<void>
  *
  * @group Events
  */
-export type OryValidationErrorHandler = (event: OryValidationErrorEvent) => void | Promise<void>
+export type OryValidationErrorHandler = (
+  event: OryValidationErrorEvent,
+) => void | Promise<void>
 
 /**
  * Callback invoked on infrastructure or flow-level errors (expired flow, CSRF
@@ -395,7 +408,9 @@ export type OryValidationErrorHandler = (event: OryValidationErrorEvent) => void
  *
  * @group Events
  */
-export type OryErrorHandler = (event: OryErrorEvent) => void | Promise<void>
+export type OryErrorHandler = (
+  event: OryErrorEvent,
+) => void | Promise<void>
 ````
 
 ## ory/packages/elements-react/src/util/flowContainer.ts
@@ -465,7 +480,10 @@ export type SettingsFlowContainer = {
  * A flow container for the {@link FlowError}
  * @interface
  */
-export type ErrorFlowContainer = { flowType: FlowType.Error; flow: FlowError }
+export type ErrorFlowContainer = {
+  flowType: FlowType.Error
+  flow: FlowError
+}
 
 /**
  * A flow container for the OAuth2 consent flow
@@ -556,7 +574,9 @@ export function flowHasErrors(ui: UiContainer): boolean {
   if (ui.messages?.some((m) => m.type === 'error')) {
     return true
   }
-  return ui.nodes.some((node) => node.messages.some((m) => m.type === 'error'))
+  return ui.nodes.some((node) =>
+    node.messages.some((m) => m.type === 'error'),
+  )
 }
 ```
 
@@ -569,27 +589,35 @@ export function flowHasErrors(ui: UiContainer): boolean {
 import { defineMessages } from 'react-intl'
 
 const KNOWN_KRATOS_MESSAGE_IDS = [
-  1010001, 1010002, 1010003, 1010004, 1010005, 1010006, 1010007, 1010008, 1010009, 1010010, 1010011,
-  1010012, 1010013, 1010014, 1010015, 1010016, 1010017, 1010018, 1010019, 1010021, 1010022, 1010023,
-  1010024, 1010025, 1040001, 1040002, 1040003, 1040004, 1040005, 1040006, 1040007, 1040008, 1040009,
-  1050001, 1050002, 1050003, 1050004, 1050005, 1050006, 1050007, 1050008, 1050009, 1050010, 1050011,
-  1050012, 1050013, 1050014, 1050015, 1050016, 1050017, 1050018, 1050019, 1050020, 1050023, 1060001,
-  1060002, 1060003, 1060004, 1060005, 1060006, 1060007, 1070001, 1070002, 1070003, 1070004, 1070005,
-  1070006, 1070007, 1070008, 1070009, 1070010, 1070011, 1070012, 1070013, 1070014, 1070015, 1070016,
-  1070017, 1070018, 1080001, 1080002, 1080003, 1080004, 1080005, 4000001, 4000002, 4000003, 4000004,
-  4000005, 4000006, 4000007, 4000008, 4000009, 4000010, 4000011, 4000012, 4000013, 4000014, 4000015,
-  4000016, 4000017, 4000018, 4000019, 4000020, 4000021, 4000022, 4000023, 4000024, 4000025, 4000026,
-  4000027, 4000028, 4000029, 4000030, 4000031, 4000032, 4000033, 4000034, 4000035, 4000036, 4000037,
-  4000038, 4000039, 4000040, 4000041, 4000042, 4000043, 4000044, 4000045, 4010001, 4010002, 4010003,
-  4010004, 4010005, 4010006, 4010007, 4010008, 4010009, 4010010, 4010011, 4040001, 4040002, 4040003,
-  4050001, 4050002, 4060001, 4060002, 4060004, 4060005, 4060006, 4070001, 4070002, 4070003, 4070005,
-  4070006, 5000001, 5000002, 5000003,
+  1010001, 1010002, 1010003, 1010004, 1010005, 1010006, 1010007, 1010008,
+  1010009, 1010010, 1010011, 1010012, 1010013, 1010014, 1010015, 1010016,
+  1010017, 1010018, 1010019, 1010021, 1010022, 1010023, 1010024, 1010025,
+  1040001, 1040002, 1040003, 1040004, 1040005, 1040006, 1040007, 1040008,
+  1040009, 1050001, 1050002, 1050003, 1050004, 1050005, 1050006, 1050007,
+  1050008, 1050009, 1050010, 1050011, 1050012, 1050013, 1050014, 1050015,
+  1050016, 1050017, 1050018, 1050019, 1050020, 1050023, 1060001, 1060002,
+  1060003, 1060004, 1060005, 1060006, 1060007, 1070001, 1070002, 1070003,
+  1070004, 1070005, 1070006, 1070007, 1070008, 1070009, 1070010, 1070011,
+  1070012, 1070013, 1070014, 1070015, 1070016, 1070017, 1070018, 1080001,
+  1080002, 1080003, 1080004, 1080005, 4000001, 4000002, 4000003, 4000004,
+  4000005, 4000006, 4000007, 4000008, 4000009, 4000010, 4000011, 4000012,
+  4000013, 4000014, 4000015, 4000016, 4000017, 4000018, 4000019, 4000020,
+  4000021, 4000022, 4000023, 4000024, 4000025, 4000026, 4000027, 4000028,
+  4000029, 4000030, 4000031, 4000032, 4000033, 4000034, 4000035, 4000036,
+  4000037, 4000038, 4000039, 4000040, 4000041, 4000042, 4000043, 4000044,
+  4000045, 4010001, 4010002, 4010003, 4010004, 4010005, 4010006, 4010007,
+  4010008, 4010009, 4010010, 4010011, 4040001, 4040002, 4040003, 4050001,
+  4050002, 4060001, 4060002, 4060004, 4060005, 4060006, 4070001, 4070002,
+  4070003, 4070005, 4070006, 5000001, 5000002, 5000003,
 ] as const
 
 export type KratosMessageId = (typeof KNOWN_KRATOS_MESSAGE_IDS)[number]
 
 export function isKratosMessageId(id: unknown): id is KratosMessageId {
-  return typeof id === 'number' && KNOWN_KRATOS_MESSAGE_IDS.includes(id as KratosMessageId)
+  return (
+    typeof id === 'number' &&
+    KNOWN_KRATOS_MESSAGE_IDS.includes(id as KratosMessageId)
+  )
 }
 
 export const kratosMessages = defineMessages<number>({
@@ -1237,7 +1265,10 @@ export const kratosMessages = defineMessages<number>({
 import { UiText } from '@ory/client-fetch'
 import { defineMessages, IntlShape, useIntl } from 'react-intl'
 import { isDynamicText } from '../nodes'
-import { isKratosMessageId, kratosMessages } from './generated/kratosMessages'
+import {
+  isKratosMessageId,
+  kratosMessages,
+} from './generated/kratosMessages'
 
 /**
  * Converts a UiText to a FormattedMessage.
@@ -1290,48 +1321,57 @@ export const uiTextToFormattedMessage = (
   { id, context = {}, text }: Omit<UiText, 'type'>,
   intl: IntlShape,
 ) => {
-  const contextInjectedMessage = Object.entries(context).reduce((accumulator, [key, value]) => {
-    // context might provide an array of objects instead of a single object
-    // for example when looking up a recovery code
-    if (Array.isArray(value)) {
-      return {
-        ...accumulator,
-        [key]: value,
-        [key + '_list']: intl.formatList<string>(value),
-      }
-    } else if (key.endsWith('_unix')) {
-      if (typeof value === 'number') {
-        return {
-          ...accumulator,
-          [key]: intl.formatDate(new Date(value * 1000)),
-          [key + '_since']: intl.formatDateTimeRange(new Date(value), new Date()),
-          [key + '_since_minutes']: Math.ceil((value - new Date().getTime() / 1000) / 60).toFixed(
-            0,
-          ),
-          [key + '_until']: intl.formatDateTimeRange(new Date(), new Date(value)),
-          [key + '_until_minutes']: Math.ceil((value - new Date().getTime() / 1000) / 60).toFixed(
-            0,
-          ),
-        }
-      }
-    } else if (key === 'property') {
-      if (isKnownPropertyKey(value)) {
-        return {
-          ...accumulator,
-          [key]: intl.formatMessage(propertyMessages[value]),
-        }
-      } else {
+  const contextInjectedMessage = Object.entries(context).reduce(
+    (accumulator, [key, value]) => {
+      // context might provide an array of objects instead of a single object
+      // for example when looking up a recovery code
+      if (Array.isArray(value)) {
         return {
           ...accumulator,
           [key]: value,
+          [key + '_list']: intl.formatList<string>(value),
+        }
+      } else if (key.endsWith('_unix')) {
+        if (typeof value === 'number') {
+          return {
+            ...accumulator,
+            [key]: intl.formatDate(new Date(value * 1000)),
+            [key + '_since']: intl.formatDateTimeRange(
+              new Date(value),
+              new Date(),
+            ),
+            [key + '_since_minutes']: Math.ceil(
+              (value - new Date().getTime() / 1000) / 60,
+            ).toFixed(0),
+            [key + '_until']: intl.formatDateTimeRange(
+              new Date(),
+              new Date(value),
+            ),
+            [key + '_until_minutes']: Math.ceil(
+              (value - new Date().getTime() / 1000) / 60,
+            ).toFixed(0),
+          }
+        }
+      } else if (key === 'property') {
+        if (isKnownPropertyKey(value)) {
+          return {
+            ...accumulator,
+            [key]: intl.formatMessage(propertyMessages[value]),
+          }
+        } else {
+          return {
+            ...accumulator,
+            [key]: value,
+          }
         }
       }
-    }
-    return {
-      ...accumulator,
-      [key]: value as string | number,
-    }
-  }, {})
+      return {
+        ...accumulator,
+        [key]: value as string | number,
+      }
+    },
+    {},
+  )
 
   if (isKratosMessageId(id)) {
     const hasEmptyArrayContext = Object.values(context).some(
@@ -1346,7 +1386,10 @@ export const uiTextToFormattedMessage = (
   return text
 }
 
-export function resolvePlaceholder(text: UiText, intl: ReturnType<typeof useIntl>) {
+export function resolvePlaceholder(
+  text: UiText,
+  intl: ReturnType<typeof useIntl>,
+) {
   const fallback = intl.formatMessage(
     {
       id: 'input.placeholder',
@@ -1540,7 +1583,9 @@ export function findScreenSelectionButton(
   ) as { attributes: UiNodeInputAttributes }
 }
 
-export function isDynamicText(text: UiText): text is UiText & { context: { name: string } } {
+export function isDynamicText(
+  text: UiText,
+): text is UiText & { context: { name: string } } {
   return (
     text.id === 1070002 &&
     !!text.context &&
@@ -1549,7 +1594,10 @@ export function isDynamicText(text: UiText): text is UiText & { context: { name:
   )
 }
 
-export function resolveLabel(text: UiText, intl: ReturnType<typeof useIntl>) {
+export function resolveLabel(
+  text: UiText,
+  intl: ReturnType<typeof useIntl>,
+) {
   if (isDynamicText(text)) {
     const field = text.context.name
     const id = `forms.label.${field}`
@@ -1572,7 +1620,11 @@ export function resolveLabel(text: UiText, intl: ReturnType<typeof useIntl>) {
  * `forms.label.{name}` convention so apps can ship one set of custom
  * translations for every form field.
  */
-export function resolveOptionLabel(name: string, value: unknown, intl: ReturnType<typeof useIntl>) {
+export function resolveOptionLabel(
+  name: string,
+  value: unknown,
+  intl: ReturnType<typeof useIntl>,
+) {
   const stringValue = String(value)
   // The descriptor is assigned to a variable so the FormatJS TS transformer
   // does not try to statically extract the dynamic `id` — this mirrors the
@@ -1736,13 +1788,17 @@ describe('onSubmitLogin', () => {
         method: 'POST',
         nodes: [
           {
-            messages: [{ id: 4000002, text: 'Field is required', type: 'error' }],
+            messages: [
+              { id: 4000002, text: 'Field is required', type: 'error' },
+            ],
             attributes: {},
             type: 'input',
             group: 'default',
           },
         ],
-        messages: [{ id: 4000001, text: 'Invalid credentials', type: 'error' }],
+        messages: [
+          { id: 4000001, text: 'Invalid credentials', type: 'error' },
+        ],
       },
     }
 
@@ -1752,7 +1808,8 @@ describe('onSubmitLogin', () => {
       clone: () => mockResponse,
       text: () => Promise.resolve(JSON.stringify(errorFlow)),
       headers: {
-        get: (name: string) => (name === 'content-type' ? 'application/json' : null),
+        get: (name: string) =>
+          name === 'content-type' ? 'application/json' : null,
         entries: () => [['content-type', 'application/json']],
       },
     }
@@ -1820,7 +1877,8 @@ describe('onSubmitLogin', () => {
       clone: () => mockResponse,
       text: () => Promise.resolve(JSON.stringify(stepTransitionFlow)),
       headers: {
-        get: (name: string) => (name === 'content-type' ? 'application/json' : null),
+        get: (name: string) =>
+          name === 'content-type' ? 'application/json' : null,
         entries: () => [['content-type', 'application/json']],
       },
     }
@@ -1914,7 +1972,11 @@ describe('onSubmitLogin', () => {
 
     await expect(
       onSubmitLogin(mockFlow, mockConfig, {
-        body: { method: 'password', identifier: 'a', password: 'b' } as any,
+        body: {
+          method: 'password',
+          identifier: 'a',
+          password: 'b',
+        } as any,
         onRedirect,
         setFlowContainer,
       }),
@@ -1966,7 +2028,9 @@ export async function onSubmitLogin(
   }: OnSubmitHandlerProps<UpdateLoginFlowBody>,
 ) {
   if (!config.sdk.url) {
-    throw new Error(`Please supply your Ory Network SDK url to the Ory Elements configuration.`)
+    throw new Error(
+      `Please supply your Ory Network SDK url to the Ory Elements configuration.`,
+    )
   }
 
   const method = String(body.method)
@@ -2112,9 +2176,15 @@ export async function onSubmitRecovery(
             onRedirect(recoveryUrl(config), true)
           }
         },
-        onValidationError: async (body: RecoveryFlow | { error: GenericError }) => {
+        onValidationError: async (
+          body: RecoveryFlow | { error: GenericError },
+        ) => {
           if ('error' in body) {
-            handleContinueWithRecoveryUIError(body.error, config, onRedirect)
+            handleContinueWithRecoveryUIError(
+              body.error,
+              config,
+              onRedirect,
+            )
             return
           } else {
             if (flowHasErrors(body.ui)) {
@@ -2142,12 +2212,20 @@ function handleContinueWithRecoveryUIError(
   config: OryElementsConfiguration,
   onRedirect: OnRedirectHandler,
 ) {
-  if ('continue_with' in error.details && Array.isArray(error.details.continue_with)) {
-    const continueWithRecovery = (error.details.continue_with as ContinueWith[]).find(
-      instanceOfContinueWithRecoveryUi,
-    )
+  if (
+    'continue_with' in error.details &&
+    Array.isArray(error.details.continue_with)
+  ) {
+    const continueWithRecovery = (
+      error.details.continue_with as ContinueWith[]
+    ).find(instanceOfContinueWithRecoveryUi)
     if (continueWithRecovery?.action === 'show_recovery_ui') {
-      onRedirect(config.project.recovery_ui_url + '?flow=' + continueWithRecovery?.flow.id, false)
+      onRedirect(
+        config.project.recovery_ui_url +
+          '?flow=' +
+          continueWithRecovery?.flow.id,
+        false,
+      )
       return
     }
   }
@@ -2360,7 +2438,10 @@ export async function onSubmitSettings(
     .catch((err) => {
       if (isResponseError(err)) {
         if (err.response.status === 401) {
-          return onRedirect(loginUrl(config) + '?return_to=' + settingsUrl(config), true)
+          return onRedirect(
+            loginUrl(config) + '?return_to=' + settingsUrl(config),
+            true,
+          )
         }
         throw err
       }
@@ -2480,7 +2561,9 @@ export function removeEmptyStrings<T>(input: T): T {
       input
         // eslint-disable-next-line @typescript-eslint/no-unsafe-return
         .map((item) => removeEmptyStrings(item))
-        .filter((v) => v || typeof v === 'boolean' || typeof v === 'number') as unknown as T
+        .filter(
+          (v) => v || typeof v === 'boolean' || typeof v === 'number',
+        ) as unknown as T
     )
   }
 
@@ -2503,7 +2586,11 @@ export function removeEmptyStrings<T>(input: T): T {
       } else if (cleaned && Object.keys(cleaned as AnyObject).length > 0) {
         out[key] = cleaned
       }
-    } else if (value || typeof value === 'boolean' || typeof value === 'number') {
+    } else if (
+      value ||
+      typeof value === 'boolean' ||
+      typeof value === 'number'
+    ) {
       out[key] = value
     }
   }
@@ -2589,7 +2676,9 @@ export function pickBestContinueWith(continueWith: ContinueWith[]) {
   }
 
   const sorted = continueWith.sort(
-    (a, b) => continueWithPriority.indexOf(a.action) - continueWithPriority.indexOf(b.action),
+    (a, b) =>
+      continueWithPriority.indexOf(a.action) -
+      continueWithPriority.indexOf(b.action),
   )
   return sorted[0]
 }
@@ -2679,7 +2768,9 @@ import {
 } from '@ory/client-fetch'
 import type { GenericErrorContent } from '@ory/client-fetch/src/models/GenericErrorContent'
 
-export function isGenericErrorResponse(response: unknown): response is { error: GenericError } {
+export function isGenericErrorResponse(
+  response: unknown,
+): response is { error: GenericError } {
   return (
     typeof response === 'object' &&
     !!response &&
@@ -2699,7 +2790,10 @@ export function isGenericErrorResponse(response: unknown): response is { error: 
 export function isNeedsPrivilegedSessionError(
   response: unknown,
 ): response is NeedsPrivilegedSessionError {
-  return isGenericErrorResponse(response) && response.error.id === 'session_refresh_required'
+  return (
+    isGenericErrorResponse(response) &&
+    response.error.id === 'session_refresh_required'
+  )
 }
 
 /**1
@@ -2710,7 +2804,10 @@ export function isNeedsPrivilegedSessionError(
 export function isSelfServiceFlowExpiredError(
   response: unknown,
 ): response is SelfServiceFlowExpiredError {
-  return isGenericErrorResponse(response) && response.error.id === 'self_service_flow_expired'
+  return (
+    isGenericErrorResponse(response) &&
+    response.error.id === 'self_service_flow_expired'
+  )
 }
 
 /**
@@ -2718,7 +2815,9 @@ export function isSelfServiceFlowExpiredError(
  *
  * @param response - The response to check.
  */
-export function isSelfServiceFlowDisabled(response: unknown): response is GenericError {
+export function isSelfServiceFlowDisabled(
+  response: unknown,
+): response is GenericError {
   return (
     isGenericErrorResponse(response) &&
     isGenericErrorResponse(response) &&
@@ -2744,16 +2843,26 @@ export function isBrowserLocationChangeRequired(
  * Checks if the response is a ErrorFlowReplaced.
  * @param response - The response to check.
  */
-export function isSelfServiceFlowReplaced(response: unknown): response is ErrorFlowReplaced {
-  return isGenericErrorResponse(response) && response.error.id === 'self_service_flow_replaced'
+export function isSelfServiceFlowReplaced(
+  response: unknown,
+): response is ErrorFlowReplaced {
+  return (
+    isGenericErrorResponse(response) &&
+    response.error.id === 'self_service_flow_replaced'
+  )
 }
 
 /**
  * Checks if the response is a GenericError due to the session already being available.
  * @param response - The response to check.
  */
-export function isSessionAlreadyAvailable(response: unknown): response is GenericError {
-  return isGenericErrorResponse(response) && response.error.id === 'session_already_available'
+export function isSessionAlreadyAvailable(
+  response: unknown,
+): response is GenericError {
+  return (
+    isGenericErrorResponse(response) &&
+    response.error.id === 'session_already_available'
+  )
 }
 
 /**
@@ -2769,7 +2878,8 @@ export function isAddressNotVerified(response: unknown): response is {
   }
 } {
   return (
-    isGenericErrorResponse(response) && response.error.id === 'session_verified_address_required'
+    isGenericErrorResponse(response) &&
+    response.error.id === 'session_verified_address_required'
   )
 }
 
@@ -2778,8 +2888,13 @@ export function isAddressNotVerified(response: unknown): response is {
  *
  * @param response - The response to check.
  */
-export function isAalAlreadyFulfilled(response: unknown): response is GenericError {
-  return isGenericErrorResponse(response) && response.error.id === 'session_aal_already_fulfilled'
+export function isAalAlreadyFulfilled(
+  response: unknown,
+): response is GenericError {
+  return (
+    isGenericErrorResponse(response) &&
+    response.error.id === 'session_aal_already_fulfilled'
+  )
 }
 
 /**
@@ -2787,8 +2902,13 @@ export function isAalAlreadyFulfilled(response: unknown): response is GenericErr
  *
  * @param response - The response to check.
  */
-export function isSessionAal1Required(response: unknown): response is ErrorGeneric {
-  return isGenericErrorResponse(response) && response.error.id === 'session_aal1_required'
+export function isSessionAal1Required(
+  response: unknown,
+): response is ErrorGeneric {
+  return (
+    isGenericErrorResponse(response) &&
+    response.error.id === 'session_aal1_required'
+  )
 }
 
 /**
@@ -2796,8 +2916,13 @@ export function isSessionAal1Required(response: unknown): response is ErrorGener
  *
  * @param response - The response to check.
  */
-export function isSessionAal2Required(response: unknown): response is GenericError {
-  return isGenericErrorResponse(response) && response.error.id === 'session_aal2_required'
+export function isSessionAal2Required(
+  response: unknown,
+): response is GenericError {
+  return (
+    isGenericErrorResponse(response) &&
+    response.error.id === 'session_aal2_required'
+  )
 }
 
 /**
@@ -2805,8 +2930,13 @@ export function isSessionAal2Required(response: unknown): response is GenericErr
  *
  * @param response - The response to check.
  */
-export function isNoActiveSession(response: unknown): response is GenericError {
-  return isGenericErrorResponse(response) && response.error.id === 'session_inactive'
+export function isNoActiveSession(
+  response: unknown,
+): response is GenericError {
+  return (
+    isGenericErrorResponse(response) &&
+    response.error.id === 'session_inactive'
+  )
 }
 
 /**
@@ -2815,7 +2945,10 @@ export function isNoActiveSession(response: unknown): response is GenericError {
  * @param response - The response to check.
  */
 export function isCsrfError(response: unknown): response is GenericError {
-  return isGenericErrorResponse(response) && response.error.id === 'security_csrf_violation'
+  return (
+    isGenericErrorResponse(response) &&
+    response.error.id === 'security_csrf_violation'
+  )
 }
 
 /**
@@ -2823,7 +2956,9 @@ export function isCsrfError(response: unknown): response is GenericError {
  *
  * @param response - The response to check.
  */
-export function isRedirectUrlNotAllowed(response: unknown): response is GenericError {
+export function isRedirectUrlNotAllowed(
+  response: unknown,
+): response is GenericError {
   return (
     isGenericErrorResponse(response) &&
     response.error.id === 'self_service_flow_return_to_forbidden'
@@ -2835,8 +2970,13 @@ export function isRedirectUrlNotAllowed(response: unknown): response is GenericE
  *
  * @param response - The response to check.
  */
-export function isSecurityIdentityMismatch(response: unknown): response is GenericError {
-  return isGenericErrorResponse(response) && response.error.id === 'security_identity_mismatch'
+export function isSecurityIdentityMismatch(
+  response: unknown,
+): response is GenericError {
+  return (
+    isGenericErrorResponse(response) &&
+    response.error.id === 'security_identity_mismatch'
+  )
 }
 
 export const isResponseError = (err: unknown): err is ResponseError => {
@@ -2844,7 +2984,12 @@ export const isResponseError = (err: unknown): err is ResponseError => {
     return true
   }
 
-  return typeof err === 'object' && !!err && 'name' in err && err.name === 'ResponseError'
+  return (
+    typeof err === 'object' &&
+    !!err &&
+    'name' in err &&
+    err.name === 'ResponseError'
+  )
 }
 
 export const isFetchError = (err: unknown): err is FetchError => {
@@ -2934,7 +3079,9 @@ type ObjWithNodeType = {
  *
  * @param attrs - the attributes of the node
  */
-export function isUiNodeAnchorAttributes(attrs: ObjWithNodeType): attrs is UiNodeAnchorAttributes {
+export function isUiNodeAnchorAttributes(
+  attrs: ObjWithNodeType,
+): attrs is UiNodeAnchorAttributes {
   return attrs.node_type === 'a'
 }
 
@@ -2943,7 +3090,9 @@ export function isUiNodeAnchorAttributes(attrs: ObjWithNodeType): attrs is UiNod
  *
  * @param attrs - the attributes of the node
  */
-export function isUiNodeImageAttributes(attrs: ObjWithNodeType): attrs is UiNodeImageAttributes {
+export function isUiNodeImageAttributes(
+  attrs: ObjWithNodeType,
+): attrs is UiNodeImageAttributes {
   return attrs.node_type === 'img'
 }
 
@@ -2952,7 +3101,9 @@ export function isUiNodeImageAttributes(attrs: ObjWithNodeType): attrs is UiNode
  *
  * @param attrs - the attributes of the node
  */
-export function isUiNodeInputAttributes(attrs: ObjWithNodeType): attrs is UiNodeInputAttributes {
+export function isUiNodeInputAttributes(
+  attrs: ObjWithNodeType,
+): attrs is UiNodeInputAttributes {
   return attrs.node_type === 'input'
 }
 
@@ -2961,7 +3112,9 @@ export function isUiNodeInputAttributes(attrs: ObjWithNodeType): attrs is UiNode
  *
  * @param attrs - the attributes of the node
  */
-export function isUiNodeDivAttributes(attrs: ObjWithNodeType): attrs is UiNodeDivisionAttributes {
+export function isUiNodeDivAttributes(
+  attrs: ObjWithNodeType,
+): attrs is UiNodeDivisionAttributes {
   return attrs.node_type === 'div'
 }
 
@@ -2970,7 +3123,9 @@ export function isUiNodeDivAttributes(attrs: ObjWithNodeType): attrs is UiNodeDi
  *
  * @param attrs - the attributes of the node
  */
-export function isUiNodeTextAttributes(attrs: ObjWithNodeType): attrs is UiNodeTextAttributes {
+export function isUiNodeTextAttributes(
+  attrs: ObjWithNodeType,
+): attrs is UiNodeTextAttributes {
   return attrs.node_type === 'text'
 }
 
@@ -2979,7 +3134,9 @@ export function isUiNodeTextAttributes(attrs: ObjWithNodeType): attrs is UiNodeT
  *
  * @param attrs - the attributes of the node
  */
-export function isUiNodeScriptAttributes(attrs: ObjWithNodeType): attrs is UiNodeScriptAttributes {
+export function isUiNodeScriptAttributes(
+  attrs: ObjWithNodeType,
+): attrs is UiNodeScriptAttributes {
   return attrs.node_type === 'script'
 }
 
@@ -3039,7 +3196,12 @@ export const verificationUrl = (config: { sdk: { url: string } }) =>
 // Copyright © 2025 Ory Corp
 // SPDX-License-Identifier: Apache-2.0
 
-import { FetchError, FlowType, GenericError, ResponseError } from '@ory/client-fetch'
+import {
+  FetchError,
+  FlowType,
+  GenericError,
+  ResponseError,
+} from '@ory/client-fetch'
 import { OryErrorHandler } from '../events'
 import { OnRedirectHandler } from './continueWith'
 import {
@@ -3129,8 +3291,12 @@ export const handleFlowError =
         opts.onRestartFlow(body.use_flow_id)
         return
       } else if (isAddressNotVerified(body)) {
-        for (const continueWith of body.error.details?.continue_with || []) {
-          if (continueWith.action === 'show_verification_ui' && continueWith.flow.url) {
+        for (const continueWith of body.error.details?.continue_with ||
+          []) {
+          if (
+            continueWith.action === 'show_verification_ui' &&
+            continueWith.flow.url
+          ) {
             opts.onRedirect(continueWith.flow.url, true)
             return
           }
@@ -3138,10 +3304,16 @@ export const handleFlowError =
 
         opts.onRedirect(verificationUrl(opts.config), true)
         return
-      } else if (isBrowserLocationChangeRequired(body) && body.redirect_browser_to) {
+      } else if (
+        isBrowserLocationChangeRequired(body) &&
+        body.redirect_browser_to
+      ) {
         opts.onRedirect(body.redirect_browser_to, true)
         return
-      } else if (isNeedsPrivilegedSessionError(body) && body.redirect_browser_to) {
+      } else if (
+        isNeedsPrivilegedSessionError(body) &&
+        body.redirect_browser_to
+      ) {
         opts.onRedirect(body.redirect_browser_to, true)
         return
       } else if (isSelfServiceFlowReplaced(body)) {
@@ -3180,7 +3352,9 @@ export const handleFlowError =
           opts.onRestartFlow()
           return
         case 400:
-          return opts.onValidationError((await err.response.json()) as unknown as T)
+          return opts.onValidationError(
+            (await err.response.json()) as unknown as T,
+          )
         case 403: // This typically happens with CSRF violations.
           await opts.onError?.({
             type: 'csrf_error',
@@ -3233,11 +3407,18 @@ export async function toBody(response: Response): Promise<unknown> {
     return await response.clone().json()
   } catch (e: unknown) {
     await logResponseError(response, true, [e])
-    throw new ResponseError(response, 'Unable to decode API response using JSON.')
+    throw new ResponseError(
+      response,
+      'Unable to decode API response using JSON.',
+    )
   }
 }
 
-async function logResponseError(response: Response, printBody: boolean, wrap?: unknown[]) {
+async function logResponseError(
+  response: Response,
+  printBody: boolean,
+  wrap?: unknown[],
+) {
   console.error('Unable to decode API response', {
     response: {
       status: response.status,
@@ -3262,7 +3443,9 @@ export function showToast(
   toast: Omit<OryToastProps, 'id'>,
   ToastComponent: React.ComponentType<OryToastProps>,
 ) {
-  return sonnerToast.custom((id) => <ToastComponent id={id} message={toast.message} />)
+  return sonnerToast.custom((id) => (
+    <ToastComponent id={id} message={toast.message} />
+  ))
 }
 ```
 
@@ -3281,7 +3464,11 @@ import {
   UpdateVerificationFlowBody,
 } from '@ory/client-fetch'
 import { OryFlowContainer } from './flowContainer'
-import { OryErrorHandler, OrySuccessHandler, OryValidationErrorHandler } from './events'
+import {
+  OryErrorHandler,
+  OrySuccessHandler,
+  OryValidationErrorHandler,
+} from './events'
 
 /**
  * Props for the submit handler
@@ -3369,7 +3556,8 @@ import { FormValues } from '../types'
  * @group Utilities
  */
 export type OryTransientPayload =
-  Record<string, unknown> | ((formValues: FormValues) => Record<string, unknown>)
+  | Record<string, unknown>
+  | ((formValues: FormValues) => Record<string, unknown>)
 
 /**
  * Resolves an `OryTransientPayload` value and merges it with any existing
@@ -3391,8 +3579,13 @@ export function resolveTransientPayload(
   existingNodeValues?: Record<string, unknown>,
 ): Record<string, unknown> {
   const raw =
-    typeof transientPayload === 'function' ? transientPayload(formValues) : transientPayload
-  const resolved = typeof raw === 'object' && raw !== null && !Array.isArray(raw) ? raw : {}
+    typeof transientPayload === 'function'
+      ? transientPayload(formValues)
+      : transientPayload
+  const resolved =
+    typeof raw === 'object' && raw !== null && !Array.isArray(raw)
+      ? raw
+      : {}
 
   if (!existingNodeValues) {
     return resolved
@@ -3408,7 +3601,11 @@ export function resolveTransientPayload(
 // Copyright © 2024 Ory Corp
 // SPDX-License-Identifier: Apache-2.0
 
-import { isUiNodeInputAttributes, isUiNodeScriptAttributes, UiNode } from '@ory/client-fetch'
+import {
+  isUiNodeInputAttributes,
+  isUiNodeScriptAttributes,
+  UiNode,
+} from '@ory/client-fetch'
 
 import type {
   UiNodeAttributes,
@@ -3422,7 +3619,9 @@ import { UiNodeInput } from '../utilFixSDKTypesHelper'
 
 export function triggerToWindowCall(
   trigger:
-    UiNodeInputAttributesOnclickTriggerEnum | UiNodeInputAttributesOnloadTriggerEnum | undefined,
+    | UiNodeInputAttributesOnclickTriggerEnum
+    | UiNodeInputAttributesOnloadTriggerEnum
+    | undefined,
 ) {
   if (!trigger) {
     return
@@ -3456,21 +3655,29 @@ export function triggerToWindowCall(
 }
 
 export function triggerToFunction(
-  trigger: UiNodeInputAttributesOnclickTriggerEnum | UiNodeInputAttributesOnloadTriggerEnum,
+  trigger:
+    | UiNodeInputAttributesOnclickTriggerEnum
+    | UiNodeInputAttributesOnloadTriggerEnum,
 ) {
   if (typeof window === 'undefined') {
-    console.debug('The Ory SDK is missing a required function: window is undefined.')
+    console.debug(
+      'The Ory SDK is missing a required function: window is undefined.',
+    )
     return undefined
   }
 
   const typedWindow = window as { [key: string]: any } // eslint-disable-line @typescript-eslint/no-explicit-any
   if (!(trigger in typedWindow) || !typedWindow[trigger]) {
-    console.debug(`The Ory SDK is missing a required function: ${trigger}.`)
+    console.debug(
+      `The Ory SDK is missing a required function: ${trigger}.`,
+    )
     return undefined
   }
   const triggerFn = typedWindow[trigger]
   if (typeof triggerFn !== 'function') {
-    console.debug(`The Ory SDK is missing a required function: ${trigger}. It is not a function.`)
+    console.debug(
+      `The Ory SDK is missing a required function: ${trigger}. It is not a function.`,
+    )
     return undefined
   }
   return triggerFn as () => void
@@ -3547,7 +3754,10 @@ export function useNodesGroups(
       groupNodes.push(node)
       groups[node.group] = groupNodes
 
-      if (omit?.includes('script') && isUiNodeScriptAttributes(node.attributes)) {
+      if (
+        omit?.includes('script') &&
+        isUiNodeScriptAttributes(node.attributes)
+      ) {
         continue
       }
 
@@ -3565,7 +3775,8 @@ export function useNodesGroups(
     const finalGroups: Partial<Record<UiNodeGroupEnum, UiNode[]>> = {}
     for (const [group, count] of Object.entries(groupRetained)) {
       if (count > 0) {
-        finalGroups[group as UiNodeGroupEnum] = groups[group as UiNodeGroupEnum]
+        finalGroups[group as UiNodeGroupEnum] =
+          groups[group as UiNodeGroupEnum]
       }
     }
 
@@ -3574,9 +3785,11 @@ export function useNodesGroups(
 
   const entries = useMemo(
     () =>
-      (Object.entries(groups) as Entries<Record<UiNodeGroupEnum, UiNode[]>>).sort(([a], [b]) =>
-        groupSorter(a, b),
-      ),
+      (
+        Object.entries(groups) as Entries<
+          Record<UiNodeGroupEnum, UiNode[]>
+        >
+      ).sort(([a], [b]) => groupSorter(a, b)),
     [groups, groupSorter],
   )
 
@@ -3626,9 +3839,13 @@ const finder = (opt: FindOptions) => (n: UiNode) => {
  * @param opt  - The matching options
  * @returns The first matching node
  */
-export const findNode = <T extends NodeType>(nodes: UiNode[], opt: FindOptions<T>) =>
+export const findNode = <T extends NodeType>(
+  nodes: UiNode[],
+  opt: FindOptions<T>,
+) =>
   nodes.find(finder(opt)) as
-    (UiNode & { attributes: UiNodeAttributes & { node_type: T } }) | undefined
+    | (UiNode & { attributes: UiNodeAttributes & { node_type: T } })
+    | undefined
 
 /**
  * Returns functional nodes not related to credentials (e.g. password node) but
@@ -3655,7 +3872,9 @@ export function useFunctionalNodes(nodes: UiNode[]) {
  *
  * @param method - The string to type guard
  */
-export function isUiNodeGroupEnum(method: string): method is UiNodeGroupEnum {
+export function isUiNodeGroupEnum(
+  method: string,
+): method is UiNodeGroupEnum {
   // @ts-expect-error it's a string array, but typescript thinks the argument must be validated stricter
   return Object.values(UiNodeGroupEnum).includes(method)
 }
@@ -3666,7 +3885,10 @@ export function isUiNodeGroupEnum(method: string): method is UiNodeGroupEnum {
  * @param node - The node
  */
 function isSingleSignOnNode(node: UiNode): boolean {
-  return node.group === UiNodeGroupEnum.Oidc || node.group === UiNodeGroupEnum.Saml
+  return (
+    node.group === UiNodeGroupEnum.Oidc ||
+    node.group === UiNodeGroupEnum.Saml
+  )
 }
 
 /**
@@ -3714,7 +3936,9 @@ export type GroupedNodes = Partial<Record<UiNodeGroupEnum, UiNode[]>>
  * @param nodes - Array of nodes to filter on.
  * @returns Record of groups with at least one visible element and their nodes.
  */
-export function useNodeGroupsWithVisibleNodes(nodes: UiNode[]): GroupedNodes {
+export function useNodeGroupsWithVisibleNodes(
+  nodes: UiNode[],
+): GroupedNodes {
   return useMemo(() => {
     const groups: Partial<Record<UiNodeGroupEnum, UiNode[]>> = {}
     const groupRetained: Partial<Record<UiNodeGroupEnum, number>> = {}
@@ -3735,7 +3959,8 @@ export function useNodeGroupsWithVisibleNodes(nodes: UiNode[]): GroupedNodes {
     const finalGroups: Partial<Record<UiNodeGroupEnum, UiNode[]>> = {}
     for (const [group, count] of Object.entries(groupRetained)) {
       if (count > 0) {
-        finalGroups[group as UiNodeGroupEnum] = groups[group as UiNodeGroupEnum]
+        finalGroups[group as UiNodeGroupEnum] =
+          groups[group as UiNodeGroupEnum]
       }
     }
 
@@ -3749,7 +3974,9 @@ export function useNodeGroupsWithVisibleNodes(nodes: UiNode[]): GroupedNodes {
  * @param nodes the UI nodes to filter (usually flow.ui.nodes)
  * @returns the UiNode that corresponds to the identfiier for code method, or undefined if not found
  */
-export function findCodeIdentifierNode(nodes: UiNode[]): UiNodeInput | undefined {
+export function findCodeIdentifierNode(
+  nodes: UiNode[],
+): UiNodeInput | undefined {
   return (findNode(nodes, {
     group: 'identifier_first',
     node_type: 'input',
@@ -3862,7 +4089,12 @@ export function isUiNodeDiv(node: UiNode): node is UiNodeDiv {
 }
 
 export type UiNodeFixed =
-  UiNodeInput | UiNodeImage | UiNodeAnchor | UiNodeText | UiNodeScript | UiNodeDiv
+  | UiNodeInput
+  | UiNodeImage
+  | UiNodeAnchor
+  | UiNodeText
+  | UiNodeScript
+  | UiNodeDiv
 ```
 
 ## ory/packages/elements-react/src/theme/default/assets/global.d.ts
@@ -3886,7 +4118,9 @@ declare module '*.svg' {
 // Copyright © 2025 Ory Corp
 // SPDX-License-Identifier: Apache-2.0
 
-export type SVGIcon = React.FunctionComponent<React.ComponentProps<'svg'> & { size?: number }>
+export type SVGIcon = React.FunctionComponent<
+  React.ComponentProps<'svg'> & { size?: number }
+>
 ```
 
 ## ory/packages/elements-react/src/theme/default/components/card/auth-method-list-container.tsx
@@ -3897,7 +4131,9 @@ export type SVGIcon = React.FunctionComponent<React.ComponentProps<'svg'> & { si
 
 import { PropsWithChildren } from 'react'
 
-export function DefaultAuthMethodListContainer({ children }: PropsWithChildren) {
+export function DefaultAuthMethodListContainer({
+  children,
+}: PropsWithChildren) {
   return <div className="grid grid-cols-1 gap-2">{children}</div>
 }
 ```
@@ -3908,17 +4144,31 @@ export function DefaultAuthMethodListContainer({ children }: PropsWithChildren) 
 // Copyright © 2024 Ory Corp
 // SPDX-License-Identifier: Apache-2.0
 
-import { UiContainer, UiNode, UiNodeGroupEnum, UiNodeInputAttributes } from '@ory/client-fetch'
-import { OryCardAuthMethodListItemProps, useOryFlow } from '@ory/elements-react'
+import {
+  UiContainer,
+  UiNode,
+  UiNodeGroupEnum,
+  UiNodeInputAttributes,
+} from '@ory/client-fetch'
+import {
+  OryCardAuthMethodListItemProps,
+  useOryFlow,
+} from '@ory/elements-react'
 import { useEffect, useState } from 'react'
 import { defineMessages, useIntl } from 'react-intl'
 import { useEventListener, useTimeout } from 'usehooks-ts'
 import { kratosMessages } from '../../../../util/i18n/generated/kratosMessages'
-import { findCodeIdentifierNode, triggerToFunction } from '../../../../util/ui'
+import {
+  findCodeIdentifierNode,
+  triggerToFunction,
+} from '../../../../util/ui'
 import AlertIcon from '../../assets/icons/alert-triangle.svg'
 import lookup_secret from '../../assets/icons/code-asterix.svg'
 import code from '../../assets/icons/code.svg'
-import { default as hardware_token, default as passkey } from '../../assets/icons/passkey.svg'
+import {
+  default as hardware_token,
+  default as passkey,
+} from '../../assets/icons/passkey.svg'
 import password from '../../assets/icons/password.svg'
 import totp from '../../assets/icons/totp.svg'
 import webauthn from '../../assets/icons/webauthn.svg'
@@ -3979,20 +4229,27 @@ export const descriptions = defineMessages<string>({
   },
   [UiNodeGroupEnum.Passkey]: {
     id: 'two-step.passkey.description',
-    defaultMessage: "Use your device's for fingerprint or face recognition",
+    defaultMessage:
+      "Use your device's for fingerprint or face recognition",
   },
   [UiNodeGroupEnum.Totp]: {
     id: 'two-step.totp.description',
-    defaultMessage: 'Use a 6-digit one-time code from your authenticator app',
+    defaultMessage:
+      'Use a 6-digit one-time code from your authenticator app',
   },
   [UiNodeGroupEnum.LookupSecret]: {
     id: 'two-step.lookup_secret.description',
-    defaultMessage: 'Use up one of your 8-digit backup codes to authenticate',
+    defaultMessage:
+      'Use up one of your 8-digit backup codes to authenticate',
   },
 })
 
 // TODO: change group to UiNodeGroupEnum throughout
-function formatTitle(group: string, nodes: UiNode[], intl: ReturnType<typeof useIntl>): string {
+function formatTitle(
+  group: string,
+  nodes: UiNode[],
+  intl: ReturnType<typeof useIntl>,
+): string {
   const fallbackTitle = { id: `two-step.${group}.title` }
 
   if (group === 'code') {
@@ -4026,7 +4283,9 @@ export function DefaultAuthMethodListItem({
       return null
     }
 
-    return <PasskeyListItem passkeyNode={passkeyNode} disabled={disabled} />
+    return (
+      <PasskeyListItem passkeyNode={passkeyNode} disabled={disabled} />
+    )
   }
 
   const fallbackDescription = { id: `two-step.${group}.description` }
@@ -4035,7 +4294,9 @@ export function DefaultAuthMethodListItem({
       as="button"
       icon={Icon}
       title={formatTitle(group, flow.ui.nodes, intl)}
-      description={intl.formatMessage(descriptions[group] ?? fallbackDescription)}
+      description={intl.formatMessage(
+        descriptions[group] ?? fallbackDescription,
+      )}
       onClick={onClick}
       type={isGroupImmediateSubmit(group) ? 'submit' : 'button'}
       data-testid={`ory/form/auth-picker/${group}`}
@@ -4050,7 +4311,9 @@ function findPasskeyNode(flow: {
   const passkeyTriggerNode = flow.ui.nodes.find(
     (node) =>
       node.attributes.node_type === 'input' &&
-      ['passkey_login_trigger', 'passkey_register_trigger'].includes(node.attributes.name),
+      ['passkey_login_trigger', 'passkey_register_trigger'].includes(
+        node.attributes.name,
+      ),
   )
 
   if (!passkeyTriggerNode) {
@@ -4069,7 +4332,8 @@ function PasskeyListItem({ passkeyNode, disabled }: PasskeyListItemProps) {
   const intl = useIntl()
   const Icon = iconsMap.passkey || null
 
-  const [isPasskeyScriptInitalized, setPasskeyScriptInitalized] = useState(false)
+  const [isPasskeyScriptInitalized, setPasskeyScriptInitalized] =
+    useState(false)
   const [failedToLoad, setFailedToLoad] = useState(false)
 
   const clickHandler = () => {
@@ -4095,9 +4359,12 @@ function PasskeyListItem({ passkeyNode, disabled }: PasskeyListItemProps) {
     setPasskeyScriptInitalized(typeof fn === 'function')
   }, [passkeyNode])
 
-  useEventListener('oryWebAuthnInitialized' as keyof WindowEventMap, () => {
-    setPasskeyScriptInitalized(true)
-  })
+  useEventListener(
+    'oryWebAuthnInitialized' as keyof WindowEventMap,
+    () => {
+      setPasskeyScriptInitalized(true)
+    },
+  )
 
   useTimeout(() => {
     if (!isPasskeyScriptInitalized) {
@@ -4220,7 +4487,9 @@ import { restartFlowUrl } from '../../utils/url'
 export function DefaultCurrentIdentifierButton() {
   const { flow, flowType, formState } = useOryFlow()
   const { setValue, getValues, watch } = useFormContext()
-  const [turnstileResponse, setTurnstileResponse] = useState<string | undefined>()
+  const [turnstileResponse, setTurnstileResponse] = useState<
+    string | undefined
+  >()
   const config = useOryConfiguration()
   const { session } = useSession()
   const ui = flow.ui
@@ -4229,8 +4498,8 @@ export function DefaultCurrentIdentifierButton() {
   // The `captcha_turnstile_response` value cannot be accessed directly via `transient_payload.captcha_turnstile_response`
   // in the form context, likely due to the way React Hook Form manages its internal state and transient payloads.
   // By using the `watch` function, we can observe changes to the `transient_payload` and retrieve the captcha response value.
-  const captchaVerificationValue = watch('transient_payload')?.captcha_turnstile_response as
-    string | undefined
+  const captchaVerificationValue = watch('transient_payload')
+    ?.captcha_turnstile_response as string | undefined
   useEffect(() => {
     if (captchaVerificationValue) {
       setTurnstileResponse(captchaVerificationValue)
@@ -4250,9 +4519,14 @@ export function DefaultCurrentIdentifierButton() {
   // `identifier` node when present (e.g. refresh with password/code) and falls
   // back to the authenticated session's identity when the flow carries none
   // (e.g. the initial 2FA screen for totp or lookup secret).
-  if (flowType === FlowType.Login && (flow.requested_aal === 'aal2' || flow.refresh)) {
+  if (
+    flowType === FlowType.Login &&
+    (flow.requested_aal === 'aal2' || flow.refresh)
+  ) {
     const identifier =
-      nodeBackButton?.value || identifierFromUiNodes(ui.nodes) || identifierFromSession(session)
+      nodeBackButton?.value ||
+      identifierFromUiNodes(ui.nodes) ||
+      identifierFromSession(session)
     if (!identifier) {
       return null
     }
@@ -4276,7 +4550,10 @@ export function DefaultCurrentIdentifierButton() {
     return null
   }
 
-  const initFlowUrl = restartFlowUrl(flow, `${config.sdk.url}/self-service/${flowType}/browser`)
+  const initFlowUrl = restartFlowUrl(
+    flow,
+    `${config.sdk.url}/self-service/${flowType}/browser`,
+  )
 
   const screenSelectionNode = findScreenSelectionButton(flow.ui.nodes)
   if (screenSelectionNode) {
@@ -4288,7 +4565,10 @@ export function DefaultCurrentIdentifierButton() {
         {flow.ui.nodes
           .filter((n) => {
             if (isUiNodeInputAttributes(n.attributes)) {
-              return n.attributes.type === 'hidden' && ['default', 'captcha'].includes(n.group)
+              return (
+                n.attributes.type === 'hidden' &&
+                ['default', 'captcha'].includes(n.group)
+              )
             }
             return false
           })
@@ -4299,13 +4579,21 @@ export function DefaultCurrentIdentifierButton() {
             // Of course turnstile works a bit differently because it uses transient_payload
             // to carry over information. So yeah, we need a special decode here.
             if (
-              attrs.name === 'transient_payload.captcha_turnstile_response' &&
+              attrs.name ===
+                'transient_payload.captcha_turnstile_response' &&
               turnstileResponse
             ) {
               value = turnstileResponse
             }
 
-            return <input key={attrs.name} type="hidden" name={attrs.name} value={value} />
+            return (
+              <input
+                key={attrs.name}
+                type="hidden"
+                name={attrs.name}
+                value={value}
+              />
+            )
           })}
         <button
           className={
@@ -4314,12 +4602,19 @@ export function DefaultCurrentIdentifierButton() {
           {...omitInputAttributes(nodeBackButton)}
           type={'submit'}
           onClick={() => {
-            setValue(screenSelectionNode.attributes.name, screenSelectionNode.attributes.value)
+            setValue(
+              screenSelectionNode.attributes.name,
+              screenSelectionNode.attributes.value,
+            )
             setValue('method', 'profile')
           }}
           name={screenSelectionNode.attributes.name}
           value={screenSelectionNode.attributes.value}
-          title={nodeBackButton.value ? `Adjust ${nodeBackButton.value}` : `Back`}
+          title={
+            nodeBackButton.value
+              ? `Adjust ${nodeBackButton.value}`
+              : `Back`
+          }
           data-testid={`ory/screen/${flowType}/action/restart`}
         >
           <span className="inline-flex min-h-5 items-center gap-2 overflow-hidden text-ellipsis">
@@ -4383,25 +4678,38 @@ export function getBackButtonNodeAttributes(
         (n) =>
           isUiNodeInputAttributes(n.attributes) &&
           !!n.attributes.value &&
-          ['email', 'recovery_confirm_address', 'recovery_address'].includes(n.attributes.name),
+          [
+            'email',
+            'recovery_confirm_address',
+            'recovery_address',
+          ].includes(n.attributes.name),
       )?.attributes as UiNodeInputAttributes | undefined
       break
     case FlowType.Verification:
       // Re-use the email node for displaying the email
       nodeBackButtonAttributes = nodes.find(
-        (n) => isUiNodeInputAttributes(n.attributes) && n.attributes.name === 'email',
+        (n) =>
+          isUiNodeInputAttributes(n.attributes) &&
+          n.attributes.name === 'email',
       )?.attributes as UiNodeInputAttributes | undefined
       break
   }
 
-  if (nodeBackButtonAttributes?.node_type !== 'input' || !nodeBackButtonAttributes?.value) {
+  if (
+    nodeBackButtonAttributes?.node_type !== 'input' ||
+    !nodeBackButtonAttributes?.value
+  ) {
     return undefined
   }
 
   return nodeBackButtonAttributes
 }
 
-const backButtonCandiates = ['traits.email', 'traits.username', 'traits.phone_number']
+const backButtonCandiates = [
+  'traits.email',
+  'traits.username',
+  'traits.phone_number',
+]
 
 /**
  * Guesses the back button for registration flows
@@ -4411,7 +4719,9 @@ const backButtonCandiates = ['traits.email', 'traits.username', 'traits.phone_nu
  * The list is most likely not exhaustive yet, and may need to be updated in the future.
  *
  */
-export function guessRegistrationBackButton(uiNodes: UiNode[]): UiNodeInputAttributes | undefined {
+export function guessRegistrationBackButton(
+  uiNodes: UiNode[],
+): UiNodeInputAttributes | undefined {
   return uiNodes.find(
     (node) =>
       isUiNodeInputAttributes(node.attributes) &&
@@ -4441,7 +4751,9 @@ function identifierFromUiNodes(nodes: UiNode[]): string | undefined {
 // the authenticated session's identity traits. Used as a fallback for the
 // current-identifier indicator on login screens where the flow itself does not
 // carry the identifier (for example, the initial second factor screens).
-function identifierFromSession(session: Session | null | undefined): string | undefined {
+function identifierFromSession(
+  session: Session | null | undefined,
+): string | undefined {
   const traits = session?.identity?.traits
   if (!traits || typeof traits !== 'object') {
     return undefined
@@ -4464,7 +4776,13 @@ function identifierFromSession(session: Session | null | undefined): string | un
 // SPDX-License-Identifier: Apache-2.0
 
 import { FlowType, LoginFlow } from '@ory/client-fetch'
-import { ConsentFlow, FormState, Node, useOryConfiguration, useOryFlow } from '@ory/elements-react'
+import {
+  ConsentFlow,
+  FormState,
+  Node,
+  useOryConfiguration,
+  useOryFlow,
+} from '@ory/elements-react'
 import { useIntl } from 'react-intl'
 import { toAuthMethodPickerOptions } from '../../../../components/card/two-step/state-select-method'
 import { findScreenSelectionButton } from '../../../../util/nodes'
@@ -4473,7 +4791,10 @@ import {
   nodesToAuthMethodGroups,
   useNodeGroupsWithVisibleNodes,
 } from '../../../../util/ui'
-import { isUiNodeInput, UiNodeInput } from '../../../../util/utilFixSDKTypesHelper'
+import {
+  isUiNodeInput,
+  UiNodeInput,
+} from '../../../../util/utilFixSDKTypesHelper'
 import { useClientLogout } from '../../utils/logout'
 import { initFlowUrl, restartFlowUrl } from '../../utils/url'
 
@@ -4502,7 +4823,11 @@ export function DefaultCardFooter() {
   }
 }
 
-function shouldShowLogoutButton(flow: LoginFlow, formState: FormState, authMethods: string[]) {
+function shouldShowLogoutButton(
+  flow: LoginFlow,
+  formState: FormState,
+  authMethods: string[],
+) {
   // Always for refresh flows, as we know there is a session
   if (flow.refresh) {
     return true
@@ -4525,7 +4850,10 @@ function shouldShowLogoutButton(flow: LoginFlow, formState: FormState, authMetho
     // This is the case when the user only has one method (e.g. code or totp), set up
     // and the user is on the "method active" screen
     // In that case there is no "select_method" state, so going back to that screen wouldn't work
-    if (formState.current === 'method_active' && authMethods.length === 1) {
+    if (
+      formState.current === 'method_active' &&
+      authMethods.length === 1
+    ) {
       return true
     }
   }
@@ -4548,7 +4876,10 @@ function LoginCardFooter({ flow }: LoginCardFooterProps) {
     returnTo = flow.return_to
   }
   if (!returnTo) {
-    returnTo = restartFlowUrl(flow, `${config.sdk.url}/self-service/${FlowType.Login}/browser`)
+    returnTo = restartFlowUrl(
+      flow,
+      `${config.sdk.url}/self-service/${FlowType.Login}/browser`,
+    )
   }
 
   if (shouldShowLogoutButton(flow, formState, authMethods)) {
@@ -4622,7 +4953,8 @@ type LogoutButtonProps = {
 function LogoutButton({ returnTo }: LogoutButtonProps) {
   const config = useOryConfiguration()
   const intl = useIntl()
-  const { logoutFlow: logout, didLoad: didLoadLogout } = useClientLogout(config)
+  const { logoutFlow: logout, didLoad: didLoadLogout } =
+    useClientLogout(config)
 
   return (
     <span className="leading-normal font-normal text-interface-foreground-default-primary antialiased">
@@ -4662,7 +4994,10 @@ function RegistrationCardFooter() {
   const screenSelectionNode = findScreenSelectionButton(flow.ui.nodes)
   switch (formState.current) {
     case 'method_active':
-      if (!screenSelectionNode || Object.entries(authMethodBlocks).length < 2) {
+      if (
+        !screenSelectionNode ||
+        Object.entries(authMethodBlocks).length < 2
+      ) {
         return null
       }
 
@@ -4741,7 +5076,8 @@ function ConsentCardFooter({ flow }: ConsentCardFooterProps) {
           Make sure you trust {flow.consent_request.client?.client_name}
         </p>
         <p className="leading-normal text-interface-foreground-default-secondary">
-          You may be sharing sensitive information with this site or application.
+          You may be sharing sensitive information with this site or
+          application.
         </p>
       </div>
       {rememberNode && <Node.Checkbox node={rememberNode} />}
@@ -4759,7 +5095,8 @@ function ConsentCardFooter({ flow }: ConsentCardFooterProps) {
       </div>
       <p className="text-sm">
         <span className="text-interface-foreground-default-tertiary">
-          Authorizing will redirect to {flow.consent_request.client?.client_name}
+          Authorizing will redirect to{' '}
+          {flow.consent_request.client?.client_name}
         </span>
       </p>
     </div>
@@ -4773,7 +5110,11 @@ function ConsentCardFooter({ flow }: ConsentCardFooterProps) {
 // Copyright © 2024 Ory Corp
 // SPDX-License-Identifier: Apache-2.0
 
-import { messageTestId, useComponents, useOryFlow } from '@ory/elements-react'
+import {
+  messageTestId,
+  useComponents,
+  useOryFlow,
+} from '@ory/elements-react'
 import { useCardHeaderText } from '../../utils/constructCardHeader'
 import { DefaultCurrentIdentifierButton } from './current-identifier-button'
 
@@ -4817,9 +5158,18 @@ function InnerCardHeader({
  */
 export function DefaultCardHeader() {
   const context = useOryFlow()
-  const { title, description, messageId } = useCardHeaderText(context.flow.ui, context)
+  const { title, description, messageId } = useCardHeaderText(
+    context.flow.ui,
+    context,
+  )
 
-  return <InnerCardHeader title={title} text={description} messageId={messageId} />
+  return (
+    <InnerCardHeader
+      title={title}
+      text={description}
+      messageId={messageId}
+    />
+  )
 }
 ```
 
@@ -4903,7 +5253,8 @@ export function ListItem<T extends React.ElementType = 'div'>({
   children,
   className,
   ...props
-}: PropsWithChildren<ListItemProps<T>> & React.ComponentPropsWithoutRef<T>) {
+}: PropsWithChildren<ListItemProps<T>> &
+  React.ComponentPropsWithoutRef<T>) {
   const Comp = as || 'div'
 
   return (
@@ -4916,11 +5267,20 @@ export function ListItem<T extends React.ElementType = 'div'>({
       )}
     >
       <span className="mt-1">
-        {Icon && <Icon size={16} className="text-interface-foreground-brand-primary" />}
+        {Icon && (
+          <Icon
+            size={16}
+            className="text-interface-foreground-brand-primary"
+          />
+        )}
       </span>
       <span className="inline-flex max-w-full min-w-1 flex-1 flex-col leading-normal">
-        <span className="break-words text-interface-foreground-default-primary">{title}</span>
-        <span className="text-interface-foreground-default-secondary">{description}</span>
+        <span className="break-words text-interface-foreground-default-primary">
+          {title}
+        </span>
+        <span className="text-interface-foreground-default-secondary">
+          {description}
+        </span>
       </span>
       {children}
     </Comp>
@@ -4963,15 +5323,28 @@ export function DefaultCardLogo() {
   const { flow } = useOryFlow()
 
   if (config.project.logo_light_url) {
-    const returnTo = getReturnTo(flow.return_to) ?? config.project.default_redirect_url
+    const returnTo =
+      getReturnTo(flow.return_to) ?? config.project.default_redirect_url
     if (!returnTo) {
       return (
-        <img src={config.project.logo_light_url} className="h-full max-h-9 self-start" alt="Logo" />
+        <img
+          src={config.project.logo_light_url}
+          className="h-full max-h-9 self-start"
+          alt="Logo"
+        />
       )
     }
     return (
-      <a href={returnTo} aria-label="Go back to homepage" className="h-full max-h-9 self-start">
-        <img src={config.project.logo_light_url} className="h-full max-h-9 w-full" alt="Logo" />
+      <a
+        href={returnTo}
+        aria-label="Go back to homepage"
+        className="h-full max-h-9 self-start"
+      >
+        <img
+          src={config.project.logo_light_url}
+          className="h-full max-h-9 w-full"
+          alt="Logo"
+        />
       </a>
     )
   }
@@ -4990,7 +5363,10 @@ export function DefaultCardLogo() {
 // Copyright © 2024 Ory Corp
 // SPDX-License-Identifier: Apache-2.0
 
-import { OryFlowComponentOverrides, OryFlowComponents } from '@ory/elements-react'
+import {
+  OryFlowComponentOverrides,
+  OryFlowComponents,
+} from '@ory/elements-react'
 import {
   DefaultCard,
   DefaultCardContent,
@@ -4999,7 +5375,11 @@ import {
   DefaultCardLogo,
 } from './card'
 import { DefaultAuthMethodListItem } from './card/auth-method-list-item'
-import { DefaultFormContainer, DefaultMessage, DefaultMessageContainer } from './form'
+import {
+  DefaultFormContainer,
+  DefaultMessage,
+  DefaultMessageContainer,
+} from './form'
 import { DefaultButton } from './form/button'
 import { DefaultCheckbox } from './form/checkbox'
 import { DefaultGroupContainer } from './form/group-container'
@@ -5015,7 +5395,10 @@ import {
   DefaultFormSectionContent,
   DefaultFormSectionFooter,
 } from './form/section'
-import { DefaultButtonSocial, DefaultSocialButtonContainer } from './form/sso'
+import {
+  DefaultButtonSocial,
+  DefaultSocialButtonContainer,
+} from './form/sso'
 import { DefaultText } from './form/text'
 import { DefaultPageHeader } from './generic/page-header'
 import { DefaultSettingsOidc } from './settings/settings-oidc'
@@ -5038,7 +5421,9 @@ import { DefaultToast } from './generic/toast'
  *
  * @category Utilities
  */
-export function getOryComponents(overrides?: OryFlowComponentOverrides): OryFlowComponents {
+export function getOryComponents(
+  overrides?: OryFlowComponentOverrides,
+): OryFlowComponents {
   // Yes, this could probably be easier by using lodash or a custom merge function.
   // But, this makes it very explicit what can be overridden, and does not introduce issues with merging nested fields.
   return {
@@ -5050,11 +5435,17 @@ export function getOryComponents(overrides?: OryFlowComponentOverrides): OryFlow
       Logo: overrides?.Card?.Logo ?? DefaultCardLogo,
       Divider: overrides?.Card?.Divider ?? DefaultHorizontalDivider,
       AuthMethodListContainer:
-        overrides?.Card?.AuthMethodListContainer ?? DefaultAuthMethodListContainer,
-      AuthMethodListItem: overrides?.Card?.AuthMethodListItem ?? DefaultAuthMethodListItem,
-      SettingsSection: overrides?.Card?.SettingsSection ?? DefaultFormSection,
-      SettingsSectionContent: overrides?.Card?.SettingsSectionContent ?? DefaultFormSectionContent,
-      SettingsSectionFooter: overrides?.Card?.SettingsSectionFooter ?? DefaultFormSectionFooter,
+        overrides?.Card?.AuthMethodListContainer ??
+        DefaultAuthMethodListContainer,
+      AuthMethodListItem:
+        overrides?.Card?.AuthMethodListItem ?? DefaultAuthMethodListItem,
+      SettingsSection:
+        overrides?.Card?.SettingsSection ?? DefaultFormSection,
+      SettingsSectionContent:
+        overrides?.Card?.SettingsSectionContent ??
+        DefaultFormSectionContent,
+      SettingsSectionFooter:
+        overrides?.Card?.SettingsSectionFooter ?? DefaultFormSectionFooter,
     },
     Node: {
       Button: overrides?.Node?.Button ?? DefaultButton,
@@ -5068,17 +5459,23 @@ export function getOryComponents(overrides?: OryFlowComponentOverrides): OryFlow
       Text: overrides?.Node?.Text ?? DefaultText,
       Anchor: overrides?.Node?.Anchor ?? DefaultLinkButton,
       Captcha: overrides?.Node?.Captcha ?? DefaultCaptcha,
-      ConsentScopeCheckbox: overrides?.Node?.ConsentScopeCheckbox ?? DefaultConsentScopeCheckbox,
+      ConsentScopeCheckbox:
+        overrides?.Node?.ConsentScopeCheckbox ??
+        DefaultConsentScopeCheckbox,
     },
     Form: {
       Root: overrides?.Form?.Root ?? DefaultFormContainer,
       Group: overrides?.Form?.Group ?? DefaultGroupContainer,
       SsoRoot: overrides?.Form?.SsoRoot ?? DefaultSocialButtonContainer,
-      RecoveryCodesSettings: overrides?.Form?.RecoveryCodesSettings ?? DefaultSettingsRecoveryCodes,
+      RecoveryCodesSettings:
+        overrides?.Form?.RecoveryCodesSettings ??
+        DefaultSettingsRecoveryCodes,
       TotpSettings: overrides?.Form?.TotpSettings ?? DefaultSettingsTotp,
       SsoSettings: overrides?.Form?.SsoSettings ?? DefaultSettingsOidc,
-      WebauthnSettings: overrides?.Form?.WebauthnSettings ?? DefaultSettingsWebauthn,
-      PasskeySettings: overrides?.Form?.PasskeySettings ?? DefaultSettingsPasskey,
+      WebauthnSettings:
+        overrides?.Form?.WebauthnSettings ?? DefaultSettingsWebauthn,
+      PasskeySettings:
+        overrides?.Form?.PasskeySettings ?? DefaultSettingsPasskey,
     },
     Message: {
       Root: overrides?.Message?.Root ?? DefaultMessageContainer,
@@ -5099,7 +5496,10 @@ export function getOryComponents(overrides?: OryFlowComponentOverrides): OryFlow
 // SPDX-License-Identifier: Apache-2.0
 
 import { getNodeLabel } from '@ory/client-fetch'
-import { OryNodeButtonProps, uiTextToFormattedMessage } from '@ory/elements-react'
+import {
+  OryNodeButtonProps,
+  uiTextToFormattedMessage,
+} from '@ory/elements-react'
 import { cva } from 'class-variance-authority'
 import { useIntl } from 'react-intl'
 import { Spinner } from './spinner'
@@ -5139,7 +5539,11 @@ export const buttonStyles = cva(
   },
 )
 
-export const DefaultButton = ({ node, buttonProps, isSubmitting }: OryNodeButtonProps) => {
+export const DefaultButton = ({
+  node,
+  buttonProps,
+  isSubmitting,
+}: OryNodeButtonProps) => {
   const intl = useIntl()
   const label = getNodeLabel(node)
 
@@ -5149,7 +5553,8 @@ export const DefaultButton = ({ node, buttonProps, isSubmitting }: OryNodeButton
       node.attributes.name.includes('passkey') ||
       node.attributes.name.includes('webauthn') ||
       node.attributes.name.includes('lookup_secret') ||
-      (node.attributes.name.includes('action') && node.attributes.value === 'accept')
+      (node.attributes.name.includes('action') &&
+        node.attributes.value === 'accept')
     )
   }, [node.attributes.name, node.attributes.value])
 
@@ -5172,7 +5577,9 @@ export const DefaultButton = ({ node, buttonProps, isSubmitting }: OryNodeButton
         />
       )}
       {label && (
-        <span className="group-loading:opacity-20">{uiTextToFormattedMessage(label, intl)}</span>
+        <span className="group-loading:opacity-20">
+          {uiTextToFormattedMessage(label, intl)}
+        </span>
       )}
     </button>
   )
@@ -5189,7 +5596,11 @@ DefaultButton.displayName = 'DefaultButton'
 
 import { Turnstile, TurnstileInstance } from '@marsidev/react-turnstile'
 import { isUiNodeInputAttributes, UiText } from '@ory/client-fetch'
-import { OryNodeCaptchaProps, useComponents, useOryFlow } from '@ory/elements-react'
+import {
+  OryNodeCaptchaProps,
+  useComponents,
+  useOryFlow,
+} from '@ory/elements-react'
 import { useEffect, useRef, useState } from 'react'
 // eslint-disable-next-line no-restricted-imports
 import { useFormContext } from 'react-hook-form'
@@ -5241,7 +5652,9 @@ export const DefaultCaptcha = ({ node }: OryNodeCaptchaProps) => {
     return null
   }
 
-  if (node.attributes.name === 'transient_payload.captcha_turnstile_response') {
+  if (
+    node.attributes.name === 'transient_payload.captcha_turnstile_response'
+  ) {
     // This is the hidden field that gets populated.
     return null
   } else if (node.attributes.name === 'captcha_turnstile_options') {
@@ -5298,7 +5711,9 @@ export const DefaultCaptcha = ({ node }: OryNodeCaptchaProps) => {
             })
           }}
         />
-        {errorMessage && <Message.Content key={errorMessage.id} message={errorMessage} />}
+        {errorMessage && (
+          <Message.Content key={errorMessage.id} message={errorMessage} />
+        )}
       </>
     )
   }
@@ -5315,7 +5730,11 @@ export const DefaultCaptcha = ({ node }: OryNodeCaptchaProps) => {
 
 'use client'
 import { getNodeLabel } from '@ory/client-fetch'
-import { messageTestId, OryNodeCheckboxProps, uiTextToFormattedMessage } from '@ory/elements-react'
+import {
+  messageTestId,
+  OryNodeCheckboxProps,
+  uiTextToFormattedMessage,
+} from '@ory/elements-react'
 import { useIntl } from 'react-intl'
 import { cn } from '../../utils/cn'
 import { CheckboxLabel } from '../ui/checkbox-label'
@@ -5339,7 +5758,10 @@ function CheckboxSVG() {
   )
 }
 
-export const DefaultCheckbox = ({ node, inputProps }: OryNodeCheckboxProps) => {
+export const DefaultCheckbox = ({
+  node,
+  inputProps,
+}: OryNodeCheckboxProps) => {
   const intl = useIntl()
   const label = getNodeLabel(node)
   const hasError = node.messages.some((m) => m.type === 'error')
@@ -5448,7 +5870,8 @@ const descriptions = defineMessages<string>({
   },
   email: {
     id: 'consent.scope.email.description',
-    defaultMessage: 'Retrieve your email address and its verification status.',
+    defaultMessage:
+      'Retrieve your email address and its verification status.',
   },
   address: {
     id: 'consent.scope.address.description',
@@ -5456,7 +5879,8 @@ const descriptions = defineMessages<string>({
   },
   phone: {
     id: 'consent.scope.phone.description',
-    defaultMessage: 'Retrieve your phone number and its verification status.',
+    defaultMessage:
+      'Retrieve your phone number and its verification status.',
   },
 })
 
@@ -5480,7 +5904,9 @@ export function DefaultConsentScopeCheckbox({
     <ListItem
       as="label"
       icon={Icon}
-      title={intl.formatMessage(titles[attributes.value as string] ?? fallbackTitleMsg)}
+      title={intl.formatMessage(
+        titles[attributes.value as string] ?? fallbackTitleMsg,
+      )}
       description={intl.formatMessage(
         descriptions[attributes.value as string] ?? fallbackDescriptionMsg,
       )}
@@ -5524,7 +5950,9 @@ export function DefaultGroupContainer({ children }: OryFormGroupProps) {
     <div
       className={cn(
         'grid',
-        flowType === FlowType.OAuth2Consent ? 'grid-cols-2 gap-2' : 'grid-cols-1 gap-8',
+        flowType === FlowType.OAuth2Consent
+          ? 'grid-cols-2 gap-2'
+          : 'grid-cols-1 gap-8',
       )}
     >
       {children}
@@ -5556,7 +5984,10 @@ import { omitInputAttributes } from '../../../../util/omitAttributes'
 export function DefaultImage({ node }: OryNodeImageProps) {
   return (
     <figure>
-      <img {...omitInputAttributes(node.attributes)} alt={node.meta.label?.text || ''} />
+      <img
+        {...omitInputAttributes(node.attributes)}
+        alt={node.meta.label?.text || ''}
+      />
     </figure>
   )
 }
@@ -5595,7 +6026,13 @@ export function DefaultFormContainer({
   method,
 }: PropsWithChildren<OryFormRootProps>) {
   return (
-    <form onSubmit={onSubmit} noValidate action={action} method={method} className={'grid gap-8'}>
+    <form
+      onSubmit={onSubmit}
+      noValidate
+      action={action}
+      method={method}
+      className={'grid gap-8'}
+    >
       {children}
     </form>
   )
@@ -5616,7 +6053,11 @@ export function DefaultMessageContainer({ children }: PropsWithChildren) {
   }
 
   return (
-    <section className={cn(flowType === FlowType.Settings ? 'text-center' : 'text-left')}>
+    <section
+      className={cn(
+        flowType === FlowType.Settings ? 'text-center' : 'text-left',
+      )}
+    >
       {children}
     </section>
   )
@@ -5637,9 +6078,12 @@ export function DefaultMessage({ message }: OryMessageContentProps) {
     <span
       className={cn(
         'leading-normal',
-        message.type === 'error' && 'text-interface-foreground-validation-danger',
-        message.type === 'info' && 'text-interface-foreground-default-secondary',
-        message.type === 'success' && 'text-interface-foreground-validation-success',
+        message.type === 'error' &&
+          'text-interface-foreground-validation-danger',
+        message.type === 'info' &&
+          'text-interface-foreground-default-secondary',
+        message.type === 'success' &&
+          'text-interface-foreground-validation-success',
       )}
       {...messageTestId(message)}
     >
@@ -5675,10 +6119,15 @@ const defaultInputClassName = cn(
 function isAutocompletePassword(
   autocomplete: string | undefined,
 ): autocomplete is 'new-password' | 'current-password' {
-  return autocomplete === 'new-password' || autocomplete === 'current-password'
+  return (
+    autocomplete === 'new-password' || autocomplete === 'current-password'
+  )
 }
 
-function PasswordInput({ className, ...rest }: ComponentProps<typeof PasswordToggleField.Input>) {
+function PasswordInput({
+  className,
+  ...rest
+}: ComponentProps<typeof PasswordToggleField.Input>) {
   return (
     <PasswordToggleField.Root>
       <div
@@ -5697,7 +6146,10 @@ function PasswordInput({ className, ...rest }: ComponentProps<typeof PasswordTog
           )}
         ></PasswordToggleField.Input>
         <PasswordToggleField.Toggle className="cursor-pointer bg-transparent px-2 py-[13px]">
-          <PasswordToggleField.Icon visible={<EyeOff />} hidden={<Eye />} />
+          <PasswordToggleField.Icon
+            visible={<EyeOff />}
+            hidden={<Eye />}
+          />
         </PasswordToggleField.Toggle>
       </div>
     </PasswordToggleField.Root>
@@ -5743,10 +6195,20 @@ const DefaultInputRoot = ({ inputProps }: OryNodeInputProps) => {
   }
 
   if (inputProps.type === 'hidden') {
-    return <input data-testid={`ory/form/node/input/${inputProps.name}`} {...inputProps} />
+    return (
+      <input
+        data-testid={`ory/form/node/input/${inputProps.name}`}
+        {...inputProps}
+      />
+    )
   }
 
-  return <TextInput data-testid={`ory/form/node/input/${inputProps.name}`} {...inputProps} />
+  return (
+    <TextInput
+      data-testid={`ory/form/node/input/${inputProps.name}`}
+      {...inputProps}
+    />
+  )
 }
 
 export const DefaultInput = Object.assign(DefaultInputRoot, {
@@ -5761,7 +6223,12 @@ export const DefaultInput = Object.assign(DefaultInputRoot, {
 // Copyright © 2024 Ory Corp
 // SPDX-License-Identifier: Apache-2.0
 
-import { FlowType, getNodeLabel, instanceOfUiText, UiNodeInputAttributes } from '@ory/client-fetch'
+import {
+  FlowType,
+  getNodeLabel,
+  instanceOfUiText,
+  UiNodeInputAttributes,
+} from '@ory/client-fetch'
 import {
   messageTestId,
   OryNodeLabelProps,
@@ -5776,7 +6243,12 @@ import { resolveLabel } from '../../../../util/nodes'
 import { initFlowUrl } from '../../utils/url'
 import { kratosMessages } from '../../../../util/i18n/generated/kratosMessages'
 
-export function DefaultLabel({ node, children, attributes, fieldError }: OryNodeLabelProps) {
+export function DefaultLabel({
+  node,
+  children,
+  attributes,
+  fieldError,
+}: OryNodeLabelProps) {
   const intl = useIntl()
   const label = getNodeLabel(node)
   const { Message } = useComponents()
@@ -5812,7 +6284,9 @@ export function DefaultLabel({ node, children, attributes, fieldError }: OryNode
       {node.messages.map((message) => (
         <Message.Content key={message.id} message={message} />
       ))}
-      {fieldError && instanceOfUiText(fieldError) && <Message.Content message={fieldError} />}
+      {fieldError && instanceOfUiText(fieldError) && (
+        <Message.Content message={fieldError} />
+      )}
     </div>
   )
 }
@@ -5827,7 +6301,11 @@ function LabelAction({ attributes }: LabelActionProps) {
   const config = useOryConfiguration()
 
   const action = useMemo(() => {
-    if (flowType === FlowType.Login && config.project.recovery_enabled && !flow.refresh) {
+    if (
+      flowType === FlowType.Login &&
+      config.project.recovery_enabled &&
+      !flow.refresh
+    ) {
       if (formState.current === 'provide_identifier') {
         if (attributes.name === 'identifier') {
           return {
@@ -5850,7 +6328,15 @@ function LabelAction({ attributes }: LabelActionProps) {
         }
       }
     }
-  }, [attributes, config.project.recovery_enabled, flow, flowType, intl, config.sdk.url, formState])
+  }, [
+    attributes,
+    config.project.recovery_enabled,
+    flow,
+    flowType,
+    intl,
+    config.sdk.url,
+    formState,
+  ])
 
   return action ? (
     <a
@@ -5871,31 +6357,35 @@ function LabelAction({ attributes }: LabelActionProps) {
 // SPDX-License-Identifier: Apache-2.0
 
 import { getNodeLabel } from '@ory/client-fetch'
-import { OryNodeAnchorProps, uiTextToFormattedMessage } from '@ory/elements-react'
+import {
+  OryNodeAnchorProps,
+  uiTextToFormattedMessage,
+} from '@ory/elements-react'
 import { forwardRef } from 'react'
 import { useIntl } from 'react-intl'
 import { cn } from '../../utils/cn'
 import { omitInputAttributes } from '../../../../util/omitAttributes'
 
-export const DefaultLinkButton = forwardRef<HTMLAnchorElement, OryNodeAnchorProps>(
-  ({ attributes, node }, ref) => {
-    const intl = useIntl()
-    const label = getNodeLabel(node)
-    return (
-      <a
-        {...omitInputAttributes(attributes)}
-        ref={ref}
-        title={label ? uiTextToFormattedMessage(label, intl) : ''}
-        data-testid={`ory/form/node/link/${attributes.id}`}
-        className={cn(
-          'cursor-pointer gap-3 border bg-button-primary-background-default p-4 text-center leading-none font-medium text-button-primary-foreground-default antialiased transition-colors hover:bg-button-primary-background-hover hover:text-button-primary-foreground-hover',
-        )}
-      >
-        {label ? uiTextToFormattedMessage(label, intl) : ''}
-      </a>
-    )
-  },
-)
+export const DefaultLinkButton = forwardRef<
+  HTMLAnchorElement,
+  OryNodeAnchorProps
+>(({ attributes, node }, ref) => {
+  const intl = useIntl()
+  const label = getNodeLabel(node)
+  return (
+    <a
+      {...omitInputAttributes(attributes)}
+      ref={ref}
+      title={label ? uiTextToFormattedMessage(label, intl) : ''}
+      data-testid={`ory/form/node/link/${attributes.id}`}
+      className={cn(
+        'cursor-pointer gap-3 border bg-button-primary-background-default p-4 text-center leading-none font-medium text-button-primary-foreground-default antialiased transition-colors hover:bg-button-primary-background-hover hover:text-button-primary-foreground-hover',
+      )}
+    >
+      {label ? uiTextToFormattedMessage(label, intl) : ''}
+    </a>
+  )
+})
 
 DefaultLinkButton.displayName = 'DefaultLinkButton'
 ```
@@ -5912,7 +6402,10 @@ import { OryNodeInputProps, useOryFlow } from '@ory/elements-react'
 import { cn } from '../../utils/cn'
 import { InputOTP, InputOTPGroup, InputOTPSlot } from './shadcn/otp-input'
 
-export const DefaultPinCodeInput = ({ node, inputProps }: OryNodeInputProps) => {
+export const DefaultPinCodeInput = ({
+  node,
+  inputProps,
+}: OryNodeInputProps) => {
   const { flowType } = useOryFlow()
 
   const { value, maxLength, ...restInputProps } = inputProps
@@ -5956,7 +6449,11 @@ import {
 } from '@ory/elements-react'
 import { cn } from '../../utils/cn'
 
-const DefaultFormSection = ({ children, nodes: _nodes, ...rest }: OryFormSectionProps) => {
+const DefaultFormSection = ({
+  children,
+  nodes: _nodes,
+  ...rest
+}: OryFormSectionProps) => {
   return (
     <form
       className="flex w-full max-w-(--breakpoint-sm) flex-col px-4 md:max-w-[712px] lg:max-w-[802px] xl:max-w-[896px]"
@@ -5975,15 +6472,22 @@ const DefaultFormSectionContent = ({
   return (
     <div className="flex flex-col gap-8 rounded-t-cards border border-b-0 border-interface-border-default-primary bg-interface-background-default-primary px-6 py-8">
       <div className="flex flex-col gap-2">
-        <h3 className="font-medium text-interface-foreground-default-primary">{title}</h3>
-        <span className="text-interface-foreground-default-secondary">{description}</span>
+        <h3 className="font-medium text-interface-foreground-default-primary">
+          {title}
+        </h3>
+        <span className="text-interface-foreground-default-secondary">
+          {description}
+        </span>
       </div>
       {children}
     </div>
   )
 }
 
-const DefaultFormSectionFooter = ({ children, text }: OryFormSectionFooterProps) => {
+const DefaultFormSectionFooter = ({
+  children,
+  text,
+}: OryFormSectionFooterProps) => {
   return (
     <div
       className={cn(
@@ -5996,7 +6500,11 @@ const DefaultFormSectionFooter = ({ children, text }: OryFormSectionFooterProps)
   )
 }
 
-export { DefaultFormSection, DefaultFormSectionContent, DefaultFormSectionFooter }
+export {
+  DefaultFormSection,
+  DefaultFormSectionContent,
+  DefaultFormSectionFooter,
+}
 ```
 
 ## ory/packages/elements-react/src/theme/default/components/form/select.tsx
@@ -6066,14 +6574,20 @@ const TextSelect = forwardRef<HTMLSelectElement, SelectElementProps>(
 )
 TextSelect.displayName = 'TextSelect'
 
-function DefaultSelectRoot({ attributes, inputProps, options }: OryNodeSelectProps) {
+function DefaultSelectRoot({
+  attributes,
+  inputProps,
+  options,
+}: OryNodeSelectProps) {
   const intl = useIntl()
 
   // `value` on a native <select> must be a string. react-hook-form passes
   // through whatever the current form state holds, so coerce to a string and
   // avoid passing a React `undefined` controlled/uncontrolled mix.
   const value =
-    inputProps.value === undefined || inputProps.value === null ? '' : String(inputProps.value)
+    inputProps.value === undefined || inputProps.value === null
+      ? ''
+      : String(inputProps.value)
 
   // For required fields the empty option is a placeholder only — disabling
   // and hiding it forces the user to pick a real value. For optional fields
@@ -6132,7 +6646,10 @@ const InputOTP = React.forwardRef<
 >(({ className, containerClassName, ...props }, ref) => (
   <OTPInput
     ref={ref}
-    containerClassName={cn('flex items-center gap-2 has-disabled:opacity-50', containerClassName)}
+    containerClassName={cn(
+      'flex items-center gap-2 has-disabled:opacity-50',
+      containerClassName,
+    )}
     className={cn('disabled:cursor-not-allowed', className)}
     {...props}
   />
@@ -6143,7 +6660,11 @@ const InputOTPGroup = React.forwardRef<
   React.ElementRef<'div'>,
   React.ComponentPropsWithoutRef<'div'>
 >(({ className, ...props }, ref) => (
-  <div ref={ref} className={cn('flex items-center', className)} {...props} />
+  <div
+    ref={ref}
+    className={cn('flex items-center', className)}
+    {...props}
+  />
 ))
 InputOTPGroup.displayName = 'InputOTPGroup'
 
@@ -6160,7 +6681,9 @@ const InputOTPSlot = React.forwardRef<
       className={cn(
         'w-full rounded-forms border border-solid bg-input-background-default py-[15px] text-center text-input-foreground-primary focus-visible:outline-hidden',
         'relative flex items-center justify-center leading-none transition-all',
-        isActive ? 'border-input-border-focus' : 'border-input-border-default',
+        isActive
+          ? 'border-input-border-focus'
+          : 'border-input-border-default',
         className,
       )}
       {...props}
@@ -6192,7 +6715,10 @@ export function Spinner({ className }: { className?: string }) {
     <svg
       aria-hidden="true"
       role="status"
-      className={cn('pointer-events-none absolute inset-0 m-auto size-8 animate-spin', className)}
+      className={cn(
+        'pointer-events-none absolute inset-0 m-auto size-8 animate-spin',
+        className,
+      )}
       viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -6266,7 +6792,9 @@ export function DefaultButtonSocial({
   } = useOryFlow()
 
   const ssoNodes = ui.nodes.filter(
-    (node) => node.group === UiNodeGroupEnum.Oidc || node.group === UiNodeGroupEnum.Saml,
+    (node) =>
+      node.group === UiNodeGroupEnum.Oidc ||
+      node.group === UiNodeGroupEnum.Saml,
   )
 
   const ssoNodeCount = ssoNodes.length ?? 0
@@ -6274,9 +6802,12 @@ export function DefaultButtonSocial({
   const Logo = logos[(node.attributes.value as string).split('-')[0]]
 
   const showLabel =
-    flowType === FlowType.Settings || (ssoNodeCount % 3 !== 0 && ssoNodeCount % 4 !== 0)
+    flowType === FlowType.Settings ||
+    (ssoNodeCount % 3 !== 0 && ssoNodeCount % 4 !== 0)
 
-  const label = node.meta.label ? uiTextToFormattedMessage(node.meta.label, intl) : ''
+  const label = node.meta.label
+    ? uiTextToFormattedMessage(node.meta.label, intl)
+    : ''
 
   return (
     <button
@@ -6295,14 +6826,24 @@ export function DefaultButtonSocial({
           showLabel ? 'size-4' : 'size-5',
         )}
       >
-        {Logo ? <Logo size={showLabel ? 16 : 20} /> : <GenericLogo label={provider.slice(0, 1)} />}
+        {Logo ? (
+          <Logo size={showLabel ? 16 : 20} />
+        ) : (
+          <GenericLogo label={provider.slice(0, 1)} />
+        )}
       </span>
 
-      {isSubmitting && <Spinner className="size-6 stroke-button-social-foreground-default" />}
+      {isSubmitting && (
+        <Spinner className="size-6 stroke-button-social-foreground-default" />
+      )}
       {showLabel && node.meta.label ? (
         <>
-          <span className="grow group-disabled:opacity-20 group-loading:opacity-20">{label}</span>
-          <span className={cn('block', showLabel ? 'size-4' : 'size-5')}></span>
+          <span className="grow group-disabled:opacity-20 group-loading:opacity-20">
+            {label}
+          </span>
+          <span
+            className={cn('block', showLabel ? 'size-4' : 'size-5')}
+          ></span>
         </>
       ) : null}
     </button>
@@ -6316,11 +6857,15 @@ export function DefaultButtonSocial({
  * @returns a variant of DefaultButtonSocial that uses the provided logos
  */
 DefaultButtonSocial.WithLogos =
-  (logos: Record<string, ElementType>) => (props: DefaultSocialButtonProps) => (
+  (logos: Record<string, ElementType>) =>
+  (props: DefaultSocialButtonProps) => (
     <DefaultButtonSocial {...props} logos={logos} />
   )
 
-export function DefaultSocialButtonContainer({ children, nodes }: OryFormSsoRootProps) {
+export function DefaultSocialButtonContainer({
+  children,
+  nodes,
+}: OryFormSsoRootProps) {
   return (
     <div
       className={cn('grid gap-3', {
@@ -6351,7 +6896,11 @@ export function GenericLogo({ label }: { label: string }) {
 // Copyright © 2024 Ory Corp
 // SPDX-License-Identifier: Apache-2.0
 
-import { OryNodeTextProps, UiNodeInput, uiTextToFormattedMessage } from '@ory/elements-react'
+import {
+  OryNodeTextProps,
+  UiNodeInput,
+  uiTextToFormattedMessage,
+} from '@ory/elements-react'
 import { useIntl } from 'react-intl'
 import { DefaultLabel } from './label'
 import { DefaultInput } from './input'
@@ -6387,13 +6936,22 @@ export function DefaultText({ node }: OryNodeTextProps) {
     // This node is rendered by the settings directly, so we don't need to render it here.
     // The problem is that it would cause an exception in the translation system, because
     // this node has an array of nodes in its context.
-    throw new Error('node `lookup_secret_codes` cannot be rendered as text')
+    throw new Error(
+      'node `lookup_secret_codes` cannot be rendered as text',
+    )
   }
 
   return (
-    <p data-testid={`ory/form/node/text/${node.attributes.id}/label`} id={node.attributes.id}>
-      {node.meta.label ? <label>{uiTextToFormattedMessage(node.meta.label, intl)}</label> : null}
-      {node.attributes.text ? uiTextToFormattedMessage(node.attributes.text, intl) : ''}
+    <p
+      data-testid={`ory/form/node/text/${node.attributes.id}/label`}
+      id={node.attributes.id}
+    >
+      {node.meta.label ? (
+        <label>{uiTextToFormattedMessage(node.meta.label, intl)}</label>
+      ) : null}
+      {node.attributes.text
+        ? uiTextToFormattedMessage(node.attributes.text, intl)
+        : ''}
     </p>
   )
 }
@@ -6462,7 +7020,11 @@ export const DefaultPageHeader = (_props: OryPageHeaderProps) => {
 // Copyright © 2025 Ory Corp
 // SPDX-License-Identifier: Apache-2.0
 
-import { messageTestId, OryToastProps, uiTextToFormattedMessage } from '@ory/elements-react'
+import {
+  messageTestId,
+  OryToastProps,
+  uiTextToFormattedMessage,
+} from '@ory/elements-react'
 import { toast as sonnerToast } from 'sonner'
 import { cn } from '../../utils/cn'
 import { useIntl } from 'react-intl'
@@ -6494,8 +7056,10 @@ export function DefaultToast({
       <div className="flex items-center justify-between">
         <p
           className={cn('font-medium', {
-            'text-interface-foreground-validation-success': message.type === 'success',
-            'text-interface-foreground-validation-danger': message.type === 'error',
+            'text-interface-foreground-validation-success':
+              message.type === 'success',
+            'text-interface-foreground-validation-danger':
+              message.type === 'error',
             'text-interface-foreground-validation-warning':
               // Currently unused from Kratos, but kept for future use
               (message.type as 'warning') === 'warning',
@@ -6512,7 +7076,9 @@ export function DefaultToast({
         </button>
       </div>
 
-      <p className="text-interface-foreground-default-inverted">{messageText}</p>
+      <p className="text-interface-foreground-default-inverted">
+        {messageText}
+      </p>
     </div>
   )
 }
@@ -6535,7 +7101,11 @@ export * from './default-components'
 // Copyright © 2024 Ory Corp
 // SPDX-License-Identifier: Apache-2.0
 
-import { OrySettingsSsoProps, UiNodeInput, useComponents } from '@ory/elements-react'
+import {
+  OrySettingsSsoProps,
+  UiNodeInput,
+  useComponents,
+} from '@ory/elements-react'
 import { useEffect } from 'react'
 import { useDebounceValue } from 'usehooks-ts'
 import { omitInputAttributes } from '../../../../util/omitAttributes'
@@ -6545,7 +7115,9 @@ import { DefaultHorizontalDivider } from '../form/horizontal-divider'
 import { Spinner } from '../form/spinner'
 import { GenericLogo } from '../form/sso'
 
-export function extractProvider(context: object | undefined): string | undefined {
+export function extractProvider(
+  context: object | undefined,
+): string | undefined {
   if (
     context &&
     typeof context === 'object' &&
@@ -6584,13 +7156,19 @@ export function DefaultSettingsOidc({
           })}
         </div>
       )}
-      {hasUnlinkButtons && hasLinkButtons ? <DefaultHorizontalDivider /> : null}
+      {hasUnlinkButtons && hasLinkButtons ? (
+        <DefaultHorizontalDivider />
+      ) : null}
       {unlinkButtons.map((button) => {
         if (button.attributes.node_type !== 'input') {
           return null
         }
         return (
-          <UnlinkRow key={button.attributes.value} button={button} isSubmitting={isSubmitting} />
+          <UnlinkRow
+            key={button.attributes.value}
+            button={button}
+            isSubmitting={isSubmitting}
+          />
         )
       })}
     </div>
@@ -6623,7 +7201,11 @@ function UnlinkRow({ button, isSubmitting }: UnlinkRowProps) {
   return (
     <div className="flex justify-between">
       <div className="flex items-center gap-6">
-        {Logo ? <Logo size={32} /> : <GenericLogo label={provider.slice(0, 1)} />}
+        {Logo ? (
+          <Logo size={32} />
+        ) : (
+          <GenericLogo label={provider.slice(0, 1)} />
+        )}
         <p className="text-sm font-medium text-interface-foreground-default-secondary">
           {provider}
         </p>
@@ -6655,7 +7237,10 @@ function UnlinkRow({ button, isSubmitting }: UnlinkRowProps) {
 ```tsx
 // Copyright © 2024 Ory Corp
 // SPDX-License-Identifier: Apache-2.0
-import { OrySettingsPasskeyProps, useComponents } from '@ory/elements-react'
+import {
+  OrySettingsPasskeyProps,
+  useComponents,
+} from '@ory/elements-react'
 import Passkey from '../../assets/icons/passkey.svg'
 import Trash from '../../assets/icons/trash.svg'
 import { DefaultHorizontalDivider } from '../form/horizontal-divider'
@@ -6688,10 +7273,14 @@ export function DefaultSettingsPasskey({
           <div className="flex flex-col gap-2">
             {removeButtons.map((node, i) => {
               const context = node.meta.label?.context ?? {}
-              const addedAt = 'added_at' in context ? (context.added_at as string) : null
+              const addedAt =
+                'added_at' in context ? (context.added_at as string) : null
               const displayName =
-                'display_name' in context ? (context.display_name as string) : null
-              const keyId = 'value' in node.attributes ? node.attributes.value : null
+                'display_name' in context
+                  ? (context.display_name as string)
+                  : null
+              const keyId =
+                'value' in node.attributes ? node.attributes.value : null
 
               return (
                 <div
@@ -6699,7 +7288,10 @@ export function DefaultSettingsPasskey({
                   key={`passkey-remove-button-${i}`}
                 >
                   <div className="flex flex-1 items-center gap-2 truncate">
-                    <Passkey size={32} className="text-interface-foreground-default-primary" />
+                    <Passkey
+                      size={32}
+                      className="text-interface-foreground-default-primary"
+                    />
                     <div className="flex flex-1 flex-col gap-4 truncate md:flex-row md:items-center md:justify-between">
                       <div className="flex-1 flex-col truncate">
                         <p className="truncate text-sm font-medium text-interface-foreground-default-secondary">
@@ -6858,8 +7450,16 @@ export function DefaultSettingsRecoveryCodes({
 // SPDX-License-Identifier: Apache-2.0
 
 import { UiNodeInputAttributes } from '@ory/client-fetch'
-import { Node, OrySettingsTotpProps, useComponents } from '@ory/elements-react'
-import { UiNodeImage, UiNodeInput, UiNodeText } from '../../../../util/utilFixSDKTypesHelper'
+import {
+  Node,
+  OrySettingsTotpProps,
+  useComponents,
+} from '@ory/elements-react'
+import {
+  UiNodeImage,
+  UiNodeInput,
+  UiNodeText,
+} from '../../../../util/utilFixSDKTypesHelper'
 import QrCode from '../../assets/icons/qrcode.svg'
 import Trash from '../../assets/icons/trash.svg'
 import { DefaultHorizontalDivider } from '../form/horizontal-divider'
@@ -6884,7 +7484,13 @@ export function DefaultSettingsTotp({
   }
 
   if (totpImage && totpSecret && totpInput) {
-    return <SettingsTotpLink totpImage={totpImage} totpSecret={totpSecret} totpInput={totpInput} />
+    return (
+      <SettingsTotpLink
+        totpImage={totpImage}
+        totpSecret={totpSecret}
+        totpInput={totpInput}
+      />
+    )
   }
 }
 
@@ -6948,7 +7554,11 @@ type SettingsTotpLinkProps = {
   totpInput: UiNodeInput
 }
 
-function SettingsTotpLink({ totpImage, totpSecret, totpInput }: SettingsTotpLinkProps) {
+function SettingsTotpLink({
+  totpImage,
+  totpSecret,
+  totpInput,
+}: SettingsTotpLinkProps) {
   return (
     <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
       <div className="col-span-full">
@@ -6976,7 +7586,11 @@ function SettingsTotpLink({ totpImage, totpSecret, totpInput }: SettingsTotpLink
 // Copyright © 2024 Ory Corp
 // SPDX-License-Identifier: Apache-2.0
 
-import { Node, OrySettingsWebauthnProps, useComponents } from '@ory/elements-react'
+import {
+  Node,
+  OrySettingsWebauthnProps,
+  useComponents,
+} from '@ory/elements-react'
 import { omitInputAttributes } from '../../../../util/omitAttributes'
 import Key from '../../assets/icons/key.svg'
 import Trash from '../../assets/icons/trash.svg'
@@ -7005,10 +7619,14 @@ export function DefaultSettingsWebauthn({
           <div className="flex flex-col gap-4">
             {removeButtons.map((node, i) => {
               const context = node.meta.label?.context ?? {}
-              const addedAt = 'added_at' in context ? (context.added_at as string) : null
+              const addedAt =
+                'added_at' in context ? (context.added_at as string) : null
               const displayName =
-                'display_name' in context ? (context.display_name as string) : null
-              const keyId = 'value' in node.attributes ? node.attributes.value : null
+                'display_name' in context
+                  ? (context.display_name as string)
+                  : null
+              const keyId =
+                'value' in node.attributes ? node.attributes.value : null
 
               return (
                 <div
@@ -7016,7 +7634,10 @@ export function DefaultSettingsWebauthn({
                   key={`webauthn-remove-button-${i}`}
                 >
                   <div className="flex flex-1 items-center gap-2 truncate">
-                    <Key size={32} className="text-interface-foreground-default-primary" />
+                    <Key
+                      size={32}
+                      className="text-interface-foreground-default-primary"
+                    />
                     <div className="flex flex-1 flex-col gap-4 truncate md:flex-row md:items-center md:justify-between">
                       <div className="flex-1 flex-col truncate">
                         <p className="truncate text-sm font-medium text-interface-foreground-default-secondary">
@@ -7110,7 +7731,8 @@ describe('computeLabelElements', () => {
   })
 
   test('renders a text with link and extra text around it correctly', () => {
-    const labelText = 'Click [here](https://example.com) to visit, or go elsewhere.'
+    const labelText =
+      'Click [here](https://example.com) to visit, or go elsewhere.'
 
     const { container } = render(
       <CheckboxLabel label={{ text: labelText, id: 0, type: 'info' }} />,
@@ -7292,7 +7914,11 @@ const DropdownMenuLabel = forwardRef<
 >(({ className, inset, ...props }, ref) => (
   <DropdownMenuPrimitive.Label
     ref={ref}
-    className={cn('px-2 py-1.5 text-sm font-semibold', inset && 'pl-8', className)}
+    className={cn(
+      'px-2 py-1.5 text-sm font-semibold',
+      inset && 'pl-8',
+      className,
+    )}
     {...props}
   />
 ))
@@ -7332,9 +7958,16 @@ export const UserAvatar = forwardRef<HTMLButtonElement, UserAvatarProps>(
       >
         <div className="relative flex size-full items-center justify-center">
           {initials.avatar ? (
-            <img src={initials.avatar} alt={initials.primary} className="w-full object-contain" />
+            <img
+              src={initials.avatar}
+              alt={initials.primary}
+              className="w-full object-contain"
+            />
           ) : (
-            <IconUser size={24} className="text-button-primary-foreground-default" />
+            <IconUser
+              size={24}
+              className="text-button-primary-foreground-default"
+            />
           )}
         </div>
       </button>
@@ -7593,7 +8226,12 @@ export type OAuth2Error = {
 }
 
 function isOAuth2Error(error: unknown): error is OAuth2Error {
-  return !!error && typeof error === 'object' && 'error' in error && 'error_description' in error
+  return (
+    !!error &&
+    typeof error === 'object' &&
+    'error' in error &&
+    'error_description' in error
+  )
 }
 
 /**
@@ -7682,7 +8320,12 @@ function useStandardize(error: OryError): InternalStandardizedError {
  * @group Components
  * @category Flows
  */
-export function Error({ error, components: Components, config, session }: ErrorFlowContextProps) {
+export function Error({
+  error,
+  components: Components,
+  config,
+  session,
+}: ErrorFlowContextProps) {
   const Card = Components?.Card?.Root ?? DefaultCard
   const Divider = Components?.Card?.Divider ?? DefaultHorizontalDivider
   const parsed = useStandardize(error)
@@ -7696,7 +8339,10 @@ export function Error({ error, components: Components, config, session }: ErrorF
         customTranslations={config.intl?.customTranslations}
       >
         <Card>
-          <div className="flex flex-col gap-6 antialiased" data-testid={'ory/screen/error'}>
+          <div
+            className="flex flex-col gap-6 antialiased"
+            data-testid={'ory/screen/error'}
+          >
             <header className="flex flex-col gap-8 antialiased">
               <div className="max-h-9 self-start">
                 <ErrorLogo />
@@ -7722,7 +8368,10 @@ export function Error({ error, components: Components, config, session }: ErrorF
 
             <div className="flex flex-col gap-2">
               <h2 className="text-lg leading-normal font-semibold text-interface-foreground-default-primary">
-                <FormattedMessage id="error.title.what-can-i-do" defaultMessage="What can I do?" />
+                <FormattedMessage
+                  id="error.title.what-can-i-do"
+                  defaultMessage="What can I do?"
+                />
               </h2>
               <p className="leading-normal text-interface-foreground-default-secondary">
                 <FormattedMessage
@@ -7757,7 +8406,10 @@ export function Error({ error, components: Components, config, session }: ErrorF
               )}
               {parsed.reason && (
                 <p className="text-sm text-interface-foreground-default-secondary">
-                  Message: <code data-testid={'ory/screen/error/message'}>{parsed.reason}</code>
+                  Message:{' '}
+                  <code data-testid={'ory/screen/error/message'}>
+                    {parsed.reason}
+                  </code>
                 </p>
               )}
 
@@ -7773,7 +8425,10 @@ ${error.correlationId ? `Correlation ID: ${error.correlationId}` : ''}
                     void navigator.clipboard.writeText(text)
                   }}
                 >
-                  <FormattedMessage id="error.footer.copy" defaultMessage="Copy" />
+                  <FormattedMessage
+                    id="error.footer.copy"
+                    defaultMessage="Copy"
+                  />
                 </button>
               </div>
             </div>
@@ -7806,7 +8461,10 @@ function GoBackButton() {
         className="text-interface-foreground-default-primary underline"
         href={config.project.default_redirect_url}
       >
-        <FormattedMessage id="error.action.go-back" defaultMessage="Go back" />
+        <FormattedMessage
+          id="error.action.go-back"
+          defaultMessage="Go back"
+        />
       </a>
     )
   }
@@ -7817,7 +8475,9 @@ function GoBackButton() {
 function ErrorLogo() {
   const { project } = useOryConfiguration()
   if (project.logo_light_url) {
-    return <img src={project.logo_light_url} className="h-full" alt="Logo" />
+    return (
+      <img src={project.logo_light_url} className="h-full" alt="Logo" />
+    )
   }
 
   return (
@@ -8495,7 +9155,8 @@ export function Verification({
       transform: scale(1);
     }
   }
-  --animate-drop-down-out: drop-down-out 400ms cubic-bezier(0.16, 1, 0.3, 1);
+  --animate-drop-down-out: drop-down-out 400ms
+    cubic-bezier(0.16, 1, 0.3, 1);
   @keyframes drop-down-out {
     from {
       opacity: 1;
@@ -8657,7 +9318,11 @@ export type CardHeaderTextOptions =
       }
     }
   | {
-      flowType: FlowType.Error | FlowType.Verification | FlowType.Recovery | FlowType.Settings
+      flowType:
+        | FlowType.Error
+        | FlowType.Verification
+        | FlowType.Recovery
+        | FlowType.Settings
     }
 
 const loginSubtitles = defineMessages<string>({
@@ -8671,11 +9336,13 @@ const loginSubtitles = defineMessages<string>({
   },
   [UiNodeGroupEnum.Totp]: {
     id: 'login.totp.subtitle',
-    defaultMessage: 'Please enter the code generated by your Authenticator App',
+    defaultMessage:
+      'Please enter the code generated by your Authenticator App',
   },
   [UiNodeGroupEnum.LookupSecret]: {
     id: 'login.lookup_secret.subtitle',
-    defaultMessage: 'Please enter one of your 8-digit backup recovery codes',
+    defaultMessage:
+      'Please enter one of your 8-digit backup recovery codes',
   },
 })
 
@@ -8717,7 +9384,10 @@ export function useCardHeaderText(
           messageId: recoveryV2Message.id + '',
         }
       } else if (
-        nodes.find((node) => 'name' in node.attributes && node.attributes.name === 'code')
+        nodes.find(
+          (node) =>
+            'name' in node.attributes && node.attributes.name === 'code',
+        )
       ) {
         return {
           title: intl.formatMessage({
@@ -8752,7 +9422,12 @@ export function useCardHeaderText(
         }),
       }
     case FlowType.Verification:
-      if (nodes.find((node) => 'name' in node.attributes && node.attributes.name === 'code')) {
+      if (
+        nodes.find(
+          (node) =>
+            'name' in node.attributes && node.attributes.name === 'code',
+        )
+      ) {
         return {
           title: intl.formatMessage({
             id: 'verification.title',
@@ -8769,12 +9444,15 @@ export function useCardHeaderText(
         }),
         description: intl.formatMessage({
           id: 'verification.subtitle',
-          defaultMessage: 'Enter the email address associated with your account to verify it',
+          defaultMessage:
+            'Enter the email address associated with your account to verify it',
         }),
       }
     case FlowType.Login: {
       // account linking
-      const accountLinkingMessage = container.messages?.find((m) => m.id === 1010016)
+      const accountLinkingMessage = container.messages?.find(
+        (m) => m.id === 1010016,
+      )
       if (accountLinkingMessage) {
         return {
           title: intl.formatMessage({
@@ -8821,7 +9499,9 @@ export function useCardHeaderText(
     }
   }
 
-  if (nodes.find((node) => node.group === 'oidc' || node.group === 'saml')) {
+  if (
+    nodes.find((node) => node.group === 'oidc' || node.group === 'saml')
+  ) {
     parts.push(
       intl.formatMessage({
         id: 'card.header.parts.oidc',
@@ -8891,7 +9571,9 @@ export function useCardHeaderText(
             defaultMessage: 'your {identifierLabel}',
           },
           {
-            identifierLabel: identifier.meta.label && resolveLabel(identifier.meta.label, intl),
+            identifierLabel:
+              identifier.meta.label &&
+              resolveLabel(identifier.meta.label, intl),
           },
         ),
       )
@@ -8914,7 +9596,9 @@ export function useCardHeaderText(
             defaultMessage: 'your {identifierLabel}',
           },
           {
-            identifierLabel: identifier.meta.label && resolveLabel(identifier.meta.label, intl),
+            identifierLabel:
+              identifier.meta.label &&
+              resolveLabel(identifier.meta.label, intl),
           },
         ),
       )
@@ -8966,7 +9650,8 @@ export function useCardHeaderText(
             ? intl.formatMessage(loginSubtitles[opts.formState.method])
             : intl.formatMessage({
                 id: 'login.subtitle-aal2',
-                defaultMessage: 'Choose a way to complete your second factor authentication',
+                defaultMessage:
+                  'Choose a way to complete your second factor authentication',
               })
         return {
           title: intl.formatMessage({
@@ -9027,7 +9712,10 @@ export function useCardHeaderText(
                 {
                   parts: joinWithCommaOr(
                     parts,
-                    intl.formatMessage({ id: 'misc.or', defaultMessage: 'or' }),
+                    intl.formatMessage({
+                      id: 'misc.or',
+                      defaultMessage: 'or',
+                    }),
                   ),
                 },
               )
@@ -9052,7 +9740,8 @@ export function useCardHeaderText(
               'A third party application wants to access information associated with your account {identifier}.',
           },
           {
-            identifier: (opts.flow.session.identity?.traits.email ?? '') as string,
+            identifier: (opts.flow.session.identity?.traits.email ??
+              '') as string,
           },
         ),
       }
@@ -9295,7 +9984,11 @@ export function restartFlowUrl(
 ) {
   return (
     flow.request_url ||
-    appendReturnToAndIdentitySchema(fallback, flow.return_to, flow.identity_schema)
+    appendReturnToAndIdentitySchema(
+      fallback,
+      flow.return_to,
+      flow.identity_schema,
+    )
   )
 }
 
@@ -9334,7 +10027,11 @@ export function initFlowUrl(
   return result + '?' + qs.toString()
 }
 
-function appendReturnToAndIdentitySchema(url: string, returnTo?: string, identitySchema?: string) {
+function appendReturnToAndIdentitySchema(
+  url: string,
+  returnTo?: string,
+  identitySchema?: string,
+) {
   const urlObj = new URL(url)
   if (returnTo) {
     urlObj.searchParams.set('return_to', returnTo)
@@ -9371,7 +10068,10 @@ export const getUserInitials = (session: Session | null): UserInitials => {
   let primary = ''
   let secondary = ''
 
-  if (!session?.identity?.traits || !isTraitsIndexable(session.identity.traits)) {
+  if (
+    !session?.identity?.traits ||
+    !isTraitsIndexable(session.identity.traits)
+  ) {
     return {
       primary,
       secondary,
@@ -9390,7 +10090,12 @@ export const getUserInitials = (session: Session | null): UserInitials => {
       primary = traits.name
     }
 
-    if (typeof traits.name === 'object' && traits.name && traits.name.first && traits.name.last) {
+    if (
+      typeof traits.name === 'object' &&
+      traits.name &&
+      traits.name.first &&
+      traits.name.last
+    ) {
       primary = traits.name.first + ' ' + traits.name.last
     }
   }
@@ -9442,7 +10147,9 @@ const ComponentContext = createContext<ComponentContextValue>({
 export function useComponents() {
   const ctx = useContext(ComponentContext)
   if (!ctx) {
-    throw new Error('useComponents must be used within a ComponentProvider')
+    throw new Error(
+      'useComponents must be used within a ComponentProvider',
+    )
   }
   return ctx.components
 }
@@ -9460,7 +10167,9 @@ export function useComponents() {
 export function useNodeSorter() {
   const ctx = useContext(ComponentContext)
   if (!ctx) {
-    throw new Error('useNodeSorter must be used within a ComponentProvider')
+    throw new Error(
+      'useNodeSorter must be used within a ComponentProvider',
+    )
   }
   return ctx.nodeSorter
 }
@@ -9468,7 +10177,9 @@ export function useNodeSorter() {
 export function useGroupSorter() {
   const ctx = useContext(ComponentContext)
   if (!ctx) {
-    throw new Error('useGroupSorter must be used within a ComponentProvider')
+    throw new Error(
+      'useGroupSorter must be used within a ComponentProvider',
+    )
   }
   return ctx.groupSorter
 }
@@ -9485,7 +10196,10 @@ const defaultGroupOrder: UiNodeGroupEnum[] = [
   UiNodeGroupEnum.Totp,
 ]
 
-function defaultGroupSorter(a: UiNodeGroupEnum, b: UiNodeGroupEnum): number {
+function defaultGroupSorter(
+  a: UiNodeGroupEnum,
+  b: UiNodeGroupEnum,
+): number {
   const aGroupWeight = defaultGroupOrder.indexOf(a) ?? 999
   const bGroupWeight = defaultGroupOrder.indexOf(b) ?? 999
 
@@ -9525,7 +10239,12 @@ export function OryComponentProvider({
 // SPDX-License-Identifier: Apache-2.0
 
 import { ConfigurationParameters, FrontendApi } from '@ory/client-fetch'
-import { createContext, PropsWithChildren, useContext, useRef } from 'react'
+import {
+  createContext,
+  PropsWithChildren,
+  useContext,
+  useRef,
+} from 'react'
 import { isProduction } from '../client/config'
 import { OryClientConfiguration, ProjectConfiguration } from '../util'
 import { frontendClient } from '../util/client'
@@ -9606,10 +10325,11 @@ type OryElementsConfigContextType = {
   project: ProjectConfiguration
 }
 
-const OryConfigurationContext = createContext<OryElementsConfigContextType>({
-  sdk: null!, // This is fine, because we always supply a proper default value for the SDK configuration in the provider
-  project: defaultProject,
-})
+const OryConfigurationContext =
+  createContext<OryElementsConfigContextType>({
+    sdk: null!, // This is fine, because we always supply a proper default value for the SDK configuration in the provider
+    project: defaultProject,
+  })
 
 /**
  * Props for the `OryConfigurationProvider` component.
@@ -9659,7 +10379,9 @@ export function OryConfigurationProvider({
   )
 }
 
-function computeSdkConfig(config?: OryClientConfiguration['sdk']): SDKConfig {
+function computeSdkConfig(
+  config?: OryClientConfiguration['sdk'],
+): SDKConfig {
   if (config?.url && typeof config.url === 'string') {
     return {
       url: config.url.replace(/\/$/, ''),
@@ -9677,7 +10399,9 @@ function getSDKUrl() {
   if (typeof process !== 'undefined' && !!process.env) {
     // process is available, let's try some environment variables
     if (isProduction()) {
-      const sdkUrl = process.env['NEXT_PUBLIC_ORY_SDK_URL'] ?? process.env['ORY_SDK_URL']
+      const sdkUrl =
+        process.env['NEXT_PUBLIC_ORY_SDK_URL'] ??
+        process.env['ORY_SDK_URL']
       if (!sdkUrl) {
         throw new Error(
           'Unable to determine SDK URL. Please set NEXT_PUBLIC_ORY_SDK_URL and/or ORY_SDK_URL in production environments.',
@@ -9739,7 +10463,8 @@ const Slot = {
 function isUiNodeButton(node: UiNode) {
   return (
     isUiNodeInputAttributes(node.attributes) &&
-    (node.attributes.type === 'submit' || node.attributes.type === 'button')
+    (node.attributes.type === 'submit' ||
+      node.attributes.type === 'button')
   )
 }
 
@@ -9757,7 +10482,11 @@ function makeUiNodeComparator({ groupOrder = defaultNodeOrder } = {}) {
     const { type } = node.attributes
 
     // Keep webauthn inputs next to the webauthn button by treating them as buttons
-    if (node.group === 'webauthn' && type !== 'submit' && type !== 'button') {
+    if (
+      node.group === 'webauthn' &&
+      type !== 'submit' &&
+      type !== 'button'
+    ) {
       return Slot.Buttons
     }
 
@@ -9814,11 +10543,25 @@ export const defaultNodeSorter = makeUiNodeComparator({
 // Copyright © 2024 Ory Corp
 // SPDX-License-Identifier: Apache-2.0
 
-import { Dispatch, PropsWithChildren, createContext, useContext, useState } from 'react'
+import {
+  Dispatch,
+  PropsWithChildren,
+  createContext,
+  useContext,
+  useState,
+} from 'react'
 import { OryFlowContainer } from '../util/flowContainer'
-import { OryErrorHandler, OrySuccessHandler, OryValidationErrorHandler } from '../util/events'
+import {
+  OryErrorHandler,
+  OrySuccessHandler,
+  OryValidationErrorHandler,
+} from '../util/events'
 import { OryTransientPayload } from '../util/transientPayload'
-import { FormState, FormStateAction, useFormStateReducer } from './form-state'
+import {
+  FormState,
+  FormStateAction,
+  useFormStateReducer,
+} from './form-state'
 
 /**
  * Returns an object that contains the current flow and the flow type, as well as the configuration.
@@ -10118,17 +10861,26 @@ function parseStateFromFlow(flow: OryFlowContainer): FlowFormState {
       } else if (flow.flow.active == 'code_recovery') {
         return { current: 'method_active', method: 'code' }
       } else if (methodWithMessage) {
-        return { current: 'method_active', method: methodWithMessage.group }
+        return {
+          current: 'method_active',
+          method: methodWithMessage.group,
+        }
       } else if (flow.flow.ui.messages?.some((m) => m.id === 1010016)) {
         // Account linking edge case
         return { current: 'select_method' }
-      } else if (flow.flow.active && !['default', 'identifier_first'].includes(flow.flow.active)) {
+      } else if (
+        flow.flow.active &&
+        !['default', 'identifier_first'].includes(flow.flow.active)
+      ) {
         return { current: 'method_active', method: flow.flow.active }
       } else if (isChoosingMethod(flow)) {
         // Login has a special case where we only have one method. Here, we
         // do not want to display the chooser.
         const authMethods = nodesToAuthMethodGroups(flow.flow.ui.nodes)
-        if (authMethods.length === 1 && !['code', 'passkey'].includes(authMethods[0])) {
+        if (
+          authMethods.length === 1 &&
+          !['code', 'passkey'].includes(authMethods[0])
+        ) {
           // TODO: https://github.com/ory/kratos/issues/4271 - once this is fixed in Kratos, we can remove the check for "code"
           return { current: 'method_active', method: authMethods[0] }
         }
@@ -10170,11 +10922,18 @@ function parseStateFromFlow(flow: OryFlowContainer): FlowFormState {
  */
 export function useFormStateReducer(flow: OryFlowContainer) {
   const action = parseStateFromFlow(flow)
-  const [selectedMethod, setSelectedMethod] = useState<UiNodeGroupEnum | undefined>()
+  const [selectedMethod, setSelectedMethod] = useState<
+    UiNodeGroupEnum | undefined
+  >()
   const [isRedirecting, setRedirecting] = useState(false)
-  const [loadingInputs, setLoadingInputs] = useState<Set<UiNodeGroupEnum>>(new Set())
+  const [loadingInputs, setLoadingInputs] = useState<Set<UiNodeGroupEnum>>(
+    new Set(),
+  )
 
-  const formStateReducer = (state: FormState, action: FormStateAction): FormState => {
+  const formStateReducer = (
+    state: FormState,
+    action: FormStateAction,
+  ): FormState => {
     switch (action.type) {
       case 'action_flow_update': {
         if (selectedMethod) {
@@ -10263,7 +11022,11 @@ export function useFormStateReducer(flow: OryFlowContainer) {
 // SPDX-License-Identifier: Apache-2.0
 
 export { useComponents, useNodeSorter } from './component'
-export { useOryFlow, type FlowContextValue, type FlowContainerSetter } from './flow-context'
+export {
+  useOryFlow,
+  type FlowContextValue,
+  type FlowContainerSetter,
+} from './flow-context'
 export * from './provider'
 
 export type {
@@ -10447,7 +11210,10 @@ export type IntlContextProps = {
   customTranslations?: Partial<LocaleMap>
 }
 
-function mergeTranslations(locale: Locale, customTranslations: Partial<Record<string, string>>) {
+function mergeTranslations(
+  locale: Locale,
+  customTranslations: Partial<Record<string, string>>,
+) {
   return Object.keys(customTranslations).reduce((acc, key) => {
     return {
       ...acc,
@@ -10462,7 +11228,10 @@ export const IntlProvider = ({
   customTranslations,
 }: PropsWithChildren<IntlContextProps>) => {
   const existingIntlContext = useContext(IntlContext)
-  const messages = mergeTranslations(locale, customTranslations?.[locale] ?? {})
+  const messages = mergeTranslations(
+    locale,
+    customTranslations?.[locale] ?? {},
+  )
 
   if (existingIntlContext) {
     // If the original context is available, we assume we're in a nested provider
@@ -10489,7 +11258,11 @@ import { PropsWithChildren } from 'react'
 
 import { OryFlowComponents } from '../components'
 import { OryClientConfiguration } from '../util'
-import { OryErrorHandler, OrySuccessHandler, OryValidationErrorHandler } from '../util/events'
+import {
+  OryErrorHandler,
+  OrySuccessHandler,
+  OryValidationErrorHandler,
+} from '../util/events'
 import { OryFlowContainer } from '../util/flowContainer'
 import { OryTransientPayload } from '../util/transientPayload'
 import { OryComponentProvider } from './component'
@@ -10664,7 +11437,9 @@ export function OryProvider({
           onError={onError}
           transientPayload={transientPayload}
         >
-          <OryComponentProvider components={Components}>{children}</OryComponentProvider>
+          <OryComponentProvider components={Components}>
+            {children}
+          </OryComponentProvider>
         </OryFlowProvider>
       </IntlProvider>
     </OryConfigurationProvider>
@@ -10931,7 +11706,10 @@ type AuthMethodListProps = {
   setSelectedGroup: (group: UiNodeGroupEnum) => void
 }
 
-export function AuthMethodList({ options, setSelectedGroup }: AuthMethodListProps) {
+export function AuthMethodList({
+  options,
+  setSelectedGroup,
+}: AuthMethodListProps) {
   const { Card } = useComponents()
   const { setValue, getValues, formState } = useFormContext()
   const { formState: oryFormState, flow } = useOryFlow()
@@ -10964,7 +11742,11 @@ export function AuthMethodList({ options, setSelectedGroup }: AuthMethodListProp
           key={group}
           group={group}
           onClick={() => handleClick(group)}
-          disabled={!formState.isReady || !oryFormState.isReady || formState.isSubmitting}
+          disabled={
+            !formState.isReady ||
+            !oryFormState.isReady ||
+            formState.isSubmitting
+          }
         />
       ))}
     </Card.AuthMethodListContainer>
@@ -10978,7 +11760,11 @@ export function AuthMethodList({ options, setSelectedGroup }: AuthMethodListProp
 // Copyright © 2024 Ory Corp
 // SPDX-License-Identifier: Apache-2.0
 
-import { isUiNodeScriptAttributes, UiNode, UiNodeGroupEnum } from '@ory/client-fetch'
+import {
+  isUiNodeScriptAttributes,
+  UiNode,
+  UiNodeGroupEnum,
+} from '@ory/client-fetch'
 import { useComponents, useNodeSorter, useOryFlow } from '../../../context'
 import { FormStateMethodActive } from '../../../context/form-state'
 import { useNodeGroupsWithVisibleNodes } from '../../../util/ui'
@@ -10989,13 +11775,18 @@ import { OryCardHeader } from '../header'
 import { OryCard, OryCardContent, OryCardFooter } from './../'
 import { getFinalNodes, handleAfterFormSubmit } from './utils'
 
-export function MethodActiveForm({ formState }: { formState: FormStateMethodActive }) {
+export function MethodActiveForm({
+  formState,
+}: {
+  formState: FormStateMethodActive
+}) {
   const { Form } = useComponents()
   const { flow, flowType, dispatchFormState } = useOryFlow()
   const { ui } = flow
 
   const nodeSorter = useNodeSorter()
-  const sortNodes = (a: UiNode, b: UiNode) => nodeSorter(a, b, { flowType })
+  const sortNodes = (a: UiNode, b: UiNode) =>
+    nodeSorter(a, b, { flowType })
   const groupsToShow = useNodeGroupsWithVisibleNodes(ui.nodes)
   const finalNodes = getFinalNodes(groupsToShow, formState.method)
 
@@ -11052,12 +11843,19 @@ export function ProvideIdentifierForm() {
   const { flowType, flow, dispatchFormState } = useOryFlow()
 
   const nodeSorter = useNodeSorter()
-  const sortNodes = (a: UiNode, b: UiNode) => nodeSorter(a, b, { flowType })
+  const sortNodes = (a: UiNode, b: UiNode) =>
+    nodeSorter(a, b, { flowType })
 
-  const nonSsoNodes = withoutSingleSignOnNodes(flow.ui.nodes).sort(sortNodes)
+  const nonSsoNodes = withoutSingleSignOnNodes(flow.ui.nodes).sort(
+    sortNodes,
+  )
   const hasSso = flow.ui.nodes
     .filter(isNodeVisible)
-    .some((node) => node.group === UiNodeGroupEnum.Oidc || node.group === UiNodeGroupEnum.Saml)
+    .some(
+      (node) =>
+        node.group === UiNodeGroupEnum.Oidc ||
+        node.group === UiNodeGroupEnum.Saml,
+    )
   const showSsoDivider = hasSso && nonSsoNodes.some(isNodeVisible)
 
   return (
@@ -11087,7 +11885,12 @@ export function ProvideIdentifierForm() {
 // Copyright © 2024 Ory Corp
 // SPDX-License-Identifier: Apache-2.0
 
-import { isUiNodeScriptAttributes, UiNode, UiNodeGroupEnum, UiText } from '@ory/client-fetch'
+import {
+  isUiNodeScriptAttributes,
+  UiNode,
+  UiNodeGroupEnum,
+  UiText,
+} from '@ory/client-fetch'
 import { useIntl } from 'react-intl'
 import { useComponents, useNodeSorter, useOryFlow } from '../../../context'
 import { kratosMessages } from '../../../util/i18n/generated/kratosMessages'
@@ -11112,7 +11915,9 @@ import { handleAfterFormSubmit } from './utils'
  *
  * @param visibleGroups - The visible groups of nodes
  */
-export function toAuthMethodPickerOptions(visibleGroups: GroupedNodes): UiNodeGroupEnum[] {
+export function toAuthMethodPickerOptions(
+  visibleGroups: GroupedNodes,
+): UiNodeGroupEnum[] {
   return Object.values(UiNodeGroupEnum)
     .filter((group) => visibleGroups[group]?.length)
     .filter(
@@ -11136,7 +11941,8 @@ export function SelectMethodForm() {
   const { ui } = flow
 
   const nodeSorter = useNodeSorter()
-  const sortNodes = (a: UiNode, b: UiNode) => nodeSorter(a, b, { flowType })
+  const sortNodes = (a: UiNode, b: UiNode) =>
+    nodeSorter(a, b, { flowType })
 
   const visibleGroups = useNodeGroupsWithVisibleNodes(ui.nodes)
   const authMethodBlocks = toAuthMethodPickerOptions(visibleGroups)
@@ -11146,7 +11952,8 @@ export function SelectMethodForm() {
   const hiddenNodes = ui.nodes.filter(
     (n) =>
       n.group !== UiNodeGroupEnum.Captcha &&
-      ((n.attributes.node_type === 'input' && n.attributes.type === 'hidden') ||
+      ((n.attributes.node_type === 'input' &&
+        n.attributes.type === 'hidden') ||
         isUiNodeScriptAttributes(n.attributes)),
   )
 
@@ -11157,7 +11964,9 @@ export function SelectMethodForm() {
         <OryCardValidationMessages />
         <OryFormSsoForm />
         {Object.entries(authMethodBlocks).length > 0 ? (
-          <OryForm onAfterSubmit={handleAfterFormSubmit(dispatchFormState)}>
+          <OryForm
+            onAfterSubmit={handleAfterFormSubmit(dispatchFormState)}
+          >
             <Form.Group>
               <Card.Divider />
               <AuthMethodList
@@ -11214,7 +12023,10 @@ function NoMethodsMessage() {
 // SPDX-License-Identifier: Apache-2.0
 
 import { FlowType, UiNode, UiNodeGroupEnum } from '@ory/client-fetch'
-import { LoginFlowContainer, RegistrationFlowContainer } from '../../../util/flowContainer'
+import {
+  LoginFlowContainer,
+  RegistrationFlowContainer,
+} from '../../../util/flowContainer'
 import { isGroupImmediateSubmit } from '../../../theme/default/utils/form'
 import { GroupedNodes, isUiNodeGroupEnum } from '../../../util/ui'
 import { Dispatch } from 'react'
@@ -11240,7 +12052,9 @@ function isScreenSelectionNode(node: UiNode) {
   return false
 }
 
-export function isChoosingMethod(flow: LoginFlowContainer | RegistrationFlowContainer): boolean {
+export function isChoosingMethod(
+  flow: LoginFlowContainer | RegistrationFlowContainer,
+): boolean {
   if (flow.flowType === FlowType.Login) {
     if (flow.flow.requested_aal === 'aal2') {
       return true
@@ -11261,7 +12075,9 @@ export function getFinalNodes(
   uniqueGroups: GroupedNodes,
   selectedGroup: UiNodeGroupEnum | undefined,
 ): UiNode[] {
-  const selectedNodes: UiNode[] = selectedGroup ? (uniqueGroups[selectedGroup] ?? []) : []
+  const selectedNodes: UiNode[] = selectedGroup
+    ? (uniqueGroups[selectedGroup] ?? [])
+    : []
 
   return [
     ...(uniqueGroups?.identifier_first ?? []),
@@ -11269,7 +12085,10 @@ export function getFinalNodes(
     ...(uniqueGroups?.captcha ?? []),
   ]
     .flat()
-    .filter((node) => 'type' in node.attributes && node.attributes.type === 'hidden')
+    .filter(
+      (node) =>
+        'type' in node.attributes && node.attributes.type === 'hidden',
+    )
     .concat(selectedNodes)
 }
 
@@ -11294,7 +12113,11 @@ export const handleAfterFormSubmit =
 // Copyright © 2024 Ory Corp
 // SPDX-License-Identifier: Apache-2.0
 
-import { FlowType, isUiNodeInputAttributes, UiNode } from '@ory/client-fetch'
+import {
+  FlowType,
+  isUiNodeInputAttributes,
+  UiNode,
+} from '@ory/client-fetch'
 import { FormValues } from '../../types'
 import { OryFlowContainer } from '../../util'
 
@@ -11351,7 +12174,9 @@ function searchOf(url: string | undefined): string {
  * @param flowContainer - The current flow container.
  * @returns The trimmed hint, or `undefined` when no source provides one.
  */
-export function resolveLoginHint(flowContainer: OryFlowContainer): string | undefined {
+export function resolveLoginHint(
+  flowContainer: OryFlowContainer,
+): string | undefined {
   if (
     flowContainer.flowType !== FlowType.Login &&
     flowContainer.flowType !== FlowType.Registration
@@ -11359,12 +12184,15 @@ export function resolveLoginHint(flowContainer: OryFlowContainer): string | unde
     return undefined
   }
 
-  const fromRequestUrl = getLoginHint(searchOf(flowContainer.flow.request_url))
+  const fromRequestUrl = getLoginHint(
+    searchOf(flowContainer.flow.request_url),
+  )
   if (fromRequestUrl) {
     return fromRequestUrl
   }
 
-  const fromOidc = flowContainer.flow.oauth2_login_request?.oidc_context?.login_hint?.trim()
+  const fromOidc =
+    flowContainer.flow.oauth2_login_request?.oidc_context?.login_hint?.trim()
   return fromOidc ? fromOidc : undefined
 }
 
@@ -11380,7 +12208,10 @@ export function computeDefaultValues(
 
     if (isUiNodeInputAttributes(attrs)) {
       // TODO: Kratos should return false for the value here, and not undefined.
-      if (attrs.type === 'checkbox' && typeof attrs.value === 'undefined') {
+      if (
+        attrs.type === 'checkbox' &&
+        typeof attrs.value === 'undefined'
+      ) {
         attrs.value = false
       }
       // Skip the "method" field and "submit" button
@@ -11444,7 +12275,9 @@ function prefillIdentifierFromHint(
 
   for (const name of prefillIdentifierFields) {
     const node = nodes.find(
-      (n) => isUiNodeInputAttributes(n.attributes) && n.attributes.name === name,
+      (n) =>
+        isUiNodeInputAttributes(n.attributes) &&
+        n.attributes.name === name,
     )
     if (!node || !isUiNodeInputAttributes(node.attributes)) {
       continue
@@ -11454,7 +12287,10 @@ function prefillIdentifierFromHint(
       // The value type is pinned to FormValues' value type so `defaults` (a
       // FormValues) is an accepted accumulator; inferring it from `hint` alone
       // would narrow the parameter to a string-only record.
-      unrollTrait<string, FormValues[string]>({ name, value: hint }, defaults)
+      unrollTrait<string, FormValues[string]>(
+        { name, value: hint },
+        defaults,
+      )
       // Seed only the most-preferred empty field. A field that is present but
       // already has a value falls through to the next preference instead.
       return
@@ -11475,13 +12311,17 @@ export function unrollTrait<T extends string, V>(
   let current: any = output
   keys.forEach((key, index) => {
     if (!key) return
-    current = current[key] = index === keys.length - 1 ? input.value : current[key] || {}
+    current = current[key] =
+      index === keys.length - 1 ? input.value : current[key] || {}
   })
 
   return output as UnrollTrait<T, V>
 }
 
-type UnrollTrait<T extends string, V> = T extends `${infer Head}.${infer Tail}`
+type UnrollTrait<
+  T extends string,
+  V,
+> = T extends `${infer Head}.${infer Tail}`
   ? { [K in Head]: UnrollTrait<Tail, V> }
   : { [K in T]: V }
 ```
@@ -11516,7 +12356,10 @@ function pickAutofocusField(nodes: UiNode[]) {
   return node.attributes.name
 }
 
-export function OryFormProvider({ children, nodes }: PropsWithChildren & { nodes?: UiNode[] }) {
+export function OryFormProvider({
+  children,
+  nodes,
+}: PropsWithChildren & { nodes?: UiNode[] }) {
   const flowContainer = useOryFlow()
   const defaultNodes = nodes
     ? flowContainer.flow.ui.nodes
@@ -11543,7 +12386,10 @@ export function OryFormProvider({ children, nodes }: PropsWithChildren & { nodes
   })
 
   useEffect(() => {
-    if (!flowContainer.formState.isReady || flowContainer.flowType === FlowType.Settings) {
+    if (
+      !flowContainer.formState.isReady ||
+      flowContainer.flowType === FlowType.Settings
+    ) {
       return
     }
     const field = pickAutofocusField(defaultNodes)
@@ -11611,7 +12457,11 @@ export function useOryFormResolver() {
             return false
           }
 
-          return group === 'code' && attributes.name === 'code' && attributes.type !== 'hidden'
+          return (
+            group === 'code' &&
+            attributes.name === 'code' &&
+            attributes.type !== 'hidden'
+          )
         })
       ) {
         return {
@@ -11974,7 +12824,9 @@ export function OryForm({ children, onAfterSubmit }: OryFormProps) {
     <Form.Root
       action={flowContainer.flow.ui.action}
       method={flowContainer.flow.ui.method}
-      onSubmit={(e) => void methods.handleSubmit(onSubmit, console.error)(e)}
+      onSubmit={(e) =>
+        void methods.handleSubmit(onSubmit, console.error)(e)
+      }
     >
       {children}
     </Form.Root>
@@ -12053,12 +12905,14 @@ export interface OryCardValidationMessagesProps {
  */
 export function OryCardValidationMessages({
   hiddenMessageIds = [
-    1040009, 1060003, 1080003, 1010004, 1010014, 1010025, 1040005, 1010016, 1010003, 1060004,
-    1060005, 1060006,
+    1040009, 1060003, 1080003, 1010004, 1010014, 1010025, 1040005, 1010016,
+    1010003, 1060004, 1060005, 1060006,
   ],
 }: OryCardValidationMessagesProps) {
   const { flow } = useOryFlow()
-  const messages = flow.ui.messages?.filter((m) => !hiddenMessageIds.includes(m.id))
+  const messages = flow.ui.messages?.filter(
+    (m) => !hiddenMessageIds.includes(m.id),
+  )
   const { Message } = useComponents()
 
   if (!messages) {
@@ -12115,7 +12969,8 @@ export function useInputProps(
     maxLength: attributes.maxlength,
     autoComplete: attributes.autocomplete,
     placeholder: placeholder || '',
-    disabled: attributes.disabled || !controller.formState.isReady || isSubmitting,
+    disabled:
+      attributes.disabled || !controller.formState.isReady || isSubmitting,
   }
 }
 ```
@@ -12162,12 +13017,17 @@ export const NodeInput = ({
     ...attrs
   } = attributes
   const isResendNode = node.meta.label?.id === 1070008
-  const isScreenSelectionNode = 'name' in node.attributes && node.attributes.name === 'screen'
+  const isScreenSelectionNode =
+    'name' in node.attributes && node.attributes.name === 'screen'
 
   const setFormValue = () => {
     if (
       attrs.value &&
-      !(isResendNode || isScreenSelectionNode || node.group === UiNodeGroupEnum.Oauth2Consent)
+      !(
+        isResendNode ||
+        isScreenSelectionNode ||
+        node.group === UiNodeGroupEnum.Oauth2Consent
+      )
     ) {
       setValue(attrs.name, attrs.value)
     }
@@ -12195,7 +13055,10 @@ export const NodeInput = ({
     case UiNodeInputAttributesTypeEnum.DatetimeLocal:
       throw new Error('Not implemented')
     case UiNodeInputAttributesTypeEnum.Checkbox:
-      if (node.group === 'oauth2_consent' && node.attributes.node_type === 'input') {
+      if (
+        node.group === 'oauth2_consent' &&
+        node.attributes.node_type === 'input'
+      ) {
         switch (node.attributes.name) {
           case 'grant_scope':
             return <ConsentCheckboxRenderer node={node} />
@@ -12237,7 +13100,8 @@ type NodeButtonProps = {
 export function NodeButton({ node }: NodeButtonProps) {
   const isResendNode = node.meta.label?.id === 1070008
 
-  const isScreenSelectionNode = 'name' in node.attributes && node.attributes.name === 'screen'
+  const isScreenSelectionNode =
+    'name' in node.attributes && node.attributes.name === 'screen'
 
   if (isResendNode || isScreenSelectionNode) {
     return null
@@ -12247,8 +13111,10 @@ export function NodeButton({ node }: NodeButtonProps) {
   }
 
   const isSocial =
-    (node.attributes.name === 'provider' || node.attributes.name === 'link') &&
-    (node.group === UiNodeGroupEnum.Oidc || node.group === UiNodeGroupEnum.Saml)
+    (node.attributes.name === 'provider' ||
+      node.attributes.name === 'link') &&
+    (node.group === UiNodeGroupEnum.Oidc ||
+      node.group === UiNodeGroupEnum.Saml)
 
   if (isSocial) {
     return <NodeRenderer.SsoButton node={node} />
@@ -12299,13 +13165,25 @@ const NodeBase = ({ node }: NodeProps): ReactNode => {
     return <NodeInput node={node} attributes={node.attributes} />
   } else if (isUiNodeAnchor(node)) {
     return <Node.Anchor attributes={node.attributes} node={node} />
-  } else if (isUiNodeScript(node) && !ignoredScriptGroups.includes(node.group)) {
-    const { crossorigin, referrerpolicy, node_type: _nodeType, ...attributes } = node.attributes
+  } else if (
+    isUiNodeScript(node) &&
+    !ignoredScriptGroups.includes(node.group)
+  ) {
+    const {
+      crossorigin,
+      referrerpolicy,
+      node_type: _nodeType,
+      ...attributes
+    } = node.attributes
 
     return (
       <script
-        crossOrigin={crossorigin as 'anonymous' | 'use-credentials' | '' | undefined}
-        referrerPolicy={referrerpolicy as React.HTMLAttributeReferrerPolicy}
+        crossOrigin={
+          crossorigin as 'anonymous' | 'use-credentials' | '' | undefined
+        }
+        referrerPolicy={
+          referrerpolicy as React.HTMLAttributeReferrerPolicy
+        }
         {...attributes}
       />
     )
@@ -12476,7 +13354,10 @@ export function ConsentCheckboxRenderer({ node }: { node: UiNodeInput }) {
     const scopes = watch('grant_scope')
     if (Array.isArray(scopes)) {
       if (checked) {
-        setValue('grant_scope', Array.from(new Set([...scopes, attributes.value])))
+        setValue(
+          'grant_scope',
+          Array.from(new Set([...scopes, attributes.value])),
+        )
       } else {
         setValue(
           'grant_scope',
@@ -12525,7 +13406,12 @@ export function HiddenInputRenderer({ node }: HiddenInputRendererProps) {
   const inputProps = useInputProps(attributes)
 
   return (
-    <Node.Input inputProps={inputProps} attributes={attributes} node={node} onClick={() => {}} />
+    <Node.Input
+      inputProps={inputProps}
+      attributes={attributes}
+      node={node}
+      onClick={() => {}}
+    />
   )
 }
 ```
@@ -12611,7 +13497,11 @@ export function InputRenderer({ node }: TextBasedInputProps) {
   const InputComponent = isPinCodeInput ? Node.CodeInput : Node.Input
 
   return (
-    <Node.Label attributes={attributes} node={node} fieldError={formState.errors[attributes.name]}>
+    <Node.Label
+      attributes={attributes}
+      node={node}
+      fieldError={formState.errors[attributes.name]}
+    >
       <InputComponent
         attributes={attributes}
         node={node}
@@ -12634,7 +13524,10 @@ import { useFormState } from 'react-hook-form'
 import { useIntl } from 'react-intl'
 import { useComponents } from '../../../../context'
 import { resolvePlaceholder } from '../../../../util'
-import { UiNodeInput, UiNodeInputAttributesOption } from '../../../../util/utilFixSDKTypesHelper'
+import {
+  UiNodeInput,
+  UiNodeInputAttributesOption,
+} from '../../../../util/utilFixSDKTypesHelper'
 import { useInputProps } from '../hooks/useInputProps'
 
 type SelectRendererProps = {
@@ -12664,8 +13557,17 @@ export function SelectRenderer({ node }: SelectRendererProps) {
   }
 
   return (
-    <Node.Label attributes={attributes} node={node} fieldError={formState.errors[attributes.name]}>
-      <Node.Select attributes={attributes} node={node} inputProps={inputProps} options={options} />
+    <Node.Label
+      attributes={attributes}
+      node={node}
+      fieldError={formState.errors[attributes.name]}
+    >
+      <Node.Select
+        attributes={attributes}
+        node={node}
+        inputProps={inputProps}
+        options={options}
+      />
     </Node.Label>
   )
 }
@@ -12688,7 +13590,9 @@ type SsoButtonProps = {
   node: UiNodeInput
 }
 
-export function extractProvider(context: object | undefined): string | undefined {
+export function extractProvider(
+  context: object | undefined,
+): string | undefined {
   if (
     context &&
     typeof context === 'object' &&
@@ -12731,7 +13635,11 @@ export function SSOButtonRenderer({ node }: SsoButtonProps) {
     name: attributes.name,
     value: attributes.value,
     onClick: clickHandler,
-    disabled: attributes.disabled || !isReady || !oryFormState.isReady || oryFormState.isSubmitting,
+    disabled:
+      attributes.disabled ||
+      !isReady ||
+      !oryFormState.isReady ||
+      oryFormState.isSubmitting,
   } satisfies OryNodeButtonButtonProps
   const provider = extractProvider(node.meta.label?.context) ?? ''
 
@@ -12773,7 +13681,11 @@ export function TextRenderer({ node }: TextRendererProps) {
 // SPDX-License-Identifier: Apache-2.0
 
 import { UiNode } from '@ory/client-fetch'
-import { ComponentPropsWithoutRef, FormEventHandler, PropsWithChildren } from 'react'
+import {
+  ComponentPropsWithoutRef,
+  FormEventHandler,
+  PropsWithChildren,
+} from 'react'
 import { useFormContext } from 'react-hook-form'
 import { useComponents } from '../../context/component'
 import { OryFormProvider } from './form-provider'
@@ -12795,7 +13707,8 @@ export type OrySettingsFormProps = Omit<
  * @inline
  * @hidden
  */
-export interface OryFormSectionProps extends PropsWithChildren, OrySettingsFormProps {
+export interface OryFormSectionProps
+  extends PropsWithChildren, OrySettingsFormProps {
   nodes?: UiNode[]
 }
 
@@ -12814,10 +13727,16 @@ export interface OryCardSettingsSectionProps extends PropsWithChildren {
  * @returns
  * @group Components
  */
-export function OrySettingsFormSection({ children, nodes, ...rest }: OryFormSectionProps) {
+export function OrySettingsFormSection({
+  children,
+  nodes,
+  ...rest
+}: OryFormSectionProps) {
   return (
     <OryFormProvider nodes={nodes}>
-      <OrySettingsFormSectionInner {...rest}>{children}</OrySettingsFormSectionInner>
+      <OrySettingsFormSectionInner {...rest}>
+        {children}
+      </OrySettingsFormSectionInner>
     </OryFormProvider>
   )
 }
@@ -12962,7 +13881,9 @@ export function OryFormSsoButtons() {
 
   // Only get the oidc nodes.
   const filteredNodes = ui.nodes.filter(
-    (node) => node.group === UiNodeGroupEnum.Oidc || node.group === UiNodeGroupEnum.Saml,
+    (node) =>
+      node.group === UiNodeGroupEnum.Oidc ||
+      node.group === UiNodeGroupEnum.Saml,
   )
 
   const { Form } = useComponents()
@@ -12995,7 +13916,9 @@ export function OryFormSsoForm() {
 
   // Only get the oidc nodes.
   const filteredNodes = ui.nodes.filter(
-    (node) => node.group === UiNodeGroupEnum.Saml || node.group === UiNodeGroupEnum.Oidc,
+    (node) =>
+      node.group === UiNodeGroupEnum.Saml ||
+      node.group === UiNodeGroupEnum.Oidc,
   )
 
   if (filteredNodes.length === 0) {
@@ -13054,7 +13977,8 @@ export function useOryFormSubmit(
   const methods = useFormContext()
   const config = useOryConfiguration()
 
-  const { onSuccess, onValidationError, onError, transientPayload } = flowContainer
+  const { onSuccess, onValidationError, onError, transientPayload } =
+    flowContainer
 
   const handleSuccess = (flow: OryFlowContainer) => {
     flowContainer.dispatchFormState({ type: 'form_submit_end' })
@@ -13070,7 +13994,9 @@ export function useOryFormSubmit(
     window.location.assign(url)
   }
 
-  const mergeTransientPayload = (data: FormValues): Record<string, unknown> | undefined => {
+  const mergeTransientPayload = (
+    data: FormValues,
+  ): Record<string, unknown> | undefined => {
     if (!transientPayload && !data.transient_payload) {
       return undefined
     }
@@ -13261,7 +14187,10 @@ export function useOryFormSubmit(
             },
           })
           const oauth2Success = await response.json()
-          if (oauth2Success.redirect_to && typeof oauth2Success.redirect_to === 'string') {
+          if (
+            oauth2Success.redirect_to &&
+            typeof oauth2Success.redirect_to === 'string'
+          ) {
             await onSuccess?.({
               flowType: FlowType.OAuth2Consent,
               consentRequest: flowContainer.flow.consent_request,
@@ -13319,7 +14248,9 @@ function findResendNode(nodes: UiNode[]) {
   return nodes.find(
     (n) =>
       'name' in n.attributes &&
-      ((['email', 'recovery_confirm_address'].includes(n.attributes.name) &&
+      ((['email', 'recovery_confirm_address'].includes(
+        n.attributes.name,
+      ) &&
         n.attributes.type === 'submit') ||
         n.attributes.name === 'resend'),
   )
@@ -13351,11 +14282,13 @@ export function useResendCode() {
   const { watch } = useFormContext()
   const resendCodeNode = findResendNode(flowContainer.flow.ui.nodes)
   const formSubmit = useOryFormSubmit()
-  const [turnstileResponse, setTurnstileResponse] = useState<string | undefined>()
+  const [turnstileResponse, setTurnstileResponse] = useState<
+    string | undefined
+  >()
 
   // This workaround ensures that CAPTCHA response token is also included when resending the code.
-  const captchaVerificationValue = watch('transient_payload')?.captcha_turnstile_response as
-    string | undefined
+  const captchaVerificationValue = watch('transient_payload')
+    ?.captcha_turnstile_response as string | undefined
   useEffect(() => {
     if (captchaVerificationValue) {
       setTurnstileResponse(captchaVerificationValue)
@@ -13372,7 +14305,8 @@ export function useResendCode() {
       .map((n) => {
         if (
           n.attributes.node_type === 'input' &&
-          n.attributes.name === 'transient_payload.captcha_turnstile_response' &&
+          n.attributes.name ===
+            'transient_payload.captcha_turnstile_response' &&
           turnstileResponse
         ) {
           n.attributes.value = turnstileResponse
@@ -13385,7 +14319,10 @@ export function useResendCode() {
       ui: { nodes: hiddenFields },
     })
 
-    if (resendCodeNode?.attributes && 'name' in resendCodeNode.attributes) {
+    if (
+      resendCodeNode?.attributes &&
+      'name' in resendCodeNode.attributes
+    ) {
       const data: FormValues = {
         code: undefined,
         [resendCodeNode.attributes.name]: resendCodeNode.attributes.value,
@@ -13441,14 +14378,18 @@ export function OryFormGroupDivider() {
 
   // Only get the oidc nodes.
   const filteredNodes = ui.nodes.filter(
-    (node) => node.group === UiNodeGroupEnum.Oidc || node.group === UiNodeGroupEnum.Saml,
+    (node) =>
+      node.group === UiNodeGroupEnum.Oidc ||
+      node.group === UiNodeGroupEnum.Saml,
   )
 
   // Are there other first-factor nodes available?
   const otherNodes = ui.nodes.filter(
     (node) =>
-      !(node.group === UiNodeGroupEnum.Oidc || node.group === UiNodeGroupEnum.Saml) &&
-      node.group !== 'default',
+      !(
+        node.group === UiNodeGroupEnum.Oidc ||
+        node.group === UiNodeGroupEnum.Saml
+      ) && node.group !== 'default',
   )
 
   if (filteredNodes.length > 0 && otherNodes.length > 0) {
@@ -13513,7 +14454,11 @@ export * from './settings'
 // SPDX-License-Identifier: Apache-2.0
 
 import { OryNodeButtonButtonProps } from '../../types'
-import { UiNodeImage, UiNodeInput, UiNodeText } from '../../util/utilFixSDKTypesHelper'
+import {
+  UiNodeImage,
+  UiNodeInput,
+  UiNodeText,
+} from '../../util/utilFixSDKTypesHelper'
 
 export * from './settings-card'
 
@@ -13575,17 +14520,29 @@ import { useFormContext } from 'react-hook-form'
 import { useIntl } from 'react-intl'
 import { OryNodeSettingsButton } from '.'
 import { useComponents } from '../../context'
-import { settingsCardDescriptions, settingsCardTitles } from '../../util/i18n/settingsCardMessages'
-import { isUiNodeInput, UiNodeInput } from '../../util/utilFixSDKTypesHelper'
+import {
+  settingsCardDescriptions,
+  settingsCardTitles,
+} from '../../util/i18n/settingsCardMessages'
+import {
+  isUiNodeInput,
+  UiNodeInput,
+} from '../../util/utilFixSDKTypesHelper'
 
 const getLinkButtons = (nodes: UiNode[]): UiNodeInput[] =>
   nodes
-    .filter((node) => 'name' in node.attributes && node.attributes.name === 'link')
+    .filter(
+      (node) =>
+        'name' in node.attributes && node.attributes.name === 'link',
+    )
     .filter(isUiNodeInput)
 
 const getUnlinkButtons = (nodes: UiNode[]): UiNodeInput[] =>
   nodes
-    .filter((node) => 'name' in node.attributes && node.attributes.name === 'unlink')
+    .filter(
+      (node) =>
+        'name' in node.attributes && node.attributes.name === 'unlink',
+    )
     .filter(isUiNodeInput)
 
 export interface HeadlessSettingsOidcProps {
@@ -13597,26 +14554,30 @@ export function OrySettingsOidc({ nodes }: HeadlessSettingsOidcProps) {
   const intl = useIntl()
   const { setValue, formState } = useFormContext()
 
-  const linkButtons: OryNodeSettingsButton[] = getLinkButtons(nodes).map((node) => {
-    const clickHandler = function () {
-      if (node.attributes.node_type === 'input') {
-        setValue('link', node.attributes.value)
-        setValue('method', node.group)
+  const linkButtons: OryNodeSettingsButton[] = getLinkButtons(nodes).map(
+    (node) => {
+      const clickHandler = function () {
+        if (node.attributes.node_type === 'input') {
+          setValue('link', node.attributes.value)
+          setValue('method', node.group)
+        }
       }
-    }
-    return {
-      ...node,
-      onClick: clickHandler,
-      buttonProps: {
-        name: node.attributes.name,
-        value: node.attributes.value,
+      return {
+        ...node,
         onClick: clickHandler,
-        type: 'submit',
-      },
-    }
-  })
+        buttonProps: {
+          name: node.attributes.name,
+          value: node.attributes.value,
+          onClick: clickHandler,
+          type: 'submit',
+        },
+      }
+    },
+  )
 
-  const unlinkButtons: OryNodeSettingsButton[] = getUnlinkButtons(nodes).map((node) => {
+  const unlinkButtons: OryNodeSettingsButton[] = getUnlinkButtons(
+    nodes,
+  ).map((node) => {
     const clickHandler = function () {
       if (node.attributes.node_type === 'input') {
         setValue('unlink', node.attributes.value)
@@ -13670,15 +14631,23 @@ import { useFormContext } from 'react-hook-form'
 import { useIntl } from 'react-intl'
 import { useComponents } from '../../context'
 import { triggerToWindowCall } from '../../util/ui'
-import { isUiNodeInput, UiNodeInput } from '../../util/utilFixSDKTypesHelper'
+import {
+  isUiNodeInput,
+  UiNodeInput,
+} from '../../util/utilFixSDKTypesHelper'
 import { Node } from '../form/nodes/node'
-import { settingsCardDescriptions, settingsCardTitles } from '../../util/i18n/settingsCardMessages'
+import {
+  settingsCardDescriptions,
+  settingsCardTitles,
+} from '../../util/i18n/settingsCardMessages'
 
 const getTriggerNode = (nodes: UiNode[]): UiNodeInput | undefined =>
   nodes
     .filter(isUiNodeInput)
     .find(
-      (node) => 'name' in node.attributes && node.attributes.name === 'passkey_register_trigger',
+      (node) =>
+        'name' in node.attributes &&
+        node.attributes.name === 'passkey_register_trigger',
     )
 
 const getSettingsNodes = (nodes: UiNode[]): UiNode[] =>
@@ -13691,14 +14660,20 @@ const getSettingsNodes = (nodes: UiNode[]): UiNode[] =>
 
 const getRemoveNodes = (nodes: UiNode[]): UiNodeInput[] =>
   nodes
-    .filter((node) => 'name' in node.attributes && node.attributes.name === 'passkey_remove')
+    .filter(
+      (node) =>
+        'name' in node.attributes &&
+        node.attributes.name === 'passkey_remove',
+    )
     .filter(isUiNodeInput)
 
 interface HeadlessSettingsPasskeyProps {
   nodes: UiNode[]
 }
 
-export function OrySettingsPasskey({ nodes }: HeadlessSettingsPasskeyProps) {
+export function OrySettingsPasskey({
+  nodes,
+}: HeadlessSettingsPasskeyProps) {
   const { Card, Form } = useComponents()
   const intl = useIntl()
   const { setValue, formState } = useFormContext()
@@ -13795,7 +14770,10 @@ import {
   UiNodeText,
 } from '../../util/utilFixSDKTypesHelper'
 import { Node } from '../form/nodes/node'
-import { settingsCardDescriptions, settingsCardTitles } from '../../util/i18n/settingsCardMessages'
+import {
+  settingsCardDescriptions,
+  settingsCardTitles,
+} from '../../util/i18n/settingsCardMessages'
 
 const getRegenerateNode = (nodes: UiNode[]): UiNodeInput | undefined =>
   nodes.find(
@@ -13816,7 +14794,9 @@ const getRevealNode = (nodes: UiNode[]): UiNodeInput | undefined =>
 const getRecoveryCodes = (nodes: UiNode[]): UiNodeText | undefined =>
   nodes.find(
     (node): node is UiNodeText =>
-      'id' in node.attributes && node.attributes.id === 'lookup_secret_codes' && isUiNodeText(node),
+      'id' in node.attributes &&
+      node.attributes.id === 'lookup_secret_codes' &&
+      isUiNodeText(node),
   )
 
 const getDisableNode = (nodes: UiNode[]): UiNodeInput | undefined =>
@@ -13839,7 +14819,9 @@ interface HeadlessSettingsRecoveryCodesProps {
   nodes: UiNode[]
 }
 
-export function OrySettingsRecoveryCodes({ nodes }: HeadlessSettingsRecoveryCodesProps) {
+export function OrySettingsRecoveryCodes({
+  nodes,
+}: HeadlessSettingsRecoveryCodesProps) {
   const { Card, Form } = useComponents()
   const intl = useIntl()
 
@@ -13854,7 +14836,9 @@ export function OrySettingsRecoveryCodes({ nodes }: HeadlessSettingsRecoveryCode
     (codesNode?.attributes?.text.context as {
       secrets?: { text: string }[]
     }) ?? {}
-  const secrets = codesContext.secrets ? codesContext.secrets.map((i) => i.text) : []
+  const secrets = codesContext.secrets
+    ? codesContext.secrets.map((i) => i.text)
+    : []
 
   const onRegenerate = () => {
     if (regenerateNode?.attributes.node_type === 'input') {
@@ -13876,7 +14860,9 @@ export function OrySettingsRecoveryCodes({ nodes }: HeadlessSettingsRecoveryCode
     <>
       <Card.SettingsSectionContent
         title={intl.formatMessage(settingsCardTitles.lookup_secret)}
-        description={intl.formatMessage(settingsCardDescriptions.lookup_secret)}
+        description={intl.formatMessage(
+          settingsCardDescriptions.lookup_secret,
+        )}
       >
         <Form.RecoveryCodesSettings
           codes={secrets}
@@ -13901,7 +14887,11 @@ export function OrySettingsRecoveryCodes({ nodes }: HeadlessSettingsRecoveryCode
 // Copyright © 2024 Ory Corp
 // SPDX-License-Identifier: Apache-2.0
 
-import { isUiNodeScriptAttributes, UiNode, UiNodeGroupEnum } from '@ory/client-fetch'
+import {
+  isUiNodeScriptAttributes,
+  UiNode,
+  UiNodeGroupEnum,
+} from '@ory/client-fetch'
 import { getNodeId } from '../../util/sdk-helpers/ui'
 import { useEffect } from 'react'
 import { useIntl } from 'react-intl'
@@ -13955,7 +14945,9 @@ function SettingsSectionContent({ group, nodes }: SettingsSectionProps) {
         nodes={groupedNodes.groups.lookup_secret}
         data-testid="ory/screen/settings/group/lookup_secret"
       >
-        <OrySettingsRecoveryCodes nodes={groupedNodes.groups.lookup_secret ?? []} />
+        <OrySettingsRecoveryCodes
+          nodes={groupedNodes.groups.lookup_secret ?? []}
+        />
         {groupedNodes.groups.default?.map((node) => (
           <Node key={getNodeId(node)} node={node} />
         ))}
@@ -14006,23 +14998,36 @@ function SettingsSectionContent({ group, nodes }: SettingsSectionProps) {
   }
 
   return (
-    <OrySettingsFormSection nodes={nodes} data-testid={`ory/screen/settings/group/${group}`}>
+    <OrySettingsFormSection
+      nodes={nodes}
+      data-testid={`ory/screen/settings/group/${group}`}
+    >
       <Card.SettingsSectionContent
         title={intl.formatMessage(settingsCardTitleMessage(group))}
-        description={intl.formatMessage(settingsCardDescriptionMessage(group))}
+        description={intl.formatMessage(
+          settingsCardDescriptionMessage(group),
+        )}
       >
         {groupedNodes.groups.default?.map((node) => (
           <Node key={getNodeId(node)} node={node} />
         ))}
         {nodes
-          .filter((node) => 'type' in node.attributes && node.attributes.type !== 'submit')
+          .filter(
+            (node) =>
+              'type' in node.attributes &&
+              node.attributes.type !== 'submit',
+          )
           .map((node) => (
             <Node key={getNodeId(node)} node={node} />
           ))}
       </Card.SettingsSectionContent>
       <Card.SettingsSectionFooter>
         {nodes
-          .filter((node) => 'type' in node.attributes && node.attributes.type === 'submit')
+          .filter(
+            (node) =>
+              'type' in node.attributes &&
+              node.attributes.type === 'submit',
+          )
           .map((node) => (
             <Node key={getNodeId(node)} node={node} />
           ))}
@@ -14033,7 +15038,9 @@ function SettingsSectionContent({ group, nodes }: SettingsSectionProps) {
 
 const onlyScriptNodes = (nodes: UiNode[]): UiNode[] =>
   nodes.filter(
-    (node) => isUiNodeScriptAttributes(node.attributes) && node.attributes.id === 'webauthn_script',
+    (node) =>
+      isUiNodeScriptAttributes(node.attributes) &&
+      node.attributes.id === 'webauthn_script',
   )
 
 /**
@@ -14063,7 +15070,13 @@ export function OrySettingsCard() {
           return null
         }
 
-        return <SettingsSectionContent key={group} group={group} nodes={nodes} />
+        return (
+          <SettingsSectionContent
+            key={group}
+            group={group}
+            nodes={nodes}
+          />
+        )
       })}
       <SettingsMessageToaster />
     </>
@@ -14111,36 +15124,49 @@ import {
   UiNodeText,
 } from '../../util/utilFixSDKTypesHelper'
 import { Node } from '../form/nodes/node'
-import { settingsCardDescriptions, settingsCardTitles } from '../../util/i18n/settingsCardMessages'
+import {
+  settingsCardDescriptions,
+  settingsCardTitles,
+} from '../../util/i18n/settingsCardMessages'
 
 const getQrCodeNode = (nodes: UiNode[]): UiNodeImage | undefined =>
   nodes.find(
     (node): node is UiNodeImage =>
-      'id' in node.attributes && node.attributes.id === 'totp_qr' && isUiNodeImage(node),
+      'id' in node.attributes &&
+      node.attributes.id === 'totp_qr' &&
+      isUiNodeImage(node),
   )
 
 const getTotpSecretNode = (nodes: UiNode[]): UiNodeText | undefined =>
   nodes.find<UiNodeText>(
     (node): node is UiNodeText =>
-      'id' in node.attributes && node.attributes.id === 'totp_secret_key' && isUiNodeText(node),
+      'id' in node.attributes &&
+      node.attributes.id === 'totp_secret_key' &&
+      isUiNodeText(node),
   )
 
 const getTotpInputNode = (nodes: UiNode[]): UiNodeInput | undefined =>
   nodes.find(
     (node): node is UiNodeInput =>
-      'name' in node.attributes && node.attributes.name === 'totp_code' && isUiNodeInput(node),
+      'name' in node.attributes &&
+      node.attributes.name === 'totp_code' &&
+      isUiNodeInput(node),
   )
 
 const getTotpUnlinkInput = (nodes: UiNode[]): UiNodeInput | undefined =>
   nodes.find(
     (node): node is UiNodeInput =>
-      'name' in node.attributes && node.attributes.name === 'totp_unlink' && isUiNodeInput(node),
+      'name' in node.attributes &&
+      node.attributes.name === 'totp_unlink' &&
+      isUiNodeInput(node),
   )
 
 const getTotpLinkButton = (nodes: UiNode[]): UiNodeInput | undefined =>
   nodes.find(
     (node): node is UiNodeInput =>
-      'name' in node.attributes && node.attributes.name === 'method' && isUiNodeInput(node),
+      'name' in node.attributes &&
+      node.attributes.name === 'method' &&
+      isUiNodeInput(node),
   )
 
 type HeadlessSettingsTotpProps = {
@@ -14172,7 +15198,11 @@ export function OrySettingsTotp({ nodes }: HeadlessSettingsTotpProps) {
         description={intl.formatMessage(settingsCardDescriptions.totp)}
       >
         {qrNode && secretNode && totpCodeNode && !totpUnlink ? (
-          <TotpSettingsLink totpImage={qrNode} totpSecret={secretNode} totpInput={totpCodeNode} />
+          <TotpSettingsLink
+            totpImage={qrNode}
+            totpSecret={secretNode}
+            totpInput={totpCodeNode}
+          />
         ) : (
           <Form.TotpSettings
             totpImage={qrNode}
@@ -14189,7 +15219,8 @@ export function OrySettingsTotp({ nodes }: HeadlessSettingsTotpProps) {
           totpUnlink
             ? intl.formatMessage({
                 id: 'settings.totp.info.linked',
-                defaultMessage: 'You currently have an authenticator app connected.',
+                defaultMessage:
+                  'You currently have an authenticator app connected.',
               })
             : intl.formatMessage({
                 id: 'settings.totp.info.not-linked',
@@ -14210,7 +15241,11 @@ type TotpSettingsLinkProps = {
   totpInput: UiNodeInput
 }
 
-function TotpSettingsLink({ totpImage, totpSecret, totpInput }: TotpSettingsLinkProps) {
+function TotpSettingsLink({
+  totpImage,
+  totpSecret,
+  totpInput,
+}: TotpSettingsLinkProps) {
   const { formState } = useFormContext()
   const { Form } = useComponents()
   return (
@@ -14236,43 +15271,60 @@ import { UiNode, UiNodeInputAttributes } from '@ory/client-fetch'
 import { useFormContext } from 'react-hook-form'
 import { useIntl } from 'react-intl'
 import { useComponents } from '../../context'
-import { settingsCardDescriptions, settingsCardTitles } from '../../util/i18n/settingsCardMessages'
+import {
+  settingsCardDescriptions,
+  settingsCardTitles,
+} from '../../util/i18n/settingsCardMessages'
 import { triggerToWindowCall } from '../../util/ui'
 import { UiNodeInput } from '../../util/utilFixSDKTypesHelper'
 import { Node } from '../form/nodes/node'
 
 const getInputNode = (nodes: UiNode[]): UiNodeInput | undefined =>
   nodes.find(
-    (node) => 'name' in node.attributes && node.attributes.name === 'webauthn_register_displayname',
+    (node) =>
+      'name' in node.attributes &&
+      node.attributes.name === 'webauthn_register_displayname',
   ) as UiNodeInput | undefined
 
 const getTriggerNode = (nodes: UiNode[]): UiNodeInput | undefined =>
   nodes.find(
-    (node) => 'name' in node.attributes && node.attributes.name === 'webauthn_register_trigger',
+    (node) =>
+      'name' in node.attributes &&
+      node.attributes.name === 'webauthn_register_trigger',
   ) as UiNodeInput | undefined
 
 const getRemoveButtons = (nodes: UiNode[]): UiNodeInput[] =>
   nodes.filter(
-    (node) => 'name' in node.attributes && node.attributes.name === 'webauthn_remove',
+    (node) =>
+      'name' in node.attributes &&
+      node.attributes.name === 'webauthn_remove',
   ) as UiNodeInput[]
 
 const getRegisterNode = (nodes: UiNode[]): UiNodeInput | undefined =>
   nodes.find(
-    (node) => 'name' in node.attributes && node.attributes.name === 'webauthn_register',
+    (node) =>
+      'name' in node.attributes &&
+      node.attributes.name === 'webauthn_register',
   ) as UiNodeInput | undefined
 
 type HeadlessSettingsWebauthnProps = {
   nodes: UiNode[]
 }
 
-export function OrySettingsWebauthn({ nodes }: HeadlessSettingsWebauthnProps) {
+export function OrySettingsWebauthn({
+  nodes,
+}: HeadlessSettingsWebauthnProps) {
   const { Card } = useComponents()
   const intl = useIntl()
   const triggerButton = getTriggerNode(nodes)
   const inputNode = getInputNode(nodes)
   const registerNode = getRegisterNode(nodes)
 
-  if (!inputNode || !triggerButton || inputNode.attributes.node_type !== 'input') {
+  if (
+    !inputNode ||
+    !triggerButton ||
+    inputNode.attributes.node_type !== 'input'
+  ) {
     return null
   }
 
@@ -14282,7 +15334,11 @@ export function OrySettingsWebauthn({ nodes }: HeadlessSettingsWebauthnProps) {
         title={intl.formatMessage(settingsCardTitles.webauthn)}
         description={intl.formatMessage(settingsCardDescriptions.webauthn)}
       >
-        <WebauthnForm inputNode={inputNode} nodes={nodes} triggerButton={triggerButton} />
+        <WebauthnForm
+          inputNode={inputNode}
+          nodes={nodes}
+          triggerButton={triggerButton}
+        />
         {registerNode && <Node node={registerNode} />}
       </Card.SettingsSectionContent>
       <Card.SettingsSectionFooter
@@ -14302,7 +15358,11 @@ type WebauthnFormProps = {
   nodes: UiNode[]
 }
 
-function WebauthnForm({ inputNode, triggerButton, nodes }: WebauthnFormProps) {
+function WebauthnForm({
+  inputNode,
+  triggerButton,
+  nodes,
+}: WebauthnFormProps) {
   const { Form } = useComponents()
   const { setValue, formState } = useFormContext()
   const removeButtons = getRemoveButtons(nodes)
@@ -14389,7 +15449,11 @@ export function orySdkUrl() {
  * This function returns whether the current environment is a production environment.
  */
 export function isProduction() {
-  return ['production', 'prod'].indexOf(process.env.VERCEL_ENV ?? process.env.NODE_ENV ?? '') > -1
+  return (
+    ['production', 'prod'].indexOf(
+      process.env.VERCEL_ENV ?? process.env.NODE_ENV ?? '',
+    ) > -1
+  )
 }
 
 /**
@@ -14400,7 +15464,9 @@ export function isProduction() {
  *
  * @param options - Options for guessing the SDK URL.
  */
-export function guessPotentiallyProxiedOrySdkUrl(options?: { knownProxiedUrl?: string }) {
+export function guessPotentiallyProxiedOrySdkUrl(options?: {
+  knownProxiedUrl?: string
+}) {
   if (isProduction()) {
     // In production, we use the production custom domain
     return orySdkUrl()
@@ -14448,11 +15514,19 @@ export function guessPotentiallyProxiedOrySdkUrl(options?: { knownProxiedUrl?: s
 // Copyright © 2024 Ory Corp
 // SPDX-License-Identifier: Apache-2.0
 'use client'
-import { Configuration, ConfigurationParameters, FrontendApi, OAuth2Api } from '@ory/client-fetch'
+import {
+  Configuration,
+  ConfigurationParameters,
+  FrontendApi,
+  OAuth2Api,
+} from '@ory/client-fetch'
 import { guessPotentiallyProxiedOrySdkUrl } from './config'
 
 export function frontendClient(
-  { forceBaseUrl, ...opts }: Partial<ConfigurationParameters & { forceBaseUrl?: string }> = {
+  {
+    forceBaseUrl,
+    ...opts
+  }: Partial<ConfigurationParameters & { forceBaseUrl?: string }> = {
     credentials: 'include',
   },
 ) {
@@ -14475,7 +15549,10 @@ export function frontendClient(
 }
 
 export function oauth2Client(
-  { forceBaseUrl, ...opts }: Partial<ConfigurationParameters & { forceBaseUrl?: string }> = {
+  {
+    forceBaseUrl,
+    ...opts
+  }: Partial<ConfigurationParameters & { forceBaseUrl?: string }> = {
     credentials: 'include',
   },
 ) {
@@ -14521,7 +15598,13 @@ export { useSession } from './useSession'
 
 'use client'
 import { Session } from '@ory/client-fetch'
-import { createContext, useCallback, useEffect, useRef, useState } from 'react'
+import {
+  createContext,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
 import { frontendClient } from './frontendClient'
 
 type SessionState =
@@ -14613,7 +15696,9 @@ export function SessionProvider({
 }: SessionProviderProps) {
   const initialized = useRef(!!initialSession)
   const [isLoading, setLoading] = useState(false)
-  const [sessionState, setSessionState] = useState<SessionState | undefined>(() => {
+  const [sessionState, setSessionState] = useState<
+    SessionState | undefined
+  >(() => {
     if (initialSession) {
       return {
         session: initialSession,
@@ -14652,8 +15737,12 @@ export function SessionProvider({
   return (
     <SessionContext.Provider
       value={{
-        error: sessionState?.state === 'error' ? sessionState.error : undefined,
-        session: sessionState?.state === 'authenticated' ? sessionState.session : null,
+        error:
+          sessionState?.state === 'error' ? sessionState.error : undefined,
+        session:
+          sessionState?.state === 'authenticated'
+            ? sessionState.session
+            : null,
         isLoading,
         initialized: initialized.current,
         refetch: fetchSession,

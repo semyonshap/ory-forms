@@ -13,7 +13,6 @@ import Linkedin from './linkedin'
 import Microsoft from './microsoft'
 import { OryComponents } from '../types'
 
-
 export const logos: OryComponents['Icons']['Providers'] = {
   Apple,
   Auth0,

@@ -34,11 +34,17 @@ function createNode({
   }
 }
 
-interface CreateAnchorNodeParams extends Omit<CreateNodeParams, 'type' | 'attributes'> {
+interface CreateAnchorNodeParams extends Omit<
+  CreateNodeParams,
+  'type' | 'attributes'
+> {
   attributes: Omit<UiNodeAnchorAttributes, 'node_type'>
 }
 
-export function createAnchorNode({ attributes, ...rest }: CreateAnchorNodeParams) {
+export function createAnchorNode({
+  attributes,
+  ...rest
+}: CreateAnchorNodeParams) {
   return createNode({
     type: UiNodeTypeEnum.A,
     attributes: {

@@ -16,7 +16,10 @@ export type OryMiddlewareOptions = {
   project?: Partial<AccountExperienceConfiguration>
 }
 
-async function proxyRequest(request: NextRequest, options: OryMiddlewareOptions) {
+async function proxyRequest(
+  request: NextRequest,
+  options: OryMiddlewareOptions,
+) {
   const matchPaths = [
     '/self-service',
     '/custom-service',
@@ -26,25 +29,37 @@ async function proxyRequest(request: NextRequest, options: OryMiddlewareOptions)
     '/.ory',
   ]
 
-  if (!some(matchPaths, (path) => request.nextUrl.pathname.startsWith(path))) {
+  if (
+    !some(matchPaths, (path) => request.nextUrl.pathname.startsWith(path))
+  ) {
     return NextResponse.next()
   }
 
-  if (request.nextUrl.pathname === '/custom-service/consent' && request.method === 'POST') {
+  if (
+    request.nextUrl.pathname === '/custom-service/consent' &&
+    request.method === 'POST'
+  ) {
     return handleConsentSubmit(request)
   }
 
-  if (request.nextUrl.pathname === '/custom-service/verify' && request.method === 'POST') {
+  if (
+    request.nextUrl.pathname === '/custom-service/verify' &&
+    request.method === 'POST'
+  ) {
     return handleVerifySubmit(request)
   }
 
-  if (request.nextUrl.pathname === '/self-service/logout' && request.method === 'POST') {
+  if (
+    request.nextUrl.pathname === '/self-service/logout' &&
+    request.method === 'POST'
+  ) {
     return handleLogoutSubmit(request)
   }
 
   const appBaseHost = request.headers.get('host')
   const matchBaseUrl = new URL(orySdkUrl())
-  const selfUrl = request.nextUrl.protocol + '//' + (appBaseHost || request.nextUrl.host)
+  const selfUrl =
+    request.nextUrl.protocol + '//' + (appBaseHost || request.nextUrl.host)
   const upstreamUrl = buildUpstreamUrl(request, matchBaseUrl)
 
   const upstreamHeaders = await buildUpstreamHeaders(
@@ -58,7 +73,9 @@ async function proxyRequest(request: NextRequest, options: OryMiddlewareOptions)
     method: request.method,
     headers: upstreamHeaders,
     body:
-      request.method !== 'GET' && request.method !== 'HEAD' ? await request.arrayBuffer() : null,
+      request.method !== 'GET' && request.method !== 'HEAD'
+        ? await request.arrayBuffer()
+        : null,
     redirect: 'manual',
   })
   upstreamResponse = new Response(upstreamResponse.body, {
@@ -68,7 +85,12 @@ async function proxyRequest(request: NextRequest, options: OryMiddlewareOptions)
   })
 
   rewriteSetCookieHeaders(request, upstreamResponse, options)
-  return buildUpstreamResponse(upstreamResponse, matchBaseUrl.toString(), selfUrl, options)
+  return buildUpstreamResponse(
+    upstreamResponse,
+    matchBaseUrl.toString(),
+    selfUrl,
+    options,
+  )
 }
 
 export function createOryMiddleware(options: OryMiddlewareOptions) {

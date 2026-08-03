@@ -22,7 +22,9 @@ export async function getOAuth2LogoutFlow(
   const api = serverSideOAuth2Client()
 
   try {
-    const logoutRequest = await api.getOAuth2LogoutRequest({ logoutChallenge })
+    const logoutRequest = await api.getOAuth2LogoutRequest({
+      logoutChallenge,
+    })
     const action = new URL('/self-service/logout', baseUrl)
     action.searchParams.set('logout_challenge', logoutChallenge)
     return {

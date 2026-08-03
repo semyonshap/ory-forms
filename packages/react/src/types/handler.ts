@@ -8,7 +8,11 @@ import {
 } from '@ory/client-fetch'
 
 import { OryFlowContainer } from './container'
-import { OryErrorHandler, OrySuccessHandler, OryValidationErrorHandler } from './event'
+import {
+  OryErrorHandler,
+  OrySuccessHandler,
+  OryValidationErrorHandler,
+} from './event'
 
 export interface OnSubmitHandlerProps<T> {
   body: T

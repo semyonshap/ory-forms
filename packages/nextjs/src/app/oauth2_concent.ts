@@ -1,7 +1,11 @@
 'use server'
 
 import { redirect } from 'next/navigation'
-import { OAuth2ConsentRequest, UiNode, UiTextTypeEnum } from '@ory/client-fetch'
+import {
+  OAuth2ConsentRequest,
+  UiNode,
+  UiTextTypeEnum,
+} from '@ory/client-fetch'
 
 import { getServerSession } from './session'
 import { serverSideOAuth2Client } from './client'
@@ -40,7 +44,9 @@ export async function getOAuth2ConsentFlow(
 
   let consentRequest: OAuth2ConsentRequest
   try {
-    consentRequest = await api.getOAuth2ConsentRequest({ consentChallenge })
+    consentRequest = await api.getOAuth2ConsentRequest({
+      consentChallenge,
+    })
   } catch (error) {
     await redirectToErrorPage({
       config,
@@ -55,7 +61,8 @@ export async function getOAuth2ConsentFlow(
       consentChallenge,
       acceptOAuth2ConsentRequest: {
         grant_scope: consentRequest.requested_scope ?? [],
-        grant_access_token_audience: consentRequest.requested_access_token_audience ?? [],
+        grant_access_token_audience:
+          consentRequest.requested_access_token_audience ?? [],
         session: {},
       },
     })

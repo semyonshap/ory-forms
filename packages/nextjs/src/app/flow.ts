@@ -36,7 +36,9 @@ export async function getFlowFactory<T extends object>(
   try {
     const rawResponse = await fetchFlowRaw()
     const parsed = await rawResponse.value()
-    return options.disableRewrite ? parsed : rewriteJsonResponse(parsed, baseUrl)
+    return options.disableRewrite
+      ? parsed
+      : rewriteJsonResponse(parsed, baseUrl)
   } catch (error) {
     const errorHandler = handleFlowError({
       onValidationError,

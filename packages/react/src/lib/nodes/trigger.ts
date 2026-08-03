@@ -5,7 +5,9 @@ import {
 
 export function triggerToWindowCall(
   trigger:
-    UiNodeInputAttributesOnclickTriggerEnum | UiNodeInputAttributesOnloadTriggerEnum | undefined,
+    | UiNodeInputAttributesOnclickTriggerEnum
+    | UiNodeInputAttributesOnloadTriggerEnum
+    | undefined,
 ): void {
   if (!trigger) return
 
@@ -36,16 +38,25 @@ export function triggerToWindowCall(
 }
 
 export function triggerToFunction(
-  trigger: UiNodeInputAttributesOnclickTriggerEnum | UiNodeInputAttributesOnloadTriggerEnum,
+  trigger:
+    | UiNodeInputAttributesOnclickTriggerEnum
+    | UiNodeInputAttributesOnloadTriggerEnum,
 ): (() => void) | undefined {
   if (typeof window === 'undefined') {
-    console.debug('The Ory SDK is missing a required function: window is undefined.')
+    console.debug(
+      'The Ory SDK is missing a required function: window is undefined.',
+    )
     return undefined
   }
 
   const typedWindow = window as unknown as Record<string, unknown>
-  if (!(trigger in typedWindow) || typeof typedWindow[trigger] !== 'function') {
-    console.debug(`The Ory SDK is missing a required function: ${trigger}.`)
+  if (
+    !(trigger in typedWindow) ||
+    typeof typedWindow[trigger] !== 'function'
+  ) {
+    console.debug(
+      `The Ory SDK is missing a required function: ${trigger}.`,
+    )
     return undefined
   }
 

@@ -25,7 +25,12 @@ export const DefaultComponents: OryComponents = {
             <p
               key={msg.id}
               style={{
-                color: msg.type === 'error' ? 'red' : msg.type === 'success' ? 'green' : 'white',
+                color:
+                  msg.type === 'error'
+                    ? 'red'
+                    : msg.type === 'success'
+                      ? 'green'
+                      : 'white',
               }}
             >
               {msg.text}
@@ -58,7 +63,11 @@ export const DefaultComponents: OryComponents = {
           {messages?.map((msg, i) => (
             <p
               key={i}
-              style={{ color: msg.type === 'error' ? 'red' : '#666', fontSize: '14px', margin: 0 }}
+              style={{
+                color: msg.type === 'error' ? 'red' : '#666',
+                fontSize: '14px',
+                margin: 0,
+              }}
             >
               {msg.text}
             </p>

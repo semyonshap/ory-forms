@@ -26,7 +26,10 @@ export async function buildUpstreamHeaders(
   selfUrl: string,
   forwardAdditionalHeaders?: string[],
 ) {
-  const headers = filterRequestHeaders(await request.headers, forwardAdditionalHeaders)
+  const headers = filterRequestHeaders(
+    await request.headers,
+    forwardAdditionalHeaders,
+  )
   headers.set('Host', upstreamUrl.host)
   headers.set('Ory-Base-URL-Rewrite', selfUrl.toString())
   headers.set('Ory-Base-URL-Rewrite-Token', getProjectApiKey())

@@ -2,12 +2,7 @@ import { ComponentType } from 'react'
 
 import { useFlowStore, useFlowStoreShallow } from '../../context'
 import { BlockButton, WrapperCaptcha, WrapperInput } from '../../types'
-import {
-  useButton,
-  useInput,
-  useCheckbox,
-  useCaptcha,
-} from '../../hooks'
+import { useButton, useInput, useCheckbox, useCaptcha } from '../../hooks'
 
 export function InputWrapper({ node, attached }: WrapperInput) {
   const { Node } = useFlowStoreShallow((state) => ({

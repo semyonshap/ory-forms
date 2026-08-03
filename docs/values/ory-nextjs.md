@@ -6,16 +6,16 @@
 // Copyright © 2024 Ory Corp
 // SPDX-License-Identifier: Apache-2.0
 
-import { errorCodes, ErrorResult, parse } from "psl"
+import { errorCodes, ErrorResult, parse } from 'psl'
 
 function isErrorResult(
   result: unknown,
 ): result is ErrorResult<keyof errorCodes> {
   return (
     !!result &&
-    typeof result === "object" &&
-    "error" in result &&
-    "input" in result
+    typeof result === 'object' &&
+    'error' in result &&
+    'input' in result
   )
 }
 
@@ -52,7 +52,6 @@ export function isIPAddress(hostname: string) {
 
   return ipv4Pattern.test(hostname) || ipv6Pattern.test(hostname)
 }
-
 ```
 
 ## packages/nextjs/src/utils/headers.ts
@@ -62,25 +61,24 @@ export function isIPAddress(hostname: string) {
 // SPDX-License-Identifier: Apache-2.0
 
 export const defaultForwardedHeaders = [
-  "accept",
-  "accept-charset",
-  "accept-encoding",
-  "accept-language",
-  "authorization",
-  "cache-control",
-  "content-type",
-  "cookie",
-  "host",
-  "user-agent",
-  "referer",
+  'accept',
+  'accept-charset',
+  'accept-encoding',
+  'accept-language',
+  'authorization',
+  'cache-control',
+  'content-type',
+  'cookie',
+  'host',
+  'user-agent',
+  'referer',
 ]
 
 export const defaultOmitHeaders = [
-  "transfer-encoding",
-  "content-encoding",
-  "content-length",
+  'transfer-encoding',
+  'content-encoding',
+  'content-length',
 ]
-
 ```
 
 ## packages/nextjs/src/utils/rewrite.ts
@@ -89,9 +87,9 @@ export const defaultOmitHeaders = [
 // Copyright © 2024 Ory Corp
 // SPDX-License-Identifier: Apache-2.0
 
-import { OryMiddlewareOptions } from "src/middleware/middleware"
-import { orySdkUrl } from "./sdk"
-import { joinUrlPaths } from "./utils"
+import { OryMiddlewareOptions } from 'src/middleware/middleware'
+import { orySdkUrl } from './sdk'
+import { joinUrlPaths } from './utils'
 
 export function rewriteUrls(
   source: string,
@@ -103,21 +101,21 @@ export function rewriteUrls(
     // TODO load these dynamically from the project config
 
     // Old AX routes
-    ["/ui/recovery", config.project?.recovery_ui_url],
-    ["/ui/registration", config.project?.registration_ui_url],
-    ["/ui/login", config.project?.login_ui_url],
-    ["/ui/verification", config.project?.verification_ui_url],
-    ["/ui/settings", config.project?.settings_ui_url],
-    ["/ui/welcome", config.project?.default_redirect_url],
+    ['/ui/recovery', config.project?.recovery_ui_url],
+    ['/ui/registration', config.project?.registration_ui_url],
+    ['/ui/login', config.project?.login_ui_url],
+    ['/ui/verification', config.project?.verification_ui_url],
+    ['/ui/settings', config.project?.settings_ui_url],
+    ['/ui/welcome', config.project?.default_redirect_url],
 
     // New AX routes
-    ["/recovery", config.project?.recovery_ui_url],
-    ["/registration", config.project?.registration_ui_url],
-    ["/login", config.project?.login_ui_url],
-    ["/verification", config.project?.verification_ui_url],
-    ["/settings", config.project?.settings_ui_url],
+    ['/recovery', config.project?.recovery_ui_url],
+    ['/registration', config.project?.registration_ui_url],
+    ['/login', config.project?.login_ui_url],
+    ['/verification', config.project?.verification_ui_url],
+    ['/settings', config.project?.settings_ui_url],
   ].entries()) {
-    const match = joinUrlPaths(matchBaseUrl, matchPath || "")
+    const match = joinUrlPaths(matchBaseUrl, matchPath || '')
     if (replaceWith && source.startsWith(match)) {
       source = source.replaceAll(
         match,
@@ -126,8 +124,8 @@ export function rewriteUrls(
     }
   }
   return source.replaceAll(
-    matchBaseUrl.replace(/\/$/, ""),
-    new URL(selfUrl).toString().replace(/\/$/, ""),
+    matchBaseUrl.replace(/\/$/, ''),
+    new URL(selfUrl).toString().replace(/\/$/, ''),
   )
 }
 
@@ -153,10 +151,10 @@ export function rewriteJsonResponse<T extends object>(
             key,
             value
               .map((item) => {
-                if (typeof item === "object" && item !== null) {
+                if (typeof item === 'object' && item !== null) {
                   // eslint-disable-next-line @typescript-eslint/no-unsafe-return
                   return rewriteJsonResponse(item, proxyUrl)
-                } else if (typeof item === "string" && proxyUrl) {
+                } else if (typeof item === 'string' && proxyUrl) {
                   return item.replaceAll(orySdkUrl(), proxyUrl)
                 }
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-return
@@ -164,10 +162,10 @@ export function rewriteJsonResponse<T extends object>(
               })
               .filter((item) => item !== undefined),
           ]
-        } else if (typeof value === "object" && value !== null) {
+        } else if (typeof value === 'object' && value !== null) {
           // Recursively remove undefined in nested objects
           return [key, rewriteJsonResponse(value, proxyUrl)]
-        } else if (typeof value === "string" && proxyUrl) {
+        } else if (typeof value === 'string' && proxyUrl) {
           // Replace SDK URL with the provided proxy URL
           return [key, value.replaceAll(orySdkUrl(), proxyUrl)]
         }
@@ -175,7 +173,6 @@ export function rewriteJsonResponse<T extends object>(
       }),
   ) as T
 }
-
 ```
 
 ## packages/nextjs/src/utils/sdk.ts
@@ -183,7 +180,7 @@ export function rewriteJsonResponse<T extends object>(
 ```typescript
 // Copyright © 2024 Ory Corp
 // SPDX-License-Identifier: Apache-2.0
-import { get } from "psl"
+import { get } from 'psl'
 
 /**
  * Gets environment variable, prioritizing the NEXT_PUBLIC_ prefixed version
@@ -193,8 +190,8 @@ function getEnv(name: string): string | undefined {
 }
 
 function orySdkUrlOrNull(): string | null {
-  const baseUrl = getEnv("ORY_SDK_URL")
-  return baseUrl ? baseUrl.replace(/\/$/, "") : null
+  const baseUrl = getEnv('ORY_SDK_URL')
+  return baseUrl ? baseUrl.replace(/\/$/, '') : null
 }
 
 export function orySdkUrl() {
@@ -202,7 +199,7 @@ export function orySdkUrl() {
 
   if (!baseUrl) {
     throw new Error(
-      "You need to set environment variable `NEXT_PUBLIC_ORY_SDK_URL` to your Ory Network SDK URL.",
+      'You need to set environment variable `NEXT_PUBLIC_ORY_SDK_URL` to your Ory Network SDK URL.',
     )
   }
 
@@ -210,8 +207,8 @@ export function orySdkUrl() {
 }
 
 export function isProduction() {
-  const env = getEnv("VERCEL_ENV") || getEnv("NODE_ENV") || ""
-  return ["production", "prod"].indexOf(env) > -1
+  const env = getEnv('VERCEL_ENV') || getEnv('NODE_ENV') || ''
+  return ['production', 'prod'].indexOf(env) > -1
 }
 
 /**
@@ -250,7 +247,7 @@ export function guessPotentiallyProxiedOrySdkUrl(options?: {
   // VERCEL_URL on a preview deployment served under a custom domain).
   const visitedOrigin =
     options?.knownProxiedUrl ??
-    (typeof window !== "undefined" ? window.location.origin : undefined)
+    (typeof window !== 'undefined' ? window.location.origin : undefined)
 
   const sdkUrl = orySdkUrlOrNull()
 
@@ -262,11 +259,11 @@ export function guessPotentiallyProxiedOrySdkUrl(options?: {
   }
 
   if (isProduction()) {
-    if (getEnv("VERCEL_ENV")) {
-      const productionUrl = getEnv("VERCEL_PROJECT_PRODUCTION_URL") || ""
-      if (productionUrl.indexOf("vercel.app") > -1) {
+    if (getEnv('VERCEL_ENV')) {
+      const productionUrl = getEnv('VERCEL_PROJECT_PRODUCTION_URL') || ''
+      if (productionUrl.indexOf('vercel.app') > -1) {
         // This is a production deployment on Vercel without a custom domain, so we use the vercel app domain.
-        return `https://${productionUrl}`.replace(/\/$/, "")
+        return `https://${productionUrl}`.replace(/\/$/, '')
       }
     }
 
@@ -278,23 +275,23 @@ export function guessPotentiallyProxiedOrySdkUrl(options?: {
     // Cross-site (or no SDK URL configured): route Ory traffic through the
     // visited origin so the proxy middleware can make cookies first-party —
     // anchored to the host the user is on, not the deployment's generated URL.
-    return visitedOrigin.replace(/\/$/, "")
+    return visitedOrigin.replace(/\/$/, '')
   }
 
   // No request or browser context available — fall back to environment-based
   // guessing.
-  if (getEnv("VERCEL_ENV")) {
+  if (getEnv('VERCEL_ENV')) {
     // We are in vercel
 
     // The domain name of the generated deployment URL. Example: *.vercel.app
     // This is only available for preview deployments on Vercel.
-    if (getEnv("VERCEL_URL")) {
-      return `https://${getEnv("VERCEL_URL")}`.replace(/\/$/, "")
+    if (getEnv('VERCEL_URL')) {
+      return `https://${getEnv('VERCEL_URL')}`.replace(/\/$/, '')
     }
 
     // This is sometimes set by the render server.
-    if (process.env["__NEXT_PRIVATE_ORIGIN"]) {
-      return process.env["__NEXT_PRIVATE_ORIGIN"].replace(/\/$/, "")
+    if (process.env['__NEXT_PRIVATE_ORIGIN']) {
+      return process.env['__NEXT_PRIVATE_ORIGIN'].replace(/\/$/, '')
     }
   }
 
@@ -306,7 +303,6 @@ export function guessPotentiallyProxiedOrySdkUrl(options?: {
 
   return final
 }
-
 ```
 
 ## packages/nextjs/src/utils/utils.ts
@@ -314,15 +310,15 @@ export function guessPotentiallyProxiedOrySdkUrl(options?: {
 ```typescript
 // Copyright © 2024 Ory Corp
 // SPDX-License-Identifier: Apache-2.0
-import { serialize, SerializeOptions } from "cookie"
-import { parse, splitCookiesString } from "set-cookie-parser"
+import { serialize, SerializeOptions } from 'cookie'
+import { parse, splitCookiesString } from 'set-cookie-parser'
 
-import { ApiResponse } from "@ory/client-fetch"
-import { OryMiddlewareOptions } from "src/middleware/middleware"
-import { FlowParams, QueryParams } from "../types"
-import { guessCookieDomain } from "./cookie"
-import { defaultForwardedHeaders } from "./headers"
-import { rewriteJsonResponse } from "./rewrite"
+import { ApiResponse } from '@ory/client-fetch'
+import { OryMiddlewareOptions } from 'src/middleware/middleware'
+import { FlowParams, QueryParams } from '../types'
+import { guessCookieDomain } from './cookie'
+import { defaultForwardedHeaders } from './headers'
+import { rewriteJsonResponse } from './rewrite'
 
 export function onValidationError<T>(value: T): T {
   return value
@@ -333,9 +329,9 @@ export async function toFlowParams(
   getCookieHeader: () => Promise<string | undefined>,
 ): Promise<FlowParams> {
   return {
-    id: params["flow"]?.toString() ?? "",
+    id: params['flow']?.toString() ?? '',
     cookie: await getCookieHeader(),
-    return_to: params["return_to"]?.toString() ?? "",
+    return_to: params['return_to']?.toString() ?? '',
   }
 }
 export function processSetCookieHeaders(
@@ -345,17 +341,18 @@ export function processSetCookieHeaders(
   requestHeaders: Headers,
 ) {
   const isTls =
-    protocol === "https:" || requestHeaders.get("x-forwarded-proto") === "https"
+    protocol === 'https:' ||
+    requestHeaders.get('x-forwarded-proto') === 'https'
 
-  const forwarded = requestHeaders.get("x-forwarded-host")
-  const host = forwarded ? forwarded : requestHeaders.get("host")
+  const forwarded = requestHeaders.get('x-forwarded-host')
+  const host = forwarded ? forwarded : requestHeaders.get('host')
   const domain =
     host && !options.forceCookieDomain
-      ? guessCookieDomain(host ?? "")
+      ? guessCookieDomain(host ?? '')
       : options.forceCookieDomain
 
   return parse(
-    splitCookiesString(fetchResponse.headers.get("set-cookie") || ""),
+    splitCookiesString(fetchResponse.headers.get('set-cookie') || ''),
   )
     .map((cookie) => ({
       ...cookie,
@@ -384,24 +381,28 @@ export function filterRequestHeaders(
   return filteredHeaders
 }
 
-export function joinUrlPaths(baseUrl: string, relativeUrl: string): string {
+export function joinUrlPaths(
+  baseUrl: string,
+  relativeUrl: string,
+): string {
   const base = new URL(baseUrl)
   const relative = new URL(relativeUrl, baseUrl)
 
   relative.pathname =
-    base.pathname.replace(/\/$/, "") +
-    "/" +
-    relative.pathname.replace(/^\//, "")
+    base.pathname.replace(/\/$/, '') +
+    '/' +
+    relative.pathname.replace(/^\//, '')
 
   return new URL(relative.toString(), baseUrl).href
 }
 
-export function toValue<T extends object>(res: ApiResponse<T>): Promise<T> {
+export function toValue<T extends object>(
+  res: ApiResponse<T>,
+): Promise<T> {
   // Remove all undefined values from the response (array and object) using lodash:
   // Remove all (nested) undefined values from the response using lodash
   return res.value().then((v) => rewriteJsonResponse(v))
 }
-
 ```
 
 ## packages/nextjs/src/index.ts
@@ -409,7 +410,6 @@ export function toValue<T extends object>(res: ApiResponse<T>): Promise<T> {
 ```typescript
 // Copyright © 2024 Ory Corp
 // SPDX-License-Identifier: Apache-2.0
-
 ```
 
 ## packages/nextjs/src/types.ts
@@ -421,7 +421,7 @@ export function toValue<T extends object>(res: ApiResponse<T>): Promise<T> {
 export type QueryParams = { [key: string]: string | string[] | undefined }
 
 export const initOverrides: RequestInit = {
-  cache: "no-cache",
+  cache: 'no-cache',
 }
 
 export type FlowParams = {
@@ -429,7 +429,6 @@ export type FlowParams = {
   cookie: string | undefined
   return_to: string
 }
-
 ```
 
 ## packages/nextjs/src/middleware/index.ts
@@ -438,10 +437,11 @@ export type FlowParams = {
 // Copyright © 2024 Ory Corp
 // SPDX-License-Identifier: Apache-2.0
 
-export { createOryMiddleware, type OryMiddlewareOptions } from "./middleware"
-
+export {
+  createOryMiddleware,
+  type OryMiddlewareOptions,
+} from './middleware'
 ```
-
 
 ## packages/nextjs/src/middleware/middleware.ts
 
@@ -449,22 +449,25 @@ export { createOryMiddleware, type OryMiddlewareOptions } from "./middleware"
 // Copyright © 2024 Ory Corp
 // SPDX-License-Identifier: Apache-2.0
 
-import { NextResponse, type NextRequest } from "next/server"
+import { NextResponse, type NextRequest } from 'next/server'
 
-import { AccountExperienceConfiguration } from "@ory/client-fetch"
-import { defaultOmitHeaders } from "../utils/headers"
-import { rewriteUrls } from "../utils/rewrite"
-import { orySdkUrl } from "../utils/sdk"
-import { filterRequestHeaders, processSetCookieHeaders } from "../utils/utils"
+import { AccountExperienceConfiguration } from '@ory/client-fetch'
+import { defaultOmitHeaders } from '../utils/headers'
+import { rewriteUrls } from '../utils/rewrite'
+import { orySdkUrl } from '../utils/sdk'
+import {
+  filterRequestHeaders,
+  processSetCookieHeaders,
+} from '../utils/utils'
 
 export function getProjectApiKey() {
-  let baseUrl = ""
+  let baseUrl = ''
 
-  if (process.env["ORY_PROJECT_API_TOKEN"]) {
-    baseUrl = process.env["ORY_PROJECT_API_TOKEN"]
+  if (process.env['ORY_PROJECT_API_TOKEN']) {
+    baseUrl = process.env['ORY_PROJECT_API_TOKEN']
   }
 
-  return baseUrl.replace(/\/$/, "")
+  return baseUrl.replace(/\/$/, '')
 }
 
 /**
@@ -496,21 +499,21 @@ export async function proxyRequest(
   options: OryMiddlewareOptions,
 ) {
   const match = [
-    "/self-service",
-    "/sessions/whoami",
-    "/ui",
-    "/.well-known/ory",
-    "/.ory",
+    '/self-service',
+    '/sessions/whoami',
+    '/ui',
+    '/.well-known/ory',
+    '/.ory',
   ]
   if (!match.some((m) => request.nextUrl.pathname.startsWith(m))) {
     return NextResponse.next()
   }
 
-  const appBaseHost = request.headers.get("host")
+  const appBaseHost = request.headers.get('host')
 
   const matchBaseUrl = new URL(orySdkUrl())
   const selfUrl =
-    request.nextUrl.protocol + "//" + (appBaseHost || request.nextUrl.host)
+    request.nextUrl.protocol + '//' + (appBaseHost || request.nextUrl.host)
 
   const upstreamUrl = request.nextUrl.clone()
   upstreamUrl.hostname = matchBaseUrl.hostname
@@ -522,24 +525,27 @@ export async function proxyRequest(
     await request.headers,
     options.forwardAdditionalHeaders,
   )
-  upstreamRequestHeaders.set("Host", upstreamUrl.host)
+  upstreamRequestHeaders.set('Host', upstreamUrl.host)
 
   // Ensures we use the correct URL in redirects like OIDC redirects.
-  upstreamRequestHeaders.set("Ory-Base-URL-Rewrite", selfUrl.toString())
-  upstreamRequestHeaders.set("Ory-Base-URL-Rewrite-Token", getProjectApiKey())
+  upstreamRequestHeaders.set('Ory-Base-URL-Rewrite', selfUrl.toString())
+  upstreamRequestHeaders.set(
+    'Ory-Base-URL-Rewrite-Token',
+    getProjectApiKey(),
+  )
 
   // We disable custom domain redirects.
-  upstreamRequestHeaders.set("Ory-No-Custom-Domain-Redirect", "true")
+  upstreamRequestHeaders.set('Ory-No-Custom-Domain-Redirect', 'true')
 
   // Fetch the upstream response
   let upstreamResponse = await fetch(upstreamUrl.toString(), {
     method: request.method,
     headers: upstreamRequestHeaders,
     body:
-      request.method !== "GET" && request.method !== "HEAD"
+      request.method !== 'GET' && request.method !== 'HEAD'
         ? await request.arrayBuffer()
         : null,
-    redirect: "manual",
+    redirect: 'manual',
   })
   upstreamResponse = new Response(upstreamResponse.body, {
     status: upstreamResponse.status,
@@ -554,21 +560,21 @@ export async function proxyRequest(
   })
 
   // Modify cookie domain
-  if (upstreamResponse.headers.get("set-cookie")) {
+  if (upstreamResponse.headers.get('set-cookie')) {
     const cookies = processSetCookieHeaders(
       request.nextUrl.protocol,
       upstreamResponse,
       options,
       request.headers,
     )
-    upstreamResponse.headers.delete("set-cookie")
+    upstreamResponse.headers.delete('set-cookie')
     cookies.forEach((cookie) => {
-      upstreamResponse.headers.append("Set-Cookie", cookie)
+      upstreamResponse.headers.append('Set-Cookie', cookie)
     })
   }
 
   // Modify location header
-  const originalLocation = upstreamResponse.headers.get("location")
+  const originalLocation = upstreamResponse.headers.get('location')
   if (originalLocation) {
     let location = originalLocation
 
@@ -576,40 +582,47 @@ export async function proxyRequest(
     // To fix this, we hard-rewrite `../self-service`.
     //
     // This is not needed with the "new" account experience based on this SDK.
-    if (location.startsWith("../self-service")) {
-      location = location.replace("../self-service", "/self-service")
-    } else if (!location.startsWith("http")) {
+    if (location.startsWith('../self-service')) {
+      location = location.replace('../self-service', '/self-service')
+    } else if (!location.startsWith('http')) {
       // If the location header is not an absolute URL, we need to make it one for rewriteUrls to properly rewrite it.
       location = new URL(location, matchBaseUrl).toString()
     }
 
-    location = rewriteUrls(location, matchBaseUrl.toString(), selfUrl, options)
+    location = rewriteUrls(
+      location,
+      matchBaseUrl.toString(),
+      selfUrl,
+      options,
+    )
 
-    if (!location.startsWith("http")) {
+    if (!location.startsWith('http')) {
       // console.debug('rewriting location', selfUrl, location, new URL(location, selfUrl).toString())
       location = new URL(location, selfUrl).toString()
     }
 
     // Next.js throws an error that is completely unhelpful if the location header is not an absolute URL.
     // Therefore, we throw a more helpful error message here.
-    if (!location.startsWith("http")) {
+    if (!location.startsWith('http')) {
       throw new Error(
-        "The HTTP location header must be an absolute URL in NextJS middlewares. However, it is not. The resulting HTTP location is `" +
+        'The HTTP location header must be an absolute URL in NextJS middlewares. However, it is not. The resulting HTTP location is `' +
           location +
-          "`. This is either a configuration or code bug. Please open an issue on https://github.com/ory/elements.",
+          '`. This is either a configuration or code bug. Please open an issue on https://github.com/ory/elements.',
       )
     }
 
-    upstreamResponse.headers.set("location", location)
+    upstreamResponse.headers.set('location', location)
   }
 
   // Modify buffer
   let modifiedBody = Buffer.from(await upstreamResponse.arrayBuffer())
   if (
-    upstreamResponse.headers.get("content-type")?.includes("text/") ||
-    upstreamResponse.headers.get("content-type")?.includes("application/json")
+    upstreamResponse.headers.get('content-type')?.includes('text/') ||
+    upstreamResponse.headers
+      .get('content-type')
+      ?.includes('application/json')
   ) {
-    const bufferString = modifiedBody.toString("utf-8")
+    const bufferString = modifiedBody.toString('utf-8')
     modifiedBody = Buffer.from(
       rewriteUrls(bufferString, matchBaseUrl.toString(), selfUrl, options),
     )
@@ -650,7 +663,6 @@ export function createOryMiddleware(options: OryMiddlewareOptions) {
     return proxyRequest(r, options)
   }
 }
-
 ````
 
 ## packages/nextjs/src/app/client.ts
@@ -659,20 +671,19 @@ export function createOryMiddleware(options: OryMiddlewareOptions) {
 // Copyright © 2024 Ory Corp
 // SPDX-License-Identifier: Apache-2.0
 
-import { Configuration, FrontendApi } from "@ory/client-fetch"
+import { Configuration, FrontendApi } from '@ory/client-fetch'
 
-import { orySdkUrl } from "../utils/sdk"
+import { orySdkUrl } from '../utils/sdk'
 
 export const serverSideFrontendClient = () =>
   new FrontendApi(
     new Configuration({
       headers: {
-        Accept: "application/json",
+        Accept: 'application/json',
       },
       basePath: orySdkUrl(),
     }),
   )
-
 ```
 
 ## packages/nextjs/src/app/error.ts
@@ -681,9 +692,9 @@ export const serverSideFrontendClient = () =>
 // Copyright © 2026 Ory Corp
 // SPDX-License-Identifier: Apache-2.0
 
-import { QueryParams } from "src/types"
-import { serverSideFrontendClient } from "./client"
-import { FlowError } from "@ory/client-fetch"
+import { QueryParams } from 'src/types'
+import { serverSideFrontendClient } from './client'
+import { FlowError } from '@ory/client-fetch'
 
 /**
  * Use this method in an app router page to fetch an error from the Ory SDK. This method works with server-side rendering.
@@ -719,20 +730,20 @@ export async function getError(
   searchParams: QueryParams | Promise<QueryParams>,
 ): Promise<{ error: string; error_description: string } | FlowError> {
   const params = await searchParams
-  if ("error" in params) {
+  if ('error' in params) {
     return {
-      error: params["error"] as string,
+      error: params['error'] as string,
       error_description:
-        (params["error_description"] as string | undefined) ??
-        "An unknown error occurred.",
+        (params['error_description'] as string | undefined) ??
+        'An unknown error occurred.',
     }
   }
 
-  const id = params["id"]?.toString() ?? ""
+  const id = params['id']?.toString() ?? ''
   if (!id) {
     return {
-      error: "unknown_error",
-      error_description: "An unknown error occurred.",
+      error: 'unknown_error',
+      error_description: 'An unknown error occurred.',
     }
   }
 
@@ -740,15 +751,15 @@ export async function getError(
     return await serverSideFrontendClient().getFlowError({ id })
   } catch (error) {
     return {
-      error: "unknown_error",
+      error: 'unknown_error',
       error_description:
-        error instanceof Error ? error.message : "An unknown error occurred.",
+        error instanceof Error
+          ? error.message
+          : 'An unknown error occurred.',
     }
   }
 }
-
 ````
-
 
 ## packages/nextjs/src/app/flow.ts
 
@@ -756,13 +767,13 @@ export async function getError(
 // Copyright © 2024 Ory Corp
 // SPDX-License-Identifier: Apache-2.0
 
-import { redirect, RedirectType } from "next/navigation"
-import { FlowType, handleFlowError, ApiResponse } from "@ory/client-fetch"
+import { redirect, RedirectType } from 'next/navigation'
+import { FlowType, handleFlowError, ApiResponse } from '@ory/client-fetch'
 
-import { startNewFlow, onRedirect } from "./utils"
-import { QueryParams } from "../types"
-import { onValidationError } from "../utils/utils"
-import { rewriteJsonResponse } from "../utils/rewrite"
+import { startNewFlow, onRedirect } from './utils'
+import { QueryParams } from '../types'
+import { onValidationError } from '../utils/utils'
+import { rewriteJsonResponse } from '../utils/rewrite'
 
 /**
  * Restores the `options` field on input node attributes that the pinned
@@ -804,10 +815,10 @@ function reattachInputOptions<T>(parsed: T, rawJson: unknown): void {
     const name = node?.attributes?.name
     const options = node?.attributes?.options
     if (
-      typeof name === "string" &&
+      typeof name === 'string' &&
       Array.isArray(options) &&
       options.length > 0 &&
-      options.every((o) => typeof o === "object" && o !== null)
+      options.every((o) => typeof o === 'object' && o !== null)
     ) {
       rawOptionsByName.set(name, options)
     }
@@ -818,12 +829,12 @@ function reattachInputOptions<T>(parsed: T, rawJson: unknown): void {
 
   for (const node of parsedNodes) {
     const attrs = node?.attributes
-    if (!attrs || typeof attrs.name !== "string") {
+    if (!attrs || typeof attrs.name !== 'string') {
       continue
     }
     const options = rawOptionsByName.get(attrs.name)
     if (options) {
-      attrs["options"] = options
+      attrs['options'] = options
     }
   }
 }
@@ -868,7 +879,7 @@ export async function getFlowFactory<T extends object>(
     return redirect(redirectTo.toString(), RedirectType.replace)
   }
 
-  if (!params["flow"]) {
+  if (!params['flow']) {
     return onRestartFlow()
   }
 
@@ -877,7 +888,7 @@ export async function getFlowFactory<T extends object>(
     // Clone the raw body before `value()` consumes it so we can recover
     // fields that the pinned `@ory/client-fetch` SDK strips during parsing.
     const rawClone =
-      typeof rawResponse.raw?.clone === "function"
+      typeof rawResponse.raw?.clone === 'function'
         ? rawResponse.raw.clone()
         : undefined
     const parsed = await rawResponse.value()
@@ -890,7 +901,7 @@ export async function getFlowFactory<T extends object>(
         // visible in server logs during incident diagnosis.
         // eslint-disable-next-line no-console
         console.warn(
-          "reattachInputOptions: failed to read raw flow response; enum options on input nodes may be missing",
+          'reattachInputOptions: failed to read raw flow response; enum options on input nodes may be missing',
           err,
         )
       }
@@ -908,7 +919,6 @@ export async function getFlowFactory<T extends object>(
     return await errorHandler(error)
   }
 }
-
 ```
 
 ## packages/nextjs/src/app/index.ts
@@ -916,20 +926,19 @@ export async function getFlowFactory<T extends object>(
 ```typescript
 // Copyright © 2024 Ory Corp
 // SPDX-License-Identifier: Apache-2.0
-"use server"
+'use server'
 
-export { getLoginFlow } from "./login"
-export { getRegistrationFlow } from "./registration"
-export { getRecoveryFlow } from "./recovery"
-export { getVerificationFlow } from "./verification"
-export { getSettingsFlow } from "./settings"
-export { getLogoutFlow } from "./logout"
-export { getServerSession } from "./session"
-export { getFlowFactory } from "./flow"
-export { getError } from "./error"
+export { getLoginFlow } from './login'
+export { getRegistrationFlow } from './registration'
+export { getRecoveryFlow } from './recovery'
+export { getVerificationFlow } from './verification'
+export { getSettingsFlow } from './settings'
+export { getLogoutFlow } from './logout'
+export { getServerSession } from './session'
+export { getFlowFactory } from './flow'
+export { getError } from './error'
 
-export type { OryPageParams } from "./utils"
-
+export type { OryPageParams } from './utils'
 ```
 
 ## packages/nextjs/src/app/login.ts
@@ -937,13 +946,13 @@ export type { OryPageParams } from "./utils"
 ````typescript
 // Copyright © 2024 Ory Corp
 // SPDX-License-Identifier: Apache-2.0
-import { FlowType, LoginFlow } from "@ory/client-fetch"
+import { FlowType, LoginFlow } from '@ory/client-fetch'
 
-import { initOverrides, QueryParams } from "../types"
-import { guessPotentiallyProxiedOrySdkUrl } from "../utils/sdk"
-import { serverSideFrontendClient } from "./client"
-import { getFlowFactory } from "./flow"
-import { getPublicUrl, toGetFlowParameter } from "./utils"
+import { initOverrides, QueryParams } from '../types'
+import { guessPotentiallyProxiedOrySdkUrl } from '../utils/sdk'
+import { serverSideFrontendClient } from './client'
+import { getFlowFactory } from './flow'
+import { getPublicUrl, toGetFlowParameter } from './utils'
 
 /**
  * Use this method in an app router page to fetch an existing login flow or to create a new one. This method works with server-side rendering.
@@ -999,7 +1008,6 @@ export async function getLoginFlow(
     config.project.login_ui_url,
   )
 }
-
 ````
 
 ## packages/nextjs/src/app/logout.ts
@@ -1007,13 +1015,13 @@ export async function getLoginFlow(
 ````typescript
 // Copyright © 2024 Ory Corp
 // SPDX-License-Identifier: Apache-2.0
-import { LogoutFlow } from "@ory/client-fetch"
+import { LogoutFlow } from '@ory/client-fetch'
 
-import { headers } from "next/headers"
-import { rewriteJsonResponse } from "../utils/rewrite"
-import { guessPotentiallyProxiedOrySdkUrl } from "../utils/sdk"
-import { serverSideFrontendClient } from "./client"
-import { getPublicUrl } from "./utils"
+import { headers } from 'next/headers'
+import { rewriteJsonResponse } from '../utils/rewrite'
+import { guessPotentiallyProxiedOrySdkUrl } from '../utils/sdk'
+import { serverSideFrontendClient } from './client'
+import { getPublicUrl } from './utils'
 
 /**
  * Use this method in an app router page to create a new logout flow. This method works with server-side rendering.
@@ -1048,12 +1056,11 @@ export async function getLogoutFlow({
   })
   return serverSideFrontendClient()
     .createBrowserLogoutFlow({
-      cookie: h.get("cookie") ?? "",
+      cookie: h.get('cookie') ?? '',
       returnTo,
     })
     .then((v: LogoutFlow): LogoutFlow => rewriteJsonResponse(v, url))
 }
-
 ````
 
 ## packages/nextjs/src/app/recovery.ts
@@ -1061,12 +1068,12 @@ export async function getLogoutFlow({
 ````typescript
 // Copyright © 2024 Ory Corp
 // SPDX-License-Identifier: Apache-2.0
-import { FlowType, RecoveryFlow } from "@ory/client-fetch"
-import { initOverrides, QueryParams } from "../types"
-import { guessPotentiallyProxiedOrySdkUrl } from "../utils/sdk"
-import { serverSideFrontendClient } from "./client"
-import { getFlowFactory } from "./flow"
-import { getPublicUrl, toGetFlowParameter } from "./utils"
+import { FlowType, RecoveryFlow } from '@ory/client-fetch'
+import { initOverrides, QueryParams } from '../types'
+import { guessPotentiallyProxiedOrySdkUrl } from '../utils/sdk'
+import { serverSideFrontendClient } from './client'
+import { getFlowFactory } from './flow'
+import { getPublicUrl, toGetFlowParameter } from './utils'
 
 /**
  * Use this method in an app router page to fetch an existing recovery flow or to create a new one. This method works with server-side rendering.
@@ -1121,7 +1128,6 @@ export async function getRecoveryFlow(
     config.project.recovery_ui_url,
   )
 }
-
 ````
 
 ## packages/nextjs/src/app/registration.ts
@@ -1129,13 +1135,13 @@ export async function getRecoveryFlow(
 ````typescript
 // Copyright © 2024 Ory Corp
 // SPDX-License-Identifier: Apache-2.0
-import { FlowType, RegistrationFlow } from "@ory/client-fetch"
+import { FlowType, RegistrationFlow } from '@ory/client-fetch'
 
-import { initOverrides, QueryParams } from "../types"
-import { guessPotentiallyProxiedOrySdkUrl } from "../utils/sdk"
-import { serverSideFrontendClient } from "./client"
-import { getFlowFactory } from "./flow"
-import { getPublicUrl, toGetFlowParameter } from "./utils"
+import { initOverrides, QueryParams } from '../types'
+import { guessPotentiallyProxiedOrySdkUrl } from '../utils/sdk'
+import { serverSideFrontendClient } from './client'
+import { getFlowFactory } from './flow'
+import { getPublicUrl, toGetFlowParameter } from './utils'
 
 /**
  * Use this method in an app router page to fetch an existing registration flow or to create a new one. This method works with server-side rendering.
@@ -1191,7 +1197,6 @@ export async function getRegistrationFlow(
     config.project.registration_ui_url,
   )
 }
-
 ````
 
 ## packages/nextjs/src/app/session.ts
@@ -1200,9 +1205,9 @@ export async function getRegistrationFlow(
 // Copyright © 2024 Ory Corp
 // SPDX-License-Identifier: Apache-2.0
 
-import { Session } from "@ory/client-fetch"
-import { serverSideFrontendClient } from "./client"
-import { getCookieHeader } from "./utils"
+import { Session } from '@ory/client-fetch'
+import { serverSideFrontendClient } from './client'
+import { getCookieHeader } from './utils'
 
 /**
  * A helper to fetch the session on the server side. This method works with server-side rendering.
@@ -1232,7 +1237,6 @@ export async function getServerSession(): Promise<Session | null> {
     })
     .catch(() => null)
 }
-
 ````
 
 ## packages/nextjs/src/app/settings.ts
@@ -1240,13 +1244,13 @@ export async function getServerSession(): Promise<Session | null> {
 ````typescript
 // Copyright © 2024 Ory Corp
 // SPDX-License-Identifier: Apache-2.0
-import { FlowType, SettingsFlow } from "@ory/client-fetch"
+import { FlowType, SettingsFlow } from '@ory/client-fetch'
 
-import { initOverrides, QueryParams } from "../types"
-import { guessPotentiallyProxiedOrySdkUrl } from "../utils/sdk"
-import { serverSideFrontendClient } from "./client"
-import { getFlowFactory } from "./flow"
-import { getPublicUrl, toGetFlowParameter } from "./utils"
+import { initOverrides, QueryParams } from '../types'
+import { guessPotentiallyProxiedOrySdkUrl } from '../utils/sdk'
+import { serverSideFrontendClient } from './client'
+import { getFlowFactory } from './flow'
+import { getPublicUrl, toGetFlowParameter } from './utils'
 
 /**
  * Use this method in an app router page to fetch an existing login flow or to create a new one. This method works with server-side rendering.
@@ -1302,7 +1306,6 @@ export async function getSettingsFlow(
     config.project.settings_ui_url,
   )
 }
-
 ````
 
 ## packages/nextjs/src/app/utils.ts
@@ -1310,15 +1313,15 @@ export async function getSettingsFlow(
 ````typescript
 // Copyright © 2024 Ory Corp
 // SPDX-License-Identifier: Apache-2.0
-import { FlowType, OnRedirectHandler } from "@ory/client-fetch"
-import { headers } from "next/headers"
-import { redirect, RedirectType } from "next/navigation"
-import { QueryParams } from "../types"
-import { ParsedUrlQuery } from "querystring"
+import { FlowType, OnRedirectHandler } from '@ory/client-fetch'
+import { headers } from 'next/headers'
+import { redirect, RedirectType } from 'next/navigation'
+import { QueryParams } from '../types'
+import { ParsedUrlQuery } from 'querystring'
 
 export async function getCookieHeader() {
   const h = await headers()
-  return h.get("cookie") ?? undefined
+  return h.get('cookie') ?? undefined
 }
 
 export const onRedirect: OnRedirectHandler = (url) => {
@@ -1332,18 +1335,18 @@ export async function toGetFlowParameter(
   params: Promise<QueryParams> | QueryParams,
 ) {
   return {
-    id: (await params)["flow"]?.toString() ?? "",
+    id: (await params)['flow']?.toString() ?? '',
     cookie: await getCookieHeader(),
   }
 }
 
 export async function getPublicUrl() {
   const h = await headers()
-  const host = h.get("host")
+  const host = h.get('host')
   if (!host) {
     return undefined
   }
-  const protocol = h.get("x-forwarded-proto") || "http"
+  const protocol = h.get('x-forwarded-proto') || 'http'
   return `${protocol}://${host}`
 }
 
@@ -1375,9 +1378,9 @@ export function startNewFlow(
   // return to automatically if they're logged in already.
   return redirect(
     new URL(
-      "/self-service/" +
+      '/self-service/' +
         flowType.toString() +
-        "/browser?" +
+        '/browser?' +
         urlQueryToSearchParams(params).toString(),
       baseUrl,
     ).toString(),
@@ -1388,21 +1391,23 @@ export function startNewFlow(
 // Copied over from https://github.com/vercel/next.js/blob/dbd5e1b274d30f9107141475eba116a8118bc346/packages/next/src/shared/lib/router/utils/querystring.ts
 // to avoid relying on internal APIs
 function stringifyUrlQueryParam(param: unknown): string {
-  if (typeof param === "string") {
+  if (typeof param === 'string') {
     return param
   }
 
   if (
-    (typeof param === "number" && !isNaN(param)) ||
-    typeof param === "boolean"
+    (typeof param === 'number' && !isNaN(param)) ||
+    typeof param === 'boolean'
   ) {
     return String(param)
   } else {
-    return ""
+    return ''
   }
 }
 
-export function urlQueryToSearchParams(query: ParsedUrlQuery): URLSearchParams {
+export function urlQueryToSearchParams(
+  query: ParsedUrlQuery,
+): URLSearchParams {
   const searchParams = new URLSearchParams()
   for (const [key, value] of Object.entries(query)) {
     if (Array.isArray(value)) {
@@ -1415,7 +1420,6 @@ export function urlQueryToSearchParams(query: ParsedUrlQuery): URLSearchParams {
   }
   return searchParams
 }
-
 ````
 
 ## packages/nextjs/src/app/verification.ts
@@ -1423,13 +1427,13 @@ export function urlQueryToSearchParams(query: ParsedUrlQuery): URLSearchParams {
 ````typescript
 // Copyright © 2024 Ory Corp
 // SPDX-License-Identifier: Apache-2.0
-import { FlowType, VerificationFlow } from "@ory/client-fetch"
+import { FlowType, VerificationFlow } from '@ory/client-fetch'
 
-import { initOverrides, QueryParams } from "../types"
-import { guessPotentiallyProxiedOrySdkUrl } from "../utils/sdk"
-import { serverSideFrontendClient } from "./client"
-import { getFlowFactory } from "./flow"
-import { getPublicUrl, toGetFlowParameter } from "./utils"
+import { initOverrides, QueryParams } from '../types'
+import { guessPotentiallyProxiedOrySdkUrl } from '../utils/sdk'
+import { serverSideFrontendClient } from './client'
+import { getFlowFactory } from './flow'
+import { getPublicUrl, toGetFlowParameter } from './utils'
 
 /**
  * Use this method in an app router page to fetch an existing verification flow or to create a new one. This method works with server-side rendering.
@@ -1485,6 +1489,4 @@ export async function getVerificationFlow(
     config.project.verification_ui_url,
   )
 }
-
 ````
-

@@ -18,7 +18,10 @@ function minutesDiff(from: number, to: number): number {
   return Math.ceil((to - from) / 60)
 }
 
-function processContext(context: Record<string, unknown>, t: TFunction): Record<string, unknown> {
+function processContext(
+  context: Record<string, unknown>,
+  t: TFunction,
+): Record<string, unknown> {
   const result: Record<string, unknown> = {}
   const now = Date.now() / 1000
 
@@ -59,7 +62,9 @@ export function uiTextToFormattedMessage(
     return text
   }
 
-  const hasEmptyArray = Object.values(context).some((v) => Array.isArray(v) && v.length === 0)
+  const hasEmptyArray = Object.values(context).some(
+    (v) => Array.isArray(v) && v.length === 0,
+  )
   if (hasEmptyArray) {
     return text
   }

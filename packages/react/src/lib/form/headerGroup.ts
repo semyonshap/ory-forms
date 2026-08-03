@@ -30,7 +30,8 @@ export function getGroupHeader(
   t: TFunction,
 ): { title: string; description: string } {
   const titleKey = groupCardTitles[group] ?? `settings.${group}.title`
-  const descriptionKey = groupCardDescriptions[group] ?? `settings.${group}.description`
+  const descriptionKey =
+    groupCardDescriptions[group] ?? `settings.${group}.description`
 
   return {
     title: t(titleKey),

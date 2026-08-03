@@ -1,4 +1,11 @@
-import { mapValues, omitBy, isNil, isPlainObject, compact, replace } from 'lodash-es'
+import {
+  mapValues,
+  omitBy,
+  isNil,
+  isPlainObject,
+  compact,
+  replace,
+} from 'lodash-es'
 import { OryMiddlewareOptions } from '../middleware/middleware'
 import { orySdkUrl } from './sdk'
 import { joinUrlPaths } from './utils'
@@ -26,7 +33,11 @@ export function rewriteUrls(
   for (const [matchPath, replaceWith] of Object.entries(routes)) {
     const match = joinUrlPaths(matchBaseUrl, matchPath)
     if (replaceWith && source.startsWith(match)) {
-      source = replace(source, match, new URL(replaceWith, selfUrl).toString())
+      source = replace(
+        source,
+        match,
+        new URL(replaceWith, selfUrl).toString(),
+      )
     }
   }
 
@@ -35,7 +46,10 @@ export function rewriteUrls(
   return replace(source, base, self)
 }
 
-export function rewriteJsonResponse<T extends object>(obj: T, proxyUrl?: string): T {
+export function rewriteJsonResponse<T extends object>(
+  obj: T,
+  proxyUrl?: string,
+): T {
   const sdkUrl = orySdkUrl()
 
   const transform = (value: unknown): unknown => {

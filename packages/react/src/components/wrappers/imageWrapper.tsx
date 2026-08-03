@@ -9,7 +9,5 @@ export function ImageWrapper({ node, attached }: WrapperImage) {
 
   const props = omitInputAttributes<UiNodeImageAttributes>(node.attributes)
 
-  return (
-    <Node.Image node={node} props={props} attached={attached} />
-  )
+  return <Node.Image node={node} props={props} attached={attached} />
 }

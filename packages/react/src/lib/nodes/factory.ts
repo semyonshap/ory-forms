@@ -48,7 +48,10 @@ function createUiNode({
   }
 }
 
-interface CreateAnchorNodeParams extends Omit<CreateUiNodeParams, 'type' | 'attributes' | 'data'> {
+interface CreateAnchorNodeParams extends Omit<
+  CreateUiNodeParams,
+  'type' | 'attributes' | 'data'
+> {
   id: string
   href: string
   title: UiText
@@ -75,12 +78,19 @@ export function createAnchorNode({
   }) as UiNodeAnchor
 }
 
-export interface CreateTextNodeParams extends Omit<CreateUiNodeParams, 'type' | 'attributes'> {
+export interface CreateTextNodeParams extends Omit<
+  CreateUiNodeParams,
+  'type' | 'attributes'
+> {
   id: string
   text: UiText
 }
 
-export function createTextNode({ id, text, ...rest }: CreateTextNodeParams): UiNodeText {
+export function createTextNode({
+  id,
+  text,
+  ...rest
+}: CreateTextNodeParams): UiNodeText {
   const attributes = {
     node_type: 'text' as const,
     id,
@@ -94,7 +104,10 @@ export function createTextNode({ id, text, ...rest }: CreateTextNodeParams): UiN
   }) as UiNodeText
 }
 
-interface CreateInputNodeParams extends Omit<CreateUiNodeParams, 'type' | 'attributes'> {
+interface CreateInputNodeParams extends Omit<
+  CreateUiNodeParams,
+  'type' | 'attributes'
+> {
   attributes: Omit<UiNodeInputAttributes, 'node_type'>
   data?: NodeDataInput
 }
@@ -134,7 +147,9 @@ export function createUiText({
 }: CreateUiTextParams): UiText {
   const isStringKey = typeof keyOrId === 'string'
   const resolvedText =
-    isStringKey && t ? t(keyOrId, { defaultValue: text, ...(context || {}) }) : text
+    isStringKey && t
+      ? t(keyOrId, { defaultValue: text, ...(context || {}) })
+      : text
 
   return {
     id: isStringKey ? 0 : keyOrId,
@@ -144,7 +159,10 @@ export function createUiText({
   }
 }
 
-interface CreateDivisionNodeParams extends Omit<CreateUiNodeParams, 'type' | 'attributes'> {
+interface CreateDivisionNodeParams extends Omit<
+  CreateUiNodeParams,
+  'type' | 'attributes'
+> {
   id: string
   class?: string
   data?: NodeDataDiv

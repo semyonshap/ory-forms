@@ -58,5 +58,8 @@ export type HeaderOptions =
   | HeaderNavigationOptions
   | HeaderErrorOptions
   | {
-      flowType: OryFlowType.Verification | OryFlowType.Recovery | OryFlowType.Settings
+      flowType:
+        | OryFlowType.Verification
+        | OryFlowType.Recovery
+        | OryFlowType.Settings
     }

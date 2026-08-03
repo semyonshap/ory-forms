@@ -14,7 +14,9 @@ export const onRedirect: OnRedirectHandler = (url) => {
   redirect(url)
 }
 
-export async function toGetFlowParameter(params: Promise<QueryParams> | QueryParams) {
+export async function toGetFlowParameter(
+  params: Promise<QueryParams> | QueryParams,
+) {
   return {
     id: (await params)['flow']?.toString() ?? '',
     cookie: await getCookieHeader(),
@@ -31,7 +33,11 @@ export async function getPublicUrl() {
   return `${protocol}://${host}`
 }
 
-export function startNewFlow(params: QueryParams, flowType: FlowType, baseUrl: string) {
+export function startNewFlow(
+  params: QueryParams,
+  flowType: FlowType,
+  baseUrl: string,
+) {
   return redirect(
     new URL(
       '/self-service/' +
@@ -46,7 +52,10 @@ export function startNewFlow(params: QueryParams, flowType: FlowType, baseUrl: s
 
 function stringifyUrlQueryParam(param: unknown): string {
   if (typeof param === 'string') return param
-  if ((typeof param === 'number' && !isNaN(param)) || typeof param === 'boolean')
+  if (
+    (typeof param === 'number' && !isNaN(param)) ||
+    typeof param === 'boolean'
+  )
     return String(param)
   return ''
 }

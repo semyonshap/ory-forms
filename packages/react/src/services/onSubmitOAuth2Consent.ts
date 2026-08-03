@@ -8,7 +8,12 @@ import { OryFlowType } from '../types'
 
 export async function onSubmitOAuth2Consent(
   flowContainer: OAuth2ConsentFlowContainer,
-  { body, onRedirect, onSuccess, onError }: OnSubmitHandlerProps<UpdateOAuth2ConsentFlowBody>,
+  {
+    body,
+    onRedirect,
+    onSuccess,
+    onError,
+  }: OnSubmitHandlerProps<UpdateOAuth2ConsentFlowBody>,
 ) {
   const response = await fetch(flowContainer.flow.ui.action, {
     method: 'POST',
@@ -18,7 +23,10 @@ export async function onSubmitOAuth2Consent(
     },
   })
   const oauth2Success = await response.json()
-  if (oauth2Success.redirect_to && typeof oauth2Success.redirect_to === 'string') {
+  if (
+    oauth2Success.redirect_to &&
+    typeof oauth2Success.redirect_to === 'string'
+  ) {
     await onSuccess?.({
       flowType: OryFlowType.OAuth2Consent,
       consentRequest: flowContainer.flow.consent_request,
