@@ -11,7 +11,6 @@ export default defineConfig({
     neverBundle: [
       'next',
       '@ory/client-fetch',
-      '@ory-forms/react',
       'cookie-es',
       'tldts',
       'lodash-es',
