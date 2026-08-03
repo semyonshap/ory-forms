@@ -21,16 +21,18 @@ export function orySdkUrl() {
   return baseUrl
 }
 
-function oryOAuth2UrlOrNull(): string | null {
-  const baseUrl = getEnv('ORY_OAUTH2_URL')
+function oryHydraUrlOrNull(): string | null {
+  const baseUrl = getEnv('ORY_HYDRA_URL')
   return baseUrl ? baseUrl.replace(/\/$/, '') : null
 }
 
-export function oryOAuth2Url() {
-  const baseUrl = oryOAuth2UrlOrNull()
+export function oryHydraUrl() {
+  const baseUrl = oryHydraUrlOrNull()
 
   if (!baseUrl) {
-    throw new Error('You need to set environment variable `ORY_OAUTH2_URL` to your Hydra URL.')
+    throw new Error(
+      'You need to set environment variable `ORY_HYDRA_URL` to your Hydra URL.',
+    )
   }
 
   return baseUrl
@@ -57,9 +59,12 @@ function isSameSite(originA: string, originB: string): boolean {
   return Boolean(domainA && domainB && domainA === domainB)
 }
 
-export function guessPotentiallyProxiedOrySdkUrl(options?: { knownProxiedUrl?: string }) {
+export function guessPotentiallyProxiedOrySdkUrl(options?: {
+  knownProxiedUrl?: string
+}) {
   const visitedOrigin =
-    options?.knownProxiedUrl ?? (typeof window !== 'undefined' ? window.location.origin : undefined)
+    options?.knownProxiedUrl ??
+    (typeof window !== 'undefined' ? window.location.origin : undefined)
 
   const sdkUrl = orySdkUrlOrNull()
 
