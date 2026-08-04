@@ -5,7 +5,3 @@
 ### Major Changes
 
 - first publish packages
-
-### Patch Changes
-
-- first patch changes
