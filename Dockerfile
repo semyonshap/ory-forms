@@ -10,7 +10,7 @@ RUN pnpm build
 FROM node:22-alpine
 WORKDIR /app
 
-ENV PORT=3000
+ENV PORT=8080
 ENV HOSTNAME=0.0.0.0
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
@@ -21,6 +21,6 @@ COPY --from=base --chown=node:node /app/auth/.next/standalone ./
 COPY --from=base --chown=node:node /app/auth/.next/static ./auth/.next/static
 COPY --from=base --chown=node:node /app/auth/public ./auth/public
 
-EXPOSE 3000
+EXPOSE 8080
 
 CMD ["node", "auth/server.js"]
