@@ -46,20 +46,28 @@ export function computeSdkConfig(
     config?.url && typeof config.url === 'string'
       ? normalizeUrl(config.url)
       : getSdkUrl()
-  const options = config?.options || {}
 
-  return { url, options, frontend: frontendClient(url, options) }
+  const options = config?.options || {}
+  const frontend = () => frontendClient(getSdkUrl(), options)
+
+  return {
+    url,
+    options,
+    get frontend() {
+      return frontend()
+    },
+  }
 }
 
 function getSdkUrl(): string {
-  if (
-    typeof process !== 'undefined' &&
-    process.env?.NEXT_PUBLIC_ORY_SDK_URL
-  ) {
-    return process.env.NEXT_PUBLIC_ORY_SDK_URL
+  const sdkUrl =
+    process.env.NEXT_PUBLIC_ORY_SDK_URL || process.env.ORY_SDK_URL
+
+  if (sdkUrl) {
+    return normalizeUrl(sdkUrl)
   }
 
-  if (typeof window !== 'undefined' && window.location?.origin) {
+  if (typeof window !== 'undefined') {
     return window.location.origin
   }
 

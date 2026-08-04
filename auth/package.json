@@ -3,9 +3,9 @@
   "version": "0.1.1",
   "private": true,
   "scripts": {
-    "dev": "rm -rf .next && next dev --turbopack --port 3000",
+    "dev": "rm -rf .next && next dev --turbopack --port 8080",
     "build": "next build --turbopack",
-    "start": "next start",
+    "start": "node .next/standalone/auth/server.js",
     "restart": "pnpm build && pnpm start",
     "lint": "eslint",
     "lint:fix": "eslint --fix",

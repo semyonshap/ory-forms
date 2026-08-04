@@ -1,9 +1,24 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-const TURNSTILE_SECRET = process.env.TURNSTILE_SECRET_KEY || ''
-
 export async function handleVerifySubmit(request: NextRequest) {
   const body = await request.json()
+
+  const turnstileSecret =
+    process.env.TURNSTILE_SECRET_KEY ??
+    (process.env.NODE_ENV === 'development'
+      ? '1x00000000000000000000AA'
+      : null)
+
+  if (!turnstileSecret) {
+    return NextResponse.json(
+      {
+        messages: [
+          { id: 0, type: 'error', text: 'Missing captcha secret key' },
+        ],
+      },
+      { status: 500 },
+    )
+  }
 
   const turnstileToken = body?.captcha_token
 
@@ -24,7 +39,7 @@ export async function handleVerifySubmit(request: NextRequest) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        secret: TURNSTILE_SECRET,
+        secret: turnstileSecret,
         response: turnstileToken,
       }),
     },

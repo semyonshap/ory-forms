@@ -349,10 +349,23 @@ export const OryComponents: OryClientComponents = {
       } = options
       const isMobile = useIsMobile(384)
 
+      const siteKey =
+        process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ||
+        (process.env.NODE_ENV === 'development'
+          ? '1x00000000000000000000AA'
+          : null)
+
+      if (!siteKey) {
+        console.error(
+          'Turnstile site key is not defined. Please set NEXT_PUBLIC_TURNSTILE_SITE_KEY in your environment variables.',
+        )
+        return null
+      }
+
       return (
         <div className={cn(token ? 'hidden' : 'flex flex-col gap-1')}>
           <Turnstile
-            siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
+            siteKey={siteKey}
             options={{
               size: isMobile ? 'compact' : 'flexible',
               theme: 'dark',
