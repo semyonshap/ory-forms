@@ -13,6 +13,7 @@
     "knip": "knip"
   },
   "dependencies": {
+    "@logtape/logtape": "^2.3.0",
     "@marsidev/react-turnstile": "^1.5.3",
     "@ory-forms/nextjs": "workspace:^",
     "@ory-forms/react": "workspace:^",
