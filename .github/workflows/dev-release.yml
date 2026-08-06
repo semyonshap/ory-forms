@@ -16,15 +16,6 @@ jobs:
   build-and-push:
     runs-on: ubuntu-latest
     steps:
-      - name: Check required secrets
-        run: |
-          if [ -z "${{ secrets.DOCKER_REGISTRY }}" ] || \
-             [ -z "${{ secrets.DOCKER_USERNAME }}" ] || \
-             [ -z "${{ secrets.DOCKER_PASSWORD }}" ]; then
-            echo "❌ Required secrets are missing. Exiting."
-            exit 1
-          fi
-
       - uses: actions/checkout@v7
 
       - name: Set up Docker Buildx
