@@ -15,7 +15,7 @@ env:
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
-    if: env.REGISTRY != ''
+    if: secrets.DOCKER_REGISTRY != ''
     steps:
       - uses: actions/checkout@v4
 
