@@ -1,22 +1,22 @@
 Directory structure:
 └── sainsburys-tech-next-logger/
-    ├── README.md
-    ├── lib/
-    │   ├── defaultPinoConfig.js
-    │   ├── logger.js
-    │   └── patches/
-    │       ├── console.js
-    │       └── next.js
-    └── presets/
-        ├── all.js
-        └── next-only.js
-
+├── README.md
+├── lib/
+│ ├── defaultPinoConfig.js
+│ ├── logger.js
+│ └── patches/
+│ ├── console.js
+│ └── next.js
+└── presets/
+├── all.js
+└── next-only.js
 
 Files Content:
 
 ================================================
 FILE: README.md
 ================================================
+
 # next-logger
 
 JSON logging patcher for Next.js
@@ -103,7 +103,7 @@ For example:
 // next-logger.config.js
 const pino = require('pino')
 
-const logger = defaultConfig =>
+const logger = (defaultConfig) =>
   pino({
     ...defaultConfig,
     messageKey: 'message',
@@ -124,7 +124,7 @@ npm install winston
 ```js
 const { createLogger, format, transports } = require('winston')
 
-const logger = defaultConfig =>
+const logger = (defaultConfig) =>
   createLogger({
     transports: [
       new transports.Console({
@@ -155,22 +155,21 @@ npm publish
 
 Then create a new release on GitHub, pointing to the tag created by `npm version`.
 
-
-
 ================================================
 FILE: lib/defaultPinoConfig.js
 ================================================
+
 const { format } = require('util')
 
 module.exports = {
-  level: 'debug',
-  hooks: {
-    // https://getpino.io/#/docs/api?id=logmethod
-    logMethod(args, method) {
-      if (args.length < 2) {
-        // If there's only 1 argument passed to the log method, use Pino's default behaviour.
-        return method.apply(this, args)
-      }
+level: 'debug',
+hooks: {
+// https://getpino.io/#/docs/api?id=logmethod
+logMethod(args, method) {
+if (args.length < 2) {
+// If there's only 1 argument passed to the log method, use Pino's default behaviour.
+return method.apply(this, args)
+}
 
       if (typeof args[0] === 'object' && typeof args[1] === 'string') {
         // If the first argument is an object, and the second is a string, we assume that it's a merging
@@ -215,14 +214,14 @@ module.exports = {
 
       return method.apply(this, [mergingObject, message])
     },
-  },
+
+},
 }
-
-
 
 ================================================
 FILE: lib/logger.js
 ================================================
+
 const { lilconfigSync } = require('lilconfig')
 
 const defaultPinoConfig = require('./defaultPinoConfig')
@@ -233,79 +232,77 @@ const explorerSync = lilconfigSync('next-logger')
 const results = explorerSync.search()
 
 if (results && results.config) {
-  config = results.config
+config = results.config
 }
 
 let logger
 
 // If logger exists in the config file, and it's a function, use it as the logger constructor.
 if ('logger' in config && typeof config.logger === 'function') {
-  logger = config.logger
+logger = config.logger
 } else {
-  // Otherwise, set the default logger constructor to Pino.
-  // eslint-disable-next-line global-require
-  logger = require('pino')
+// Otherwise, set the default logger constructor to Pino.
+// eslint-disable-next-line global-require
+logger = require('pino')
 }
 
 // Call the logger constructor with the library's default Pino configuration.
 module.exports = logger(defaultPinoConfig)
 
-
-
 ================================================
 FILE: lib/patches/console.js
 ================================================
+
 const logger = require('../logger')
 
 const getLogMethod = consoleMethod => {
-  const childLogger = logger.child({ name: 'console' })
+const childLogger = logger.child({ name: 'console' })
 
-  switch (consoleMethod) {
-    case 'error':
-      return childLogger.error.bind(childLogger)
-    case 'warn':
-      return childLogger.warn.bind(childLogger)
-    case 'debug':
-      return childLogger.debug.bind(childLogger)
-    case 'log':
-    case 'info':
-    default:
-      return childLogger.info.bind(childLogger)
-  }
+switch (consoleMethod) {
+case 'error':
+return childLogger.error.bind(childLogger)
+case 'warn':
+return childLogger.warn.bind(childLogger)
+case 'debug':
+return childLogger.debug.bind(childLogger)
+case 'log':
+case 'info':
+default:
+return childLogger.info.bind(childLogger)
+}
 }
 
 const consoleMethods = ['log', 'debug', 'info', 'warn', 'error']
 consoleMethods.forEach(method => {
-  // eslint-disable-next-line no-console
-  console[method] = getLogMethod(method)
+// eslint-disable-next-line no-console
+console[method] = getLogMethod(method)
 })
-
-
 
 ================================================
 FILE: lib/patches/next.js
 ================================================
+
 const nextLogger = require('next/dist/build/output/log')
 
 const logger = require('../logger')
 
 const getLogMethod = nextMethod => {
-  const childLogger = logger.child({ name: 'next.js', prefix: nextMethod })
+const childLogger = logger.child({ name: 'next.js', prefix: nextMethod })
 
-  switch (nextMethod) {
-    case 'error':
-      return childLogger.error.bind(childLogger)
-    case 'warn':
-      return childLogger.warn.bind(childLogger)
-    case 'trace':
-      if ('trace' in childLogger) {
-        return childLogger.trace.bind(childLogger)
-      }
-      // To support Winston which doesn't have logger.trace()
-      return childLogger.debug.bind(childLogger)
-    default:
-      return childLogger.info.bind(childLogger)
-  }
+switch (nextMethod) {
+case 'error':
+return childLogger.error.bind(childLogger)
+case 'warn':
+return childLogger.warn.bind(childLogger)
+case 'trace':
+if ('trace' in childLogger) {
+return childLogger.trace.bind(childLogger)
+}
+// To support Winston which doesn't have logger.trace()
+return childLogger.debug.bind(childLogger)
+default:
+return childLogger.info.bind(childLogger)
+}
 }
 
 const cachePath = require.resolve('next/dist/build/output/log')
@@ -316,22 +313,18 @@ const cacheObject = require.cache[cachePath]
 cacheObject.exports = { ...cacheObject.exports }
 
 Object.keys(nextLogger.prefixes).forEach(method => {
-  Object.defineProperty(cacheObject.exports, method, { value: getLogMethod(method) })
+Object.defineProperty(cacheObject.exports, method, { value: getLogMethod(method) })
 })
-
-
 
 ================================================
 FILE: presets/all.js
 ================================================
+
 require('../lib/patches/next')
 require('../lib/patches/console')
-
-
 
 ================================================
 FILE: presets/next-only.js
 ================================================
+
 require('../lib/patches/next')
-
-

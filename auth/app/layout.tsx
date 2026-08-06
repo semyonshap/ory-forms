@@ -3,15 +3,15 @@ import React, { ReactNode, Suspense } from 'react'
 import { Inter } from 'next/font/google'
 import { Metadata } from 'next'
 import { Toaster } from '@/components/ui/sonner'
+import { oryConfig } from '@/ory.config'
 
 const inter = Inter({ subsets: ['latin'] })
 
-const projectName = process.env.NEXT_PUBLIC_PROJECT_NAME
-const brandPrimary = process.env.NEXT_PUBLIC_BRAND_PRIMARY
+const brandPrimary = oryConfig.project.brand_primary
 
 export const metadata: Metadata = {
-  title: projectName || 'Auth',
-  description: `Authentication for ${projectName || 'Ory'}.`,
+  title: oryConfig.project.name,
+  description: `Authentication for ${oryConfig.project.name}.`,
   icons: {
     icon: '/favicon.ico',
     shortcut: '/favicon.ico',

@@ -1,6 +1,18 @@
 import { OryClientConfiguration } from '@ory-forms/react'
 
-export const oryConfig: OryClientConfiguration = {
+function getBooleanEnv(key: string, defaultValue: boolean): boolean {
+  const value = process.env[key]
+  if (value === undefined) return defaultValue
+  return value.toLowerCase() === 'true'
+}
+
+export const oryConfig: OryClientConfiguration & {
+  project: {
+    captcha_enabled: boolean
+    brand_primary?: string
+    turnstile_site_key?: string
+  }
+} = {
   sdk: {
     url: process.env.NEXT_PUBLIC_ORY_SDK_URL,
   },
@@ -20,24 +32,34 @@ export const oryConfig: OryClientConfiguration = {
         ? process.env.NEXT_PUBLIC_PROJECT_LOCALE_BEHAVIOR
         : 'force_default',
 
-    name: process.env.NEXT_PUBLIC_PROJECT_NAME || 'Authorization',
+    name: process.env.NEXT_PUBLIC_PROJECT_NAME || 'Ory',
     logo_dark_url: process.env.NEXT_PUBLIC_PROJECT_LOGO_DARK_URL,
     logo_light_url: process.env.NEXT_PUBLIC_PROJECT_LOGO_LIGHT_URL,
 
-    recovery_enabled: true,
-    hide_registration_link:
-      process.env.NEXT_PUBLIC_HIDE_REGISTRATION_LINK === undefined
-        ? false
-        : process.env.NEXT_PUBLIC_HIDE_REGISTRATION_LINK === 'true',
-    registration_enabled:
-      process.env.NEXT_PUBLIC_REGISTRATION_ENABLED === undefined
-        ? true
-        : process.env.NEXT_PUBLIC_REGISTRATION_ENABLED === 'true',
-    verification_enabled:
-      process.env.NEXT_PUBLIC_VERIFICATION_ENABLED === undefined
-        ? true
-        : process.env.NEXT_PUBLIC_VERIFICATION_ENABLED === 'true',
+    recovery_enabled: true, // возможно, захардкожено? Если нужно через env, используйте getBooleanEnv
+
+    hide_registration_link: getBooleanEnv(
+      'NEXT_PUBLIC_HIDE_REGISTRATION_LINK',
+      false,
+    ),
+    registration_enabled: getBooleanEnv(
+      'NEXT_PUBLIC_REGISTRATION_ENABLED',
+      true,
+    ),
+    verification_enabled: getBooleanEnv(
+      'NEXT_PUBLIC_VERIFICATION_ENABLED',
+      true,
+    ),
     hide_ory_branding: true,
+
+    turnstile_site_key:
+      process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ??
+      (process.env.NODE_ENV === 'development'
+        ? '1x00000000000000000000AA'
+        : undefined),
+
+    brand_primary: process.env.NEXT_PUBLIC_BRAND_PRIMARY,
+    captcha_enabled: getBooleanEnv('NEXT_PUBLIC_CAPTCHA_ENABLED', false),
 
     default_redirect_url: '/',
     error_ui_url: '/auth/error',

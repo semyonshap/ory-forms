@@ -349,11 +349,7 @@ export const OryComponents: OryClientComponents = {
       } = options
       const isMobile = useIsMobile(384)
 
-      const siteKey =
-        process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ||
-        (process.env.NODE_ENV === 'development'
-          ? '1x00000000000000000000AA'
-          : null)
+      const siteKey = oryConfig.project.turnstile_site_key
 
       if (!siteKey) {
         console.error(

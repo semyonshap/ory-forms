@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation'
 import { createInputNode, Flow, FlowInputProps } from '@ory-forms/react'
+import { oryConfig } from '@/ory.config'
 
 export function FormWithRouter(props: FlowInputProps) {
   const router = useRouter()
@@ -15,8 +16,6 @@ export function FormWithRouter(props: FlowInputProps) {
   )
 }
 
-const captchaEnabled = process.env.NEXT_PUBLIC_CAPTCHA_ENABLED === 'true'
-
 export function FormWithCaptcha(props: FlowInputProps) {
   const router = useRouter()
 
@@ -27,7 +26,7 @@ export function FormWithCaptcha(props: FlowInputProps) {
         router.push(url)
       }}
       extraNodes={
-        captchaEnabled
+        oryConfig.project.captcha_enabled
           ? [
               createInputNode({
                 attributes: {

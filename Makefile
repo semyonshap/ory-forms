@@ -42,6 +42,12 @@ version: ## Apply changesets and bump versions
 publish: ## Build and publish packages
 	pnpm build && pnpm changeset:publish
 
+full:
+	pnpm format:write
+	pnpm lint:fix
+	pnpm typecheck
+	pnpm deps:check
+
 start: ## Start auth app (standalone production server)
 	cp -r -n auth/.next/static auth/.next/standalone/auth/.next/ && \
 	cp -r -n auth/public auth/.next/standalone/auth/
