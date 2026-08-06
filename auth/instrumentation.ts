@@ -1,9 +1,11 @@
 import { Instrumentation } from 'next'
+import { patchNextLogger } from 'next-logger-logtape'
 import { logger } from './lib/logger'
 import { oryConfig } from './ory.config'
 
 export async function register() {
   if (process.env.NEXT_RUNTIME === 'nodejs') {
+    patchNextLogger({ logger })
     logger.info('Site configuration', { config: oryConfig })
   }
 }
@@ -13,10 +15,19 @@ export const onRequestError: Instrumentation.onRequestError = async (
   request,
   context,
 ) => {
-  logger.error('Request error occurred', {
-    error: err,
-    request: request,
-    context: context,
+  logger.error('Request error', {
+    request: {
+      method: request.method,
+      path: request.path,
+      userAgent: request.headers['user-agent'],
+    },
+    route: context.routePath,
+    routerKind: context.routerKind,
+    routeType: context.routeType,
+    error: {
+      name: err instanceof Error ? err.name : 'UnknownError',
+      message: err instanceof Error ? err.message : String(err),
+    },
   })
 }
 
