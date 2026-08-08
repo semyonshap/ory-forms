@@ -1,3 +1,1 @@
-export {
-  createOryMiddleware,
-} from './middleware'
+export { createOryMiddleware } from './middleware'

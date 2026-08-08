@@ -1,7 +1,6 @@
 import { pick } from 'lodash-es'
 
 import { defaultForwardedHeaders } from '../const'
-import { headers } from 'next/headers'
 
 export function onValidationError<T>(value: T): T {
   return value
@@ -33,16 +32,6 @@ export function joinUrlPaths(
     relative.pathname.replace(/^\//, '')
 
   return new URL(relative.toString(), baseUrl).href
-}
-
-export async function getRequestOrigin() {
-  const h = await headers()
-  const host = h.get('host')
-  if (!host) {
-    return undefined
-  }
-  const protocol = h.get('x-forwarded-proto') || 'http'
-  return `${protocol}://${host}`
 }
 
 export function normalizeUrl(url: string): string {
