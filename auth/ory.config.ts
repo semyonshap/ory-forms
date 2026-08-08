@@ -55,8 +55,6 @@ export const oryConfig: OryClientConfiguration = {
     brand_primary: process.env.NEXT_PUBLIC_BRAND_PRIMARY,
     captcha_enabled: getBooleanEnv('NEXT_PUBLIC_CAPTCHA_ENABLED', false),
 
-    force_cookie_domain: process.env.FORCE_COOKIE_DOMAIN,
-
     default_redirect_url: '/',
     error_ui_url: '/auth/error',
     login_ui_url: '/auth/login',
