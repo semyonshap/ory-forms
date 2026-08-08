@@ -37,34 +37,16 @@ export type BuildWrapperContext = Partial<
   Record<string, React.ReactNode[]>
 >
 
-interface Attached {
+export interface WrapperProps<TNode> {
+  node: TNode
+  children?: ReactNode
   attached?: ReactNode
 }
 
-export type WrapperBase = {
-  node: FormNode
-} & Attached
-
-export type WrapperCaptcha = {
-  node: UiNode
-} & Attached
-
-export type WrapperInput = {
-  node: UiNodeInput
-} & Attached
-
-export type WrapperImage = {
-  node: UiNodeImage
-} & Attached
-
-export type WrapperAnchor = {
-  node: UiNodeAnchor
-} & Attached
-
-export type WrapperText = {
-  node: UiNodeText
-} & Attached
-
-export type WrapperDiv = {
-  node: UiNodeDiv
-} & Attached
+export type WrapperBase = WrapperProps<FormNode>
+export type WrapperCaptcha = WrapperProps<UiNode>
+export type WrapperInput = WrapperProps<UiNodeInput>
+export type WrapperImage = WrapperProps<UiNodeImage>
+export type WrapperAnchor = WrapperProps<UiNodeAnchor>
+export type WrapperText = WrapperProps<UiNodeText>
+export type WrapperDiv = WrapperProps<UiNodeDiv>

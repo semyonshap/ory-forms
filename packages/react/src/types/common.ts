@@ -129,7 +129,7 @@ export type OryClientComponents = {
   }
 } & Partial<Pick<OryComponents, 'nodeSorter' | 'groupSorter'>>
 
-export type OryProject = AccountExperienceConfiguration & {
+export interface OryProject extends AccountExperienceConfiguration {
   oauth2_login_ui_url: string
   oauth2_consent_ui_url: string
   oauth2_logout_ui_url: string

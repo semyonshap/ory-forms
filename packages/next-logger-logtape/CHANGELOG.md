@@ -1,4 +1,4 @@
-# @next-logger-logtape
+# @jiko/next-logger-logtape
 
 ## 1.0.0
 

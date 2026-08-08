@@ -2,36 +2,46 @@ import React from 'react'
 
 import { useCard } from '../../hooks'
 import { WrapperDiv } from '../../types'
-import { useFlowStore } from '../../context'
+import { useStoreClient, useFlowStoreShallow } from '../../context'
 
-export function DivWrapper({ node, attached }: WrapperDiv) {
-  const Main = useFlowStore((state) => state.components.Layout)
+export function DivWrapper({ node, children, attached }: WrapperDiv) {
+  const store = useStoreClient()
+
+  const { Layout } = useFlowStoreShallow((s) => ({
+    Layout: s.components.Layout,
+  }))
 
   const { props, options } = useCard(node)
 
   const type = node.data?.type
 
-  if (!type && Main.Div)
+  if (!type && Layout.Div)
     return (
-      <Main.Div
+      <Layout.Div
         node={node}
-        attached={attached}
         options={{ variant: node.data?.variant }}
-      />
+        store={store}
+        attached={attached}
+      >
+        {children}
+      </Layout.Div>
     )
   else if (type === 'DividerCard') {
-    if (Main.Divider) return <Main.Divider node={node} />
+    if (Layout.Divider) return <Layout.Divider node={node} store={store} />
     else return null
   } else if (type === 'Card') {
     return (
-      <Main.Card
+      <Layout.Card
         node={node}
-        attached={attached}
         props={props}
         options={options}
-      />
+        store={store}
+        attached={attached}
+      >
+        {children}
+      </Layout.Card>
     )
   } else {
-    return <React.Fragment>{attached}</React.Fragment>
+    return <React.Fragment>{children}</React.Fragment>
   }
 }

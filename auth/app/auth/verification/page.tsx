@@ -1,8 +1,9 @@
 import { oryConfig } from '@/ory.config'
 import { OryFlowType } from '@ory-forms/react'
-import { FormWithCaptcha } from '@/components/custom/oryForm'
+import { FormWithRouter } from '@/components/custom/oryForm'
 import { OryComponents } from '@/components/custom/oryComponents'
 import { getVerificationFlow, OryPageParams } from '@ory-forms/nextjs'
+import { getExtraNodes } from '@/lib/nodes'
 
 export default async function VerificationPage(props: OryPageParams) {
   const flow = await getVerificationFlow(oryConfig, props.searchParams)
@@ -10,10 +11,11 @@ export default async function VerificationPage(props: OryPageParams) {
   if (!flow) return null
 
   return (
-    <FormWithCaptcha
+    <FormWithRouter
       flow={{ flow, flowType: OryFlowType.Verification }}
       components={OryComponents}
       config={oryConfig}
+      extraNodes={getExtraNodes(oryConfig.project.captcha_enabled)}
     />
   )
 }

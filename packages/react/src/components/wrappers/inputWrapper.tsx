@@ -1,10 +1,16 @@
 import { ComponentType } from 'react'
 
-import { useFlowStore, useFlowStoreShallow } from '../../context'
 import { BlockButton, WrapperCaptcha, WrapperInput } from '../../types'
 import { useButton, useInput, useCheckbox, useCaptcha } from '../../hooks'
+import {
+  useStoreClient,
+  useFlowStore,
+  useFlowStoreShallow,
+} from '../../context'
 
-export function InputWrapper({ node, attached }: WrapperInput) {
+export function InputWrapper({ node, children, attached }: WrapperInput) {
+  const store = useStoreClient()
+
   const { Node } = useFlowStoreShallow((state) => ({
     Node: state.components.Node,
   }))
@@ -23,18 +29,28 @@ export function InputWrapper({ node, attached }: WrapperInput) {
     Component = Node.Password
 
   return (
-    <Node.Label node={node} options={options} attached={attached}>
+    <Node.Label
+      node={node}
+      options={options}
+      store={store}
+      attached={attached}
+    >
       <Component
         node={node}
         props={props}
         options={options}
+        store={store}
         attached={attached}
-      />
+      >
+        {children}
+      </Component>
     </Node.Label>
   )
 }
 
-export function ButtonWrapper({ node, attached }: WrapperInput) {
+export function ButtonWrapper({ node, children, attached }: WrapperInput) {
+  const store = useStoreClient()
+
   const Node = useFlowStore((state) => state.components.Node)
 
   const { props, options } = useButton(node)
@@ -52,12 +68,21 @@ export function ButtonWrapper({ node, attached }: WrapperInput) {
       node={node}
       props={props}
       options={options}
+      store={store}
       attached={attached}
-    />
+    >
+      {children}
+    </Component>
   )
 }
 
-export function CheckboxWrapper({ node, attached }: WrapperInput) {
+export function CheckboxWrapper({
+  node,
+  children,
+  attached,
+}: WrapperInput) {
+  const store = useStoreClient()
+
   const Node = useFlowStore((state) => state.components.Node)
 
   const { options, props } = useCheckbox(node)
@@ -65,14 +90,23 @@ export function CheckboxWrapper({ node, attached }: WrapperInput) {
   return (
     <Node.Checkbox
       node={node}
-      attached={attached}
       props={props}
       options={options}
-    />
+      store={store}
+      attached={attached}
+    >
+      {children}
+    </Node.Checkbox>
   )
 }
 
-export function CaptchaWrapper({ node, attached }: WrapperCaptcha) {
+export function CaptchaWrapper({
+  node,
+  children,
+  attached,
+}: WrapperCaptcha) {
+  const store = useStoreClient()
+
   const { Node } = useFlowStoreShallow((state) => ({
     Node: state.components.Node,
   }))
@@ -81,5 +115,14 @@ export function CaptchaWrapper({ node, attached }: WrapperCaptcha) {
 
   if (!Node.Captcha) return null
 
-  return <Node.Captcha node={node} options={options} attached={attached} />
+  return (
+    <Node.Captcha
+      node={node}
+      options={options}
+      store={store}
+      attached={attached}
+    >
+      {children}
+    </Node.Captcha>
+  )
 }

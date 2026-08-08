@@ -6,9 +6,9 @@ import {
   compact,
   replace,
 } from 'lodash-es'
-import { OryMiddlewareOptions } from '../middleware/middleware'
 import { orySdkUrl } from './sdk'
 import { joinUrlPaths } from './utils'
+import { OryMiddlewareOptions } from '../types'
 
 export function rewriteUrls(
   source: string,

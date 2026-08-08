@@ -1,4 +1,5 @@
 import {
+  AccountExperienceConfiguration,
   OAuth2ConsentRequest,
   OAuth2LogoutRequest,
   Session,
@@ -9,6 +10,12 @@ export type QueryParams = { [key: string]: string | string[] | undefined }
 
 export interface OryPageParams {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+}
+
+export type OryMiddlewareOptions = {
+  forwardAdditionalHeaders?: string[]
+  forceCookieDomain?: string
+  project?: Partial<AccountExperienceConfiguration>
 }
 
 export const initOverrides: RequestInit = {

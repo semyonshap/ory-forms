@@ -59,6 +59,9 @@ importers:
 
   auth:
     dependencies:
+      '@jiko/next-logger-logtape':
+        specifier: workspace:^
+        version: link:../packages/next-logger-logtape
       '@logtape/logtape':
         specifier: ^2.3.0
         version: 2.3.0
@@ -92,9 +95,6 @@ importers:
       next:
         specifier: ^15.5.7
         version: 15.5.21(@babel/core@7.29.7(supports-color@7.2.0))(babel-plugin-macros@3.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
-      next-logger-logtape:
-        specifier: workspace:^
-        version: link:../packages/next-logger-logtape
       next-themes:
         specifier: ^0.4.6
         version: 0.4.6(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -147,6 +147,9 @@ importers:
 
   packages/next-logger-logtape:
     dependencies:
+      ansi-regex:
+        specifier: ^6.2.2
+        version: 6.2.2
       next:
         specifier: '>=13.1.0'
         version: 15.5.21(@babel/core@7.29.7(supports-color@7.2.0))(babel-plugin-macros@3.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -2905,6 +2908,10 @@ packages:
   ansi-regex@5.0.1:
     resolution: {integrity: sha512-quJQXlTSUGL2LH9SUXo8VwsY4soanhgo6LNSm84E1LBcE8s3O0wpdiRzyR9z/ZZJMlMWv37qOOb9pdJlMUEKFQ==}
     engines: {node: '>=8'}
+
+  ansi-regex@6.2.2:
+    resolution: {integrity: sha512-Bq3SmSpyFHaWjPk8If9yc6svM8c56dB5BAtW4Qbw5jHTwwXXcTLoRMkpDJp6VL0XzlWaCHTXrkFURMYmD0sLqg==}
+    engines: {node: '>=12'}
 
   ansi-styles@4.3.0:
     resolution: {integrity: sha512-zbB9rCJAT1rbjiVDb2hqKFHNYLxgtk8NURxZ3IZwD3F6NtxbXZQCnnSi1Lkx+IDohdPlFp222wVALIheZJQSEg==}
@@ -7786,6 +7793,8 @@ snapshots:
   ansi-colors@4.1.3: {}
 
   ansi-regex@5.0.1: {}
+
+  ansi-regex@6.2.2: {}
 
   ansi-styles@4.3.0:
     dependencies:

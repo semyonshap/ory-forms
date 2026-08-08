@@ -6,8 +6,7 @@ import { OAuth2LoginRequest } from '@ory/client-fetch'
 import { getServerSession } from './session'
 import { serverSideOAuth2Client } from './client'
 import { QueryParams } from '../types'
-import { getPublicUrl } from './utils'
-import { guessPotentiallyProxiedOrySdkUrl } from '../utils/sdk'
+import { orySdkPublicUrl } from '../utils/sdk'
 import { redirectToErrorPage } from '../utils/error'
 
 export async function getOAuth2LoginFlow(
@@ -23,9 +22,7 @@ export async function getOAuth2LoginFlow(
   const resolved = await params
   const loginChallenge = resolved['login_challenge']?.toString()
 
-  const baseUrl = guessPotentiallyProxiedOrySdkUrl({
-    knownProxiedUrl: await getPublicUrl(),
-  })
+  const baseUrl = await orySdkPublicUrl()
 
   if (!loginChallenge) {
     await redirectToErrorPage({
@@ -65,7 +62,7 @@ export async function getOAuth2LoginFlow(
     const returnTo = new URL(oauth2_login_ui_url, baseUrl)
     returnTo.searchParams.set('login_challenge', loginChallenge)
 
-    const loginUrl = new URL(login_ui_url, await getPublicUrl())
+    const loginUrl = new URL(login_ui_url, baseUrl)
 
     if (status === '2fa_required') {
       loginUrl.searchParams.set('aal', 'aal2')

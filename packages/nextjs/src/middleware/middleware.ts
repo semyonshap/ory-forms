@@ -1,6 +1,5 @@
 import { some } from 'lodash-es'
 import { NextResponse, type NextRequest } from 'next/server'
-import { AccountExperienceConfiguration } from '@ory/client-fetch'
 
 import { orySdkUrl } from '../utils/sdk'
 import { buildUpstreamResponse } from './response'
@@ -9,12 +8,7 @@ import { handleConsentSubmit } from '../handlers/consent'
 import { handleLogoutSubmit } from '../handlers/logout'
 import { handleVerifySubmit } from '../handlers/verify'
 import { buildUpstreamUrl, buildUpstreamHeaders } from './request'
-
-export type OryMiddlewareOptions = {
-  forwardAdditionalHeaders?: string[]
-  forceCookieDomain?: string
-  project?: Partial<AccountExperienceConfiguration>
-}
+import { OryMiddlewareOptions } from '../types'
 
 async function proxyRequest(
   request: NextRequest,

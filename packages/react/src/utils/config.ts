@@ -42,12 +42,16 @@ export function computeComponents(
 export function computeSdkConfig(
   config?: OryClientConfiguration['sdk'],
 ): OryConfiguration['sdk'] {
-  const url =
-    config?.url && typeof config.url === 'string'
+  const options = config?.options || {}
+
+  const resolveUrl = () => {
+    return config?.url && typeof config.url === 'string'
       ? normalizeUrl(config.url)
       : getSdkUrl()
+  }
 
-  const options = config?.options || {}
+  const url = resolveUrl()
+
   const frontend = () => frontendClient(getSdkUrl(), options)
 
   return {
@@ -61,7 +65,7 @@ export function computeSdkConfig(
 
 function getSdkUrl(): string {
   const sdkUrl =
-    process.env.NEXT_PUBLIC_ORY_SDK_URL || process.env.ORY_SDK_URL
+    process.env.ORY_SDK_URL || process.env.NEXT_PUBLIC_ORY_SDK_URL
 
   if (sdkUrl) {
     return normalizeUrl(sdkUrl)

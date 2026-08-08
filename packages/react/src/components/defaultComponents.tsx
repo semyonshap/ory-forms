@@ -4,7 +4,7 @@ import { defaultGroupSorter, defaultNodeSorter } from '../lib/nodes'
 
 export const DefaultComponents: OryComponents = {
   Layout: {
-    Card: ({ props, options, attached }) => {
+    Card: ({ props, options, children }) => {
       const { title, description, messages } = options
       return (
         <form
@@ -36,7 +36,7 @@ export const DefaultComponents: OryComponents = {
               {msg.text}
             </p>
           ))}
-          {attached}
+          {children}
         </form>
       )
     },

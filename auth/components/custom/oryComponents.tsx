@@ -45,7 +45,6 @@ import { useEffect, useState } from 'react'
 import { Checkbox } from '../ui/checkbox'
 import { Turnstile } from '@marsidev/react-turnstile'
 import { useIsMobile } from '@/hooks/use-mobile'
-import { oryConfig } from '@/ory.config'
 
 export const OryComponents: OryClientComponents = {
   Icons: {
@@ -94,22 +93,25 @@ export const OryComponents: OryClientComponents = {
       )
     },
     Divider: () => <Separator />,
-    Card: ({ props, options, attached }) => {
+    Card: ({ props, options, children, attached, store }) => {
       const { title, description, messages, flowType } = options
 
       const isSettings = flowType === OryFlowType.Settings
 
       const { id, key, ...formProps } = props
 
+      const { config } = store
+      const { name, logo_light_url } = config.project
+
       return (
         <form key={key} id={id} {...formProps} className="w-full">
           <Card className="w-full bg-transparent border-none md:bg-card md:border">
             {title && (
               <CardHeader className="flex flex-col w-full">
-                {!isSettings && oryConfig.project.logo_light_url && (
+                {!isSettings && logo_light_url && (
                   <Image
-                    src={oryConfig.project.logo_light_url}
-                    alt={oryConfig.project.name}
+                    src={logo_light_url}
+                    alt={name}
                     width={72}
                     height={72}
                     className="pb-4 pt-2 w-auto h-14"
@@ -136,13 +138,14 @@ export const OryComponents: OryClientComponents = {
                     </AlertDescription>
                   </Alert>
                 ))}
+              {children}
               {attached}
             </CardContent>
           </Card>
         </form>
       )
     },
-    Div: ({ options, attached }) => {
+    Div: ({ options, children, attached }) => {
       const { variant } = options
 
       return (
@@ -161,6 +164,7 @@ export const OryComponents: OryClientComponents = {
             variant === 'settings-divider' && 'flex px-4 md:hidden',
           )}
         >
+          {children}
           {attached}
         </div>
       )
@@ -338,7 +342,7 @@ export const OryComponents: OryClientComponents = {
         </div>
       )
     },
-    Captcha: ({ options }) => {
+    Captcha: ({ options, store }) => {
       const {
         token,
         messages,
@@ -349,7 +353,10 @@ export const OryComponents: OryClientComponents = {
       } = options
       const isMobile = useIsMobile(384)
 
-      const siteKey = oryConfig.project.turnstile_site_key
+      const { config } = store
+      const { default_locale } = config.project
+
+      const siteKey = config.project.turnstile_site_key
 
       if (!siteKey) {
         console.error(
@@ -366,7 +373,7 @@ export const OryComponents: OryClientComponents = {
               size: isMobile ? 'compact' : 'flexible',
               theme: 'dark',
               appearance: 'always',
-              language: oryConfig.project.default_locale,
+              language: default_locale,
             }}
             className={cn(
               '[clip-path:inset(1.5px_round_var(--radius))]',

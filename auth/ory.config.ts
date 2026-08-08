@@ -6,15 +6,9 @@ function getBooleanEnv(key: string, defaultValue: boolean): boolean {
   return value.toLowerCase() === 'true'
 }
 
-export const oryConfig: OryClientConfiguration & {
-  project: {
-    captcha_enabled: boolean
-    brand_primary?: string
-    turnstile_site_key?: string
-  }
-} = {
+export const oryConfig: OryClientConfiguration = {
   sdk: {
-    url: process.env.NEXT_PUBLIC_ORY_SDK_URL,
+    url: process.env.ORY_SDK_URL,
   },
   project: {
     translations: process.env.NEXT_PUBLIC_PROJECT_TRANSLATIONS
@@ -36,7 +30,7 @@ export const oryConfig: OryClientConfiguration & {
     logo_dark_url: process.env.NEXT_PUBLIC_PROJECT_LOGO_DARK_URL,
     logo_light_url: process.env.NEXT_PUBLIC_PROJECT_LOGO_LIGHT_URL,
 
-    recovery_enabled: true, // возможно, захардкожено? Если нужно через env, используйте getBooleanEnv
+    recovery_enabled: true,
 
     hide_registration_link: getBooleanEnv(
       'NEXT_PUBLIC_HIDE_REGISTRATION_LINK',
@@ -60,6 +54,8 @@ export const oryConfig: OryClientConfiguration & {
 
     brand_primary: process.env.NEXT_PUBLIC_BRAND_PRIMARY,
     captcha_enabled: getBooleanEnv('NEXT_PUBLIC_CAPTCHA_ENABLED', false),
+
+    force_cookie_domain: process.env.FORCE_COOKIE_DOMAIN,
 
     default_redirect_url: '/',
     error_ui_url: '/auth/error',

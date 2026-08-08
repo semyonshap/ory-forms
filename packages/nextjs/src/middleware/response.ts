@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { defaultOmitHeaders } from '../const'
 import { rewriteUrls } from '../utils/rewrite'
-import { OryMiddlewareOptions } from './middleware'
+import { OryMiddlewareOptions } from '../types'
 
 export async function buildUpstreamResponse(
   upstreamResponse: Response,

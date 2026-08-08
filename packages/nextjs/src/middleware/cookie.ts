@@ -1,7 +1,7 @@
 import { parse } from 'tldts'
 import { parseSetCookie, serialize, splitSetCookieString } from 'cookie-es'
 
-import { OryMiddlewareOptions } from './middleware'
+import { OryMiddlewareOptions } from '../types'
 
 export function rewriteSetCookieHeaders(
   request: { nextUrl: { protocol: string }; headers: Headers },

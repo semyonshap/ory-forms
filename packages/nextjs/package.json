@@ -38,7 +38,7 @@
     "dist"
   ],
   "scripts": {
-    "dev": "tsdown --watch",
+    "dev": "tsdown --watch --logLevel warn",
     "build": "tsdown",
     "clean": "rm -rf dist",
     "lint": "eslint src/",

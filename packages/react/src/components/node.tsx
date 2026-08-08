@@ -25,35 +25,46 @@ import {
   InputWrapper,
 } from './wrappers'
 
-export const Node = ({ node, attached }: WrapperBase) => {
+export const Node = ({ node, children, attached }: WrapperBase) => {
   const { group } = node
 
   if (group === UiNodeGroupEnum.Captcha) {
     if (isUiNodeScript(node)) return null
-    return <CaptchaWrapper node={node} attached={attached} />
+    return (
+      <CaptchaWrapper node={node} attached={attached}>
+        {children}
+      </CaptchaWrapper>
+    )
   }
 
-  if (isUiNodeDiv(node)) return DivWrapper({ node, attached })
-  else if (isUiNodeImage(node)) return ImageWrapper({ node, attached })
-  else if (isUiNodeText(node)) return TextWrapper({ node, attached })
-  else if (isUiNodeAnchor(node)) return AnchorWrapper({ node, attached })
+  if (isUiNodeDiv(node)) return DivWrapper({ node, children, attached })
+  else if (isUiNodeImage(node))
+    return ImageWrapper({ node, children, attached })
+  else if (isUiNodeText(node))
+    return TextWrapper({ node, children, attached })
+  else if (isUiNodeAnchor(node))
+    return AnchorWrapper({ node, children, attached })
   else if (isUiNodeInput(node))
-    return <NodeInput node={node} attached={attached} />
+    return (
+      <NodeInput node={node} attached={attached}>
+        {children}
+      </NodeInput>
+    )
   else if (isUiNodeScript(node)) return <NodeScript node={node} />
 
   return null
 }
 
-function NodeInput({ node, attached }: WrapperInput) {
+function NodeInput({ node, children, attached }: WrapperInput) {
   const { attributes } = node
 
   switch (attributes.type) {
     case UiNodeInputAttributesTypeEnum.Checkbox:
-      return CheckboxWrapper({ node, attached })
+      return CheckboxWrapper({ node, children, attached })
     case UiNodeInputAttributesTypeEnum.Button:
     case UiNodeInputAttributesTypeEnum.Submit:
-      return ButtonWrapper({ node, attached })
+      return ButtonWrapper({ node, children, attached })
     default:
-      return InputWrapper({ node, attached })
+      return InputWrapper({ node, children, attached })
   }
 }

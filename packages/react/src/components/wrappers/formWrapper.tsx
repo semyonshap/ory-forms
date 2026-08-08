@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { renderNodes } from '../render'
-import { useFlowStoreShallow } from '../../context'
+import { useStoreClient, useFlowStoreShallow } from '../../context'
 import {
   useFormMessages,
   useFormNodes,
@@ -10,6 +10,8 @@ import {
 } from '../../hooks'
 
 export function FormWrapper() {
+  const store = useStoreClient()
+
   const {
     flowContainer: { flowType },
     Form,
@@ -29,5 +31,9 @@ export function FormWrapper() {
 
   const messages = useFormMessages()
 
-  return <Component options={{ flowType, messages }}>{result}</Component>
+  return (
+    <Component options={{ flowType, messages }} store={store}>
+      {result}
+    </Component>
+  )
 }

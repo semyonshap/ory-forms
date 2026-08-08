@@ -1,5 +1,5 @@
 import { Instrumentation } from 'next'
-import { patchNextLogger } from 'next-logger-logtape'
+import { patchNextLogger } from '@jiko/next-logger-logtape'
 import { logger } from './lib/logger'
 import { oryConfig } from './ory.config'
 

@@ -1,5 +1,5 @@
 {
-  "name": "next-logger-logtape",
+  "name": "@jiko/next-logger-logtape",
   "version": "1.0.0",
   "license": "Apache-2.0",
   "type": "module",
@@ -37,7 +37,7 @@
     "dist"
   ],
   "scripts": {
-    "dev": "tsdown --watch",
+    "dev": "tsdown --watch --logLevel warn",
     "build": "tsdown",
     "clean": "rm -rf dist",
     "lint": "eslint src/",
@@ -54,5 +54,8 @@
     "@types/node": "^20",
     "tsdown": "^0.22.0",
     "typescript": "^5.5.0"
+  },
+  "dependencies": {
+    "ansi-regex": "^6.2.2"
   }
 }

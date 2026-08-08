@@ -6,16 +6,19 @@ import { startNewFlow, onRedirect } from './utils'
 import { onValidationError } from '../utils/utils'
 import { rewriteJsonResponse } from '../utils/rewrite'
 
-export async function getFlowFactory<T extends object>(
-  params: QueryParams,
-  fetchFlowRaw: () => Promise<ApiResponse<T>>,
-  flowType: FlowType,
-  baseUrl: string,
-  route: string,
-  options: {
-    disableRewrite?: boolean
-  } = { disableRewrite: false },
-): Promise<T | null | void> {
+export async function getFlowFactory<T extends object>({
+  params,
+  fetchFlowRaw,
+  flowType,
+  baseUrl,
+  route,
+}: {
+  params: QueryParams
+  fetchFlowRaw: () => Promise<ApiResponse<T>>
+  flowType: FlowType
+  baseUrl: string
+  route: string
+}): Promise<T | null | void> {
   const onRestartFlow = (useFlowId?: string) => {
     if (!useFlowId) {
       return startNewFlow(params, flowType, baseUrl)
@@ -36,9 +39,7 @@ export async function getFlowFactory<T extends object>(
   try {
     const rawResponse = await fetchFlowRaw()
     const parsed = await rawResponse.value()
-    return options.disableRewrite
-      ? parsed
-      : rewriteJsonResponse(parsed, baseUrl)
+    return rewriteJsonResponse(parsed, baseUrl)
   } catch (error) {
     const errorHandler = handleFlowError({
       onValidationError,

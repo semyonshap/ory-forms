@@ -1,7 +1,6 @@
 'use server'
 
-import { getPublicUrl } from './utils'
-import { guessPotentiallyProxiedOrySdkUrl } from '../utils/sdk'
+import { orySdkPublicUrl } from '../utils/sdk'
 import { serverSideOAuth2Client } from './client'
 import { OAuth2LogoutFlow, QueryParams } from '../types'
 import { UiTextTypeEnum } from '@ory/client-fetch'
@@ -11,9 +10,7 @@ export async function getOAuth2LogoutFlow(
 ): Promise<OAuth2LogoutFlow | null> {
   const resolved = await params
   const logoutChallenge = resolved['logout_challenge']?.toString()
-  const baseUrl = guessPotentiallyProxiedOrySdkUrl({
-    knownProxiedUrl: await getPublicUrl(),
-  })
+  const baseUrl = await orySdkPublicUrl()
 
   if (!logoutChallenge || !baseUrl) {
     return null

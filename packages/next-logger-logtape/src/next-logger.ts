@@ -1,5 +1,6 @@
 import { createRequire } from 'node:module'
 import { format } from 'node:util'
+import ansiRegex from 'ansi-regex'
 import { getLogger, type Logger } from '@logtape/logtape'
 
 const require = createRequire(process.cwd() + '/')
@@ -12,11 +13,6 @@ export interface NextLoggerPatchOptions {
   /** Strip ANSI escape codes from messages. Defaults to `true`. */
   stripAnsi?: boolean
 }
-
-const ansiRegex = new RegExp(
-  `${String.fromCharCode(0x1b)}\\[[0-?]*[ -/]*[@-~]`,
-  'g',
-)
 
 const consoleMethods = [
   ['log', 'info'],
@@ -51,7 +47,7 @@ function getBaseLogger(options?: NextLoggerPatchOptions): Logger {
 
 function clean(value: unknown, stripAnsi: boolean): unknown {
   return stripAnsi && typeof value === 'string'
-    ? value.replace(ansiRegex, '')
+    ? value.replace(ansiRegex(), '')
     : value
 }
 

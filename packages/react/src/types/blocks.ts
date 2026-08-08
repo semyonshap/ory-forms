@@ -1,4 +1,6 @@
-import { PropsWithChildren, ReactNode } from 'react'
+import type { FlowStoreState } from '../context/oryStore'
+
+import { ReactNode } from 'react'
 import { ControllerRenderProps } from 'react-hook-form'
 import {
   UiNode,
@@ -34,7 +36,9 @@ export interface MessageProps {
 }
 
 interface BaseBlockProps {
+  children?: ReactNode | ReactNode[]
   attached?: ReactNode | ReactNode[]
+  store: FlowStoreState
 }
 
 // Button
@@ -126,7 +130,7 @@ export type BlockDiv = BaseBlockProps & {
   }
 }
 
-export interface BlockDivider {
+export type BlockDivider = BaseBlockProps & {
   node: UiNodeDiv
 }
 
@@ -166,7 +170,7 @@ export type BlockLabel = BaseBlockProps & {
     label?: string
     messages?: MessageProps[]
   }
-} & PropsWithChildren
+}
 
 // Text
 
@@ -202,7 +206,7 @@ export type BlockCard = BlockDiv & {
 
 // Form
 
-export type BlockForm = PropsWithChildren & {
+export type BlockForm = BaseBlockProps & {
   options: {
     flowType: OryFlowType
     messages?: MessageProps[]

@@ -47,7 +47,9 @@ function renderRange(
         )
 
         result.push(
-          <Node key={getNodeId(node)} node={node} attached={children} />,
+          <Node key={getNodeId(node)} node={node}>
+            {children}
+          </Node>,
         )
         i = nextIndex
         continue
