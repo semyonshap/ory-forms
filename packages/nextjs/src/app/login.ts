@@ -20,7 +20,7 @@ export async function getLoginFlow(
         initOverrides,
       ),
     flowType: FlowType.Login,
-    baseUrl: await orySdkPublicUrl(),
+    baseUrl: orySdkPublicUrl(),
     route: config.project.login_ui_url,
   })
 }

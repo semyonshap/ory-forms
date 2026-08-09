@@ -11,7 +11,7 @@ export async function getLogoutFlow({
 }: { returnTo?: string } = {}): Promise<LogoutFlow> {
   const h = await headers()
 
-  const url = await orySdkPublicUrl()
+  const url = orySdkPublicUrl()
   return serverSideFrontendClient()
     .createBrowserLogoutFlow({
       cookie: h.get('cookie') ?? '',

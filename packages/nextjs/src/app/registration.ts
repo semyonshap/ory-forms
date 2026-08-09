@@ -20,7 +20,7 @@ export async function getRegistrationFlow(
         initOverrides,
       ),
     flowType: FlowType.Registration,
-    baseUrl: await orySdkPublicUrl(),
+    baseUrl: orySdkPublicUrl(),
     route: config.project.registration_ui_url,
   })
 }

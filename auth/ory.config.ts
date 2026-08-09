@@ -7,9 +7,6 @@ function getBooleanEnv(key: string, defaultValue: boolean): boolean {
 }
 
 export const oryConfig: OryClientConfiguration = {
-  sdk: {
-    url: process.env.ORY_SDK_URL,
-  },
   project: {
     translations: process.env.NEXT_PUBLIC_PROJECT_TRANSLATIONS
       ? JSON.parse(process.env.NEXT_PUBLIC_PROJECT_TRANSLATIONS)

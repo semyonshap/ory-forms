@@ -20,7 +20,7 @@ export async function getVerificationFlow(
         initOverrides,
       ),
     flowType: FlowType.Verification,
-    baseUrl: await orySdkPublicUrl(),
+    baseUrl: orySdkPublicUrl(),
     route: config.project.verification_ui_url,
   })
 }

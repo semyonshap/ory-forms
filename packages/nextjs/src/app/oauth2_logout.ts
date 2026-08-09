@@ -10,7 +10,7 @@ export async function getOAuth2LogoutFlow(
 ): Promise<OAuth2LogoutFlow | null> {
   const resolved = await params
   const logoutChallenge = resolved['logout_challenge']?.toString()
-  const baseUrl = await orySdkPublicUrl()
+  const baseUrl = orySdkPublicUrl()
 
   if (!logoutChallenge || !baseUrl) {
     return null

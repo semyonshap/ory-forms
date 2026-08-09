@@ -51,21 +51,17 @@ export function computeSdkConfig(
   }
 
   const url = resolveUrl()
-
-  const frontend = () => frontendClient(getSdkUrl(), options)
+  const frontend = frontendClient(url, options)
 
   return {
     url,
     options,
-    get frontend() {
-      return frontend()
-    },
+    frontend,
   }
 }
 
 function getSdkUrl(): string {
-  const sdkUrl =
-    process.env.ORY_SDK_URL || process.env.NEXT_PUBLIC_ORY_SDK_URL
+  const sdkUrl = process.env.NEXT_PUBLIC_ORY_SDK_URL
 
   if (sdkUrl) {
     return normalizeUrl(sdkUrl)
@@ -76,7 +72,7 @@ function getSdkUrl(): string {
   }
 
   throw new Error(
-    'ORY SDK URL is not configured. Please set sdk.url in the configuration, ' +
-      'or provide NEXT_PUBLIC_ORY_SDK_URL environment variable.',
+    'You need to set environment variable: NEXT_PUBLIC_ORY_SDK_URL.' +
+      'or  set sdk.url in the configuration',
   )
 }

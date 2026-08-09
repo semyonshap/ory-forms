@@ -22,7 +22,7 @@ export async function getOAuth2LoginFlow(
   const resolved = await params
   const loginChallenge = resolved['login_challenge']?.toString()
 
-  const baseUrl = await orySdkPublicUrl()
+  const baseUrl = orySdkPublicUrl()
 
   if (!loginChallenge) {
     await redirectToErrorPage({

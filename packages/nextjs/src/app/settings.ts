@@ -20,7 +20,7 @@ export async function getSettingsFlow(
         initOverrides,
       ),
     flowType: FlowType.Settings,
-    baseUrl: await orySdkPublicUrl(),
+    baseUrl: orySdkPublicUrl(),
     route: config.project.settings_ui_url,
   })
 }

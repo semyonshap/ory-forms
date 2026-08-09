@@ -4,10 +4,6 @@
   "sourceRoot": "auth",
   "projectType": "application",
   "targets": {
-    "dev": {
-      "executor": "nx:run-script",
-      "options": { "script": "dev" }
-    },
     "build": {
       "executor": "nx:run-script",
       "dependsOn": ["^build"],
@@ -18,10 +14,6 @@
       "executor": "nx:run-script",
       "dependsOn": ["^build"],
       "options": { "script": "typecheck" }
-    },
-    "lint": {
-      "executor": "nx:run-script",
-      "options": { "script": "lint" }
     }
   },
   "tags": ["type:app", "scope:auth"]

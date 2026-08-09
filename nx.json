@@ -10,6 +10,9 @@
     }
   },
   "targetDefaults": {
+    "dev": {
+      "continuous": true
+    },
     "build": {
       "dependsOn": ["^build"],
       "cache": true

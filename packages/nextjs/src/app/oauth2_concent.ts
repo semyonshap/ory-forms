@@ -26,7 +26,7 @@ export async function getOAuth2ConsentFlow(
   const resolved = await params
   const consentChallenge = resolved['consent_challenge']?.toString()
 
-  const baseUrl = await orySdkPublicUrl()
+  const baseUrl = orySdkPublicUrl()
 
   if (!consentChallenge) {
     await redirectToErrorPage({

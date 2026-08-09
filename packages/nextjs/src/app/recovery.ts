@@ -19,7 +19,7 @@ export async function getRecoveryFlow(
         initOverrides,
       ),
     flowType: FlowType.Recovery,
-    baseUrl: await orySdkPublicUrl(),
+    baseUrl: orySdkPublicUrl(),
     route: config.project.recovery_ui_url,
   })
 }

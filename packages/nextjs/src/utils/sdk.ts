@@ -23,7 +23,7 @@ export function orySdkUrl() {
   return getUrl(['ORY_SDK_URL', 'NEXT_PUBLIC_ORY_SDK_URL'])
 }
 
-export async function orySdkPublicUrl() {
+export function orySdkPublicUrl() {
   return getUrl(['NEXT_PUBLIC_ORY_SDK_URL'])
 }
 
