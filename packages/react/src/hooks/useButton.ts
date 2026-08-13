@@ -26,7 +26,6 @@ export function useButton(node: UiNodeInput): {
   const {
     selectMethod,
     setOverrideState,
-    setOverrideSubmitting,
     setTransientField,
     webauthnScriptStatus,
   } = useFlowStoreShallow((state) => ({
@@ -34,7 +33,6 @@ export function useButton(node: UiNodeInput): {
     system: state.components.Icons.System,
     setOverrideState: state.setOverrideState,
     selectMethod: state.selectMethod,
-    setOverrideSubmitting: state.setOverrideSubmitting,
     webauthnScriptStatus: state.webauthnScriptStatus,
     setTransientField: state.setTransientField,
   }))
@@ -54,52 +52,56 @@ export function useButton(node: UiNodeInput): {
       ? 'submit'
       : 'button'
 
-  const onClick = useCallback(() => {
-    setClicked(true)
+  const onClick = useCallback(
+    (e: React.MouseEvent) => {
+      setClicked(true)
 
-    setValue('method', group)
+      setValue('method', group)
 
-    if (transient) setTransientField(name, value)
-    else setValue(name, value)
+      if (transient) setTransientField(name, value)
+      else setValue(name, value)
 
-    if (type === 'button') {
-      if (name === 'select-another-method')
-        setOverrideState({ current: 'select_method' })
-      if (variant === 'method') selectMethod(group)
+      if (type === 'button') {
+        if (name === 'select-another-method')
+          setOverrideState({ current: 'select_method' })
+        if (variant === 'method') selectMethod(group)
 
-      if (variant === 'sso') {
-        setOverrideSubmitting(true)
-        Promise.resolve(onSubmit(getValues())).finally(() =>
-          setOverrideSubmitting(false),
-        )
-      } else if (variant === 'resend') {
-        setValue('code', undefined)
-        onSubmit(getValues())
+        if (variant === 'sso') {
+          const form = e.currentTarget.closest('form')
+          if (form) {
+            form.requestSubmit()
+          } else {
+            onSubmit(getValues())
+          }
+        } else if (variant === 'resend') {
+          setValue('code', undefined)
+          onSubmit(getValues())
+        }
+
+        if (onclickTrigger) {
+          const fn = triggerToFunction(onclickTrigger)
+          if (fn) fn()
+          else triggerToWindowCall(onclickTrigger)
+        }
       }
-
-      if (onclickTrigger) {
-        const fn = triggerToFunction(onclickTrigger)
-        if (fn) fn()
-        else triggerToWindowCall(onclickTrigger)
-      }
-    }
-  }, [
-    name,
-    type,
-    group,
-    value,
-    variant,
-    transient,
-    setClicked,
-    onclickTrigger,
-    onSubmit,
-    setValue,
-    getValues,
-    selectMethod,
-    setOverrideState,
-    setTransientField,
-    setOverrideSubmitting,
-  ])
+    },
+    [
+      name,
+      type,
+      group,
+      value,
+      variant,
+      transient,
+      setClicked,
+      onclickTrigger,
+      onSubmit,
+      setValue,
+      getValues,
+      selectMethod,
+      setOverrideState,
+      setTransientField,
+    ],
+  )
 
   const isWebAuthnDisabled =
     webauthnGroups.includes(group) &&

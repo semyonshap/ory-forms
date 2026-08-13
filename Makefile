@@ -42,7 +42,7 @@ version: ## Apply changesets and bump versions
 publish: ## Build and publish packages
 	pnpm build && pnpm changeset:publish
 
-full:
+all: ## Form, Lint, Typecheck, Knip
 	pnpm format:write
 	pnpm lint:fix
 	pnpm typecheck

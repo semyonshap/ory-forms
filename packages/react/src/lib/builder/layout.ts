@@ -96,14 +96,12 @@ export function BuildLayout(
       break
     }
     case 'method_active': {
-      if (formState.method === UiNodeGroupEnum.Password) {
-        const profileNodes = getNodesByGroups({
-          groupsNodes: visibleGroupsNodes,
-          groups: [UiNodeGroupEnum.Default, UiNodeGroupEnum.Profile],
-        })
+      const profileNodes = getNodesByGroups({
+        groupsNodes: visibleGroupsNodes,
+        groups: [UiNodeGroupEnum.Default, UiNodeGroupEnum.Profile],
+      })
 
-        result.push(...profileNodes)
-      }
+      result.push(...profileNodes)
 
       const selectedNodes = getNodesByGroups({
         groupsNodes: visibleGroupsNodes,
