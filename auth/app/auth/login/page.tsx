@@ -3,7 +3,6 @@ import { OryFlowType } from '@ory-forms/react'
 import { FormWithRouter } from '@/components/custom/oryForm'
 import { OryComponents } from '@/components/custom/oryComponents'
 import { getLoginFlow, OryPageParams } from '@ory-forms/nextjs'
-import { getExtraNodes } from '@/lib/nodes'
 
 export default async function LoginPage(props: OryPageParams) {
   const flow = await getLoginFlow(oryConfig, props.searchParams)
@@ -15,7 +14,6 @@ export default async function LoginPage(props: OryPageParams) {
       config={oryConfig}
       components={OryComponents}
       flow={{ flow, flowType: OryFlowType.Login }}
-      extraNodes={getExtraNodes(oryConfig.project.captcha_enabled)}
     />
   )
 }

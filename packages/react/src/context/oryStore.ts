@@ -9,7 +9,7 @@ import {
   OryConfiguration,
   OryFlowContainer,
   OryComponents,
-  UiNodeFixed,
+  SetExtraNodes,
   MessageProps,
   FormValues,
 } from '../types'
@@ -37,7 +37,7 @@ export const createFlowStore = (initProps: {
   components: OryComponents
   flowContainer: OryFlowContainer
   transientPayload?: FormValues
-  extraNodes?: UiNodeFixed[]
+  setExtraNodes?: SetExtraNodes
   onSuccess?: FlowInputSlice['onSuccess']
   onValidationError?: FlowInputSlice['onValidationError']
   onError?: FlowInputSlice['onError']

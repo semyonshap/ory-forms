@@ -8,7 +8,7 @@ import {
   UiNodeGroupEnum,
 } from '@ory/client-fetch'
 
-import { OryFlowContainer, UiNodeFixed } from '.'
+import { OryFlowContainer, UiNodeFixed, FlowFormState } from '.'
 import {
   OrySuccessHandler,
   OryValidationErrorHandler,
@@ -35,12 +35,17 @@ export interface FormValues {
     string | boolean | number | string[] | undefined | FormValues
 }
 
+export type SetExtraNodes = (
+  config: OryConfiguration,
+  formState: FlowFormState,
+) => UiNodeFixed[]
+
 export interface FlowInputProps {
   flow: OryFlowContainer
   config: OryClientConfiguration
   components?: Partial<OryClientComponents>
   transientPayload?: FormValues
-  extraNodes?: UiNodeFixed[]
+  setExtraNodes?: SetExtraNodes
   onSuccess?: OrySuccessHandler
   onValidationError?: OryValidationErrorHandler
   onError?: OryErrorHandler

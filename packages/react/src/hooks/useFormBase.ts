@@ -10,22 +10,29 @@ import {
 } from '../lib/form/helpers'
 
 export function useOryForm() {
-  const { extraNodes, flowContainer, transientPayload, setFlowNodes } =
-    useFlowStoreShallow((s) => ({
-      extraNodes: s.extraNodes,
-      flowContainer: s.flowContainer,
-      transientPayload: s.transientPayload,
-      setFlowNodes: s.setFlowNodes,
-    }))
+  const {
+    config,
+    flowContainer,
+    flowFormState,
+    setExtraNodes,
+    transientPayload,
+    setFlowNodes,
+  } = useFlowStoreShallow((s) => ({
+    config: s.config,
+    flowContainer: s.flowContainer,
+    flowFormState: s.flowFormState,
+    setExtraNodes: s.setExtraNodes,
+    transientPayload: s.transientPayload,
+    setFlowNodes: s.setFlowNodes,
+  }))
 
   const { flow } = flowContainer
 
   const flowNodes = useMemo(() => {
     if (!flow.ui.nodes.length) return []
-    return extraNodes?.length
-      ? flow.ui.nodes.concat(extraNodes)
-      : flow.ui.nodes
-  }, [flow, extraNodes])
+    const extraNodes = setExtraNodes?.(config, flowFormState) ?? []
+    return flow.ui.nodes.concat(extraNodes)
+  }, [flow, setExtraNodes, config, flowFormState])
 
   useEffect(() => {
     setFlowNodes(flowNodes)
