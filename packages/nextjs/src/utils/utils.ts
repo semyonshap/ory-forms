@@ -57,14 +57,26 @@ export function isRouteAuthorized(
 ): boolean {
   if (!auth) return true
 
-  const value =
-    auth.type === 'cookie'
-      ? auth.key
-        ? request.cookies.get(auth.key)?.value
-        : null
-      : auth.key
-        ? request.headers.get(auth.key)
-        : null
+  const { type, key, secret } = auth
 
-  return Boolean(auth.secret) && value === auth.secret
+  if (!key || !secret) {
+    console.warn('Auth is missing key or secret')
+    return false
+  }
+
+  let value: string | null = null
+
+  switch (type) {
+    case 'cookie':
+      value = request.cookies.get(key)?.value ?? null
+      break
+    case 'header':
+      value = request.headers.get(key)
+      break
+    default:
+      console.warn(`Unknown auth type: "${type}"`)
+      return false
+  }
+
+  return value === secret
 }
