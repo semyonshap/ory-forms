@@ -1,6 +1,6 @@
 import { pick } from 'lodash-es'
 
-import { NextRequest } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { defaultForwardedHeaders } from '../const'
 import { OryMiddlewareCustomRoute } from '../types'
 
@@ -79,4 +79,22 @@ export function isRouteAuthorized(
   }
 
   return value === secret
+}
+
+export function buildJsonResponse(
+  status: number,
+  text: string,
+  instance_ptr: string = '#/',
+) {
+  return NextResponse.json(
+    {
+      messages: [
+        {
+          instance_ptr,
+          messages: [{ id: 1234567, type: 'error', text }],
+        },
+      ],
+    },
+    { status },
+  )
 }

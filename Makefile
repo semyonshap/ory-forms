@@ -52,10 +52,10 @@ start: ## Start auth app (standalone production server)
 	cp -r -n auth/.next/static auth/.next/standalone/auth/.next/ && \
 	cp -r -n auth/public auth/.next/standalone/auth/
 
-	HOSTNAME=0.0.0.0 PORT=8080 pnpm exec dotenv -e auth/.env.local -- pnpm --filter auth start
+	HOSTNAME=0.0.0.0 PORT=8080 pnpm exec dotenv -e auth/.env -- pnpm --filter auth start
 
 docker-build: ## Build auth app docker image
 	docker build -t ory-auth .
 
 docker-start: docker-build ## Start auth app in docker
-	docker run -p 8080:8080 --env-file auth/.env.local ory-auth 
+	docker run -p 8080:8080 --env-file auth/.env ory-auth 

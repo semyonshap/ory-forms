@@ -2,7 +2,8 @@
   "name": "@ory-forms",
   "private": true,
   "scripts": {
-    "dev": "nx run-many --target=dev --all --parallel",
+    "dev": "nx run-many --target=dev --all --parallel --exclude=@ory-forms/test",
+    "dev:docker": "nx run-many --target=dev --all --parallel",
     "build": "nx run-many --target=build --all",
     "build:react": "nx run @ory-forms/react:build --skip-nx-cache",
     "build:nextjs": "nx run @ory-forms/nextjs:build --skip-nx-cache",

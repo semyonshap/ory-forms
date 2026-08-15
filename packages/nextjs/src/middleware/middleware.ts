@@ -8,7 +8,7 @@ import { handleConsentSubmit } from '../handlers/consent'
 import { handleLogoutSubmit } from '../handlers/logout'
 import { buildUpstreamUrl, buildUpstreamHeaders } from './request'
 import { OryMiddlewareOptions } from '../types'
-import { isRouteAuthorized } from '../utils/utils'
+import { buildJsonResponse, isRouteAuthorized } from '../utils/utils'
 
 async function proxyRequest(
   request: NextRequest,
@@ -53,7 +53,10 @@ async function proxyRequest(
     }
 
     if (!isRouteAuthorized(request, route.auth)) {
-      return NextResponse.json({}, { status: 401 })
+      return buildJsonResponse(
+        401,
+        'Server configuration error. Please contact support.',
+      )
     }
 
     return route.handler(request)
