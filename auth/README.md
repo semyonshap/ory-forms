@@ -38,4 +38,3 @@
 
 - `WEBHOOK_KEY` – HTTP header name for authentication, e.g. `x-webhook-secret`
 - `WEBHOOK_SECRET_KEY` – Secret value for the header
-
