@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { Configuration, RelationshipApi } from '@ory/client-fetch'
 
 async function getGroupsFromKeto(subjectId: string): Promise<string[]> {
-  const ketoUrl = process.env.KETO_READ_URL
+  const ketoUrl = process.env.ORY_KETO_READ_URL
 
   if (!ketoUrl)
     throw new Error('You need to set environment variables KETO_READ_URL')
