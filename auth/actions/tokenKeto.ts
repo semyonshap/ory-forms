@@ -2,10 +2,10 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { Configuration, RelationshipApi } from '@ory/client-fetch'
-import { oryConfig } from '@/ory.config'
+import env from '@/lib/env'
 
 async function getGroupsFromKeto(subjectId: string): Promise<string[]> {
-  const ketoUrl = oryConfig.project.keto_url
+  const ketoUrl = env.ketoUrl
 
   if (!ketoUrl)
     throw new Error('You need to set environment variables KETO_READ_URL')
@@ -16,8 +16,8 @@ async function getGroupsFromKeto(subjectId: string): Promise<string[]> {
     }),
   )
 
-  const namespace = oryConfig.project.keto_namespace
-  const relation = oryConfig.project.keto_relation
+  const namespace = env.ketoNamespace
+  const relation = env.ketoRelation
 
   if (!namespace || !relation) return []
 

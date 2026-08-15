@@ -2,6 +2,7 @@ import { oryConfig } from '@/ory.config'
 import { createOryMiddleware } from '@ory-forms/nextjs'
 import { VerifyCaptcha } from '@/actions/verifyCaptcha'
 import { TokenKeto } from './actions/tokenKeto'
+import env from '@/lib/env'
 
 export const middleware = createOryMiddleware({
   project: oryConfig.project,
@@ -12,8 +13,8 @@ export const middleware = createOryMiddleware({
       handler: VerifyCaptcha,
       auth: {
         type: 'header',
-        key: oryConfig.project.webhook_key,
-        secret: oryConfig.project.webhook_secret_key,
+        key: env.webhookKey,
+        secret: env.webhookSecretKey,
       },
     },
     {
@@ -22,8 +23,8 @@ export const middleware = createOryMiddleware({
       handler: TokenKeto,
       auth: {
         type: 'header',
-        key: oryConfig.project.webhook_key,
-        secret: oryConfig.project.webhook_secret_key,
+        key: env.webhookKey,
+        secret: env.webhookSecretKey,
       },
     },
   ],

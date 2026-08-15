@@ -1,50 +1,23 @@
 import { OryClientConfiguration } from '@ory-forms/react'
-
-function getBooleanEnv(key: string, defaultValue: boolean): boolean {
-  const value = process.env[key]
-  if (value === undefined) return defaultValue
-  return value.toLowerCase() === 'true'
-}
-
-const turnstileSiteSuccess = '1x00000000000000000000AA'
-const turnstileSecretSuccess = '1x0000000000000000000000000000000AA'
+import env from '@/lib/env'
 
 export const oryConfig: OryClientConfiguration = {
   project: {
-    translations: process.env.NEXT_PUBLIC_PROJECT_TRANSLATIONS
-      ? JSON.parse(process.env.NEXT_PUBLIC_PROJECT_TRANSLATIONS)
-      : {},
-    default_locale: process.env.NEXT_PUBLIC_PROJECT_DEFAULT_LOCALE || 'en',
-    enabled_locales: process.env.NEXT_PUBLIC_PROJECT_ENABLED_LOCALES
-      ? process.env.NEXT_PUBLIC_PROJECT_ENABLED_LOCALES.split(',')
-      : [process.env.NEXT_PUBLIC_PROJECT_DEFAULT_LOCALE || 'en'],
-    locale_behavior:
-      process.env.NEXT_PUBLIC_PROJECT_LOCALE_BEHAVIOR ===
-        'force_default' ||
-      process.env.NEXT_PUBLIC_PROJECT_LOCALE_BEHAVIOR ===
-        'respect_accept_language'
-        ? process.env.NEXT_PUBLIC_PROJECT_LOCALE_BEHAVIOR
-        : 'force_default',
+    translations: env.translations,
+    default_locale: env.defaultLocale,
+    enabled_locales: env.enabledLocales,
+    locale_behavior: env.localeBehavior,
 
-    name: process.env.NEXT_PUBLIC_PROJECT_NAME || 'Ory',
-    logo_dark_url: process.env.NEXT_PUBLIC_PROJECT_LOGO_DARK_URL,
-    logo_light_url: process.env.NEXT_PUBLIC_PROJECT_LOGO_LIGHT_URL,
+    name: env.projectName,
+    logo_dark_url: env.logoDarkUrl,
+    logo_light_url: env.logoLightUrl,
 
     recovery_enabled: true,
-
-    hide_registration_link: getBooleanEnv(
-      'NEXT_PUBLIC_HIDE_REGISTRATION_LINK',
-      false,
-    ),
-    registration_enabled: getBooleanEnv(
-      'NEXT_PUBLIC_REGISTRATION_ENABLED',
-      true,
-    ),
-    verification_enabled: getBooleanEnv(
-      'NEXT_PUBLIC_VERIFICATION_ENABLED',
-      true,
-    ),
     hide_ory_branding: true,
+
+    hide_registration_link: env.hideRegistrationLink,
+    registration_enabled: env.registrationEnabled,
+    verification_enabled: env.verificationEnabled,
 
     default_redirect_url: '/',
     error_ui_url: '/auth/error',
@@ -57,30 +30,9 @@ export const oryConfig: OryClientConfiguration = {
     registration_ui_url: '/auth/registration',
     verification_ui_url: '/auth/verification',
 
-    // Extra Values by Auth
-    // Ui
-    brand_primary: process.env.NEXT_PUBLIC_BRAND_PRIMARY,
+    brand_primary: env.brandPrimary,
+    turnstile_site_key: env.turnstileSiteKey,
 
-    // Custom Captcha
-    captcha_enabled: getBooleanEnv('NEXT_PUBLIC_CAPTCHA_ENABLED', false),
-    turnstile_site_key:
-      process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ??
-      (process.env.NODE_ENV === 'development'
-        ? turnstileSiteSuccess
-        : undefined),
-    turnstile_secret:
-      process.env.TURNSTILE_SECRET_KEY ??
-      (process.env.NODE_ENV === 'development'
-        ? turnstileSecretSuccess
-        : undefined),
-
-    // WebHook Auth
-    webhook_key: process.env.WEBHOOK_KEY,
-    webhook_secret_key: process.env.WEBHOOK_SECRET_KEY,
-
-    // Keto extract objects to claims
-    keto_url: process.env.ORY_KETO_READ_URL,
-    keto_namespace: process.env.KETO_NAMESPACE,
-    keto_relation: process.env.KETO_RELATION,
+    captcha_enabled: env.captchaEnabled,
   },
 }
