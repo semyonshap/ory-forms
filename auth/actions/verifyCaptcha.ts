@@ -1,14 +1,11 @@
+import { oryConfig } from '@/ory.config'
 import { buildJsonResponse } from '@ory-forms/nextjs'
 import { NextRequest, NextResponse } from 'next/server'
-
-const turnstilePlaceholder = '1x0000000000000000000000000000000AA'
 
 export async function VerifyCaptcha(request: NextRequest) {
   const body = await request.json()
 
-  const turnstileSecret =
-    process.env.TURNSTILE_SECRET_KEY ??
-    (process.env.NODE_ENV === 'development' ? turnstilePlaceholder : null)
+  const turnstileSecret = oryConfig.extra.turnstile_secret
 
   if (!turnstileSecret) {
     return buildJsonResponse(500, 'Missing captcha secret key')

@@ -6,7 +6,36 @@ function getBooleanEnv(key: string, defaultValue: boolean): boolean {
   return value.toLowerCase() === 'true'
 }
 
+const turnstileSiteSuccess = '1x00000000000000000000AA'
+const turnstileSecretSuccess = '1x0000000000000000000000000000000AA'
+
 export const oryConfig: OryClientConfiguration = {
+  extra: {
+    // Ui
+    brand_primary: process.env.NEXT_PUBLIC_BRAND_PRIMARY,
+
+    // Custom Captcha
+    captcha_enabled: getBooleanEnv('NEXT_PUBLIC_CAPTCHA_ENABLED', false),
+    turnstile_site_key:
+      process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ??
+      (process.env.NODE_ENV === 'development'
+        ? turnstileSiteSuccess
+        : undefined),
+    turnstile_secret:
+      process.env.TURNSTILE_SECRET_KEY ??
+      (process.env.NODE_ENV === 'development'
+        ? turnstileSecretSuccess
+        : undefined),
+
+    // WebHook Auth
+    webhook_key: process.env.WEBHOOK_KEY,
+    webhook_secret_key: process.env.WEBHOOK_SECRET_KEY,
+
+    // Keto extract objects to claims
+    keto_url: process.env.ORY_KETO_READ_URL,
+    keto_namespace: process.env.KETO_NAMESPACE,
+    keto_relation: process.env.KETO_RELATION,
+  },
   project: {
     translations: process.env.NEXT_PUBLIC_PROJECT_TRANSLATIONS
       ? JSON.parse(process.env.NEXT_PUBLIC_PROJECT_TRANSLATIONS)
@@ -42,15 +71,6 @@ export const oryConfig: OryClientConfiguration = {
       true,
     ),
     hide_ory_branding: true,
-
-    turnstile_site_key:
-      process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ??
-      (process.env.NODE_ENV === 'development'
-        ? '1x00000000000000000000AA'
-        : undefined),
-
-    brand_primary: process.env.NEXT_PUBLIC_BRAND_PRIMARY,
-    captcha_enabled: getBooleanEnv('NEXT_PUBLIC_CAPTCHA_ENABLED', false),
 
     default_redirect_url: '/',
     error_ui_url: '/auth/error',

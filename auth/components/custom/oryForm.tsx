@@ -13,7 +13,7 @@ export function FormWithRouter(props: FlowInputProps) {
         router.push(url)
       }}
       setExtraNodes={(config, formState) => {
-        if (!config.project.captcha_enabled) return []
+        if (!config.extra.captcha_enabled) return []
 
         if (
           formState.current === 'provide_identifier' ||

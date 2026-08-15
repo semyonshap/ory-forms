@@ -2,11 +2,15 @@ import { Instrumentation } from 'next'
 import { patchNextLogger } from '@jiko/next-logger-logtape'
 import { logger } from './lib/logger'
 import { oryConfig } from './ory.config'
+import { maskSecretsInObject } from './lib/secrets'
 
 export async function register() {
   if (process.env.NEXT_RUNTIME === 'nodejs') {
     patchNextLogger({ logger })
-    logger.info('Site configuration', { config: oryConfig })
+    const safeConfig = maskSecretsInObject(
+      oryConfig as unknown as Record<string, unknown>,
+    )
+    logger.info('Site configuration', { config: safeConfig })
   }
 }
 
