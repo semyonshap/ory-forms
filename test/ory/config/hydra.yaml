@@ -1,0 +1,46 @@
+dsn: memory
+
+secrets:
+  system:
+    - dev-system-secret-not-secure
+  cookie:
+    - dev-cookie-secret-not-secure
+
+log:
+  level: info
+  format: text
+  leak_sensitive_values: false
+
+serve:
+  public:
+    port: 4444
+
+  admin:
+    port: 4445
+
+urls:
+  self:
+    issuer: http://localhost:4444
+    public: http://localhost:4444
+  login: http://localhost:8080/auth2/login
+  logout: http://localhost:8080/auth2/logout
+  consent: http://localhost:8080/auth2/consent
+  post_logout_redirect: http://localhost:8080
+
+oauth2:
+  token_hook:
+    url: http://host.docker.internal:8080/custom-service/token
+    auth:
+      type: api_key
+      config:
+        in: header
+        name: X-Webhook-Key
+        value: super-webhook-secret-key
+
+oidc:
+  subject_identifiers:
+    supported_types:
+      - pairwise
+      - public
+    pairwise:
+      salt: dev-pairwise-salt-not-secure

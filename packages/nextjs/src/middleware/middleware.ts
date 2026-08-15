@@ -53,7 +53,7 @@ async function proxyRequest(
     }
 
     if (!isRouteAuthorized(request, route.auth)) {
-      return new NextResponse(null, { status: 401 })
+      return NextResponse.json({}, { status: 401 })
     }
 
     return route.handler(request)

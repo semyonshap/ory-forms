@@ -5,6 +5,7 @@ import { createInputNode, Flow, FlowInputProps } from '@ory-forms/react'
 
 export function FormWithRouter(props: FlowInputProps) {
   const router = useRouter()
+
   return (
     <Flow
       {...props}

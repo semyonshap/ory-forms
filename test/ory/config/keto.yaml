@@ -1,0 +1,15 @@
+dsn: memory
+
+log:
+  level: info
+  format: text
+  leak_sensitive_values: false
+
+serve:
+  read:
+    port: 4466
+  write:
+    port: 4467
+
+namespaces:
+  location: file:///etc/config/permissions.ts

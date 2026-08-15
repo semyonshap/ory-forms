@@ -5,24 +5,26 @@ function createKratosError(text: string, instance_ptr: string = '#/') {
     messages: [
       {
         instance_ptr,
-        messages: [{ type: 'error', text }],
+        messages: [{ id: 1234567, type: 'error', text }],
       },
     ],
   }
 }
+
+const turnstilePlaceholder = '1x0000000000000000000000000000000AA'
 
 export async function VerifyCaptcha(request: NextRequest) {
   const body = await request.json()
 
   const turnstileSecret =
     process.env.TURNSTILE_SECRET_KEY ??
-    (process.env.NODE_ENV === 'development'
-      ? '1x00000000000000000000AA'
-      : null)
+    (process.env.NODE_ENV === 'development' ? turnstilePlaceholder : null)
 
   if (!turnstileSecret) {
-    console.warn('Missing captcha secret key')
-    return NextResponse.json(null, { status: 500 })
+    return NextResponse.json(
+      createKratosError('Missing captcha secret key'),
+      { status: 500 },
+    )
   }
 
   const turnstileToken = body?.captcha_token

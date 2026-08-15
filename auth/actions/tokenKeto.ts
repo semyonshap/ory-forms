@@ -23,7 +23,7 @@ async function getGroupsFromKeto(subjectId: string): Promise<string[]> {
   const response = await api.getRelationships({
     namespace,
     relation,
-    subjectId: subjectId,
+    subjectId,
   })
 
   if (!response.relation_tuples) {
@@ -37,7 +37,7 @@ export async function TokenKeto(request: NextRequest) {
   try {
     const body = await request.json()
 
-    const subjectId = body.session.id_token.subject
+    const subjectId = body.session?.id_token?.subject
 
     if (!subjectId) {
       return new NextResponse(null, { status: 204 })
@@ -64,6 +64,6 @@ export async function TokenKeto(request: NextRequest) {
     )
   } catch (error) {
     console.error('Token hook error:', error)
-    return new NextResponse(null, { status: 403 })
+    return new NextResponse(null, { status: 204 })
   }
 }

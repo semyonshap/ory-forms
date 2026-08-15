@@ -1,0 +1,8 @@
+{
+  "name": "@ory-forms/test",
+  "private": true,
+  "scripts": {
+    "dev": "docker compose -f ory/docker-compose.yaml up",
+    "ory:down": "docker compose -f ory/docker-compose.yaml down"
+  }
+}
