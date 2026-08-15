@@ -6,9 +6,9 @@ import { buildUpstreamResponse } from './response'
 import { rewriteSetCookieHeaders } from './cookie'
 import { handleConsentSubmit } from '../handlers/consent'
 import { handleLogoutSubmit } from '../handlers/logout'
-import { handleVerifySubmit } from '../handlers/verify'
 import { buildUpstreamUrl, buildUpstreamHeaders } from './request'
 import { OryMiddlewareOptions } from '../types'
+import { isRouteAuthorized } from '../utils/utils'
 
 async function proxyRequest(
   request: NextRequest,
@@ -21,6 +21,7 @@ async function proxyRequest(
     '/ui',
     '/.well-known/ory',
     '/.ory',
+    ...(options.customRoutes?.map((route) => route.path) ?? []),
   ]
 
   if (
@@ -37,17 +38,25 @@ async function proxyRequest(
   }
 
   if (
-    request.nextUrl.pathname === '/custom-service/verify' &&
-    request.method === 'POST'
-  ) {
-    return handleVerifySubmit(request)
-  }
-
-  if (
     request.nextUrl.pathname === '/self-service/logout' &&
     request.method === 'POST'
   ) {
     return handleLogoutSubmit(request)
+  }
+
+  for (const route of options.customRoutes ?? []) {
+    if (
+      request.nextUrl.pathname !== route.path ||
+      (route.method && request.method !== route.method)
+    ) {
+      continue
+    }
+
+    if (!isRouteAuthorized(request, route.auth)) {
+      return new NextResponse(null, { status: 401 })
+    }
+
+    return route.handler(request)
   }
 
   const appBaseHost = request.headers.get('host')

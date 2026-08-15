@@ -5,6 +5,7 @@ import {
   Session,
   UiContainer,
 } from '@ory/client-fetch'
+import { NextRequest, NextResponse } from 'next/server'
 
 export type QueryParams = { [key: string]: string | string[] | undefined }
 
@@ -12,10 +13,22 @@ export interface OryPageParams {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }
 
+export type OryMiddlewareCustomRoute = {
+  path: string
+  method?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'HEAD' | 'OPTIONS'
+  handler: (request: NextRequest) => NextResponse | Promise<NextResponse>
+  auth?: {
+    type: 'cookie' | 'header'
+    key?: string
+    secret?: string
+  }
+}
+
 export type OryMiddlewareOptions = {
   forwardAdditionalHeaders?: string[]
   forceCookieDomain?: string
   project?: Partial<AccountExperienceConfiguration>
+  customRoutes?: OryMiddlewareCustomRoute[]
 }
 
 export const initOverrides: RequestInit = {

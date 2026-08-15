@@ -18,6 +18,7 @@
     "@jiko/next-logger-logtape": "workspace:^",
     "@ory-forms/nextjs": "workspace:^",
     "@ory-forms/react": "workspace:^",
+    "@ory/client-fetch": "^1.22.0",
     "@radix-ui/react-checkbox": "^1.3.3",
     "@radix-ui/react-slot": "^1.2.4",
     "class-variance-authority": "^0.7.1",

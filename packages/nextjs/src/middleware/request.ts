@@ -1,15 +1,5 @@
 import { NextRequest } from 'next/server'
-import { filterRequestHeaders } from '../utils/utils'
-
-function getProjectApiKey() {
-  let baseUrl = ''
-
-  if (process.env['ORY_PROJECT_API_TOKEN']) {
-    baseUrl = process.env['ORY_PROJECT_API_TOKEN']
-  }
-
-  return baseUrl.replace(/\/$/, '')
-}
+import { filterRequestHeaders, getProjectApiKey } from '../utils/utils'
 
 export function buildUpstreamUrl(request: NextRequest, matchBaseUrl: URL) {
   const upstreamUrl = request.nextUrl.clone()
@@ -27,7 +17,7 @@ export async function buildUpstreamHeaders(
   forwardAdditionalHeaders?: string[],
 ) {
   const headers = filterRequestHeaders(
-    await request.headers,
+    request.headers,
     forwardAdditionalHeaders,
   )
   headers.set('Host', upstreamUrl.host)

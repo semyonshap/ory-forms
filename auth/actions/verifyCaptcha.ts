@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-export async function handleVerifySubmit(request: NextRequest) {
+export async function VerifyCaptcha(request: NextRequest) {
   const body = await request.json()
 
   const turnstileSecret =
