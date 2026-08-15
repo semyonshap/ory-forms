@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from 'next/server'
 export async function VerifyCaptcha(request: NextRequest) {
   const body = await request.json()
 
-  const turnstileSecret = oryConfig.extra.turnstile_secret
+  const turnstileSecret = oryConfig.project.turnstile_secret
 
   if (!turnstileSecret) {
     return buildJsonResponse(500, 'Missing captcha secret key')

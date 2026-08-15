@@ -356,7 +356,7 @@ export const OryComponents: OryClientComponents = {
       const { config } = store
       const { default_locale } = config.project
 
-      const siteKey = config.extra.turnstile_site_key
+      const siteKey = config.project.turnstile_site_key
 
       if (!siteKey) {
         console.error(

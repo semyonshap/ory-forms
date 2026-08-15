@@ -5,7 +5,7 @@ import { Configuration, RelationshipApi } from '@ory/client-fetch'
 import { oryConfig } from '@/ory.config'
 
 async function getGroupsFromKeto(subjectId: string): Promise<string[]> {
-  const ketoUrl = oryConfig.extra.keto_url
+  const ketoUrl = oryConfig.project.keto_url
 
   if (!ketoUrl)
     throw new Error('You need to set environment variables KETO_READ_URL')
@@ -16,8 +16,8 @@ async function getGroupsFromKeto(subjectId: string): Promise<string[]> {
     }),
   )
 
-  const namespace = oryConfig.extra.keto_namespace
-  const relation = oryConfig.extra.keto_relation
+  const namespace = oryConfig.project.keto_namespace
+  const relation = oryConfig.project.keto_relation
 
   if (!namespace || !relation) return []
 

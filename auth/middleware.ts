@@ -12,8 +12,8 @@ export const middleware = createOryMiddleware({
       handler: VerifyCaptcha,
       auth: {
         type: 'header',
-        key: oryConfig.extra.webhook_key,
-        secret: oryConfig.extra.webhook_secret_key,
+        key: oryConfig.project.webhook_key,
+        secret: oryConfig.project.webhook_secret_key,
       },
     },
     {
@@ -22,8 +22,8 @@ export const middleware = createOryMiddleware({
       handler: TokenKeto,
       auth: {
         type: 'header',
-        key: oryConfig.extra.webhook_key,
-        secret: oryConfig.extra.webhook_secret_key,
+        key: oryConfig.project.webhook_key,
+        secret: oryConfig.project.webhook_secret_key,
       },
     },
   ],

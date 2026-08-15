@@ -7,7 +7,7 @@ import { oryConfig } from '@/ory.config'
 
 const inter = Inter({ subsets: ['latin'] })
 
-const brandPrimary = oryConfig.extra.brand_primary
+const brandPrimary = oryConfig.project.brand_primary
 
 export const metadata: Metadata = {
   title: oryConfig.project.name,
