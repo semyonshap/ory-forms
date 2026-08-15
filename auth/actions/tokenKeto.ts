@@ -34,31 +34,36 @@ async function getGroupsFromKeto(subjectId: string): Promise<string[]> {
 }
 
 export async function TokenKeto(request: NextRequest) {
-  const body = await request.json()
+  try {
+    const body = await request.json()
 
-  const subjectId = body.session.id_token.subject
+    const subjectId = body.session.id_token.subject
 
-  if (!subjectId) {
-    return new NextResponse(null, { status: 204 })
-  }
+    if (!subjectId) {
+      return new NextResponse(null, { status: 204 })
+    }
 
-  const groups = await getGroupsFromKeto(subjectId)
+    const groups = await getGroupsFromKeto(subjectId)
 
-  if (groups.length === 0) {
-    return new NextResponse(null, { status: 204 })
-  }
+    if (groups.length === 0) {
+      return new NextResponse(null, { status: 204 })
+    }
 
-  return NextResponse.json(
-    {
-      session: {
-        access_token: {
-          groups,
-        },
-        id_token: {
-          groups,
+    return NextResponse.json(
+      {
+        session: {
+          access_token: {
+            groups,
+          },
+          id_token: {
+            groups,
+          },
         },
       },
-    },
-    { status: 200 },
-  )
+      { status: 200 },
+    )
+  } catch (error) {
+    console.error('Token hook error:', error)
+    return new NextResponse(null, { status: 403 })
+  }
 }

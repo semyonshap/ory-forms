@@ -1,5 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server'
 
+function createKratosError(text: string, instance_ptr: string = '#/') {
+  return {
+    messages: [
+      {
+        instance_ptr,
+        messages: [{ type: 'error', text }],
+      },
+    ],
+  }
+}
+
 export async function VerifyCaptcha(request: NextRequest) {
   const body = await request.json()
 
@@ -10,27 +21,16 @@ export async function VerifyCaptcha(request: NextRequest) {
       : null)
 
   if (!turnstileSecret) {
-    return NextResponse.json(
-      {
-        messages: [
-          { id: 0, type: 'error', text: 'Missing captcha secret key' },
-        ],
-      },
-      { status: 500 },
-    )
+    console.warn('Missing captcha secret key')
+    return NextResponse.json(null, { status: 500 })
   }
 
   const turnstileToken = body?.captcha_token
 
   if (!turnstileToken) {
-    return NextResponse.json(
-      {
-        messages: [
-          { id: 0, type: 'error', text: 'Missing captcha token' },
-        ],
-      },
-      { status: 400 },
-    )
+    return NextResponse.json(createKratosError('Missing captcha token'), {
+      status: 400,
+    })
   }
 
   const cfResponse = await fetch(
@@ -49,11 +49,7 @@ export async function VerifyCaptcha(request: NextRequest) {
 
   if (!cfResult.success) {
     return NextResponse.json(
-      {
-        messages: [
-          { id: 0, type: 'error', text: 'Captcha verification failed' },
-        ],
-      },
+      createKratosError('Captcha verification failed'),
       { status: 400 },
     )
   }
