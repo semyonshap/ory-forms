@@ -1,8 +1,7 @@
 {
-  "name": "auth",
+  "name": "test",
   "$schema": "../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "auth",
   "projectType": "application",
-  "targets": {},
-  "tags": ["type:app", "scope:auth"]
+  "tags": ["type:docker", "scope:test"],
+  "targets": {}
 }

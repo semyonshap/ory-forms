@@ -3,8 +3,11 @@ import {
   getConsoleSink,
   getJsonLinesFormatter,
   getLogger,
-  type Logger,
+  isLogLevel,
+  LogLevel,
 } from '@logtape/logtape'
+import { redactByField } from '@logtape/redaction'
+import env from '@/lib/env'
 
 const originalConsole: Console = {
   log: console.log.bind(console),
@@ -15,20 +18,41 @@ const originalConsole: Console = {
   trace: console.trace.bind(console),
 } as unknown as Console
 
+const consoleSink = getConsoleSink({
+  console: originalConsole,
+  formatter: getJsonLinesFormatter({
+    properties: 'flatten',
+  }),
+})
+
+function maskString(value: unknown): unknown {
+  if (typeof value !== 'string') return value
+  if (value.length <= 4) return '*'.repeat(value.length)
+  const visible = value.slice(0, 4)
+  const hidden = '*'.repeat(value.length - 4)
+  return visible + hidden
+}
+
+const redactedSink = redactByField(consoleSink, {
+  fieldPatterns: [/secret/i, 'password'],
+  action: maskString,
+})
+
+const level = env.log_level?.toLowerCase() || ''
+const lowestLevel: LogLevel = isLogLevel(level)
+  ? level
+  : process.env.NODE_ENV === 'production'
+    ? 'info'
+    : 'debug'
+
 await configure({
   sinks: {
-    console: getConsoleSink({
-      console: originalConsole,
-      formatter: getJsonLinesFormatter({
-        properties: 'flatten',
-      }),
-    }),
+    console: redactedSink,
   },
   loggers: [
     {
       category: 'app',
-      lowestLevel:
-        process.env.NODE_ENV === 'production' ? 'info' : 'debug',
+      lowestLevel,
       sinks: ['console'],
     },
     {
@@ -39,4 +63,4 @@ await configure({
   ],
 })
 
-export const logger: Logger = getLogger(['app'])
+export const logger = getLogger(['app'])

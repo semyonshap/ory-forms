@@ -69,6 +69,9 @@ const env = {
   ketoUrl: getStringEnv('ORY_KETO_READ_URL', ''),
   ketoNamespace: getStringEnv('KETO_NAMESPACE', ''),
   ketoRelation: getStringEnv('KETO_RELATION', ''),
+
+  log_level: getStringEnv('LOG_LEVEL', ''),
+  env_file: getStringEnv('ENV_FILE', ''),
 }
 
 export default env

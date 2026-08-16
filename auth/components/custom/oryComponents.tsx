@@ -17,6 +17,7 @@ import {
 } from '../ui/card'
 import { Alert, AlertDescription } from '../ui/alert'
 import { useCooldown } from '@/hooks/useCooldown'
+import { logger } from '@/lib/logger'
 
 import { cn } from '@/lib/utils'
 import {
@@ -359,7 +360,7 @@ export const OryComponents: OryClientComponents = {
       const siteKey = config.project.turnstile_site_key
 
       if (!siteKey) {
-        console.error(
+        logger.error(
           'Turnstile site key is not defined. Please set NEXT_PUBLIC_TURNSTILE_SITE_KEY in your environment variables.',
         )
         return null
