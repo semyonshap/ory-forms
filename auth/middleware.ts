@@ -4,6 +4,14 @@ import { VerifyCaptcha } from '@/actions/verifyCaptcha'
 import { TokenKeto } from './actions/tokenKeto'
 import env from '@/lib/env'
 
+const auth = env.webhookKey
+  ? {
+      type: 'header' as const,
+      key: env.webhookKey,
+      secret: env.webhookSecretKey,
+    }
+  : undefined
+
 export const middleware = createOryMiddleware({
   project: oryConfig.project,
   customRoutes: [
@@ -11,21 +19,13 @@ export const middleware = createOryMiddleware({
       path: '/custom-service/verify',
       method: 'POST',
       handler: VerifyCaptcha,
-      auth: {
-        type: 'header',
-        key: env.webhookKey,
-        secret: env.webhookSecretKey,
-      },
+      auth,
     },
     {
       path: '/custom-service/token',
       method: 'POST',
       handler: TokenKeto,
-      auth: {
-        type: 'header',
-        key: env.webhookKey,
-        secret: env.webhookSecretKey,
-      },
+      auth,
     },
   ],
 })
