@@ -46,7 +46,7 @@ curl --silent --request POST \
     "client_secret": "my-secret",
     "grant_types": ["authorization_code", "refresh_token"],
     "response_types": ["code", "id_token"],
-    "scope": "openid offline",
+    "scope": "openid email profile offline",
     "redirect_uris": ["http://127.0.0.1:5555/callback"],
     "token_endpoint_auth_method": "client_secret_post"
   }' \

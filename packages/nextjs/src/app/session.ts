@@ -9,10 +9,16 @@ import { serverSideFrontendClient } from './client'
 import { getCookieHeader } from './utils'
 import { SessionWithStatus } from '../types'
 
-export async function getServerSession(): Promise<SessionWithStatus> {
-  const cookie = await getCookieHeader()
+export async function getServerSession(
+  cookie?: string,
+): Promise<SessionWithStatus> {
+  const resolvedCookie =
+    cookie !== undefined ? cookie : await getCookieHeader()
+
   try {
-    const session = await serverSideFrontendClient().toSession({ cookie })
+    const session = await serverSideFrontendClient().toSession({
+      cookie: resolvedCookie,
+    })
     return { status: 'authenticated', session }
   } catch (err) {
     if (isResponseError(err)) {

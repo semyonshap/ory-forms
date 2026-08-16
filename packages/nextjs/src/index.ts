@@ -8,7 +8,7 @@ export { getServerSession } from './app/session'
 export { getErrorFlow } from './app/error'
 
 export { getNavigationFlow } from './app/navigation'
-export { getOAuth2ConsentFlow } from './app/oauth2_concent'
+export { getOAuth2ConsentFlow } from './app/oauth2_consent'
 export { getOAuth2LoginFlow } from './app/oauth2_login'
 export { getOAuth2LogoutFlow } from './app/oauth2_logout'
 

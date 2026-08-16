@@ -31,7 +31,6 @@
     "@nx/eslint": "21.3.11",
     "@nx/js": "21.3.11",
     "concurrently": "^10.0.5",
-    "cross-env": "^10.1.0",
     "eslint": "^9.0.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-import": "^2.32.0",

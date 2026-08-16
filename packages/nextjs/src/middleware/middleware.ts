@@ -7,59 +7,56 @@ import { rewriteSetCookieHeaders } from './cookie'
 import { handleConsentSubmit } from '../handlers/consent'
 import { handleLogoutSubmit } from '../handlers/logout'
 import { buildUpstreamUrl, buildUpstreamHeaders } from './request'
-import { OryMiddlewareOptions } from '../types'
+import { OryMiddlewareCustomRoute, OryMiddlewareOptions } from '../types'
 import { buildJsonResponse, isRouteAuthorized } from '../utils/utils'
+
+const extraRoutes: OryMiddlewareCustomRoute[] = [
+  {
+    path: '/custom-service/consent',
+    method: 'POST',
+    handler: handleConsentSubmit,
+  },
+  {
+    path: '/custom-service/logout',
+    method: 'POST',
+    handler: handleLogoutSubmit,
+  },
+]
 
 async function proxyRequest(
   request: NextRequest,
   options: OryMiddlewareOptions,
 ) {
+  const customRoutes = [...(options.customRoutes ?? []), ...extraRoutes]
+
+  const matchedCustom = customRoutes.find(
+    (route) =>
+      request.nextUrl.pathname === route.path &&
+      (!route.method || request.method === route.method),
+  )
+
+  if (matchedCustom) {
+    if (!isRouteAuthorized(request, matchedCustom.auth)) {
+      return buildJsonResponse(
+        401,
+        'Server configuration error. Please contact support.',
+      )
+    }
+    return matchedCustom.handler(request)
+  }
+
   const matchPaths = [
     '/self-service',
-    '/custom-service',
     '/sessions/whoami',
     '/ui',
     '/.well-known/ory',
     '/.ory',
-    ...(options.customRoutes?.map((route) => route.path) ?? []),
   ]
 
   if (
     !some(matchPaths, (path) => request.nextUrl.pathname.startsWith(path))
   ) {
     return NextResponse.next()
-  }
-
-  if (
-    request.nextUrl.pathname === '/custom-service/consent' &&
-    request.method === 'POST'
-  ) {
-    return handleConsentSubmit(request)
-  }
-
-  if (
-    request.nextUrl.pathname === '/self-service/logout' &&
-    request.method === 'POST'
-  ) {
-    return handleLogoutSubmit(request)
-  }
-
-  for (const route of options.customRoutes ?? []) {
-    if (
-      request.nextUrl.pathname !== route.path ||
-      (route.method && request.method !== route.method)
-    ) {
-      continue
-    }
-
-    if (!isRouteAuthorized(request, route.auth)) {
-      return buildJsonResponse(
-        401,
-        'Server configuration error. Please contact support.',
-      )
-    }
-
-    return route.handler(request)
   }
 
   const appBaseHost = request.headers.get('host')

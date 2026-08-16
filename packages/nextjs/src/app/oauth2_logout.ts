@@ -22,7 +22,7 @@ export async function getOAuth2LogoutFlow(
     const logoutRequest = await api.getOAuth2LogoutRequest({
       logoutChallenge,
     })
-    const action = new URL('/self-service/logout', baseUrl)
+    const action = new URL('/custom-service/logout', baseUrl)
     action.searchParams.set('logout_challenge', logoutChallenge)
     return {
       id: 'UNSET',

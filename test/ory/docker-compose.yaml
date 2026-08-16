@@ -54,5 +54,6 @@ services:
       --client-secret my-secret
       --endpoint http://localhost:4444
       --port 5555
-      --scope openid,offline
+      --scope openid,email,profile,offline
       --no-shutdown
+      --prompt consent
