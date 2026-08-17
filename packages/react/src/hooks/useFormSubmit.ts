@@ -165,6 +165,7 @@ export function useFormSubmit(methods: UseFormReturn<FormValues>) {
         await onSubmitOAuth2Consent(flowContainer, {
           onRedirect,
           body: submitData,
+          setFlowContainer: handleSuccess,
           onSuccess,
           onError,
         })

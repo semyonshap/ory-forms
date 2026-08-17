@@ -4,6 +4,41 @@ import { NextRequest, NextResponse } from 'next/server'
 import { serverSideOAuth2Client } from '../app/client'
 import { getServerSession } from '../app/session'
 
+const SUCCESS_MESSAGE_ID = 9999998
+
+function challengeNode(challenge: string) {
+  return {
+    type: 'input',
+    group: 'oauth2_consent',
+    meta: {},
+    attributes: {
+      node_type: 'input',
+      name: 'consent_challenge',
+      value: challenge,
+      type: 'hidden',
+      disabled: false,
+    },
+    messages: [],
+  }
+}
+
+function successUi(consentChallenge: string, message: string) {
+  return {
+    ui: {
+      action: `/custom-service/consent?consent_challenge=${encodeURIComponent(consentChallenge)}`,
+      method: 'POST',
+      nodes: [challengeNode(consentChallenge)],
+      messages: [
+        {
+          id: SUCCESS_MESSAGE_ID,
+          type: 'success',
+          text: message,
+        },
+      ],
+    },
+  }
+}
+
 export async function handleConsentSubmit(request: NextRequest) {
   const body = await request.json()
   const consentChallenge: string | undefined = body.consent_challenge
@@ -48,7 +83,13 @@ export async function handleConsentSubmit(request: NextRequest) {
           error_description: 'The resource owner denied the request',
         },
       })
-      return NextResponse.json({ redirect_to: reject.redirect_to })
+      return NextResponse.json({
+        ...successUi(
+          consentChallenge,
+          'Access denied. The application has been opened, you can close this tab.',
+        ),
+        redirect_to: reject.redirect_to,
+      })
     }
 
     const traits = session.identity?.traits ?? {}
@@ -73,13 +114,19 @@ export async function handleConsentSubmit(request: NextRequest) {
         remember_for: 3600,
       },
     })
-    return NextResponse.json({ redirect_to: accept.redirect_to })
+    return NextResponse.json({
+      ...successUi(
+        consentChallenge,
+        'Authorization successful. The application has been opened, you can close this tab.',
+      ),
+      redirect_to: accept.redirect_to,
+    })
   } catch (err) {
     if (err instanceof ResponseError) {
-      const body = await err.response
+      const errorBody = await err.response
         .json()
         .catch(() => ({ error: { message: err.message } }))
-      return NextResponse.json(body, { status: err.response.status })
+      return NextResponse.json(errorBody, { status: err.response.status })
     }
 
     return NextResponse.json(
