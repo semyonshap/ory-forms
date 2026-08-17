@@ -11,6 +11,7 @@ import {
   HeaderOptions,
   HeaderLoginOptions,
   HeaderOAuth2ConsentOptions,
+  HeaderOAuth2LogoutOptions,
   HeaderRegistrationOptions,
   OryFlowType,
   HeaderNavigationOptions,
@@ -39,10 +40,7 @@ export function getCardHeaderText(
     case OryFlowType.Error:
       return getErrorHeader(t)
     case OryFlowType.OAuth2Logout:
-      return {
-        description: 'Logout',
-        title: 'DEsc',
-      }
+      return getOAuth2LogoutHeader(opts, t)
     default:
       return getDefaultHeader(t)
   }
@@ -170,6 +168,40 @@ function getRegistrationHeader(
             parts: joinWithCommaOr(parts, orText),
           })
         : '',
+  }
+}
+
+function getOAuth2LogoutHeader(
+  opts: HeaderOAuth2LogoutOptions,
+  t: TFunction,
+) {
+  const description = t(
+    'logout.subtitle',
+    'Are you sure to logout {party}?',
+    {
+      party: opts.flow.logout_request?.client?.client_name || 'client',
+    },
+  )
+
+  let postLogoutRedirectUri: string | null = null
+  try {
+    postLogoutRedirectUri =
+      new URL(
+        opts.flow.logout_request?.request_url ?? '',
+      ).searchParams.get('post_logout_redirect_uri') || null
+  } catch {
+    /* ignore invalid url */
+  }
+
+  return {
+    title: t('logout.title', 'Log out'),
+    description: postLogoutRedirectUri
+      ? `${description} ${t(
+          'logout.redirect-notice',
+          'You will be redirected to {url} after logging out.',
+          { url: postLogoutRedirectUri },
+        )}`
+      : description,
   }
 }
 

@@ -97,6 +97,8 @@ export function parseStateFromFlow(
       return { current: 'settings' }
     case OryFlowType.OAuth2Consent:
       return { current: 'method_active', method: 'oauth2_consent' }
+    case OryFlowType.OAuth2Logout:
+      return { current: 'logout' }
     case OryFlowType.Navigation:
       return { current: 'navigation' }
     case OryFlowType.Error:

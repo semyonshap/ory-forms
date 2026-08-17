@@ -7,7 +7,7 @@ secrets:
     - dev-cookie-secret-not-secure
 
 log:
-  level: info
+  level: warn
   format: text
   leak_sensitive_values: false
 

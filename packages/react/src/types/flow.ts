@@ -5,6 +5,11 @@ export interface UpdateOAuth2ConsentFlowBody {
   remember?: boolean
 }
 
+export interface UpdateOAuth2LogoutFlowBody {
+  logout_challenge: string
+  action: 'accept' | 'reject'
+}
+
 export interface OAuth2ConsentFlowResponse {
   redirect_to: string
 }

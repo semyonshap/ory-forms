@@ -18,10 +18,12 @@ import {
   OryFlowContainer,
   OryFlowType,
   UpdateOAuth2ConsentFlowBody,
+  UpdateOAuth2LogoutFlowBody,
 } from '../types'
 import {
   onSubmitLogin,
   onSubmitOAuth2Consent,
+  onSubmitOAuth2Logout,
   onSubmitRecovery,
   onSubmitRegistration,
   onSubmitSettings,
@@ -161,6 +163,18 @@ export function useFormSubmit(methods: UseFormReturn<FormValues>) {
           ...(filtered as unknown as UpdateOAuth2ConsentFlowBody),
         }
         await onSubmitOAuth2Consent(flowContainer, {
+          onRedirect,
+          body: submitData,
+          onSuccess,
+          onError,
+        })
+        break
+      }
+      case OryFlowType.OAuth2Logout: {
+        const submitData: UpdateOAuth2LogoutFlowBody = {
+          ...(filtered as unknown as UpdateOAuth2LogoutFlowBody),
+        }
+        await onSubmitOAuth2Logout(flowContainer, {
           onRedirect,
           body: submitData,
           onSuccess,

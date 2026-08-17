@@ -8,6 +8,7 @@ export type FlowFormState =
   | { current: 'settings' }
   | { current: 'navigation' }
   | { current: 'error' }
+  | { current: 'logout' }
 
 export type FormState = FlowFormState & {
   isReady: boolean

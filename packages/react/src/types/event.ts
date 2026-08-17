@@ -52,6 +52,10 @@ export interface OryConsentSuccessEvent {
   consentRequest: OAuth2ConsentRequest
 }
 
+export interface OryLogoutSuccessEvent {
+  flowType: OryFlowType.OAuth2Logout
+}
+
 export type OrySuccessEvent =
   | OryLoginSuccessEvent
   | OryRegistrationSuccessEvent
@@ -59,6 +63,7 @@ export type OrySuccessEvent =
   | OryRecoverySuccessEvent
   | OrySettingsSuccessEvent
   | OryConsentSuccessEvent
+  | OryLogoutSuccessEvent
 
 export type OryValidationErrorEvent =
   | { flowType: OryFlowType.Login; flow: LoginFlow }
@@ -85,6 +90,7 @@ export type OryErrorEvent =
       flowType: OryFlowType.OAuth2Consent
       consentRequest: OAuth2ConsentRequest
     }
+  | { type: 'logout_error'; flowType: OryFlowType.OAuth2Logout }
 
 export type OrySuccessHandler = (
   event: OrySuccessEvent,

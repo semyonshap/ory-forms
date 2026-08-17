@@ -7,7 +7,7 @@ secrets:
     - this-is-a-32-char-dev-secret-key
 
 log:
-  level: info
+  level: warning
   format: text
   leak_sensitive_values: false
 
