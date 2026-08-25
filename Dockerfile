@@ -2,6 +2,9 @@ FROM node:22-alpine AS base
 RUN corepack enable && corepack prepare pnpm@11.17.0 --activate
 WORKDIR /app
 
+ARG ENV_FILE
+ENV ENV_FILE=$ENV_FILE
+
 COPY . .
 
 RUN pnpm install --frozen-lockfile

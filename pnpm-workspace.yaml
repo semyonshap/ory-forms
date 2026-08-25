@@ -1,7 +1,7 @@
 packages:
   - 'packages/*'
   - 'auth'
-  - 'test'
+  - 'tests'
 allowBuilds:
   nx: true
   sharp: true

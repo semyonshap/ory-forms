@@ -6,7 +6,7 @@ services:
       - '4434:4434'
     command: serve -c /etc/config/kratos.yaml --dev --watch-courier
     volumes:
-      - ./config:/etc/config
+      - ../config:/etc/config
 
   mailslurper:
     image: oryd/mailslurper:latest-smtps
@@ -21,7 +21,7 @@ services:
       - '4467:4467'
     command: serve all -c /etc/config/keto.yaml
     volumes:
-      - ./config:/etc/config
+      - ../config:/etc/config
 
   hydra:
     image: oryd/hydra:latest
@@ -30,7 +30,7 @@ services:
       - '4445:4445'
     command: serve all -c /etc/config/hydra.yaml --dev
     volumes:
-      - ./config:/etc/config
+      - ../config:/etc/config
 
   init:
     image: curlimages/curl:latest
@@ -40,7 +40,7 @@ services:
       - keto
     restart: on-failure
     volumes:
-      - ./config/init.sh:/init.sh
+      - ../config/init.sh:/init.sh
     entrypoint: sh /init.sh
 
   hydra-oauth2-test:

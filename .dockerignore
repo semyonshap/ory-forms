@@ -17,4 +17,3 @@ coverage
 **/.next
 **/node_modules
 **/dist
-test

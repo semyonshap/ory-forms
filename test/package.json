@@ -1,7 +1,0 @@
-{
-  "name": "test",
-  "private": true,
-  "scripts": {
-    "docker:up": "docker compose -f ory/docker-compose.yaml up"
-  }
-}
