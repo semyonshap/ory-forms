@@ -10,11 +10,13 @@ const oauth2Api = new OAuth2Api(
 export async function createOAuth2Client({
   clientId,
   redirectUris,
+  postLogoutRedirectUris,
   scopes = env.scope,
   accessTokenStrategy = 'opaque',
 }: {
   clientId: string
   redirectUris: string[]
+  postLogoutRedirectUris?: string[]
   scopes?: string
   accessTokenStrategy?: 'jwt' | 'opaque'
 }) {
@@ -26,6 +28,7 @@ export async function createOAuth2Client({
       response_types: ['code'],
       scope: scopes,
       redirect_uris: redirectUris,
+      post_logout_redirect_uris: postLogoutRedirectUris,
       token_endpoint_auth_method: 'none',
       access_token_strategy: accessTokenStrategy,
     },

@@ -48,3 +48,33 @@ export async function exchangeCodeForToken({
     refresh_token: tokenSet.refresh_token,
   }
 }
+
+import { decodeJwt, decodeProtectedHeader } from 'jose'
+
+export function printTokenInfo(token: client.TokenEndpointResponse): void {
+  const result: any = {
+    raw: token,
+    decoded: {},
+  }
+
+  if (token.access_token && token.access_token.split('.').length === 3) {
+    try {
+      result.decoded.access = {
+        payload: decodeJwt(token.access_token),
+        header: decodeProtectedHeader(token.access_token),
+      }
+    } catch {
+      result.decoded.access = 'Failed to decode'
+    }
+  }
+
+  if (token.id_token) {
+    try {
+      result.decoded.id = decodeJwt(token.id_token)
+    } catch {
+      result.decoded.id = 'Failed to decode'
+    }
+  }
+
+  console.log(JSON.stringify(result, null, 2))
+}

@@ -25,6 +25,7 @@ urls:
   login: http://localhost:8080/auth2/login
   logout: http://localhost:8080/auth2/logout
   consent: http://localhost:8080/auth2/consent
+  error: http://localhost:8080/auth/error
   post_logout_redirect: http://localhost:8080
 
 oauth2:

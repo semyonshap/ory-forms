@@ -24,9 +24,16 @@ export async function getOAuth2LogoutFlow(
     })
     const action = new URL('/custom-service/logout', baseUrl)
     action.searchParams.set('logout_challenge', logoutChallenge)
+
+    const now = new Date()
+
     return {
       id: 'UNSET',
       active: 'oauth2_logout',
+      state: 'show_form' as const,
+      created_at: now,
+      issued_at: now,
+      expires_at: new Date(now.getTime() + 1000 * 60 * 10),
       logout_request: logoutRequest,
       ui: {
         action: action.toString(),

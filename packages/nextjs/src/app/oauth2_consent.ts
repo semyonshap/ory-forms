@@ -87,9 +87,15 @@ export async function getOAuth2ConsentFlow(
   const action = new URL('/custom-service/consent', baseUrl)
   action.searchParams.set('consent_challenge', consentChallenge)
 
+  const now = new Date()
+
   return {
     id: 'UNSET',
     active: 'oauth2_consent',
+    state: 'show_form' as const,
+    created_at: now,
+    issued_at: now,
+    expires_at: new Date(now.getTime() + 1000 * 60 * 10),
     consent_request: consentRequest,
     session,
     ui: {

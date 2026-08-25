@@ -5,6 +5,7 @@ import {
   ContinueWith,
   GenericError,
   ResponseError,
+  OnRedirectHandler,
   verificationUrl,
   isResponseError,
   isAddressNotVerified,
@@ -14,7 +15,11 @@ import {
   isBrowserLocationChangeRequired,
 } from '@ory/client-fetch'
 
-import { FlowErrorHandlerProps } from '../types'
+import {
+  FlowErrorHandlerProps,
+  OryFlowType,
+  OryErrorHandler,
+} from '../types'
 
 export const handleFlowError =
   <T>(opts: FlowErrorHandlerProps<T>) =>
@@ -61,6 +66,43 @@ export const handleFlowError =
         contentType +
         '`.  Check your console output for details.',
     )
+  }
+
+export const handleOAuth2FlowError =
+  (opts: {
+    onRedirect: OnRedirectHandler
+    onError?: OryErrorHandler
+    flowType: OryFlowType.OAuth2Consent | OryFlowType.OAuth2Logout
+  }) =>
+  async (err: unknown): Promise<void> => {
+    if (err instanceof ResponseError) {
+      const errorBody = (await err.response.json().catch(() => ({}))) as {
+        redirect_to?: string
+        error?: GenericError['error']
+      }
+
+      if (typeof errorBody.redirect_to === 'string') {
+        opts.onRedirect(errorBody.redirect_to, true)
+        return
+      }
+
+      if (opts.flowType === OryFlowType.OAuth2Consent) {
+        await opts.onError?.({
+          type: 'consent_error',
+          flowType: OryFlowType.OAuth2Consent,
+          body: errorBody as GenericError,
+        })
+        return
+      }
+
+      await opts.onError?.({
+        type: 'logout_error',
+        flowType: OryFlowType.OAuth2Logout,
+        body: errorBody as GenericError,
+      })
+      return
+    }
+    throw err
   }
 
 async function handleJsonError<T>(

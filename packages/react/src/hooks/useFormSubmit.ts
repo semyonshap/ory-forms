@@ -162,7 +162,7 @@ export function useFormSubmit(methods: UseFormReturn<FormValues>) {
         const submitData: UpdateOAuth2ConsentFlowBody = {
           ...(filtered as unknown as UpdateOAuth2ConsentFlowBody),
         }
-        await onSubmitOAuth2Consent(flowContainer, {
+        await onSubmitOAuth2Consent(flowContainer, config, {
           onRedirect,
           body: submitData,
           setFlowContainer: handleSuccess,
@@ -175,7 +175,7 @@ export function useFormSubmit(methods: UseFormReturn<FormValues>) {
         const submitData: UpdateOAuth2LogoutFlowBody = {
           ...(filtered as unknown as UpdateOAuth2LogoutFlowBody),
         }
-        await onSubmitOAuth2Logout(flowContainer, {
+        await onSubmitOAuth2Logout(flowContainer, config, {
           onRedirect,
           body: submitData,
           onSuccess,

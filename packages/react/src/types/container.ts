@@ -87,6 +87,10 @@ export type OryFlowContainerWithState = OryFlowContainer & {
 export interface OAuth2ConsentFlow {
   id: 'UNSET'
   active: 'oauth2_consent'
+  state: 'show_form' | 'rejected' | 'accepted'
+  created_at: Date
+  issued_at: Date
+  expires_at: Date
   ui: UiContainer
   consent_request: OAuth2ConsentRequest
   session: Session
@@ -96,6 +100,10 @@ export interface OAuth2ConsentFlow {
 export interface OAuth2LogoutFlow {
   id: 'UNSET'
   active: 'oauth2_logout'
+  state: 'show_form' | 'rejected' | 'accepted'
+  created_at: Date
+  issued_at: Date
+  expires_at: Date
   ui: UiContainer
   return_to?: string
   logout_request: OAuth2LogoutRequest

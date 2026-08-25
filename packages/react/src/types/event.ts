@@ -88,9 +88,13 @@ export type OryErrorEvent =
   | {
       type: 'consent_error'
       flowType: OryFlowType.OAuth2Consent
-      consentRequest: OAuth2ConsentRequest
+      body: GenericError
     }
-  | { type: 'logout_error'; flowType: OryFlowType.OAuth2Logout }
+  | {
+      type: 'logout_error'
+      flowType: OryFlowType.OAuth2Logout
+      body?: GenericError
+    }
 
 export type OrySuccessHandler = (
   event: OrySuccessEvent,

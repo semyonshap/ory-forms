@@ -11,7 +11,7 @@ import path from 'path'
 import { createOAuth2Client } from '../helpers/hydra'
 import { ensureIdentity } from '../helpers/kratos'
 import { env } from '../env'
-import { exchangeCodeForToken } from '../helpers/oidc'
+import { exchangeCodeForToken, printTokenInfo } from '../helpers/oidc'
 
 test.describe('OAuth2 with Electron app', () => {
   let clientId = ''
@@ -99,15 +99,6 @@ test.describe('OAuth2 with Electron app', () => {
       ),
     )
 
-    console.log(
-      JSON.stringify(
-        {
-          payload: jose.decodeJwt(token.access_token),
-          header: jose.decodeProtectedHeader(token.access_token),
-        },
-        null,
-        2,
-      ),
-    )
+    printTokenInfo(token)
   })
 })

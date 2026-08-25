@@ -40,6 +40,13 @@ export type SessionWithStatus = {
   session: Session | null
 }
 
+export type UiMessage = {
+  id: number
+  type: 'error' | 'info' | 'success'
+  text: string
+  context?: Record<string, unknown>
+}
+
 export type OryError = {
   code: number
   message?: string
@@ -70,6 +77,10 @@ export type NavigationFlow = {
 export type OAuth2ConsentFlow = {
   id: 'UNSET'
   active: 'oauth2_consent'
+  state: 'show_form' | 'rejected' | 'accepted'
+  created_at: Date
+  issued_at: Date
+  expires_at: Date
   ui: UiContainer
   session: Session
   return_to?: string
@@ -79,6 +90,10 @@ export type OAuth2ConsentFlow = {
 export type OAuth2LogoutFlow = {
   id: 'UNSET'
   active: 'oauth2_logout'
+  state: 'show_form' | 'rejected' | 'accepted'
+  created_at: Date
+  issued_at: Date
+  expires_at: Date
   ui: UiContainer
   return_to?: string
   logout_request: OAuth2LogoutRequest
