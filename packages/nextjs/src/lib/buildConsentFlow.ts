@@ -62,8 +62,18 @@ export function buildConsentFlow({
         createInputNode('consent_challenge', 'hidden', consentChallenge),
         ...(state === 'show_form'
           ? [
-              createInputNode('remember', 'checkbox', false, 'Remember me'),
-              createInputNode('action', 'submit', 'accept', 'Allow access'),
+              createInputNode(
+                'remember',
+                'checkbox',
+                false,
+                'Remember me',
+              ),
+              createInputNode(
+                'action',
+                'submit',
+                'accept',
+                'Allow access',
+              ),
               createInputNode('action', 'submit', 'reject', 'Deny access'),
             ]
           : []),

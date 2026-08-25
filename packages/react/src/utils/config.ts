@@ -1,4 +1,4 @@
-import { frontendClient } from './sdk'
+import { frontendClient } from './client'
 import { DefaultComponents } from '../components/defaultComponents'
 import { defaultGroupSorter, defaultNodeSorter } from '../lib/nodes/sorter'
 import {

@@ -1,16 +1,11 @@
-import {
-  Configuration,
-  ConfigurationParameters,
-  FrontendApi,
-  JSONApiResponse,
-} from '@ory/client-fetch'
-
 import type {
   OAuth2ConsentFlowResponse,
   OAuth2LogoutFlowResponse,
   UpdateOAuth2ConsentFlowBody,
   UpdateOAuth2LogoutFlowBody,
 } from '../types'
+
+import { FrontendApi, JSONApiResponse } from '@ory/client-fetch'
 
 declare module '@ory/client-fetch' {
   interface FrontendApi {
@@ -81,20 +76,4 @@ export class OryFrontendApi extends FrontendApi {
       (jsonValue) => jsonValue as OAuth2LogoutFlowResponse,
     )
   }
-}
-
-export function frontendClient(
-  sdkUrl: string,
-  opts: Partial<ConfigurationParameters> = {},
-) {
-  const config = new Configuration({
-    ...opts,
-    basePath: sdkUrl.replace(/\/$/, ''),
-    credentials: 'include',
-    headers: {
-      Accept: 'application/json',
-    },
-  })
-
-  return new OryFrontendApi(config)
 }
