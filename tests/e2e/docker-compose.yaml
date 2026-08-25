@@ -1,0 +1,61 @@
+services:
+  kratos:
+    image: oryd/kratos:latest
+    ports:
+      - '4433:4433'
+      - '4434:4434'
+    command: serve -c /etc/config/kratos.yaml --dev
+    environment:
+      SELFSERVICE_FLOWS_LOGIN_AFTER_PASSWORD_HOOKS_0_CONFIG_URL: http://auth:8080/custom-service/verify
+    volumes:
+      - ../config:/etc/config
+
+  keto:
+    image: oryd/keto:latest
+    ports:
+      - '4466:4466'
+      - '4467:4467'
+    command: serve all -c /etc/config/keto.yaml
+    volumes:
+      - ../config:/etc/config
+
+  hydra:
+    image: oryd/hydra:latest
+    ports:
+      - '4444:4444'
+      - '4445:4445'
+    command: serve all -c /etc/config/hydra.yaml --dev
+    environment:
+      OAUTH2_TOKEN_HOOK_URL: http://auth:8080/custom-service/token
+    volumes:
+      - ../config:/etc/config
+
+  auth:
+    build:
+      context: ../..
+      dockerfile: Dockerfile
+    ports:
+      - '8080:8080'
+    environment:
+      NEXT_PUBLIC_ORY_SDK_URL: http://localhost:8080
+      NEXT_PUBLIC_CAPTCHA_ENABLED: 'true'
+      NEXT_PUBLIC_PROJECT_NAME: Ory Auth
+      NEXT_PUBLIC_PROJECT_DEFAULT_LOCALE: en
+      NEXT_PUBLIC_PROJECT_ENABLED_LOCALES: en
+      NEXT_PUBLIC_PROJECT_LOCALE_BEHAVIOR: force_default
+      NEXT_PUBLIC_HIDE_REGISTRATION_LINK: 'false'
+      NEXT_PUBLIC_REGISTRATION_ENABLED: 'true'
+      NEXT_PUBLIC_VERIFICATION_ENABLED: 'true'
+      NEXT_PUBLIC_TURNSTILE_SITE_KEY: 1x00000000000000000000AA
+      ORY_SDK_URL: http://kratos:4433
+      ORY_HYDRA_URL: http://hydra:4445
+      ORY_KETO_READ_URL: http://keto:4466
+      WEBHOOK_KEY: X-Webhook-Key
+      WEBHOOK_SECRET_KEY: super-webhook-secret-key
+      KETO_NAMESPACE: Group
+      KETO_RELATION: members
+      TURNSTILE_SECRET_KEY: 1x0000000000000000000000000000000AA
+    depends_on:
+      - kratos
+      - hydra
+      - keto

@@ -1,6 +1,5 @@
 import { test, expect } from '@playwright/test'
 
-import { startStack, stopStack, Stack } from '../docker/stack'
 import { registerAppProtocol } from '../helpers/appProtocol'
 import {
   createOAuth2Client,
@@ -14,20 +13,9 @@ import { env } from '../env'
 
 test.describe('OAuth2 authorization code + PKCE with app protocol', () => {
   let clientId = ''
-  let stack: Stack | null = null
 
-  test.beforeAll(
-    async () => {
-      stack = await startStack()
-      await ensureIdentity()
-    },
-    { timeout: 600_000 },
-  )
-
-  test.afterAll(async () => {
-    if (stack) {
-      await stopStack(stack)
-    }
+  test.beforeAll(async () => {
+    await ensureIdentity()
   })
 
   test.beforeEach(async () => {

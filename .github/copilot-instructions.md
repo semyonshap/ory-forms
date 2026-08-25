@@ -4,3 +4,4 @@
 - Output ONLY the modified or new lines of code. Never restate unchanged functions or entire files.
 - Do not write comments inside the code and do not explain obvious syntax.
 - Keep the response in a strict "Q&A" style without meta-commentary or explanations.
+- Dont write README files if i dotn ask you
