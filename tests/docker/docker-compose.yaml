@@ -1,3 +1,4 @@
+name: ory-test
 services:
   kratos:
     image: oryd/kratos:latest
@@ -31,29 +32,3 @@ services:
     command: serve all -c /etc/config/hydra.yaml --dev
     volumes:
       - ../config:/etc/config
-
-  init:
-    image: curlimages/curl:latest
-    depends_on:
-      - kratos
-      - hydra
-      - keto
-    restart: on-failure
-    volumes:
-      - ../config/init.sh:/init.sh
-    entrypoint: sh /init.sh
-
-  hydra-oauth2-test:
-    image: oryd/hydra:latest
-    network_mode: host
-    depends_on:
-      - init
-    command: >
-      perform authorization-code
-      --client-id my-client
-      --client-secret my-secret
-      --endpoint http://localhost:4444
-      --port 5555
-      --scope openid,email,profile,offline
-      --no-shutdown
-      --prompt consent
