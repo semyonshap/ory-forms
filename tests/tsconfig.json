@@ -7,5 +7,5 @@
     "declarationMap": false,
     "sourceMap": false
   },
-  "include": ["playwright.config.ts", "e2e/**/*.ts"]
+  "include": ["playwright.config.ts", "e2e/**/*.ts", "e2e/electron/preload.js", "e2e/electron/main.js", "e2e/electron/renderer.js"]
 }

@@ -3,8 +3,7 @@
   "private": true,
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "docker:up": "docker compose -f ory/docker-compose.yaml up --build",
-    "e2e:docker:up": "docker compose -f e2e/docker-compose.yaml up --build",
+    "docker:up": "docker compose -f docker/docker-compose.yaml up",
     "e2e": "playwright test",
     "e2e:ui": "playwright test --ui",
     "e2e:headed": "playwright test --headed",
@@ -12,6 +11,12 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.62.1",
-    "@types/node": "^26.2.0"
+    "@types/node": "^26.2.0",
+    "electron": "^43.4.1"
+  },
+  "dependencies": {
+    "@ory/client-fetch": "^1.22.63",
+    "jose": "^6.2.10",
+    "openid-client": "^6.8.7"
   }
 }
