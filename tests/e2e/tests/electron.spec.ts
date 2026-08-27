@@ -6,7 +6,6 @@ import {
   expect,
 } from '@playwright/test'
 import * as client from 'openid-client'
-import * as jose from 'jose'
 import path from 'path'
 import { createOAuth2Client } from '../helpers/hydra'
 import { ensureIdentity } from '../helpers/kratos'

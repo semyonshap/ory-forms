@@ -47,11 +47,13 @@ async function findIdentityByEmail(email: string) {
 }
 
 /**
- * Fetches the latest login code delivered via email from the Kratos courier
- * admin API (used to complete the second factor / code method).
- * Polls until a message with a code appears.
+ * Fetches the latest email code (login / verification) delivered to `recipient`
+ * from the Kratos courier admin API. Polls until a message with a code appears.
  */
-export async function getLoginCode(timeoutMs = 20_000): Promise<string> {
+export async function getCodeForEmail(
+  recipient: string,
+  timeoutMs = 30_000,
+): Promise<string> {
   const deadline = Date.now() + timeoutMs
   let lastError: unknown
 
@@ -63,9 +65,7 @@ export async function getLoginCode(timeoutMs = 20_000): Promise<string> {
 
       const message = messages
         .filter(
-          (m) =>
-            m.recipient === env.identity.email &&
-            /code/i.test(m.body ?? ''),
+          (m) => m.recipient === recipient && /code/i.test(m.body ?? ''),
         )
         .sort((a, b) =>
           (b.created_at?.toISOString() ?? '').localeCompare(
@@ -85,6 +85,14 @@ export async function getLoginCode(timeoutMs = 20_000): Promise<string> {
   }
 
   throw new Error(
-    `Timed out waiting for a login code from courier (last error: ${String(lastError)})`,
+    `Timed out waiting for an email code for ${recipient} (last error: ${String(lastError)})`,
   )
+}
+
+/**
+ * Fetches the latest login code delivered via email from the Kratos courier
+ * admin API (used to complete the second factor / code method).
+ */
+export async function getLoginCode(timeoutMs = 20_000): Promise<string> {
+  return getCodeForEmail(env.identity.email, timeoutMs)
 }

@@ -7,23 +7,6 @@ import type {
 
 import { FrontendApi, JSONApiResponse } from '@ory/client-fetch'
 
-declare module '@ory/client-fetch' {
-  interface FrontendApi {
-    updateOAuth2ConsentFlowRaw(
-      requestParameters: {
-        updateOAuth2ConsentFlowBody: UpdateOAuth2ConsentFlowBody
-      },
-      initOverrides?: RequestInit,
-    ): Promise<JSONApiResponse<OAuth2ConsentFlowResponse>>
-    updateOAuth2LogoutFlowRaw(
-      requestParameters: {
-        updateOAuth2LogoutFlowBody: UpdateOAuth2LogoutFlowBody
-      },
-      initOverrides?: RequestInit,
-    ): Promise<JSONApiResponse<OAuth2LogoutFlowResponse>>
-  }
-}
-
 export class OryFrontendApi extends FrontendApi {
   async updateOAuth2ConsentFlowRaw(
     requestParameters: {

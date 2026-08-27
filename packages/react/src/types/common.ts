@@ -2,12 +2,12 @@ import { ComponentType } from 'react'
 import {
   AccountExperienceConfiguration,
   ConfigurationParameters,
-  FrontendApi,
   OnRedirectHandler,
   UiNode,
   UiNodeGroupEnum,
 } from '@ory/client-fetch'
 
+import { OryFrontendApi } from '../utils/sdk'
 import { OryFlowContainer, UiNodeFixed, FlowFormState } from '.'
 import {
   OrySuccessHandler,
@@ -152,7 +152,7 @@ export interface OryConfiguration {
   sdk: {
     url: string
     options?: Partial<ConfigurationParameters>
-    frontend: FrontendApi
+    frontend: OryFrontendApi
   }
   project: OryProject
 }

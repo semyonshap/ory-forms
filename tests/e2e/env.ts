@@ -15,6 +15,11 @@ export const env = {
   appProtocolCallback: `${appProtocol}://oauth/callback`,
   scope: 'openid email profile offline',
 
+  webhook: {
+    key: process.env.E2E_WEBHOOK_KEY ?? 'X-Webhook-Key',
+    secret: process.env.E2E_WEBHOOK_SECRET ?? 'super-webhook-secret-key',
+  },
+
   identity: {
     username: process.env.E2E_IDENTITY_USERNAME ?? 'e2e.user',
     email: process.env.E2E_IDENTITY_EMAIL ?? 'e2e@example.com',

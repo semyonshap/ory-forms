@@ -10,7 +10,7 @@ import { env } from '../env'
 import { exchangeCodeForToken, printTokenInfo } from '../helpers/oidc'
 import { openExternalBrowser } from '../helpers/system'
 
-test.describe('Classic OAuth2 flow (without Electron)', () => {
+test.describe('OAuth2 flow', () => {
   let clientId: string
   let server: Server
   let port: number

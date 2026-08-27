@@ -1,8 +1,0 @@
-{
-  "name": "@jiko/next-logger-logtape",
-  "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "packages/next-logger-logtape/src",
-  "projectType": "library",
-  "targets": {},
-  "tags": ["type:lib", "scope:logging"]
-}

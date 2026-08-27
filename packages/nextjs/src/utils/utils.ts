@@ -83,15 +83,25 @@ export function isRouteAuthorized(
 
 export function buildJsonResponse(
   status: number,
-  text: string,
-  instance_ptr: string = '#/',
-) {
+  message: string,
+): NextResponse {
+  if (status >= 200 && status < 400) {
+    return new NextResponse(null, { status })
+  }
+
   return NextResponse.json(
     {
       messages: [
         {
-          instance_ptr,
-          messages: [{ id: 1234567, type: 'error', text }],
+          instance_ptr: '#/',
+          messages: [
+            {
+              id: status === 400 ? 4000038 : 500,
+              text: message,
+              type: 'error',
+              context: {},
+            },
+          ],
         },
       ],
     },

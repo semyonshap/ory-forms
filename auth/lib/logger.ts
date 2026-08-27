@@ -1,25 +1,15 @@
 import {
   configure,
-  getConsoleSink,
   getJsonLinesFormatter,
   getLogger,
   isLogLevel,
   LogLevel,
 } from '@logtape/logtape'
 import { redactByField } from '@logtape/redaction'
+import { getRawConsoleSink } from '@with-jiko/next-logger-logtape'
 import env from '@/lib/env'
 
-const originalConsole: Console = {
-  log: console.log.bind(console),
-  error: console.error.bind(console),
-  warn: console.warn.bind(console),
-  info: console.info.bind(console),
-  debug: console.debug.bind(console),
-  trace: console.trace.bind(console),
-} as unknown as Console
-
-const consoleSink = getConsoleSink({
-  console: originalConsole,
+const consoleSink = getRawConsoleSink({
   formatter: getJsonLinesFormatter({
     properties: 'flatten',
   }),

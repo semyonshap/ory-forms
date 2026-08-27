@@ -1,11 +1,12 @@
 import { Instrumentation } from 'next'
-import { patchNextLogger } from '@jiko/next-logger-logtape'
 import { logger } from './lib/logger'
 import env from '@/lib/env'
 
 export async function register() {
   if (process.env.NEXT_RUNTIME === 'nodejs') {
-    patchNextLogger({ logger })
+    const { patchNextLogger } =
+      await import('@with-jiko/next-logger-logtape/node')
+    patchNextLogger()
     logger.info('Environments:', { env })
   }
 }

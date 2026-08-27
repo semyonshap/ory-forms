@@ -4,8 +4,9 @@ import env from '@/lib/env'
 import { logger } from '@/lib/logger'
 
 export async function VerifyCaptcha(request: NextRequest) {
-  logger.debug('VerifyCaptcha invoked')
   try {
+    logger.debug('VerifyCaptcha invoked')
+
     const body = await request.json()
     const turnstileToken = body?.captcha_token
 
@@ -44,7 +45,7 @@ export async function VerifyCaptcha(request: NextRequest) {
     }
 
     logger.debug('Captcha verified successfully')
-    return NextResponse.json({ success: true })
+    return NextResponse.json({}, { status: 200 })
   } catch (error) {
     logger.error('Captcha verification error:', {
       error: error instanceof Error ? error.message : String(error),
