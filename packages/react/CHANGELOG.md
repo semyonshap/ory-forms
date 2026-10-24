@@ -1,5 +1,27 @@
 # @ory-forms/react
 
+## 1.2.0
+
+### Minor Changes
+
+- e1dd0d8: Add useStoreClient hook
+- e1dd0d8: Pass store into every wrapper component
+- e1dd0d8: Pass children into every wrapper component
+- e1dd0d8: Export WrapperProps
+- 4e63bf9: Add onSubmitOAuth2Logout
+- 4e63bf9: Add OAuth2LogoutFlowContainer
+- 4e63bf9: Add OAuth2LogoutFlowResponse
+- 4e63bf9: Add UpdateOAuth2LogoutFlowBody
+- 4e63bf9: Add OryLogoutSuccessEvent
+- 4e63bf9: Add logout form state
+- 4e63bf9: Add logout header
+- 455cd3c: Add OryFrontendApi with consent and logout custom-service methods
+- 455cd3c: Add handleOAuth2FlowError
+- 455cd3c: Add redirect handling for OAuth2 flows
+- 3d899c7: Move extraNodes to setExtraNodes config callback
+- 3d899c7: Export SetExtraNodes
+- 9409d84: Use NEXT_PUBLIC_ORY_SDK_URL in computeSdkConfig
+
 ## 1.1.0
 
 ### Minor Changes
