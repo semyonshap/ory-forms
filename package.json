@@ -1,6 +1,5 @@
 {
   "name": "ory-forms",
-  "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "nx run-many --target=dev --all --parallel",
@@ -18,7 +17,8 @@
     "release": "nx release",
     "changeset": "changeset",
     "changeset:version": "changeset version",
-    "changeset:publish": "changeset publish"
+    "changeset:publish": "changeset publish",
+    "publish:packages": "pnpm -r publish --no-git-checks --access public"
   },
   "packageManager": "pnpm@11.17.0",
   "repository": {
