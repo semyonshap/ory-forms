@@ -1,5 +1,6 @@
 {
   "name": "ory-forms",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "nx run-many --target=dev --all --parallel",
