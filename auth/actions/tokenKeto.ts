@@ -2,6 +2,7 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { Configuration, RelationshipApi } from '@ory/client-fetch'
+
 import env from '@/lib/env'
 import { logger } from '@/lib/logger'
 

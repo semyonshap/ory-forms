@@ -3,10 +3,10 @@
 import { redirect } from 'next/navigation'
 import { OAuth2LoginRequest } from '@ory/client-fetch'
 
-import { getServerSession } from './session'
-import { serverSideOAuth2Client } from './client'
 import { QueryParams } from '../types'
+import { getServerSession } from './session'
 import { orySdkPublicUrl } from '../utils/sdk'
+import { serverSideOAuth2Client } from './client'
 import { redirectToErrorPage } from '../utils/error'
 
 export async function getOAuth2LoginFlow(

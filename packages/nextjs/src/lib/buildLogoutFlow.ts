@@ -1,4 +1,5 @@
 import { OAuth2LogoutRequest } from '@ory/client-fetch'
+
 import { UiMessage } from '../types'
 
 function createInputNode(

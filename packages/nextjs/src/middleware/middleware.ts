@@ -4,11 +4,11 @@ import { NextResponse, type NextRequest } from 'next/server'
 import { orySdkUrl } from '../utils/sdk'
 import { buildUpstreamResponse } from './response'
 import { rewriteSetCookieHeaders } from './cookie'
-import { handleConsentSubmit } from '../handlers/consent'
 import { handleLogoutSubmit } from '../handlers/logout'
+import { handleConsentSubmit } from '../handlers/consent'
 import { buildUpstreamUrl, buildUpstreamHeaders } from './request'
-import { OryMiddlewareCustomRoute, OryMiddlewareOptions } from '../types'
 import { buildJsonResponse, isRouteAuthorized } from '../utils/utils'
+import { OryMiddlewareCustomRoute, OryMiddlewareOptions } from '../types'
 
 const extraRoutes: OryMiddlewareCustomRoute[] = [
   {

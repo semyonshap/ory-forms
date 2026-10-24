@@ -1,9 +1,11 @@
-import './globals.css'
-import React, { ReactNode, Suspense } from 'react'
-import { Inter } from 'next/font/google'
 import { Metadata } from 'next'
-import { Toaster } from '@/components/ui/sonner'
+import { Inter } from 'next/font/google'
+import React, { ReactNode, Suspense } from 'react'
+
 import { oryConfig } from '@/ory.config'
+import { Toaster } from '@/components/ui/sonner'
+
+import './globals.css'
 
 const inter = Inter({ subsets: ['latin'] })
 

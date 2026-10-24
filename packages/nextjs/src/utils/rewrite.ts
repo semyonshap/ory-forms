@@ -6,6 +6,7 @@ import {
   compact,
   replace,
 } from 'lodash-es'
+
 import { orySdkUrl } from './sdk'
 import { joinUrlPaths } from './utils'
 import { OryMiddlewareOptions } from '../types'

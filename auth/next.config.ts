@@ -1,5 +1,7 @@
 import type { NextConfig } from 'next'
+
 import dotenv from 'dotenv'
+
 import env from '@/lib/env'
 
 const envfile = env.env_file

@@ -1,7 +1,8 @@
-import { buildJsonResponse } from '@ory-forms/nextjs'
 import { NextRequest, NextResponse } from 'next/server'
+
 import env from '@/lib/env'
 import { logger } from '@/lib/logger'
+import { buildJsonResponse } from '@ory-forms/nextjs'
 
 export async function VerifyCaptcha(request: NextRequest) {
   try {

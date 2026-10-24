@@ -1,6 +1,8 @@
 import { Instrumentation } from 'next'
-import { logger } from './lib/logger'
+
 import env from '@/lib/env'
+
+import { logger } from './lib/logger'
 
 export async function register() {
   if (process.env.NEXT_RUNTIME === 'nodejs') {

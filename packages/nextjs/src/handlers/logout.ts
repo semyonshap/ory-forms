@@ -1,5 +1,5 @@
-import { OAuth2LogoutRequest, ResponseError } from '@ory/client-fetch'
 import { NextRequest, NextResponse } from 'next/server'
+import { OAuth2LogoutRequest, ResponseError } from '@ory/client-fetch'
 
 import { serverSideOAuth2Client } from '../app/client'
 import { buildLogoutFlow } from '../lib/buildLogoutFlow'

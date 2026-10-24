@@ -14,11 +14,12 @@
     "typecheck": "nx run-many --target=typecheck --all",
     "format:check": "nx format:check --all",
     "format:write": "nx format:write --all",
+    "all": "nx run-many --target=format:write,lint:fix,typecheck --all",
     "release": "nx release",
     "changeset": "changeset",
     "changeset:version": "changeset version",
     "changeset:publish": "changeset publish",
-    "publish:packages": "pnpm -r publish --no-git-checks --access public"
+    "pub": "nx run-many --target=pub --projects=tag:type:lib --parallel=1"
   },
   "packageManager": "pnpm@11.17.0",
   "repository": {
@@ -29,6 +30,7 @@
   "devDependencies": {
     "@changesets/cli": "^2.27.0",
     "@eslint/js": "^9.0.0",
+    "@next/eslint-plugin-next": "^15.5.3",
     "@nx/eslint": "21.3.11",
     "@nx/js": "21.3.11",
     "concurrently": "^10.0.5",

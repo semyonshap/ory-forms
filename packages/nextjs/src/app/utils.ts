@@ -1,9 +1,9 @@
-import { FlowType, OnRedirectHandler } from '@ory/client-fetch'
-
 import { headers } from 'next/headers'
-import { QueryParams } from '../types'
 import { ParsedUrlQuery } from 'querystring'
 import { redirect, RedirectType } from 'next/navigation'
+import { FlowType, OnRedirectHandler } from '@ory/client-fetch'
+
+import { QueryParams } from '../types'
 
 export async function getCookieHeader() {
   const h = await headers()

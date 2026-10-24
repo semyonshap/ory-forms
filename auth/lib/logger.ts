@@ -1,3 +1,5 @@
+import { redactByField } from '@logtape/redaction'
+import { getRawConsoleSink } from '@with-jiko/next-logger-logtape'
 import {
   configure,
   getJsonLinesFormatter,
@@ -5,8 +7,7 @@ import {
   isLogLevel,
   LogLevel,
 } from '@logtape/logtape'
-import { redactByField } from '@logtape/redaction'
-import { getRawConsoleSink } from '@with-jiko/next-logger-logtape'
+
 import env from '@/lib/env'
 
 const consoleSink = getRawConsoleSink({

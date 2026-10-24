@@ -1,7 +1,7 @@
 import { oryConfig } from '@/ory.config'
 import { Flow, OryFlowType } from '@ory-forms/react'
-import { OryComponents } from '@/components/custom/oryComponents'
 import { getNavigationFlow } from '@ory-forms/nextjs'
+import { OryComponents } from '@/components/custom/oryComponents'
 
 export default async function LoginPage() {
   const flow = await getNavigationFlow(oryConfig)

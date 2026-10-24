@@ -1,13 +1,14 @@
 'use server'
 
-import { getServerSession } from './session'
-import { ErrorFlow, OryError, QueryParams } from '../types'
-import { UiNode } from '@ory/client-fetch'
-import { createUiText } from '../utils/factory'
-import { getLogoutFlow } from './logout'
-import { createNavigationNode } from '../utils/presets'
 import { upperFirst } from 'lodash-es'
+import { UiNode } from '@ory/client-fetch'
+
+import { getLogoutFlow } from './logout'
 import { getError } from '../utils/error'
+import { getServerSession } from './session'
+import { createUiText } from '../utils/factory'
+import { createNavigationNode } from '../utils/presets'
+import { ErrorFlow, OryError, QueryParams } from '../types'
 
 export async function getErrorFlow(
   config: { project: { default_redirect_url: string } },

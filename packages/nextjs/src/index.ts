@@ -13,6 +13,7 @@ export { getOAuth2LoginFlow } from './app/oauth2_login'
 export { getOAuth2LogoutFlow } from './app/oauth2_logout'
 
 export type { OryPageParams, OryMiddlewareOptions } from './types'
+export type { OryAccept, OryFlowOptions } from './types'
 
 export { createOryMiddleware } from './middleware'
 

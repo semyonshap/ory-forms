@@ -1,9 +1,10 @@
 'use server'
 
+import { UiTextTypeEnum } from '@ory/client-fetch'
+
 import { orySdkPublicUrl } from '../utils/sdk'
 import { serverSideOAuth2Client } from './client'
 import { OAuth2LogoutFlow, QueryParams } from '../types'
-import { UiTextTypeEnum } from '@ory/client-fetch'
 
 export async function getOAuth2LogoutFlow(
   params: QueryParams | Promise<QueryParams>,

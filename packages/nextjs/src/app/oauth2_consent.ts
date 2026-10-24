@@ -8,10 +8,10 @@ import {
 } from '@ory/client-fetch'
 
 import { getServerSession } from './session'
-import { serverSideOAuth2Client } from './client'
-import { OAuth2ConsentFlow, QueryParams } from '../types'
 import { orySdkPublicUrl } from '../utils/sdk'
+import { serverSideOAuth2Client } from './client'
 import { redirectToErrorPage } from '../utils/error'
+import { OAuth2ConsentFlow, QueryParams } from '../types'
 
 export async function getOAuth2ConsentFlow(
   config: {

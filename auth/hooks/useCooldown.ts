@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 
-export function useCooldown(seconds: number = 60) {
+export function useCooldown(seconds = 60) {
   const [remaining, setRemaining] = useState(0)
   const deadlineRef = useRef<number | null>(null)
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null)

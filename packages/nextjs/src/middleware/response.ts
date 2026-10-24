@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+
 import { defaultOmitHeaders } from '../const'
 import { rewriteUrls } from '../utils/rewrite'
 import { OryMiddlewareOptions } from '../types'

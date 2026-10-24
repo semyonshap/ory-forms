@@ -1,8 +1,8 @@
-import { OAuth2ConsentRequest, ResponseError } from '@ory/client-fetch'
 import { NextRequest, NextResponse } from 'next/server'
+import { OAuth2ConsentRequest, ResponseError } from '@ory/client-fetch'
 
-import { serverSideOAuth2Client } from '../app/client'
 import { getServerSession } from '../app/session'
+import { serverSideOAuth2Client } from '../app/client'
 import { buildConsentFlow } from '../lib/buildConsentFlow'
 
 const SUCCESS_MESSAGE_ID = 9999998
@@ -11,7 +11,7 @@ export async function handleConsentSubmit(request: NextRequest) {
   const body = await request.json()
   const consentChallenge: string | undefined = body.consent_challenge
   const action: string | undefined = body.action
-  const remember: boolean = !!body.remember
+  const remember = !!body.remember
   const grantScope: string[] = body.grant_scope ?? []
 
   if (!consentChallenge) {

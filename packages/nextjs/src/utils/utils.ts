@@ -1,6 +1,6 @@
 import { pick } from 'lodash-es'
-
 import { NextRequest, NextResponse } from 'next/server'
+
 import { defaultForwardedHeaders } from '../const'
 import { OryMiddlewareCustomRoute } from '../types'
 

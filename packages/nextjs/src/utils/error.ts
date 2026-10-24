@@ -4,10 +4,11 @@ import {
   instanceOfGenericError,
   ResponseError,
 } from '@ory/client-fetch'
-import { serverSideFrontendClient } from '../app/client'
-import { OryError, QueryParams } from '../types'
 
-type ErrorBody = {
+import { OryError, QueryParams } from '../types'
+import { serverSideFrontendClient } from '../app/client'
+
+interface ErrorBody {
   message?: string
   error?: { message?: string }
 }

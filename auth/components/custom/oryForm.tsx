@@ -1,6 +1,7 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
+
 import { createInputNode, Flow, FlowInputProps } from '@ory-forms/react'
 
 export function FormWithRouter(props: FlowInputProps) {

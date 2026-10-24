@@ -1,5 +1,5 @@
-import { OryClientConfiguration } from '@ory-forms/react'
 import env from '@/lib/env'
+import { OryClientConfiguration } from '@ory-forms/react'
 
 export const oryConfig: OryClientConfiguration = {
   project: {

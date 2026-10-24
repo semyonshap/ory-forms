@@ -1,4 +1,5 @@
 import { NextRequest } from 'next/server'
+
 import { filterRequestHeaders, getProjectApiKey } from '../utils/utils'
 
 export function buildUpstreamUrl(request: NextRequest, matchBaseUrl: URL) {

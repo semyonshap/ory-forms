@@ -1,3 +1,4 @@
+import { NextRequest, NextResponse } from 'next/server'
 import {
   AccountExperienceConfiguration,
   OAuth2ConsentRequest,
@@ -5,15 +6,20 @@ import {
   Session,
   UiContainer,
 } from '@ory/client-fetch'
-import { NextRequest, NextResponse } from 'next/server'
 
-export type QueryParams = { [key: string]: string | string[] | undefined }
+export type QueryParams = Record<string, string | string[] | undefined>;
 
-export interface OryPageParams {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+export type OryAccept = 'text/html' | 'application/json'
+
+export interface OryFlowOptions {
+  accept?: OryAccept
 }
 
-export type OryMiddlewareCustomRoute = {
+export interface OryPageParams {
+  searchParams: Promise<Record<string, string | string[] | undefined>>
+}
+
+export interface OryMiddlewareCustomRoute {
   path: string
   method?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'HEAD' | 'OPTIONS'
   handler: (request: NextRequest) => NextResponse | Promise<NextResponse>
@@ -24,7 +30,7 @@ export type OryMiddlewareCustomRoute = {
   }
 }
 
-export type OryMiddlewareOptions = {
+export interface OryMiddlewareOptions {
   forwardAdditionalHeaders?: string[]
   forceCookieDomain?: string
   project?: Partial<AccountExperienceConfiguration>
@@ -35,19 +41,19 @@ export const initOverrides: RequestInit = {
   cache: 'no-cache',
 }
 
-export type SessionWithStatus = {
+export interface SessionWithStatus {
   status: 'authenticated' | '2fa_required' | 'unauthenticated'
   session: Session | null
 }
 
-export type UiMessage = {
+export interface UiMessage {
   id: number
   type: 'error' | 'info' | 'success'
   text: string
   context?: Record<string, unknown>
 }
 
-export type OryError = {
+export interface OryError {
   code: number
   message?: string
   status?: string
@@ -57,7 +63,7 @@ export type OryError = {
   correlationId?: string
 }
 
-export type ErrorFlow = {
+export interface ErrorFlow {
   id: string
   active: 'error'
   ui: UiContainer
@@ -66,7 +72,7 @@ export type ErrorFlow = {
   error: OryError
 }
 
-export type NavigationFlow = {
+export interface NavigationFlow {
   id: 'UNSET'
   active: 'navigation'
   ui: UiContainer
@@ -74,7 +80,7 @@ export type NavigationFlow = {
   return_to?: string
 }
 
-export type OAuth2ConsentFlow = {
+export interface OAuth2ConsentFlow {
   id: 'UNSET'
   active: 'oauth2_consent'
   state: 'show_form' | 'rejected' | 'accepted'
@@ -87,7 +93,7 @@ export type OAuth2ConsentFlow = {
   consent_request: OAuth2ConsentRequest
 }
 
-export type OAuth2LogoutFlow = {
+export interface OAuth2LogoutFlow {
   id: 'UNSET'
   active: 'oauth2_logout'
   state: 'show_form' | 'rejected' | 'accepted'

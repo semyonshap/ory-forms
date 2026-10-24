@@ -5,9 +5,10 @@ import {
   isSessionAal2Required,
   toBody,
 } from '@ory/client-fetch'
-import { serverSideFrontendClient } from './client'
+
 import { getCookieHeader } from './utils'
 import { SessionWithStatus } from '../types'
+import { serverSideFrontendClient } from './client'
 
 export async function getServerSession(
   cookie?: string,

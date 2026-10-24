@@ -1,25 +1,9 @@
 'use client'
 
 import Image from 'next/image'
-
-import { OryClientComponents, OryFlowType } from '@ory-forms/react'
-import { InputOTP, InputOTPGroup, InputOTPSlot } from '../ui/input-otp'
-import { Button, buttonVariants } from '../ui/button'
-import { Spinner } from '../ui/spinner'
-import { Input } from '../ui/input'
-import { Label } from '../ui/label'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '../ui/card'
-import { Alert, AlertDescription } from '../ui/alert'
-import { useCooldown } from '@/hooks/useCooldown'
-import { logger } from '@/lib/logger'
-
-import { cn } from '@/lib/utils'
+import { toast } from 'sonner'
+import { useEffect, useState } from 'react'
+import { Turnstile } from '@marsidev/react-turnstile'
 import {
   KeyRound,
   Mail,
@@ -40,12 +24,28 @@ import {
   Eye,
   EyeOff,
 } from 'lucide-react'
-import { Separator } from '../ui/separator'
-import { toast } from 'sonner'
-import { useEffect, useState } from 'react'
-import { Checkbox } from '../ui/checkbox'
-import { Turnstile } from '@marsidev/react-turnstile'
+
+import { cn } from '@/lib/utils'
+import { logger } from '@/lib/logger'
 import { useIsMobile } from '@/hooks/use-mobile'
+import { useCooldown } from '@/hooks/useCooldown'
+import { OryClientComponents, OryFlowType } from '@ory-forms/react'
+
+import { Input } from '../ui/input'
+import { Label } from '../ui/label'
+import { Spinner } from '../ui/spinner'
+import { Checkbox } from '../ui/checkbox'
+import { Separator } from '../ui/separator'
+import { Button, buttonVariants } from '../ui/button'
+import { Alert, AlertDescription } from '../ui/alert'
+import { InputOTP, InputOTPGroup, InputOTPSlot } from '../ui/input-otp'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '../ui/card'
 
 export const OryComponents: OryClientComponents = {
   Icons: {
