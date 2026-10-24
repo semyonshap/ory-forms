@@ -1,5 +1,5 @@
 {
-  "name": "@ory-forms",
+  "name": "ory-forms",
   "private": true,
   "scripts": {
     "dev": "nx run-many --target=dev --all --parallel",
