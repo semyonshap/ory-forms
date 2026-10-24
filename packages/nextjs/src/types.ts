@@ -1,10 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
 import {
   AccountExperienceConfiguration,
+  LoginFlow,
   OAuth2ConsentRequest,
   OAuth2LogoutRequest,
+  RecoveryFlow,
+  RegistrationFlow,
   Session,
+  SettingsFlow,
   UiContainer,
+  VerificationFlow,
 } from '@ory/client-fetch'
 
 export type QueryParams = Record<string, string | string[] | undefined>
@@ -131,3 +136,59 @@ export interface OAuth2LogoutFlow {
   return_to?: string
   logout_request: OAuth2LogoutRequest
 }
+
+export interface LoginFlowContainer {
+  flowType: OryFlowType.Login
+  flow: LoginFlow
+}
+
+export interface RegistrationFlowContainer {
+  flowType: OryFlowType.Registration
+  flow: RegistrationFlow
+}
+
+export interface RecoveryFlowContainer {
+  flowType: OryFlowType.Recovery
+  flow: RecoveryFlow
+}
+
+export interface VerificationFlowContainer {
+  flowType: OryFlowType.Verification
+  flow: VerificationFlow
+}
+
+export interface SettingsFlowContainer {
+  flowType: OryFlowType.Settings
+  flow: SettingsFlow
+}
+
+export interface OAuth2ConsentFlowContainer {
+  flowType: OryFlowType.OAuth2Consent
+  flow: OAuth2ConsentFlow
+}
+
+export interface OAuth2LogoutFlowContainer {
+  flowType: OryFlowType.OAuth2Logout
+  flow: OAuth2LogoutFlow
+}
+
+export interface NavigationFlowContainer {
+  flowType: OryFlowType.Navigation
+  flow: NavigationFlow
+}
+
+export interface ErrorFlowContainer {
+  flowType: OryFlowType.Error
+  flow: ErrorFlow
+}
+
+export type OryFlowContainer =
+  | LoginFlowContainer
+  | RegistrationFlowContainer
+  | RecoveryFlowContainer
+  | VerificationFlowContainer
+  | SettingsFlowContainer
+  | OAuth2ConsentFlowContainer
+  | OAuth2LogoutFlowContainer
+  | NavigationFlowContainer
+  | ErrorFlowContainer

@@ -1,12 +1,14 @@
 import { redirect, RedirectType } from 'next/navigation'
+import { isRedirectError } from 'next/dist/client/components/redirect-error'
 import { FlowType, handleFlowError, ApiResponse } from '@ory/client-fetch'
 
-import { QueryParams } from '../types'
+import { QueryParams, OryFlowConfig } from '../types'
 import { startNewFlow, onRedirect } from './utils'
 import { onValidationError } from '../utils/utils'
+import { redirectToErrorPage } from '../utils/error'
 import { rewriteJsonResponse } from '../utils/rewrite'
 
-export async function getFlowFactory<T extends object>({
+export async function loadKratosFlow<T extends object>({
   params,
   fetchFlowRaw,
   flowType,
@@ -48,5 +50,32 @@ export async function getFlowFactory<T extends object>({
     })
 
     return await errorHandler(error)
+  }
+}
+
+export async function loadOAuth2Flow<T>({
+  params,
+  fetchFlowRaw,
+  baseUrl,
+  config,
+}: {
+  params: QueryParams | Promise<QueryParams>
+  fetchFlowRaw: (params: QueryParams) => Promise<T>
+  baseUrl: string
+  config: OryFlowConfig
+}): Promise<T | null> {
+  try {
+    return await fetchFlowRaw(await params)
+  } catch (error) {
+    if (isRedirectError(error)) {
+      throw error
+    }
+
+    await redirectToErrorPage({
+      baseUrl,
+      config,
+      error,
+    })
+    return null
   }
 }

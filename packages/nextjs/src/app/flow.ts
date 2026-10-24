@@ -10,9 +10,8 @@ import {
 } from '@ory/client-fetch'
 
 import { toGetFlowParameter } from './utils'
-import { getFlowFactory } from './flowFactory'
+import { loadKratosFlow, loadOAuth2Flow } from './loaders'
 import { orySdkPublicUrl } from '../utils/sdk'
-import { getOAuthFlowFactory } from './oauthFlowFactory'
 import { serverSideFrontendClient, serverSideOAuth2Client } from './client'
 import {
   initOverrides,
@@ -21,6 +20,7 @@ import {
   OAuth2ConsentFlow,
   OAuth2LogoutFlow,
   OryFlowConfig,
+  OryFlowContainer,
   OryFlowType,
   QueryParams,
 } from '../types'
@@ -51,7 +51,7 @@ const handlers: {
   [OryFlowType.Login]: async (config, params) => {
     const parameter = await toGetFlowParameter(params)
 
-    return getFlowFactory({
+    return loadKratosFlow({
       params,
       flowType: FlowType.Login,
       fetchFlowRaw: () =>
@@ -66,7 +66,7 @@ const handlers: {
   [OryFlowType.Registration]: async (config, params) => {
     const parameter = await toGetFlowParameter(params)
 
-    return getFlowFactory({
+    return loadKratosFlow({
       params,
       flowType: FlowType.Registration,
       fetchFlowRaw: () =>
@@ -81,7 +81,7 @@ const handlers: {
   [OryFlowType.Recovery]: async (config, params) => {
     const parameter = await toGetFlowParameter(params)
 
-    return getFlowFactory({
+    return loadKratosFlow({
       params,
       flowType: FlowType.Recovery,
       fetchFlowRaw: () =>
@@ -96,7 +96,7 @@ const handlers: {
   [OryFlowType.Verification]: async (config, params) => {
     const parameter = await toGetFlowParameter(params)
 
-    return getFlowFactory({
+    return loadKratosFlow({
       params,
       flowType: FlowType.Verification,
       fetchFlowRaw: () =>
@@ -111,7 +111,7 @@ const handlers: {
   [OryFlowType.Settings]: async (config, params) => {
     const parameter = await toGetFlowParameter(params)
 
-    return getFlowFactory({
+    return loadKratosFlow({
       params,
       flowType: FlowType.Settings,
       fetchFlowRaw: () =>
@@ -124,30 +124,30 @@ const handlers: {
     })
   },
   [OryFlowType.OAuth2Login]: (config, params) => {
-    return getOAuthFlowFactory({
-      baseUrl: orySdkPublicUrl(),
-      config,
+    return loadOAuth2Flow({
       params,
       fetchFlowRaw: () =>
         serverSideOAuth2Client().getOAuth2LoginFlow(config, params),
+      baseUrl: orySdkPublicUrl(),
+      config,
     })
   },
   [OryFlowType.OAuth2Consent]: (config, params) => {
-    return getOAuthFlowFactory({
-      baseUrl: orySdkPublicUrl(),
-      config,
+    return loadOAuth2Flow({
       params,
       fetchFlowRaw: () =>
         serverSideOAuth2Client().getOAuth2ConsentFlow(config, params),
+      baseUrl: orySdkPublicUrl(),
+      config,
     })
   },
   [OryFlowType.OAuth2Logout]: (config, params) => {
-    return getOAuthFlowFactory({
-      baseUrl: orySdkPublicUrl(),
-      config,
+    return loadOAuth2Flow({
       params,
       fetchFlowRaw: () =>
         serverSideOAuth2Client().getOAuth2LogoutFlow(params),
+      baseUrl: orySdkPublicUrl(),
+      config,
     })
   },
   [OryFlowType.Navigation]: async (config) => {
@@ -162,8 +162,11 @@ export async function getFlow<T extends keyof OryFlowMap>(
   flowType: T,
   config: OryFlowConfig,
   params: QueryParams | Promise<QueryParams>,
-): Promise<OryFlowMap[T] | null | void> {
+): Promise<OryFlowContainer | null | void> {
   const resolved = await params
+  const flow = await handlers[flowType](config, resolved)
 
-  return handlers[flowType](config, resolved)
+  if (!flow) return flow
+
+  return { flowType, flow } as OryFlowContainer
 }

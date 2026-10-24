@@ -41,7 +41,7 @@ export type SetExtraNodes = (
 ) => UiNodeFixed[]
 
 export interface FlowInputProps {
-  flow: OryFlowContainer['flow']
+  flow: OryFlowContainer
   config: OryClientConfiguration
   components?: Partial<OryClientComponents>
   transientPayload?: FormValues
