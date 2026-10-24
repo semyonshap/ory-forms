@@ -1,8 +1,5 @@
 {
   "name": "@ory-forms/react",
-  "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "packages/react/src",
-  "projectType": "library",
-  "targets": {},
   "tags": ["type:lib", "scope:react"]
 }

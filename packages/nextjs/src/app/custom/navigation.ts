@@ -1,21 +1,16 @@
 'use server'
 
-import { UiNode } from '@ory/client-fetch'
+import { FrontendApi, UiNode } from '@ory/client-fetch'
 
 import { getLogoutFlow } from './logout'
-import { NavigationFlow } from '../types'
-import { getServerSession } from './session'
-import { createNavigationNode } from '../utils/presets'
+import { getServerSession } from '../session'
+import { createNavigationNode } from '../../utils/presets'
+import { NavigationFlow, OryFlowConfig } from '../../types'
 
-export async function getNavigationFlow(config: {
-  project: {
-    login_ui_url: string
-    registration_ui_url: string
-    verification_ui_url: string
-    recovery_ui_url: string
-    settings_ui_url: string
-  }
-}): Promise<NavigationFlow | null> {
+export async function getNavigationFlow(
+  api: FrontendApi,
+  config: OryFlowConfig,
+): Promise<NavigationFlow | null> {
   const {
     login_ui_url,
     recovery_ui_url,
@@ -35,7 +30,7 @@ export async function getNavigationFlow(config: {
         createNavigationNode('recovery', recovery_ui_url),
       )
     } else if (status === '2fa_required') {
-      const logoutFlow = await getLogoutFlow()
+      const logoutFlow = await getLogoutFlow(api)
 
       result.push(
         createNavigationNode('settings', settings_ui_url),
@@ -51,7 +46,7 @@ export async function getNavigationFlow(config: {
       )
     }
 
-    const logoutFlow = await getLogoutFlow()
+    const logoutFlow = await getLogoutFlow(api)
 
     result.push(
       createNavigationNode('settings', settings_ui_url),

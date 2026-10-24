@@ -1,7 +1,5 @@
 {
   "name": "test",
-  "$schema": "../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
-  "tags": ["type:docker", "scope:test"],
-  "targets": {}
+  "tags": ["type:docker", "scope:test"]
 }

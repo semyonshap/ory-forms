@@ -6,14 +6,17 @@ import { I18nextProvider, I18nContext } from 'react-i18next'
 
 import libraryI18n from '../i18n'
 import { FormWrapper } from './wrappers'
+import { OryFlowContainer } from '../types'
 import { OryFlowProvider } from '../context'
 import { useI18n, useOryForm } from '../hooks'
 import { FlowInputProps, type OryClientConfiguration } from '../types'
 
-export function Flow(props: FlowInputProps) {
+export function Flow({ flow, ...props }: FlowInputProps) {
+  const flowContainer = { flow, flowType: flow.active } as OryFlowContainer
+
   return (
     <FormTranslation config={props.config}>
-      <OryFlowProvider {...props}>
+      <OryFlowProvider {...props} flow={flowContainer}>
         <FormRHF />
       </OryFlowProvider>
     </FormTranslation>

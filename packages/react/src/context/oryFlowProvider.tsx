@@ -1,10 +1,11 @@
 import { useMemo } from 'react'
 
-import { FlowInputProps } from '../types'
+import { FlowInputProps, OryFlowContainer } from '../types'
 import { computeSdkConfig, computeComponents } from '../utils'
 import { createFlowStore, FlowStoreContext } from './oryStore'
 
-interface OryFlowProviderProps extends FlowInputProps {
+interface OryFlowProviderProps extends Omit<FlowInputProps, 'flow'> {
+  flow: OryFlowContainer
   children: React.ReactNode
 }
 

@@ -1,52 +1,169 @@
-import { redirect, RedirectType } from 'next/navigation'
-import { FlowType, handleFlowError, ApiResponse } from '@ory/client-fetch'
+'use server'
 
-import { QueryParams } from '../types'
-import { startNewFlow, onRedirect } from './utils'
-import { onValidationError } from '../utils/utils'
-import { rewriteJsonResponse } from '../utils/rewrite'
+import {
+  FlowType,
+  LoginFlow,
+  RecoveryFlow,
+  SettingsFlow,
+  VerificationFlow,
+  RegistrationFlow,
+} from '@ory/client-fetch'
 
-export async function getFlowFactory<T extends object>({
-  params,
-  fetchFlowRaw,
-  flowType,
-  baseUrl,
-  route,
-}: {
-  params: QueryParams
-  fetchFlowRaw: () => Promise<ApiResponse<T>>
-  flowType: FlowType
-  baseUrl: string
-  route: string
-}): Promise<T | null | void> {
-  const onRestartFlow = (useFlowId?: string) => {
-    if (!useFlowId) {
-      return startNewFlow(params, flowType, baseUrl)
-    }
+import { toGetFlowParameter } from './utils'
+import { getFlowFactory } from './flowFactory'
+import { orySdkPublicUrl } from '../utils/sdk'
+import { getOAuthFlowFactory } from './oauthFlowFactory'
+import { serverSideFrontendClient, serverSideOAuth2Client } from './client'
+import {
+  initOverrides,
+  ErrorFlow,
+  NavigationFlow,
+  OAuth2ConsentFlow,
+  OAuth2LogoutFlow,
+  OryFlowConfig,
+  OryFlowType,
+  QueryParams,
+} from '../types'
 
-    const redirectTo = new URL(route, baseUrl)
-    redirectTo.search = new URLSearchParams({
-      ...params,
-      flow: useFlowId,
-    }).toString()
-    return redirect(redirectTo.toString(), RedirectType.replace)
-  }
+export type { OryFlowConfig } from '../types'
 
-  if (!params['flow']) {
-    return onRestartFlow()
-  }
+export interface OryFlowMap {
+  [OryFlowType.Login]: LoginFlow
+  [OryFlowType.Registration]: RegistrationFlow
+  [OryFlowType.Recovery]: RecoveryFlow
+  [OryFlowType.Verification]: VerificationFlow
+  [OryFlowType.Settings]: SettingsFlow
+  [OryFlowType.OAuth2Login]: void
+  [OryFlowType.OAuth2Consent]: OAuth2ConsentFlow
+  [OryFlowType.OAuth2Logout]: OAuth2LogoutFlow
+  [OryFlowType.Navigation]: NavigationFlow
+  [OryFlowType.Error]: ErrorFlow
+}
 
-  try {
-    const rawResponse = await fetchFlowRaw()
-    const parsed = await rawResponse.value()
-    return rewriteJsonResponse(parsed, baseUrl)
-  } catch (error) {
-    const errorHandler = handleFlowError({
-      onValidationError,
-      onRestartFlow,
-      onRedirect: onRedirect,
+type OryFlowHandler<T> = (
+  config: OryFlowConfig,
+  params: QueryParams,
+) => Promise<T | null | void>
+
+const handlers: {
+  [K in keyof OryFlowMap]: OryFlowHandler<OryFlowMap[K]>
+} = {
+  [OryFlowType.Login]: async (config, params) => {
+    const parameter = await toGetFlowParameter(params)
+
+    return getFlowFactory({
+      params,
+      flowType: FlowType.Login,
+      fetchFlowRaw: () =>
+        serverSideFrontendClient().getLoginFlowRaw(
+          parameter,
+          initOverrides,
+        ),
+      baseUrl: orySdkPublicUrl(),
+      route: config.project.login_ui_url,
     })
+  },
+  [OryFlowType.Registration]: async (config, params) => {
+    const parameter = await toGetFlowParameter(params)
 
-    return await errorHandler(error)
-  }
+    return getFlowFactory({
+      params,
+      flowType: FlowType.Registration,
+      fetchFlowRaw: () =>
+        serverSideFrontendClient().getRegistrationFlowRaw(
+          parameter,
+          initOverrides,
+        ),
+      baseUrl: orySdkPublicUrl(),
+      route: config.project.registration_ui_url,
+    })
+  },
+  [OryFlowType.Recovery]: async (config, params) => {
+    const parameter = await toGetFlowParameter(params)
+
+    return getFlowFactory({
+      params,
+      flowType: FlowType.Recovery,
+      fetchFlowRaw: () =>
+        serverSideFrontendClient().getRecoveryFlowRaw(
+          parameter,
+          initOverrides,
+        ),
+      baseUrl: orySdkPublicUrl(),
+      route: config.project.recovery_ui_url,
+    })
+  },
+  [OryFlowType.Verification]: async (config, params) => {
+    const parameter = await toGetFlowParameter(params)
+
+    return getFlowFactory({
+      params,
+      flowType: FlowType.Verification,
+      fetchFlowRaw: () =>
+        serverSideFrontendClient().getVerificationFlowRaw(
+          parameter,
+          initOverrides,
+        ),
+      baseUrl: orySdkPublicUrl(),
+      route: config.project.verification_ui_url,
+    })
+  },
+  [OryFlowType.Settings]: async (config, params) => {
+    const parameter = await toGetFlowParameter(params)
+
+    return getFlowFactory({
+      params,
+      flowType: FlowType.Settings,
+      fetchFlowRaw: () =>
+        serverSideFrontendClient().getSettingsFlowRaw(
+          parameter,
+          initOverrides,
+        ),
+      baseUrl: orySdkPublicUrl(),
+      route: config.project.settings_ui_url,
+    })
+  },
+  [OryFlowType.OAuth2Login]: (config, params) => {
+    return getOAuthFlowFactory({
+      baseUrl: orySdkPublicUrl(),
+      config,
+      params,
+      fetchFlowRaw: () =>
+        serverSideOAuth2Client().getOAuth2LoginFlow(config, params),
+    })
+  },
+  [OryFlowType.OAuth2Consent]: (config, params) => {
+    return getOAuthFlowFactory({
+      baseUrl: orySdkPublicUrl(),
+      config,
+      params,
+      fetchFlowRaw: () =>
+        serverSideOAuth2Client().getOAuth2ConsentFlow(config, params),
+    })
+  },
+  [OryFlowType.OAuth2Logout]: (config, params) => {
+    return getOAuthFlowFactory({
+      baseUrl: orySdkPublicUrl(),
+      config,
+      params,
+      fetchFlowRaw: () =>
+        serverSideOAuth2Client().getOAuth2LogoutFlow(params),
+    })
+  },
+  [OryFlowType.Navigation]: async (config) => {
+    return serverSideFrontendClient().getNavigationFlow(config)
+  },
+  [OryFlowType.Error]: async (config, params) => {
+    return serverSideFrontendClient().getErrorFlow(config, params)
+  },
+}
+
+export async function getFlow<T extends keyof OryFlowMap>(
+  flowType: T,
+  config: OryFlowConfig,
+  params: QueryParams | Promise<QueryParams>,
+): Promise<OryFlowMap[T] | null | void> {
+  const resolved = await params
+
+  return handlers[flowType](config, resolved)
 }

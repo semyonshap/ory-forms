@@ -1,61 +1,31 @@
 'use server'
 
 import { redirect } from 'next/navigation'
-import {
-  OAuth2ConsentRequest,
-  UiNode,
-  UiTextTypeEnum,
-} from '@ory/client-fetch'
+import { OAuth2Api, UiNode, UiTextTypeEnum } from '@ory/client-fetch'
 
-import { getServerSession } from './session'
-import { orySdkPublicUrl } from '../utils/sdk'
-import { serverSideOAuth2Client } from './client'
-import { redirectToErrorPage } from '../utils/error'
-import { OAuth2ConsentFlow, QueryParams } from '../types'
+import { getServerSession } from '../session'
+import { orySdkPublicUrl } from '../../utils/sdk'
+import { OryFlowConfig, QueryParams, OAuth2ConsentFlow } from '../../types'
 
 export async function getOAuth2ConsentFlow(
-  config: {
-    project: {
-      login_ui_url: string
-      error_ui_url?: string
-      oauth2_consent_ui_url?: string
-    }
-  },
+  api: OAuth2Api,
+  config: OryFlowConfig,
   params: QueryParams | Promise<QueryParams>,
-): Promise<OAuth2ConsentFlow | null> {
-  const resolved = await params
-  const consentChallenge = resolved['consent_challenge']?.toString()
+): Promise<OAuth2ConsentFlow> {
+  const challenge = (await params)['consent_challenge']?.toString()
+
+  if (!challenge) {
+    throw new Error('Missing consent_challenge in URL')
+  }
 
   const baseUrl = orySdkPublicUrl()
-
-  if (!consentChallenge) {
-    await redirectToErrorPage({
-      baseUrl,
-      config,
-      error: new Error('Consent challenge not found in url'),
-    })
-    return null
-  }
-
-  const api = serverSideOAuth2Client()
-
-  let consentRequest: OAuth2ConsentRequest
-  try {
-    consentRequest = await api.getOAuth2ConsentRequest({
-      consentChallenge,
-    })
-  } catch (error) {
-    await redirectToErrorPage({
-      config,
-      baseUrl,
-      error,
-    })
-    return null
-  }
+  const consentRequest = await api.getOAuth2ConsentRequest({
+    consentChallenge: challenge,
+  })
 
   if (consentRequest.skip) {
     const accept = await api.acceptOAuth2ConsentRequest({
-      consentChallenge,
+      consentChallenge: challenge,
       acceptOAuth2ConsentRequest: {
         grant_scope: consentRequest.requested_scope ?? [],
         grant_access_token_audience:
@@ -77,7 +47,7 @@ export async function getOAuth2ConsentFlow(
     const consentUiUrl = config.project.oauth2_consent_ui_url
     if (consentUiUrl) {
       const returnTo = new URL(consentUiUrl, baseUrl)
-      returnTo.searchParams.set('consent_challenge', consentChallenge)
+      returnTo.searchParams.set('consent_challenge', challenge)
       loginUrl.searchParams.set('return_to', returnTo.toString())
     }
 
@@ -85,7 +55,7 @@ export async function getOAuth2ConsentFlow(
   }
 
   const action = new URL('/custom-service/consent', baseUrl)
-  action.searchParams.set('consent_challenge', consentChallenge)
+  action.searchParams.set('consent_challenge', challenge)
 
   const now = new Date()
 

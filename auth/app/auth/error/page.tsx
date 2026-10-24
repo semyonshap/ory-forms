@@ -1,17 +1,22 @@
 import { oryConfig } from '@/ory.config'
-import { OryFlowType } from '@ory-forms/react'
 import { FormWithRouter } from '@/components/custom/oryForm'
-import { getErrorFlow, OryPageParams } from '@ory-forms/nextjs'
 import { OryComponents } from '@/components/custom/oryComponents'
+import { getFlow, OryFlowType, OryPageParams } from '@ory-forms/nextjs'
 
 export default async function ErrorPage(props: OryPageParams) {
-  const flow = await getErrorFlow(oryConfig, props.searchParams)
+  const flow = await getFlow(
+    OryFlowType.Error,
+    oryConfig,
+    props.searchParams,
+  )
+
+  if (!flow) return null
 
   return (
     <FormWithRouter
       config={oryConfig}
       components={OryComponents}
-      flow={{ flow, flowType: OryFlowType.Error }}
+      flow={flow}
     />
   )
 }

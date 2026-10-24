@@ -7,7 +7,34 @@ import {
   UiContainer,
 } from '@ory/client-fetch'
 
-export type QueryParams = Record<string, string | string[] | undefined>;
+export type QueryParams = Record<string, string | string[] | undefined>
+
+export enum OryFlowType {
+  Login = 'login',
+  Registration = 'registration',
+  Recovery = 'recovery',
+  Verification = 'verification',
+  Settings = 'settings',
+  OAuth2Login = 'oauth2_login',
+  OAuth2Consent = 'oauth2_consent',
+  OAuth2Logout = 'oauth2_logout',
+  Error = 'error',
+  Navigation = 'navigation',
+}
+
+export interface OryFlowConfig {
+  project: {
+    login_ui_url: string
+    registration_ui_url: string
+    recovery_ui_url: string
+    verification_ui_url: string
+    settings_ui_url: string
+    default_redirect_url: string
+    error_ui_url?: string
+    oauth2_login_ui_url?: string
+    oauth2_consent_ui_url?: string
+  }
+}
 
 export type OryAccept = 'text/html' | 'application/json'
 

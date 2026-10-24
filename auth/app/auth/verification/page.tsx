@@ -1,17 +1,20 @@
 import { oryConfig } from '@/ory.config'
-import { OryFlowType } from '@ory-forms/react'
 import { FormWithRouter } from '@/components/custom/oryForm'
 import { OryComponents } from '@/components/custom/oryComponents'
-import { getVerificationFlow, OryPageParams } from '@ory-forms/nextjs'
+import { getFlow, OryFlowType, OryPageParams } from '@ory-forms/nextjs'
 
 export default async function VerificationPage(props: OryPageParams) {
-  const flow = await getVerificationFlow(oryConfig, props.searchParams)
+  const flow = await getFlow(
+    OryFlowType.Verification,
+    oryConfig,
+    props.searchParams,
+  )
 
   if (!flow) return null
 
   return (
     <FormWithRouter
-      flow={{ flow, flowType: OryFlowType.Verification }}
+      flow={flow}
       components={OryComponents}
       config={oryConfig}
     />

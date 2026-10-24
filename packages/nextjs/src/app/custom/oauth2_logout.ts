@@ -1,0 +1,95 @@
+'use server'
+
+import { OAuth2Api, UiTextTypeEnum } from '@ory/client-fetch'
+
+import { orySdkPublicUrl } from '../../utils/sdk'
+import { OAuth2LogoutFlow, QueryParams } from '../../types'
+
+export async function getOAuth2LogoutFlow(
+  api: OAuth2Api,
+  params: QueryParams | Promise<QueryParams>,
+): Promise<OAuth2LogoutFlow> {
+  const logoutChallenge = (await params)['logout_challenge']?.toString()
+
+  if (!logoutChallenge) {
+    throw new Error('Missing logout_challenge in URL')
+  }
+
+  const baseUrl = orySdkPublicUrl()
+  const logoutRequest = await api.getOAuth2LogoutRequest({
+    logoutChallenge,
+  })
+
+  const action = new URL('/custom-service/logout', baseUrl)
+  action.searchParams.set('logout_challenge', logoutChallenge)
+
+  const now = new Date()
+
+  return {
+    id: 'UNSET',
+    active: 'oauth2_logout',
+    state: 'show_form' as const,
+    created_at: now,
+    issued_at: now,
+    expires_at: new Date(now.getTime() + 1000 * 60 * 10),
+    logout_request: logoutRequest,
+    ui: {
+      action: action.toString(),
+      method: 'POST',
+      nodes: [
+        {
+          type: 'input',
+          group: 'default',
+          meta: {},
+          attributes: {
+            node_type: 'input',
+            name: 'logout_challenge',
+            value: logoutChallenge,
+            type: 'hidden',
+            disabled: false,
+          },
+          messages: [],
+        },
+        {
+          type: 'input',
+          group: 'default',
+          meta: {
+            label: {
+              id: 9999111,
+              text: 'Reject',
+              type: UiTextTypeEnum.Info,
+            },
+          },
+          attributes: {
+            node_type: 'input',
+            name: 'action',
+            value: 'reject',
+            type: 'submit',
+            disabled: false,
+          },
+          messages: [],
+        },
+        {
+          type: 'input',
+          group: 'default',
+          meta: {
+            label: {
+              id: 9999111,
+              text: 'Accept',
+              type: UiTextTypeEnum.Info,
+            },
+          },
+          attributes: {
+            node_type: 'input',
+            name: 'action',
+            value: 'accept',
+            type: 'submit',
+            disabled: false,
+          },
+          messages: [],
+        },
+      ],
+      messages: [],
+    },
+  }
+}

@@ -1,17 +1,23 @@
 'use server'
 
 import { upperFirst } from 'lodash-es'
-import { UiNode } from '@ory/client-fetch'
+import { FrontendApi, UiNode } from '@ory/client-fetch'
 
 import { getLogoutFlow } from './logout'
-import { getError } from '../utils/error'
-import { getServerSession } from './session'
-import { createUiText } from '../utils/factory'
-import { createNavigationNode } from '../utils/presets'
-import { ErrorFlow, OryError, QueryParams } from '../types'
+import { getError } from '../../utils/error'
+import { getServerSession } from '../session'
+import { createUiText } from '../../utils/factory'
+import { createNavigationNode } from '../../utils/presets'
+import {
+  ErrorFlow,
+  OryError,
+  OryFlowConfig,
+  QueryParams,
+} from '../../types'
 
 export async function getErrorFlow(
-  config: { project: { default_redirect_url: string } },
+  api: FrontendApi,
+  config: OryFlowConfig,
   searchParams: QueryParams | Promise<QueryParams>,
 ): Promise<ErrorFlow> {
   const params = await searchParams
@@ -23,7 +29,7 @@ export async function getErrorFlow(
   const result: UiNode[] = []
 
   if (status !== 'unauthenticated') {
-    const logoutFlow = await getLogoutFlow()
+    const logoutFlow = await getLogoutFlow(api)
     result.push(createNavigationNode('logout', logoutFlow.logout_url))
   }
 

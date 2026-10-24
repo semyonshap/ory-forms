@@ -18,6 +18,7 @@ export enum OryFlowType {
   Recovery = 'recovery',
   Verification = 'verification',
   Settings = 'settings',
+  OAuth2Login = 'oauth2_login',
   OAuth2Consent = 'oauth2_consent',
   OAuth2Logout = 'oauth2_logout',
   Error = 'error',

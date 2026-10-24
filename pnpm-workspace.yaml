@@ -2,6 +2,7 @@ packages:
   - 'packages/*'
   - 'auth'
   - 'tests'
+  - 'examples/*'
 allowBuilds:
   esbuild: true
   nx: true
