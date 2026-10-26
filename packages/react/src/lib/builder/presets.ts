@@ -153,14 +153,15 @@ export function BuildSelectMethod({
   })
 }
 
-export function BuildGoBackCode(ctx: BuildContext) {
-  const returnTo = BuildReturnTo(ctx)
-
-  const { t } = ctx
-
+export function BuildGoBackCode({
+  t,
+  config: {
+    project: { default_redirect_url },
+  },
+}: BuildContext) {
   return createAnchorNode({
     id: 'go-back-anchor',
-    href: returnTo,
+    href: default_redirect_url,
     title: createUiText({
       keyOrId: 'login.2fa.go-back.link',
       text: 'Go back',
@@ -184,25 +185,11 @@ export function BuildTransientPayload(payload: FormValues) {
   })
 }
 
-function BuildReturnTo({
+export function BuildRestartFlow({
   config: {
-    project: { default_redirect_url },
     sdk: { url: sdkUrl },
   },
   flowContainer: { flow, flowType },
 }: BuildContext) {
-  let returnTo = default_redirect_url
-
-  if (flow.return_to) {
-    returnTo = flow.return_to
-  }
-
-  if (!returnTo) {
-    returnTo = restartFlowUrl(
-      flow,
-      `${sdkUrl}/self-service/${flowType}/browser`,
-    )
-  }
-
-  return returnTo
+  return restartFlowUrl(flow, `${sdkUrl}/self-service/${flowType}/browser`)
 }

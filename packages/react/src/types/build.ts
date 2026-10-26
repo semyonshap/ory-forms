@@ -6,6 +6,7 @@ import {
   FormNode,
   FormState,
   GroupSorter,
+  NodeFilter,
   NodeSorter,
   OryConfiguration,
   OryFlowContainer,
@@ -26,9 +27,10 @@ export interface BuildContext {
   t: TFunction
 }
 
-export interface BuilderSorter {
+export interface BuilderOptions {
   nodeSorter: NodeSorter
   groupSorter: GroupSorter
+  nodeFilter: NodeFilter
 }
 
 // Wrapper

@@ -5,6 +5,7 @@ export {
   BuildForgotPassword,
   BuildGoBackCode,
   BuildRecover,
+  BuildRestartFlow,
   BuildSelectMethod,
   BuildSignIn,
   BuildSignUp,

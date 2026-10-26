@@ -39,20 +39,7 @@ const env = {
     'force_default',
   ) as 'force_default' | 'respect_accept_language',
   translations: getJsonEnv('NEXT_PUBLIC_PROJECT_TRANSLATIONS', []),
-  logoDarkUrl: getStringEnv('NEXT_PUBLIC_PROJECT_LOGO_DARK_URL', ''),
-  logoLightUrl: getStringEnv('NEXT_PUBLIC_PROJECT_LOGO_LIGHT_URL', ''),
-  hideRegistrationLink: getBooleanEnv(
-    'NEXT_PUBLIC_HIDE_REGISTRATION_LINK',
-    false,
-  ),
-  registrationEnabled: getBooleanEnv(
-    'NEXT_PUBLIC_REGISTRATION_ENABLED',
-    true,
-  ),
-  verificationEnabled: getBooleanEnv(
-    'NEXT_PUBLIC_VERIFICATION_ENABLED',
-    true,
-  ),
+  logoUrl: getStringEnv('NEXT_PUBLIC_PROJECT_LOGO_URL', ''),
   brandPrimary: getStringEnv('NEXT_PUBLIC_BRAND_PRIMARY', ''),
   turnstileSiteKey: getStringEnv(
     'NEXT_PUBLIC_TURNSTILE_SITE_KEY',

@@ -32,6 +32,7 @@ selfservice:
   default_browser_return_url: http://localhost:8080
   allowed_return_urls:
     - http://localhost:8080
+    - http://localhost:3000
 
   methods:
     password:

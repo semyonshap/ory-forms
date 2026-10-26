@@ -13,7 +13,7 @@ import {
 } from '../nodes'
 import {
   BuildContext,
-  BuilderSorter,
+  BuilderOptions,
   FormNode,
   OryFlowType,
   FormValues,
@@ -22,7 +22,7 @@ import {
 export function BuildLayout(
   flowNodes: UiNode[],
   ctx: BuildContext,
-  { nodeSorter, groupSorter }: BuilderSorter,
+  { nodeSorter, groupSorter, nodeFilter }: BuilderOptions,
   transientPayload?: FormValues,
 ) {
   const sortNodes = (a: UiNode, b: UiNode) =>
@@ -179,7 +179,11 @@ export function BuildLayout(
 
   if (flowType !== OryFlowType.Settings) {
     result.push(...BuildFooter(ctx, authMethods))
+  }
 
+  result = result.filter((node) => nodeFilter(node, ctx))
+
+  if (flowType !== OryFlowType.Settings) {
     result = createDivGroup({
       id: 'form-card',
       data: {

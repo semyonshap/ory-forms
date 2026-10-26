@@ -1,11 +1,11 @@
 import { redirect, RedirectType } from 'next/navigation'
-import { isRedirectError } from 'next/dist/client/components/redirect-error'
 import { FlowType, handleFlowError, ApiResponse } from '@ory/client-fetch'
+import { isRedirectError } from 'next/dist/client/components/redirect-error'
 
-import { QueryParams, OryFlowConfig } from '../types'
 import { startNewFlow, onRedirect } from './utils'
 import { onValidationError } from '../utils/utils'
 import { redirectToErrorPage } from '../utils/error'
+import { QueryParams, OryFlowConfig } from '../types'
 import { rewriteJsonResponse } from '../utils/rewrite'
 
 export async function loadKratosFlow<T extends object>({

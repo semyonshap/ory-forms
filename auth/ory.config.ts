@@ -1,7 +1,6 @@
 import env from '@/lib/env'
-import { OryClientConfiguration } from '@ory-forms/react'
 
-export const oryConfig: OryClientConfiguration = {
+export const oryConfig = {
   project: {
     translations: env.translations,
     default_locale: env.defaultLocale,
@@ -9,15 +8,6 @@ export const oryConfig: OryClientConfiguration = {
     locale_behavior: env.localeBehavior,
 
     name: env.projectName,
-    logo_dark_url: env.logoDarkUrl,
-    logo_light_url: env.logoLightUrl,
-
-    recovery_enabled: true,
-    hide_ory_branding: true,
-
-    hide_registration_link: env.hideRegistrationLink,
-    registration_enabled: env.registrationEnabled,
-    verification_enabled: env.verificationEnabled,
 
     default_redirect_url: '/',
     error_ui_url: '/auth/error',
@@ -30,6 +20,7 @@ export const oryConfig: OryClientConfiguration = {
     registration_ui_url: '/auth/registration',
     verification_ui_url: '/auth/verification',
 
+    logo_url: env.logoUrl,
     brand_primary: env.brandPrimary,
     turnstile_site_key: env.turnstileSiteKey,
 

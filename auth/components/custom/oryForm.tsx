@@ -1,18 +1,11 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
-
 import { createInputNode, Flow, FlowInputProps } from '@ory-forms/react'
 
 export function FormWithRouter(props: FlowInputProps) {
-  const router = useRouter()
-
   return (
     <Flow
       {...props}
-      onRedirect={(url) => {
-        router.push(url)
-      }}
       setExtraNodes={(config, formState) => {
         if (!config.project.captcha_enabled) return []
 

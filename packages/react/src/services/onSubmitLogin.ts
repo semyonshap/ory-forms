@@ -6,7 +6,7 @@ import {
 } from '@ory/client-fetch'
 
 import { flowHasErrors } from '../lib'
-import { replaceWindowFlowId, handleFlowError } from '../utils'
+import { flowIdUrl, handleFlowError } from '../utils'
 import {
   OryFlowType,
   OryConfiguration,
@@ -61,13 +61,11 @@ export async function onSubmitLogin(
     })
     .catch(
       handleFlowError({
-        onRestartFlow: (useFlowId?: string) => {
-          if (useFlowId) {
-            replaceWindowFlowId(useFlowId)
-          } else {
-            onRedirect(loginUrl(config), true)
-          }
-        },
+        onRestartFlow: (useFlowId?: string) =>
+          onRedirect(
+            useFlowId ? flowIdUrl(useFlowId) : loginUrl(config),
+            true,
+          ),
         onValidationError: async (body: LoginFlow) => {
           if (flowHasErrors(body.ui)) {
             await onValidationError?.({

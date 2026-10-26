@@ -9,12 +9,8 @@
 - `NEXT_PUBLIC_PROJECT_ENABLED_LOCALES` – Comma-separated list of enabled locales (required)
 - `NEXT_PUBLIC_PROJECT_LOCALE_BEHAVIOR` – `force_default` or `respect_accept_language` (default: `force_default`)
 - `NEXT_PUBLIC_PROJECT_NAME` – Project name (default: `Ory`)
-- `NEXT_PUBLIC_PROJECT_LOGO_DARK_URL` – Logo URL for dark theme (optional)
-- `NEXT_PUBLIC_PROJECT_LOGO_LIGHT_URL` – Logo URL for light theme (optional)
+- `NEXT_PUBLIC_PROJECT_LOGO_URL` – Logo URL (optional)
 - `NEXT_PUBLIC_BRAND_PRIMARY` – Primary brand color (optional)
-- `NEXT_PUBLIC_HIDE_REGISTRATION_LINK` – Hide the registration link (default: `false`)
-- `NEXT_PUBLIC_REGISTRATION_ENABLED` – Enable user registration (default: `true`)
-- `NEXT_PUBLIC_VERIFICATION_ENABLED` – Enable email verification (default: `true`)
 
 ---
 

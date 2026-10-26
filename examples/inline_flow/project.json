@@ -1,6 +1,0 @@
-{
-  "name": "inline-flow",
-  "sourceRoot": "examples/inline_flow",
-  "projectType": "application",
-  "tags": ["type:app", "scope:example"]
-}

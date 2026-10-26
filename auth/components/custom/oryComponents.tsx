@@ -27,6 +27,7 @@ import {
 
 import { cn } from '@/lib/utils'
 import { logger } from '@/lib/logger'
+import { oryConfig } from '@/ory.config'
 import { useIsMobile } from '@/hooks/use-mobile'
 import { useCooldown } from '@/hooks/useCooldown'
 import { OryClientComponents, OryFlowType } from '@ory-forms/react'
@@ -102,16 +103,17 @@ export const OryComponents: OryClientComponents = {
       const { id, key, ...formProps } = props
 
       const { config } = store
-      const { name, logo_light_url } = config.project
+      const { name } = config.project
+      const logoUrl = oryConfig.project.logo_url
 
       return (
         <form key={key} id={id} {...formProps} className="w-full">
           <Card className="w-full bg-transparent border-none md:bg-card md:border">
             {title && (
               <CardHeader className="flex flex-col w-full">
-                {!isSettings && logo_light_url && (
+                {!isSettings && logoUrl && (
                   <Image
-                    src={logo_light_url}
+                    src={logoUrl}
                     alt={name}
                     width={72}
                     height={72}

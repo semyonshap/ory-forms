@@ -36,27 +36,28 @@ export function computeComponents(
     },
     nodeSorter: overrides.nodeSorter ?? defaultNodeSorter,
     groupSorter: overrides.groupSorter ?? defaultGroupSorter,
+    nodeFilter: overrides.nodeFilter ?? (() => true),
   }
 }
 
-export function computeSdkConfig(
-  config?: OryClientConfiguration['sdk'],
-): OryConfiguration['sdk'] {
-  const options = config?.options || {}
-
-  const resolveUrl = () => {
-    return config?.url && typeof config.url === 'string'
-      ? normalizeUrl(config.url)
+export function computeConfig(
+  config: OryClientConfiguration,
+): OryConfiguration {
+  const options = config.sdk?.options ?? {}
+  const url =
+    config.sdk?.url && typeof config.sdk.url === 'string'
+      ? normalizeUrl(config.sdk.url)
       : getSdkUrl()
-  }
-
-  const url = resolveUrl()
-  const frontend = frontendClient(url, options)
 
   return {
-    url,
-    options,
-    frontend,
+    sdk: {
+      url,
+      options,
+      frontend: frontendClient(url, options),
+    },
+    project: {
+      ...config.project,
+    },
   }
 }
 

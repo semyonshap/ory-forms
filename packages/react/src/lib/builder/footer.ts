@@ -20,9 +20,8 @@ export function BuildFooter(
   ctx: BuildContext,
   authMethods: UiNodeGroupEnum[],
 ): FormNode[] {
-  const { flowContainer, formState, config } = ctx
+  const { flowContainer, formState } = ctx
   const { flow, flowType } = flowContainer
-  const { registration_enabled, hide_registration_link } = config.project
 
   const stateActive = formState.current
 
@@ -64,11 +63,7 @@ export function BuildFooter(
         } else if (flow.active === 'code') {
           result.push(BuildGoBackCode(ctx))
         }
-      } else if (
-        stateActive === 'provide_identifier' &&
-        registration_enabled &&
-        !hide_registration_link
-      ) {
+      } else if (stateActive === 'provide_identifier') {
         result.push(...BuildSignUp(ctx))
       }
       break
@@ -81,7 +76,7 @@ export function BuildFooter(
         if (screenSelectionNode && authMethods.length > 1) {
           result.push(BuildSelectMethod(ctx))
         }
-      } else if (registration_enabled) {
+      } else {
         result.push(...BuildSignIn(ctx))
       }
       break

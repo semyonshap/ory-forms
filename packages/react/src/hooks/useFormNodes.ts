@@ -13,6 +13,7 @@ export function useFormNodes() {
     transientPayload,
     nodeSorter,
     groupSorter,
+    nodeFilter,
   } = useFlowStoreShallow((state) => ({
     config: state.config,
     flowNodes: state.flowNodes,
@@ -20,6 +21,7 @@ export function useFormNodes() {
     transientPayload: state.transientPayload,
     nodeSorter: state.components.nodeSorter,
     groupSorter: state.components.groupSorter,
+    nodeFilter: state.components.nodeFilter,
   }))
   const formState = useFormState()
   const { t } = useTranslation()
@@ -29,7 +31,7 @@ export function useFormNodes() {
     return BuildLayout(
       flowNodes,
       { config, flowContainer, formState, t },
-      { nodeSorter, groupSorter },
+      { nodeSorter, groupSorter, nodeFilter },
       transientPayload,
     )
   }, [
@@ -40,6 +42,7 @@ export function useFormNodes() {
     t,
     nodeSorter,
     groupSorter,
+    nodeFilter,
     transientPayload,
   ])
 }

@@ -10,8 +10,8 @@ import {
 } from '@ory/client-fetch'
 
 import { toGetFlowParameter } from './utils'
-import { loadKratosFlow, loadOAuth2Flow } from './loaders'
 import { orySdkPublicUrl } from '../utils/sdk'
+import { loadKratosFlow, loadOAuth2Flow } from './loaders'
 import { serverSideFrontendClient, serverSideOAuth2Client } from './client'
 import {
   initOverrides,

@@ -13,6 +13,7 @@ import {
   isSelfServiceFlowExpiredError,
   isNeedsPrivilegedSessionError,
   isBrowserLocationChangeRequired,
+  isSessionAal2Required,
 } from '@ory/client-fetch'
 
 import {
@@ -145,6 +146,9 @@ async function handleJsonError<T>(
     isNeedsPrivilegedSessionError(body) &&
     body.redirect_browser_to
   ) {
+    opts.onRedirect(body.redirect_browser_to, true)
+    return true
+  } else if (isSessionAal2Required(body) && body.redirect_browser_to) {
     opts.onRedirect(body.redirect_browser_to, true)
     return true
   } else if (isSelfServiceFlowReplaced(body)) {

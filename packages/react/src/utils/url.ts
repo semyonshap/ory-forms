@@ -52,8 +52,8 @@ export function initFlowUrl(
   })
 }
 
-export function replaceWindowFlowId(flow: string) {
+export function flowIdUrl(flow: string) {
   const url = new URL(window.location.href)
   url.searchParams.set('flow', flow)
-  window.location.href = url.toString()
+  return url.toString()
 }

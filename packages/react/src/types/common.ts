@@ -1,14 +1,16 @@
 import { ComponentType } from 'react'
 import {
-  AccountExperienceConfiguration,
+  AccountExperienceConfigurationLocaleBehaviorEnum,
   ConfigurationParameters,
   OnRedirectHandler,
+  RevisionAccountExperienceCustomTranslation,
   UiNode,
   UiNodeGroupEnum,
 } from '@ory/client-fetch'
 
+import { BuildContext } from './build'
 import { OryFrontendApi } from '../utils/sdk'
-import { OryFlowContainer, UiNodeFixed, FlowFormState } from '.'
+import { OryFlowContainer, FormNode, UiNodeFixed, FlowFormState } from '.'
 import {
   OrySuccessHandler,
   OryValidationErrorHandler,
@@ -62,6 +64,8 @@ export type GroupSorter = (
   a: UiNodeGroupEnum,
   b: UiNodeGroupEnum,
 ) => number
+
+export type NodeFilter = (node: FormNode, ctx: BuildContext) => boolean
 
 export interface OryComponents {
   Layout: {
@@ -121,6 +125,7 @@ export interface OryComponents {
   }
   nodeSorter: NodeSorter
   groupSorter: GroupSorter
+  nodeFilter: NodeFilter
 }
 
 // Config
@@ -132,12 +137,29 @@ export type OryClientComponents = {
     Providers?: Partial<OryComponents['Icons']['Providers']>
     System?: Partial<OryComponents['Icons']['System']>
   }
-} & Partial<Pick<OryComponents, 'nodeSorter' | 'groupSorter'>>
+} & Partial<
+  Pick<OryComponents, 'nodeSorter' | 'groupSorter' | 'nodeFilter'>
+>
 
-export interface OryProject extends AccountExperienceConfiguration {
-  oauth2_login_ui_url: string
-  oauth2_consent_ui_url: string
-  oauth2_logout_ui_url: string
+export interface OryProject {
+  name: string
+  default_locale: string
+  enabled_locales: string[]
+  locale_behavior: AccountExperienceConfigurationLocaleBehaviorEnum
+  translations: RevisionAccountExperienceCustomTranslation[]
+
+  default_redirect_url: string
+
+  login_ui_url: string
+  registration_ui_url: string
+  recovery_ui_url: string
+  verification_ui_url: string
+  settings_ui_url: string
+  error_ui_url: string
+
+  oauth2_login_ui_url?: string
+  oauth2_consent_ui_url?: string
+  oauth2_logout_ui_url?: string
 }
 
 export interface OryClientConfiguration {
