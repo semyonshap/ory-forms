@@ -18,13 +18,13 @@
 
 - `NEXT_PUBLIC_CAPTCHA_ENABLED` – Enable captcha (default: `false`)
 - `NEXT_PUBLIC_TURNSTILE_SITE_KEY` – Turnstile site key (dev default: `1x00000000000000000000AA`)
-- `TURNSTILE_SECRET_KEY` – Turnstile secret key (dev default: `1x00000000000000000000AA`)
+- `TURNSTILE_SECRET` – Turnstile secret key (dev default: `1x00000000000000000000AA`)
 
 ---
 
 ### 🔐 Keto Integration
 
-- `ORY_KETO_READ_URL` – Keto read API URL (required)
+- `KETO_READ_URL` – Keto read API URL (required)
 - `KETO_NAMESPACE` – Relationship namespace, e.g. `Group`
 - `KETO_RELATION` – Relationship type, e.g. `members`
 

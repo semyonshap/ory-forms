@@ -4,26 +4,26 @@
 
 ### Minor Changes
 
-- 028fa83: Add customRoutes to createOryMiddleware
-- 028fa83: Add method and auth checks for custom routes
-- 028fa83: Remove verify custom route
-- 85e8258: Add 401 response for unauthorized custom routes
-- ca66374: Add built-in consent custom route
-- edf8003: Add built-in logout custom route
-- edf8003: Rename oauth2_concent route to oauth2_consent
-- edf8003: Add cookie argument to getServerSession
-- 455cd3c: Add buildConsentFlow
-- 455cd3c: Add buildLogoutFlow
-- 455cd3c: Add UiMessage type
-- 313f66e: Export buildJsonResponse
-- e1dd0d8: Add options argument to getFlowFactory
-- e1dd0d8: Add disableRewrite option to getFlowFactory
-- e1dd0d8: Support ORY_SDK_URL fallback in orySdkUrl
-- e1dd0d8: Add orySdkPublicUrl
-- 2069e21: Export OryMiddlewareOptions
+- feat: add `customRoutes` to `createOryMiddleware`
+- feat: add method and auth checks for custom routes
+- feat: add built-in consent custom route
+- feat: add built-in logout custom route
+- feat: add `buildConsentFlow`
+- feat: add `buildLogoutFlow`
+- feat: add `UiMessage` type
+- feat: add `options` argument to `getFlowFactory`
+- feat: add `disableRewrite` option to `getFlowFactory`
+- feat: add `orySdkPublicUrl`
+- feat: export `buildJsonResponse`
+- feat: export `OryMiddlewareOptions`
+- feat: add `cookie` argument to `getServerSession`
+- feat: add 401 response for unauthorized custom routes
+- fix: support `ORY_SDK_URL` fallback in `orySdkUrl`
+- refactor!: rename `oauth2_concent` route to `oauth2_consent`
+- refactor!: remove `verify` custom route
 
 ## 1.0.0
 
 ### Major Changes
 
-- first publish packages
+- chore: first publish of packages

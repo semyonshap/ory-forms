@@ -12,7 +12,7 @@ import { ensureIdentity } from '../helpers/kratos'
 import { env } from '../env'
 import { exchangeCodeForToken, printTokenInfo } from '../helpers/oidc'
 
-test.describe('OAuth2 with Electron app', () => {
+test.describe('OAuth2 with Electron app', { tag: '@interactive' }, () => {
   let clientId = ''
   let electronApp: ElectronApplication
   let mainWindow: Page

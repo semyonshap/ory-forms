@@ -2,12 +2,12 @@ import env from '@/lib/env'
 
 export const oryConfig = {
   project: {
-    translations: env.translations,
-    default_locale: env.defaultLocale,
-    enabled_locales: env.enabledLocales,
-    locale_behavior: env.localeBehavior,
+    translations: env.project.translations,
+    default_locale: env.project.defaultLocale,
+    enabled_locales: env.project.enabledLocales,
+    locale_behavior: env.project.localeBehavior,
 
-    name: env.projectName,
+    name: env.project.name,
 
     default_redirect_url: '/',
     error_ui_url: '/auth/error',
@@ -20,7 +20,7 @@ export const oryConfig = {
     registration_ui_url: '/auth/registration',
     verification_ui_url: '/auth/verification',
 
-    logo_url: env.logoUrl,
+    logo_url: env.project.logoUrl,
     brand_primary: env.brandPrimary,
     turnstile_site_key: env.turnstileSiteKey,
 

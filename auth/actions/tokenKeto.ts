@@ -7,7 +7,7 @@ import env from '@/lib/env'
 import { logger } from '@/lib/logger'
 
 async function getGroupsFromKeto(subjectId: string): Promise<string[]> {
-  const ketoUrl = env.ketoUrl
+  const ketoUrl = env.ketoReadUrl
 
   if (!ketoUrl) {
     logger.debug('KETO_URL not set, returning empty groups')

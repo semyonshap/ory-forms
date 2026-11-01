@@ -90,13 +90,11 @@ test.describe('OAuth2 flow', () => {
     await page.goto(authorizeUrl.toString())
     await loginWithPassword(page)
 
-    const consentForm = page.locator('form[action*="consent"]')
-    await consentForm
-      .waitFor({ state: 'visible', timeout: 30_000 })
-      .catch(() => {})
-    if ((await consentForm.count()) > 0) {
-      await consentForm.locator('button[value="accept"]').click()
-    }
+    const consentAccept = page.locator(
+      'form[action*="consent"] button[value="accept"]',
+    )
+    await expect(consentAccept).toBeVisible({ timeout: 30_000 })
+    await consentAccept.click()
 
     await test.step('Wait for code', async () => {
       await expect(async () => {
@@ -138,12 +136,11 @@ test.describe('OAuth2 flow', () => {
 
       await page.goto(logoutUrl.toString())
 
-      const logoutConfirmButton = page.locator(
-        'button[id="accept"], button[value="accept"]',
-      )
-      if ((await logoutConfirmButton.count()) > 0) {
-        await logoutConfirmButton.click()
-      }
+      const logoutConfirmButton = page.getByRole('button', {
+        name: /^accept$/i,
+      })
+      await expect(logoutConfirmButton).toBeVisible({ timeout: 30_000 })
+      await logoutConfirmButton.click()
 
       await page.waitForURL(
         (url) =>
@@ -153,51 +150,55 @@ test.describe('OAuth2 flow', () => {
     })
   })
 
-  test('manual complete OAuth2 flow via external browser', async ({}) => {
-    test.setTimeout(180_000)
+  test(
+    'manual complete OAuth2 flow via external browser',
+    { tag: '@interactive' },
+    async ({}) => {
+      test.setTimeout(180_000)
 
-    const codeVerifier = client.randomPKCECodeVerifier()
-    const codeChallenge =
-      await client.calculatePKCECodeChallenge(codeVerifier)
-    const state = client.randomState()
-    const nonce = client.randomNonce()
+      const codeVerifier = client.randomPKCECodeVerifier()
+      const codeChallenge =
+        await client.calculatePKCECodeChallenge(codeVerifier)
+      const state = client.randomState()
+      const nonce = client.randomNonce()
 
-    const authorizeUrl = new URL('/oauth2/auth', env.hydraPublicUrl)
-    authorizeUrl.searchParams.set('client_id', clientId)
-    authorizeUrl.searchParams.set('response_type', 'code')
-    authorizeUrl.searchParams.set(
-      'redirect_uri',
-      `http://localhost:${port}/callback`,
-    )
-    authorizeUrl.searchParams.set('scope', env.scope)
-    authorizeUrl.searchParams.set('state', state)
-    authorizeUrl.searchParams.set('nonce', nonce)
-    authorizeUrl.searchParams.set('code_challenge', codeChallenge)
-    authorizeUrl.searchParams.set('code_challenge_method', 'S256')
+      const authorizeUrl = new URL('/oauth2/auth', env.hydraPublicUrl)
+      authorizeUrl.searchParams.set('client_id', clientId)
+      authorizeUrl.searchParams.set('response_type', 'code')
+      authorizeUrl.searchParams.set(
+        'redirect_uri',
+        `http://localhost:${port}/callback`,
+      )
+      authorizeUrl.searchParams.set('scope', env.scope)
+      authorizeUrl.searchParams.set('state', state)
+      authorizeUrl.searchParams.set('nonce', nonce)
+      authorizeUrl.searchParams.set('code_challenge', codeChallenge)
+      authorizeUrl.searchParams.set('code_challenge_method', 'S256')
 
-    openExternalBrowser(authorizeUrl.toString())
+      openExternalBrowser(authorizeUrl.toString())
 
-    await test.step('Wait for code (manual)', async () => {
-      await expect(async () => {
-        expect(receivedCode).toBeTruthy()
-      }).toPass({ timeout: 150_000 })
-    })
+      await test.step('Wait for code (manual)', async () => {
+        await expect(async () => {
+          expect(receivedCode).toBeTruthy()
+        }).toPass({ timeout: 150_000 })
+      })
 
-    console.log('Code received:', receivedCode)
+      console.log('Code received:', receivedCode)
 
-    const token = await exchangeCodeForToken({
-      clientId,
-      code: receivedCode!,
-      redirectUri: `http://localhost:${port}/callback`,
-      codeVerifier,
-      nonce,
-    })
+      const token = await exchangeCodeForToken({
+        clientId,
+        code: receivedCode!,
+        redirectUri: `http://localhost:${port}/callback`,
+        codeVerifier,
+        nonce,
+      })
 
-    expect(token.access_token).toBeTruthy()
-    expect(token.refresh_token).toBeTruthy()
-    expect(token.token_type).toBe('bearer')
-    expect(token.scope).toContain('openid')
+      expect(token.access_token).toBeTruthy()
+      expect(token.refresh_token).toBeTruthy()
+      expect(token.token_type).toBe('bearer')
+      expect(token.scope).toContain('openid')
 
-    printTokenInfo(token)
-  })
+      printTokenInfo(token)
+    },
+  )
 })

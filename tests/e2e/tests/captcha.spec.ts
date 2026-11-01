@@ -58,12 +58,12 @@ test.describe('Captcha verification', () => {
       `${env.authUrl}/self-service/login?flow=${flowId}`,
       {
         headers: { Accept: 'application/json' },
-        form: {
+        data: {
           csrf_token: csrf ?? '',
           identifier: env.identity.username,
           password: env.identity.password,
           method: 'password',
-          captcha_turnstile_response: '',
+          transient_payload: { captcha_turnstile_response: '' },
         },
       },
     )
@@ -76,6 +76,8 @@ test.describe('Captcha verification', () => {
 
     // 5. Render the updated flow in the browser and assert the error is visible
     await page.goto(`/auth/login?flow=${flowId}`)
-    await expect(page.getByText('Missing captcha token')).toBeVisible()
+    await expect(
+      page.getByText('Captcha verification failed, please try again.'),
+    ).toBeVisible()
   })
 })

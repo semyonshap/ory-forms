@@ -1,64 +1,51 @@
-function getStringEnv(key: string, defaultValue: string): string {
-  const value = process.env[key]
-  return value !== undefined ? value : defaultValue
-}
+import type { AccountExperienceConfiguration } from '@ory/client-fetch'
 
-function getBooleanEnv(key: string, defaultValue: boolean): boolean {
-  const value = process.env[key]
-  if (value === undefined) return defaultValue
-  return value.toLowerCase() === 'true'
-}
-
-function getJsonEnv<T>(key: string, defaultValue: T): T {
-  const value = process.env[key]
-  if (value === undefined) return defaultValue
-  try {
-    return JSON.parse(value) as T
-  } catch {
-    return defaultValue
-  }
-}
-function getStringArrayEnv(key: string, defaultValue: string[]): string[] {
-  const value = process.env[key]
-  if (value === undefined) return defaultValue
-  return value.split(',').filter(Boolean)
-}
+import { z } from 'zod'
+import { loadEnvConfig } from '@with-jiko/config'
 
 const TURNSTILE_SITE_DEV = '1x00000000000000000000AA'
 const TURNSTILE_SECRET_DEV = '1x0000000000000000000000000000000AA'
+const isDev = process.env.NODE_ENV === 'development'
+
+type Translations = AccountExperienceConfiguration['translations']
+
+const publicSchema = z.object({
+  project: z
+    .object({
+      name: z.string().default('Ory'),
+      defaultLocale: z.string().default('en'),
+      enabledLocales: z
+        .string()
+        .default('en')
+        .transform((value) => value.split(',').filter(Boolean)),
+      localeBehavior: z
+        .enum(['force_default', 'respect_accept_language'])
+        .default('force_default'),
+      translations: z
+        .string()
+        .default('[]')
+        .transform((value) => JSON.parse(value) as Translations),
+      logoUrl: z.string().default('/ory-logo-light.svg'),
+    })
+    .prefault({}),
+  brandPrimary: z.string().default(''),
+  turnstileSiteKey: z.string().default(isDev ? TURNSTILE_SITE_DEV : ''),
+  captchaEnabled: z.stringbool().default(false),
+})
+
+const serverSchema = z.object({
+  turnstileSecret: z.string().default(isDev ? TURNSTILE_SECRET_DEV : ''),
+  webhookKey: z.string().default(''),
+  webhookSecretKey: z.string().default(''),
+  ketoReadUrl: z.string().default(''),
+  ketoNamespace: z.string().default(''),
+  ketoRelation: z.string().default(''),
+  log_level: z.string().default(''),
+})
 
 const env = {
-  projectName: getStringEnv('NEXT_PUBLIC_PROJECT_NAME', 'Ory'),
-  defaultLocale: getStringEnv('NEXT_PUBLIC_PROJECT_DEFAULT_LOCALE', 'en'),
-  enabledLocales: getStringArrayEnv(
-    'NEXT_PUBLIC_PROJECT_ENABLED_LOCALES',
-    ['en'],
-  ),
-  localeBehavior: getStringEnv(
-    'NEXT_PUBLIC_PROJECT_LOCALE_BEHAVIOR',
-    'force_default',
-  ) as 'force_default' | 'respect_accept_language',
-  translations: getJsonEnv('NEXT_PUBLIC_PROJECT_TRANSLATIONS', []),
-  logoUrl: getStringEnv('NEXT_PUBLIC_PROJECT_LOGO_URL', ''),
-  brandPrimary: getStringEnv('NEXT_PUBLIC_BRAND_PRIMARY', ''),
-  turnstileSiteKey: getStringEnv(
-    'NEXT_PUBLIC_TURNSTILE_SITE_KEY',
-    process.env.NODE_ENV === 'development' ? TURNSTILE_SITE_DEV : '',
-  ),
-  captchaEnabled: getBooleanEnv('NEXT_PUBLIC_CAPTCHA_ENABLED', false),
-
-  turnstileSecret: getStringEnv(
-    'TURNSTILE_SECRET_KEY',
-    process.env.NODE_ENV === 'development' ? TURNSTILE_SECRET_DEV : '',
-  ),
-  webhookKey: getStringEnv('WEBHOOK_KEY', ''),
-  webhookSecretKey: getStringEnv('WEBHOOK_SECRET_KEY', ''),
-  ketoUrl: getStringEnv('ORY_KETO_READ_URL', ''),
-  ketoNamespace: getStringEnv('KETO_NAMESPACE', ''),
-  ketoRelation: getStringEnv('KETO_RELATION', ''),
-
-  log_level: getStringEnv('LOG_LEVEL', ''),
-  env_file: getStringEnv('ENV_FILE', ''),
+  ...loadEnvConfig(serverSchema),
+  ...loadEnvConfig(publicSchema, { prefix: 'NEXT_PUBLIC_' }),
 }
 
 export default env

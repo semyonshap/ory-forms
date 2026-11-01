@@ -1,6 +1,5 @@
 import { frontendClient } from './client'
 import { DefaultComponents } from '../components/defaultComponents'
-import { defaultGroupSorter, defaultNodeSorter } from '../lib/nodes/sorter'
 import {
   OryComponents,
   OryConfiguration,
@@ -34,9 +33,9 @@ export function computeComponents(
       },
       System: components?.Icons?.System,
     },
-    nodeSorter: overrides.nodeSorter ?? defaultNodeSorter,
-    groupSorter: overrides.groupSorter ?? defaultGroupSorter,
-    nodeFilter: overrides.nodeFilter ?? (() => true),
+    nodeSorter: overrides.nodeSorter ?? defaultComponents.nodeSorter,
+    groupSorter: overrides.groupSorter ?? defaultComponents.groupSorter,
+    nodeFilter: overrides.nodeFilter ?? defaultComponents.nodeFilter,
   }
 }
 

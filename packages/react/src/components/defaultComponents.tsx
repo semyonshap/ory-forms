@@ -153,4 +153,5 @@ export const DefaultComponents: OryComponents = {
   },
   nodeSorter: defaultNodeSorter,
   groupSorter: defaultGroupSorter,
+  nodeFilter: () => true,
 }

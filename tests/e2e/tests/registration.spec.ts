@@ -51,10 +51,12 @@ async function fillRegistrationPassword(page: Page) {
 async function completeVerification(page: Page, email: string) {
   await page.waitForURL('**/auth/verification**', { timeout: 30_000 })
 
-  const codeInput = page.locator('input[name="code"]')
-  if ((await codeInput.count()) === 0) {
-    const emailInput = page.locator('input[name="email"]')
-    await expect(emailInput).toBeVisible({ timeout: 15_000 })
+  const codeInput = page.locator('#code')
+  const emailInput = page.locator('#email')
+  await expect(codeInput.or(emailInput).first()).toBeVisible({
+    timeout: 30_000,
+  })
+  if (!(await codeInput.isVisible())) {
     if (!(await emailInput.inputValue())) {
       await emailInput.fill(email)
     }
@@ -63,8 +65,13 @@ async function completeVerification(page: Page, email: string) {
 
   await expect(codeInput).toBeVisible({ timeout: 30_000 })
   const code = await getCodeForEmail(email)
-  await codeInput.fill(code)
+  await codeInput.pressSequentially(code)
   await page.locator('button[name="method"][value="code"]').click()
+
+  await expect(page.getByText(/successfully verified/i)).toBeVisible({
+    timeout: 30_000,
+  })
+  await page.getByRole('link', { name: /^continue$/i }).click()
 
   await expect(page).toHaveURL(/^http:\/\/localhost:8080\/?$/, {
     timeout: 30_000,

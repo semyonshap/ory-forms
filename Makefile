@@ -5,6 +5,3 @@ help: ## Show this help message
 
 docker-build: ## Build auth app docker image
 	docker build -t ory-auth .
-
-docker-start: docker-build ## Start auth app in docker
-	docker run -p 8080:8080 --env-file auth/.env ory-auth 
