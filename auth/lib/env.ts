@@ -9,7 +9,7 @@ const isDev = process.env.NODE_ENV === 'development'
 
 type Translations = AccountExperienceConfiguration['translations']
 
-const publicSchema = z.object({
+const schema = z.object({
   project: z
     .object({
       name: z.string().default('Ory'),
@@ -31,9 +31,7 @@ const publicSchema = z.object({
   brandPrimary: z.string().default(''),
   turnstileSiteKey: z.string().default(isDev ? TURNSTILE_SITE_DEV : ''),
   captchaEnabled: z.stringbool().default(false),
-})
 
-const serverSchema = z.object({
   turnstileSecret: z.string().default(isDev ? TURNSTILE_SECRET_DEV : ''),
   webhookKey: z.string().default(''),
   webhookSecretKey: z.string().default(''),
@@ -43,9 +41,4 @@ const serverSchema = z.object({
   log_level: z.string().default(''),
 })
 
-const env = {
-  ...loadEnvConfig(serverSchema),
-  ...loadEnvConfig(publicSchema, { prefix: 'NEXT_PUBLIC_' }),
-}
-
-export default env
+export default loadEnvConfig(schema)

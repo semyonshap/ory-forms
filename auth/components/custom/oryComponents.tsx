@@ -26,8 +26,6 @@ import {
 } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
-import { logger } from '@/lib/logger'
-import { oryConfig } from '@/ory.config'
 import { useIsMobile } from '@/hooks/use-mobile'
 import { useCooldown } from '@/hooks/useCooldown'
 import { OryClientComponents, OryFlowType } from '@ory-forms/react'
@@ -104,7 +102,7 @@ export const OryComponents: OryClientComponents = {
 
       const { config } = store
       const { name } = config.project
-      const logoUrl = oryConfig.project.logo_url
+      const logoUrl = config.project.logo_url
 
       return (
         <form key={key} id={id} {...formProps} className="w-full">
@@ -361,12 +359,7 @@ export const OryComponents: OryClientComponents = {
 
       const siteKey = config.project.turnstile_site_key
 
-      if (!siteKey) {
-        logger.error(
-          'Turnstile site key is not defined. Please set NEXT_PUBLIC_TURNSTILE_SITE_KEY in your environment variables.',
-        )
-        return null
-      }
+      if (!siteKey) return null
 
       return (
         <div className={cn(token ? 'hidden' : 'flex flex-col gap-1')}>
