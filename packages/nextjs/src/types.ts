@@ -137,47 +137,47 @@ export interface OAuth2LogoutFlow {
   logout_request: OAuth2LogoutRequest
 }
 
-export interface LoginFlowContainer {
+interface LoginFlowContainer {
   flowType: OryFlowType.Login
   flow: LoginFlow
 }
 
-export interface RegistrationFlowContainer {
+interface RegistrationFlowContainer {
   flowType: OryFlowType.Registration
   flow: RegistrationFlow
 }
 
-export interface RecoveryFlowContainer {
+interface RecoveryFlowContainer {
   flowType: OryFlowType.Recovery
   flow: RecoveryFlow
 }
 
-export interface VerificationFlowContainer {
+interface VerificationFlowContainer {
   flowType: OryFlowType.Verification
   flow: VerificationFlow
 }
 
-export interface SettingsFlowContainer {
+interface SettingsFlowContainer {
   flowType: OryFlowType.Settings
   flow: SettingsFlow
 }
 
-export interface OAuth2ConsentFlowContainer {
+interface OAuth2ConsentFlowContainer {
   flowType: OryFlowType.OAuth2Consent
   flow: OAuth2ConsentFlow
 }
 
-export interface OAuth2LogoutFlowContainer {
+interface OAuth2LogoutFlowContainer {
   flowType: OryFlowType.OAuth2Logout
   flow: OAuth2LogoutFlow
 }
 
-export interface NavigationFlowContainer {
+interface NavigationFlowContainer {
   flowType: OryFlowType.Navigation
   flow: NavigationFlow
 }
 
-export interface ErrorFlowContainer {
+interface ErrorFlowContainer {
   flowType: OryFlowType.Error
   flow: ErrorFlow
 }

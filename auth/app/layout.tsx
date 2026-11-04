@@ -11,6 +11,8 @@ const inter = Inter({ subsets: ['latin'] })
 
 const brandPrimary = oryConfig.project.brand_primary
 
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = {
   title: oryConfig.project.name,
   description: `Authentication for ${oryConfig.project.name}.`,
